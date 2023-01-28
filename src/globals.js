@@ -35,7 +35,7 @@ const draftTypeLabelsLower = ["draft",
     "third draft supplemental"];
 
 const Globals = {
-    currentHost: new URL('https://bighorn.sbs.arizona.edu:8443/'),
+    currentHost: new URL('https://bighorn.sbs.arizona.edu:8443/nepaBackend/'),
 
     listeners: {},
 
