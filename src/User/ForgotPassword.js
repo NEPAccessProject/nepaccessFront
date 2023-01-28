@@ -97,7 +97,7 @@ class ForgotPassword extends React.Component {
         }).then(success => {
             if(success){
                 this.setState({
-                    successLabel: "Reset link sent to provided email address from NEPAccess@NEPAccess.org."
+                    successLabel: "Reset link sent to provided email address from NEPAccess <noreply@mail.nepaccess.org>."
                     + " Please allow a minute or so for email to arrive."
                     + " If email doesn't arrive, please check your spam folder.",
                     disabledButton: false
