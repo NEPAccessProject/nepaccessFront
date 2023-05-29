@@ -1,0 +1,46 @@
+<svg id="Layer_1" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 943.97 1051.7">
+  <defs>
+    <style>
+      .cls-1 {
+        font-size: 14px;
+        fill: #659f42;
+        font-family: OpenSans-Extrabold, Open Sans;
+        font-weight: 800;
+      }
+
+      .cls-2 {
+        font-size: 12px;
+        font-family: OpenSans-Semibold, Open Sans;
+        font-weight: 600;
+      }
+
+      .cls-2, .cls-3 {
+        fill: #231f20;
+      }
+
+      .cls-3 {
+        font-size: 20px;
+        font-family: OpenSans-Bold, Open Sans;
+        font-weight: 700;
+      }
+
+      .cls-4, .cls-5 {
+        fill: none;
+        stroke: #231f20;
+        stroke-miterlimit: 10;
+      }
+
+      .cls-4 {
+        stroke-width: 0.75px;
+      }
+
+      .cls-5 {
+        stroke-width: 0.5px;
+      }
+    </style>
+  </defs>
+  <text class="cls-1" transform="translate(38.92 102.55)">Department of Agriculture (USDA) <tspan class="cls-2"><tspan x="16" y="21">Animal and Plant Health Inspection Service (APHIS) </tspan><tspan x="16" y="42">Farm Service Agency (FSA) </tspan><tspan x="16" y="63">Natural Resources Conservation Service (NRCS) </tspan><tspan x="16" y="84">Rural Utilities Service (RUS) </tspan><tspan x="16" y="105">United States Forest Service (USFS) </tspan></tspan><tspan x="0" y="141">Department of Commerce (DOC) </tspan><tspan class="cls-2"><tspan x="16" y="162">First Responder Network Authority (FirstNet) </tspan><tspan x="16" y="183">National Oceanic and Atmospheric Administration (NOAA) </tspan></tspan><tspan x="0" y="222">Department of Defense (DOD) </tspan><tspan class="cls-2"><tspan x="16" y="243">National Geospatial-Intelligence Agency (NGA) </tspan><tspan x="16" y="264">National Security Agency (NSA) </tspan><tspan x="16" y="285">United States Air Force (USAF) </tspan><tspan x="16" y="306">United States Army (USA) </tspan><tspan x="16" y="327">United States Army Corps of Engineers (USACE) </tspan><tspan x="16" y="348">United States Marine Corps (USMC) </tspan><tspan x="16" y="369">United States Navy (USN) </tspan></tspan><tspan x="0" y="405">Department of Energy (DOE) </tspan><tspan class="cls-2"><tspan x="16" y="426">Bonneville Power Administration (BPA) </tspan><tspan x="16" y="447">Western Area Power Administration (WAPA) </tspan><tspan x="16" y="468">National Nuclear Security Administration (NNSA) </tspan></tspan><tspan x="0" y="504">Department of Health and Human Services (HHS) </tspan><tspan class="cls-2"><tspan x="16" y="525">Centers for Disease Control and Prevention (CDC) </tspan><tspan x="16" y="546">Food and Drug Administration (FDA) </tspan><tspan x="16" y="567">National Institutes of Health (NIH) </tspan></tspan><tspan x="0" y="603">Department of Homeland Security (DHS) </tspan><tspan class="cls-2"><tspan x="16" y="624">Customs and Border Protection (CBP) </tspan><tspan x="16" y="645">Federal Emergency Management Agency (FEMA) </tspan><tspan x="16" y="666">United States Coast Guard (USCG) </tspan></tspan><tspan x="0" y="702">Department of Housing and Urban Development (HUD) </tspan><tspan x="0" y="738">Department of the Interior (DOI) </tspan><tspan class="cls-2"><tspan x="16" y="759">Bureau of Indian Affairs (BIA) </tspan><tspan x="16" y="780">Bureau of Land Management (BLM) </tspan><tspan x="16" y="801">Bureau of Ocean Energy Management (BOEM) </tspan><tspan x="16" y="822">Bureau of Reclamation (BR) </tspan><tspan x="16" y="843">National Park Service (NPS) </tspan><tspan x="16" y="864">Office of Surface Mining Reclamation and Enforcement (OSMRE) </tspan><tspan x="16" y="885">United States Fish and Wildlife Service (USFWS) </tspan></tspan><tspan x="445.23" y="16.48">Department of Justice (DOJ) </tspan><tspan class="cls-2"><tspan x="461.23" y="37.48">Federal Bureau of Prisons (BOP) </tspan></tspan><tspan x="445.23" y="73.48">Department of State (DOS) </tspan><tspan x="445.23" y="109.48">Department of Transportation (DOT) </tspan><tspan class="cls-2"><tspan x="461.23" y="130.48">Federal Aviation Administration (FAA) </tspan><tspan x="461.23" y="151.48">Federal Highway Administration (FHWA) </tspan><tspan x="461.23" y="172.48">Federal Railroad Administration (FRA) </tspan><tspan x="461.23" y="193.48">Federal Transit Administration (FTA) </tspan><tspan x="461.23" y="214.48">National Highway Traffic Safety Administration (NHTSA) </tspan><tspan x="461.23" y="235.48">Surface Transportation Board (STB) </tspan><tspan x="461.23" y="256.48">Department of Veterans Affairs (VA) </tspan></tspan><tspan x="445.23" y="292.48">Environmental Protection Agency (EPA) </tspan><tspan x="445.23" y="328.48">Federal Energy Regulatory Commission (FERC) </tspan><tspan x="445.23" y="364.48">General Services Administration (GSA) </tspan><tspan x="445.23" y="400.48">U.S. International Boundary &amp; Water Commission (USIBWC) </tspan><tspan x="445.23" y="436.48">National Aeronautics and Space Administration (NASA) </tspan><tspan x="445.23" y="472.48">National Science Foundation (NSF) </tspan><tspan x="445.23" y="508.48">Nuclear Regulatory Commission (NRC) </tspan><tspan x="445.23" y="544.48">Tennessee Valley Authority (TVA) </tspan></text>
+  <text class="cls-3" transform="translate(209.34 48.78)">Federal Department and Agency Organization Chart</text>
+  <line class="cls-4" x1="38.79" y1="67.2" x2="881.9" y2="67.2"/>
+  <line class="cls-5" x1="451.2" y1="91.91" x2="451.2" y2="989.45"/>
+</svg>

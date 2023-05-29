@@ -1,6 +1,6 @@
 import React from 'react';
 import globals from './globals.js';
-import { HorizontalBar } from 'react-chartjs-2';
+import { Bar } from 'react-chartjs-2';
 // import { Line, Pie, Doughnut, Bar, Radar, Polar, Bubble, Scatter } from 'react-chartjs-2';
 
 const chartClass = "chart-holder";
@@ -108,7 +108,7 @@ export default class ChartBar extends React.Component {
             return (
                 <div hidden={this.props.option!==this.props.label} className={chartClass + " " + this.props.size + " bar-holder"}>
                     <h2 className="chart-label">{this.props.label}</h2>
-                    <HorizontalBar ref={this.chart_ref} data={data} options={options} />
+                    <Bar ref={this.chart_ref} data={data} options={options} />
                 </div>
             );
             
@@ -190,7 +190,7 @@ export default class ChartBar extends React.Component {
             return (
                 <div hidden={this.props.option!==this.props.label} className={chartClass + " " + this.props.size + " bar-holder"}>
                     <h2 className="chart-label">{this.props.label}</h2>
-                    <HorizontalBar ref={this.chart_ref} data={data} options={options} />
+                    <Bar ref={this.chart_ref} data={data} options={options} />
                 </div>
             );
 
@@ -275,7 +275,7 @@ export default class ChartBar extends React.Component {
             return (
                 <div hidden={this.props.option!==this.props.label} className={chartClass + " " + this.props.size + " bar-holder"}>
                     <h2 className="chart-label">{this.props.label}</h2>
-                    <HorizontalBar ref={this.chart_ref} data={data} options={options} />
+                    <Bar ref={this.chart_ref} data={data} options={options} />
                 </div>
             );
 
@@ -348,7 +348,7 @@ export default class ChartBar extends React.Component {
             return (
                 <div hidden={this.props.option!==this.props.label} className={chartClass + " " + this.props.size + " bar-holder"}>
                     <h2 className="chart-label">{this.props.label}</h2>
-                    <HorizontalBar ref={this.chart_ref} data={data} options={options} />
+                    <Bar ref={this.chart_ref} data={data} options={options} />
                 </div>
             );
         }
