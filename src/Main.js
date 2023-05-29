@@ -67,6 +67,7 @@ import { Link, Switch, Route, withRouter } from 'react-router-dom';
 import PropTypes from "prop-types";
 
 import ImporterAlignment from './ImporterAlignment';
+import Header from './Header'
 
 const _ = require('lodash');
 
@@ -241,16 +242,16 @@ class Main extends React.Component {
             </Helmet>
 
             <div id="header" className={this.getHeaderCss() + this.state.headerLandingCss}>
-
-                <div id="logo" className="no-select">
+                <Header/>
+                {/* <div id="logo" className="no-select">
                     <Link id="logo-link" to="/">
                     </Link>
                     <div id="logo-box">
 
                     </div>
-                </div>
+                </div> */}
 
-                <div id="top-menu" className="no-select">
+                {/* <div id="top-menu" className="no-select">
                     
                     {this.showMenuItems()}
 
@@ -266,8 +267,8 @@ class Main extends React.Component {
                     <span className={this.state.loggedInDisplay + " right-nav-item logged-in"}>
                         <Link className="top-menu-link" to="/logout">Log out</Link>
                     </span>
-                </div>
-
+                </div> */}
+{/* 
                 <div id="main-menu">
                     <Link currentpage={(this.state.currentPage==="/search").toString()} className="main-menu-link" to="/search">
                         Search
@@ -298,15 +299,11 @@ class Main extends React.Component {
                             <Link to="/people">People</Link>
                         </div>
                     </div>
-                    
-                    {/* <Link currentpage={(this.state.currentPage==="/future").toString()} className="main-menu-link" to="/future">
-                        Future
-                    </Link> */}
                     <Link currentpage={(this.state.currentPage==="/contact").toString()} className="main-menu-link" to="/contact">
                         Contact
                     </Link>
 
-                </div>
+                </div> */}
                 
             </div>
             <Switch>

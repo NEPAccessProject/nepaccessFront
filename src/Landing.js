@@ -1,6 +1,7 @@
 import React from 'react';
 
 import {Helmet} from 'react-helmet';
+import MediaQuery from 'react-responsive';
 
 import './index.css';
 import './landing.css';
@@ -9,6 +10,8 @@ import SearcherLanding from './SearcherLanding.js';
 import './User/login.css';
 
 import IframeResizer from 'iframe-resizer-react';
+import Media from './iframes/Media';
+import { Grid } from '@material-ui/core';
 
 class Landing extends React.Component {
 
@@ -33,7 +36,6 @@ class Landing extends React.Component {
         });
     }
 
-
     render(){
         return (
             <div id="landing">
@@ -43,21 +45,24 @@ class Landing extends React.Component {
                     <meta name="description" content="Search, download, and learn from environmental impact statements and other NEPA documents created under the National Environmental Policy Act of 1969." data-react-helmet="true" />
                     <link rel="canonical" href="https://nepaccess.org/" />
                 </Helmet>
-
+                <MediaQuery minWidth={768}>
                 <div id="landing-images">
-                    <div id="headline" className="no-select cursor-default">
-                        <div id="landing-headline-container">
-                            <h1 id="landing-headline-left">
-                                <span className="glow">
-                                    Fulfilling NEPA’s Promise Through the Power of Data Science
-                                </span>
-                            </h1>
-                            <h2 id="landing-headline-right">
-                                <span className="glow">
-                                    Help grow our community of knowledge and put our information infrastructure to work for you.
-                                </span>
-                            </h2>
-                        </div>
+   <MediaQuery minWidth={768}>
+                        <Grid container id="headline" className="no-select cursor-default">
+                            <Grid item id="landing-headline-container">
+                                <h1 id="landing-headline-left">
+                                    <span className="glow">
+                                        Fulfilling NEPA’s Promise Through the Power of Data Science
+                                    </span>
+                                </h1>
+                                <h2 id="landing-headline-right">
+                                    <span className="glow">
+                                        Help grow our community of knowledge and put our information infrastructure to work for you.
+                                    </span>
+                                </h2>
+                            </Grid>
+                    </Grid>
+   </MediaQuery>
             
                         <SearcherLanding 
                             id="rawInput"
@@ -65,8 +70,8 @@ class Landing extends React.Component {
                             onClick={this.handleClick}
                             value={this.state.rawInput}
                         />
-                    </div>
                 </div>
+   </MediaQuery>
 
                 <IframeResizer
                     // log

@@ -31,27 +31,50 @@ body {
   /* background: #FBFBF6; */
   background: #F8F9FA;
 }
+#header-root-app-bar{
+    background-color: #C4C4C4 !important;
+    background-image: url(assets/home-page-image_9-21-22.jpg) !important;
+    background-repeat: 'no-repeat';
 
+}
+#paper-root{
+    background-color: #C4C4C4;
+}
 #header {
-  position: fixed;
   width: 100%;
-  min-width: 700px;
   height: 102px;
-  left: 0px;
-  top: 0px;
 
-  /* background: #C4C4C4; */
+    align-items: space-around;
+    background-repeat: no-repeat;
+    background-position: center 10px;
+    background-size: contain;
+    background-size: cover;
+    background-image: 'logo2022.png';
+    border: '1px solid green';  
+    background-position: 0;
+    background-size: contain;
+     background-color: #C4C4C4;
   box-sizing: border-box;
   z-index: 99999; /* Geojson map introduces some very high z-index items */
 
   /* background: #8FBC3F; */
-  background: #B6C4C8;
+  background: #B6C4C8; 
 }
 
 /* Header contents */
+#root-paper-container{
+    border: 3px solid green;
+    width: 100%;
+    background-color: #abbdc4;
+}
 
 #logo {
     position: absolute;
+    top:0;
+    left:0;
+    border-color: #8FBC3F;
+    flex-grow: 1;
+    width: 100%;
 }
 
 #logo-link {
@@ -69,33 +92,80 @@ body {
     height: 102px;
 
 }
+#logo-grid-container{
+    border:3px solid red;
+    flex-direction: row;
+    width: 100%;
+    display: inline;
+}
+#logo-grid-item {
+    background-color: 'transparent';
+    flex-grow: 1;
+    width: 100%;
+    margin-left: 0;
+    border: 3px solid blue;
+    justify-content: space-around;
+    display: flow-root;
+}
+#desktop-nav-container {
+				background-color:  red;
+				justify-items: flex-end;
+				justify-content: flex-end;
+				border: 3px solid blue;
+                flex-grow: 1;
+                height: 102px;
+                width: 100%;
+                justify-content: right;
+
+
+}
 
 #logo-box {
-    position: absolute;
+    /* position: absolute; */
 
     /* background-color: white; */
     background-repeat: no-repeat;
-    /* background-position: center 10px; */
+    background-position: center 10px;
     background-size: contain;
-    /* background-size: cover; */
+    background-size: cover;
     /* background-image: url("assets/nepaccess\ 1x.png"); */
     /* background-image: url("assets/thumbnail_logo-beta.png"); */
     background-image: url("assets/NEPAccess logo2022_BETA.png");
-
-    margin-left: 30px;
+border: '1px solid green';
+    margin-left: 0px;
+    margin-right: -24px;
+    width: 302px;
+    height: 102px;
 }
 
 #logo-type {
-  position: absolute;
+
   width: 289x;
   height: 122px;
   
   /* Center vertically using top 50% and margin - half of height */
-  top: 50%;
+  /* top: 50%; */
   margin-top: -61px;
   z-index: 1;
 }
 
+#nav-links-container{
+    width: 100%;
+    background-color: darkgray;
+    border: 3px solid blue;
+}
+#nav-links{
+    max-width: 100%;
+    flex-grow: 1;
+    justify-content: flex-start;
+    justify-items: flex-start;
+    align-items: center;
+    align-content: flex-start;
+    margin-left: 350px;
+    display: flex;
+    width: 100%;
+    background-color: darkgray;
+}
 #logo-type #NEP {
   position: absolute;
   width: 139.34px;
@@ -231,14 +301,18 @@ body {
     display: inline;
     margin-left: 0px;
 } */
-
+#mobile-paper-container{
+    background-color: #abbec3;
+}
+#mobile-drawer-container{
+    background-color: #abbec3
+}
 .main-menu-link {
   position: relative;
   float: left;
   margin-left: 40px;
 
   font-family: "Open Sans";
-  font-style: normal;
   font-weight: 600;
   font-size: 18px;
   line-height: 25px;
@@ -355,6 +429,21 @@ button {
 .successLabel {
   color: green;
   font-style: italic;
+}
+.muiAppBar{
+    height:102px;
+
+}
+
+#mobile-app-bar {
+    color: '#000';
+    elevation: 1;
+    height: '105px';
+    flexFlow: 'row nowrap';
+    justifyContent: 'space-between';
+    justifySelf: 'center';
+    alignItems: 'center';
+    backgroundColor: 'transparent';
 }
 
 #app-content>.errorLabel {

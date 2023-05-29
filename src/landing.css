@@ -1,11 +1,11 @@
 /* Landing */
 #landing {
     position: relative;
-    /* height: 100%;
-    width: 100%; */
+    height: 100%;
+    width: 100%; 
     /** The search box now has a percentage-based position, which means the overall page
     needs a minimum height that does not clip into the header texts. This needs to change if the landing text changes. */
-    /* min-width: 750px; */
+    min-width: 750px; 
     
     margin: auto;
     /* margin-top: 102px; */
@@ -78,7 +78,7 @@ span.glow {
     max-width: 1120px;
     margin: 0 auto;
 
-    padding-top: 140px;
+    /* padding-top: 140px; */
 
     -webkit-column-count: 2; /* Chrome, Safari, Opera */
     -moz-column-count: 2; /* Firefox */
@@ -118,10 +118,10 @@ span.glow {
 }
 
 #header.landing-header {
-    /* background: rgb(151,171,178) !important; */
-    background: none;
+    background: rgb(151,171,178) !important;
     -webkit-transition: background 0.6s; /* Safari */
     transition: background 0.6s;
+    height: 52px;
 }
 #header.landing-header.transition {
     background: #B6C4C8;
@@ -142,8 +142,9 @@ span.glow {
     /* Allow centering of child element #landing-search-bar-holder */
     position: relative;
     /* height: 170px; */
-    height: 250px;
-
+    min-height: 40px;
+    max-height: 300px;
+    background-color: #F1D40A !important;
     /* Start search bar header text on left side */
     text-align: left;
     
@@ -254,4 +255,7 @@ a.link.landing-link {
 
 a.link.landing-link:hover {
     color: white;
+}
+.menu-item{
+    color: black;
 }
