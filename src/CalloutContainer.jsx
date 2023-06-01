@@ -1,4 +1,4 @@
-import react from 'react';
+import React from 'react';
 import { Button, CardContent, CardHeader, Grid, Paper } from '@mui/material';
 import CalloutCard from './CalloutCard';
 const cards = [

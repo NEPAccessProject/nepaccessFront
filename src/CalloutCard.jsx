@@ -1,4 +1,4 @@
-import react from 'react';
+import React from 'react';
 import { CardActions, CardHeader, Card, Button, CardContent, Paper } from '@mui/material';
 import { AlignVerticalCenter } from '@mui/icons-material';
 import { useTheme } from '@mui/styles';

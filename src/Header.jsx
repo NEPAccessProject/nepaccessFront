@@ -181,7 +181,7 @@ import {
   
     useEffect(() => {
       const setResponsiveness = () => {
-        console.log('set responsive', window.innerHeight);
+        //console.log('set responsive', window.innerHeight);
         return window.innerWidth < 768
           ? setState((prevState) => ({ ...prevState, mobileView: true }))
           : setState((prevState) => ({ ...prevState, mobileView: false }));
@@ -257,6 +257,7 @@ import {
       return headersData.map(({ label, href }, idx) => {
         return (
           <Link
+          key={`${label}-${idx}`}
             {...{
               component: RouterLink,
               to: href,
@@ -400,8 +401,9 @@ import {
       return headersData.map(({ label, href }) => {
         return (
           <Button
-            {...{
-              key: label,
+          key= {label}
+          {...{
+
               color: 'inherit',
               to: href,
               component: RouterLink,
@@ -415,9 +417,8 @@ import {
     };
     /* RETURN of the main function */
     return (
-      <Paper id="paper-root" backgroundColor="#a0b6c1" 
-       elevation={2}>
-        <AppBar elevation={1} color='##a0b6c1'  id="header-root-app-bar"  sx={{
+      <Paper id="paper-root" elevation={2}>
+        <AppBar elevation={1} color='#a0b6c1'  id="header-root-app-bar"  sx={{
             background: '#a0b6c1',
         }}> 
         <MediaQuery maxWidth={960}>         
