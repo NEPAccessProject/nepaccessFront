@@ -9,9 +9,8 @@ import './css/tabulator.css';
 import "./search.css";
 import "./sidebar.css";
 import './survey.css';
-//import { DatePicker } from '@mui/x-date-pickers/DatePicker';
-import "react-datepicker/dist/react-datepicker.css";
-import DatePicker from 'react-datepicker';
+//import "react-datepicker/dist/react-datepicker.css";
+//import DatePicker from 'react-datepicker';
 import 'tippy.js/dist/tippy.css'; // optional
 import Tippy from '@tippyjs/react';
 import Checkbox from '@mui/material/Checkbox';
@@ -20,9 +19,13 @@ import persist from './persist.js';
 import theme from './styles/theme.js';
 import { withRouter } from "react-router";
 import TippySearchTips from './TippySearchTips.js';
-import { Paper, Button, Box, Divider, FormControl, Select,Autocomplete,Input,InputLabel,TextField } from '@mui/material';
+import { Paper, Button, Box,  Divider, FormControl, Autocomplete,InputLabel,TextField, Typography,Grid } from '@mui/material';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { InputAdornment } from '@mui/icons-material';
 import { makeStyles,withStyles } from '@mui/styles';
+import dayjs from 'dayjs';
 //import { DatePicker } from '@mui/lab';
 // import PropTypes from "prop-types";
 const drawerWidth = 200;const _ = require('lodash');
@@ -1177,7 +1180,7 @@ class Search extends React.Component {
                       onChange={this.onAgencyChange}
                       value={this.state.agencyRaw ? this.state.agencyRaw : ''}
                       autoHighlight
-                    //   getOptionLabel={(option) => option.label}
+                      //   getOptionLabel={(option) => option.label}
                       renderOption={(props, option) => <>{option.label}</>}
                       renderInput={(params) => (
                         <TextField
@@ -1193,10 +1196,9 @@ class Search extends React.Component {
                   <Divider />
                 </Box>
               </div>
-              {/* <div>
+              <div>
                 <Box className={this.classes.box}>
                   <FormControl variant="filled" className={this.classes.formControl}>
-   
                     <Autocomplete
                       id="searchAgency"
                       sx={{ width: 300 }}
@@ -1204,16 +1206,14 @@ class Search extends React.Component {
                       onChange={this.onAgencyChange}
                       value={this.state.agencyRaw ? this.state.agencyRaw : ''}
                       autoHighlight
-                      placeholder="Type or select Cooperating agencies"
-                       getOptionLabel={(option) => option.label}
+                      //    getOptionLabel={(option) => option.label}
                       renderOption={(props, option) => <>{option.label}</>}
                       renderInput={(params) => (
                         <TextField
                           {...params}
-                          label="Type or select agencies"
                           inputProps={{
                             ...params.inputProps,
-                            placeholder: 'Type or Select Agencies', // disable autocomplete and autofill
+                            placeholder: 'Type or Select Cooperating Agencies', // disable autocomplete and autofill
                           }}
                         />
                       )}
@@ -1221,7 +1221,7 @@ class Search extends React.Component {
                   </FormControl>
                   <Divider />
                 </Box>
-              </div> */}
+              </div>
               {/* <Box className={this.classes.box}>
                 <FormControl variant="filled" className={this.classes.formControl}>
                   <Autocomplete
@@ -1254,69 +1254,8 @@ class Search extends React.Component {
                 </FormControl>
                 <Divider />
               </Box> */}
-
-              {/* <div>
-                <Box className={this.classes.box}>
-                  <FormControl variant="filled" className={this.classes.formControl}>
-                    <Autocomplete
-                      id="searchAgency"
-                      sx={{ width: 300 }}
-                      options={agencyOptions}
-                      onChange={this.onAgencyChange}
-                      value={this.state.agencyRaw}
-                      autoHighlight
-                      placeholder="Type or select Cooperating agencies"
-                      getOptionLabel={(option) => option.label}
-                      renderOption={(props, option) => <>{option.label}</>}
-                      renderInput={(params) => (
-                        <TextField
-                          {...params}
-                          label="Type or select agencies"
-                          inputProps={{
-                            ...params.inputProps,
-                            placeholder: 'Type or Select Agencies', // disable autocomplete and autofill
-                          }}
-                        />
-                      )}
-                    />
-                  </FormControl>
-                  <Divider />
-                </Box>
-              </div> */}
-              {/* <Box className={this.classes.box}>
-                <FormControl variant="filled" className={this.classes.formControl}>
-                  <Autocomplete
-                    disablePortal
-                    sx={{}}
-                    className={this.classes.autocomplete}
-                    renderInput={(params) => (
-                      <TextField
-                        id="searchAgency"
-                        className={this.classes.autocomplete}
-                        classNamePrefix="react-select"
-                        isMulti
-                        name="cooperatingAgency"
-                        isSearchable
-                        isClearable
-                        styles={customStyles}
-                        tabIndex="4"
-                        options={agencyOptions}
-                        onChange={this.onCooperatingAgencyChange}
-                        value={this.state.cooperatingAgencyRaw}
-                        placeholder="Type or select Cooperating agencies"
-                        sx={{
-                          p: 0,
-                          m: 0,
-                          width: '100%',
-                          minWidth: 300,
-                        }}
-                      />
-                    )}
-                  />
-                </FormControl>
-                <Divider />
-              </Box> */}
-              {/* <div>
+              <Divider />
+              <div>
                 <Box className={this.classes.box}>
                   <FormControl variant="filled" className={this.classes.formControl}>
                     <Autocomplete
@@ -1324,63 +1263,56 @@ class Search extends React.Component {
                       sx={{ width: 300 }}
                       options={stateOptions}
                       onChange={this.onLocationChange}
-                      autoHighlight
-                      placeholder="Type or select Cooperating agencies"
-                      getOptionLabel={(option) => option.label}
-                      renderOption={(props, option) => <>{option.label}</>}
                       value={stateOptions.filter((stateObj) =>
                         this.state.state.includes(stateObj.value),
                       )}
+                      autoHighlight
+                      //    getOptionLabel={(option) => option.label}
+                      renderOption={(props, option) => <>{option.label}</>}
                       renderInput={(params) => (
                         <TextField
                           {...params}
-                          label="Type or Select States"
                           inputProps={{
                             ...params.inputProps,
-                            autoComplete: 'Type or Select States', // disable autocomplete and autofill
+                            placeholder: 'Type or Select State(s)', // disable autocomplete and autofill
                           }}
                         />
                       )}
                     />
                   </FormControl>
-                  <Divider />
                 </Box>
-              </div> */}
-              {/* <Box className={this.classes.box}>
-                <FormControl variant="filled" className={this.classes.formControl}>
-                  <Autocomplete
-                    disablePortal
-                    sx={{}}
-                    className={this.classes.autocomplete}
-                    renderInput={(params) => (
-                      <TextField
-                        className={this.classes.autocomplete}
-                        id="searchState"
-                        classNamePrefix="react-select"
-                        isMulti
-                        name="state"
-                        isSearchable
-                        isClearable
-                        styles={customStyles}
-                        tabIndex="5"
-                        options={stateOptions}
-                        onChange={this.onLocationChange}
-                        value={stateOptions.filter((stateObj) =>
-                          this.state.state.includes(stateObj.value),
-                        )}
-                        placeholder="Type or select states"
-                        sx={{
-                          p: 0,
-                          m: 0,
-                          width: '100%',
-                          minWidth: 300,
-                        }}
-                      />
-                    )}
-                  />
-                </FormControl>
                 <Divider />
-              </Box> */}
+              </div>
+
+              <div>
+                <Box className={this.classes.box}>
+                  <FormControl variant="filled" className={this.classes.formControl}>
+                    <Autocomplete
+                      id="searchCounty"
+                      sx={{ width: 300 }}
+                      options={this.state.countyOptions}
+                      onChange={this.onCountyChange}
+                      value={this.state.countyOptions.filter((countyObj) =>
+                        this.state.county.includes(countyObj.value),
+                      )}
+                      autoHighlight
+                      //    getOptionLabel={(option) => option.label}
+                      renderOption={(props, option) => <>{option.label}</>}
+                      renderInput={(params) => (
+                        <TextField
+                          {...params}
+                          inputProps={{
+                            ...params.inputProps,
+                            placeholder: 'Type or Select Counties', // disable autocomplete and autofill
+                          }}
+                        />
+                      )}
+                    />
+                  </FormControl>
+                </Box>
+              </div>
+              <Divider />
+
               {/* <div>
                 <Box className={this.classes.box}>
                   <FormControl variant="filled" className={this.classes.formControl}>
@@ -1546,11 +1478,10 @@ class Search extends React.Component {
                 </Box> */}
               </div>
               <Divider />
-
+              <InputLabel>Date Range:</InputLabel>
               <Box className={this.classes.box}>
                 <span className="sidebar-date-text">From</span>
-                <DatePicker
-                  type="date"
+                {/* <DatePicker
                   onChange={this.onStartDateChange}
                   onKeyDown={this.onKeyDown}
                   placeholder="YYYY-MM-DD"
@@ -1564,7 +1495,63 @@ class Search extends React.Component {
                     minWidth: 220,
                     width: '100%',
                   }}
-                />
+                /> */}
+                <InputLabel>Date Range</InputLabel>
+                <Grid container xs={{
+                    border: 3,
+                    borderColor: 'red'
+                }}>
+                    <Grid item>
+                        <LocalizationProvider dateAdapter={AdapterDayjs}>
+                          <DatePicker
+                            label="From:"
+                            ref={(ref) => (this.datePickerEnd = ref)}
+                            onChange={this.onEndDateChange}
+                            onKeyDown={this.onKeyDown}
+                            placeholder="YYYY-MM-DD"
+                            value={this.state.endPublish}
+                            className={this.classes.datePicker}
+                            tabIndex="10"
+                            xs={{
+                                mb: 10,
+                                border: 1,
+                            }}
+                          />
+                        </LocalizationProvider>
+                    </Grid>
+                    <Grid item>
+                        <LocalizationProvider dateAdapter={AdapterDayjs}>
+                          <DatePicker
+                            label="To:"
+                            value={this.state.startPublish ? this.state.startPublish : ''}
+                            onChange={this.onEndDateChange}
+                            onKeyDown={this.onKeyDown}
+                            ref={(ref) => (this.datePickerStart = ref)}
+                            tabIndex="9"
+                            className={this.classes.datePicker}
+                            
+                          />
+                        </LocalizationProvider>
+                    </Grid>
+                </Grid>
+                {/* <LocalizationProvider dateAdapter={AdapterDayjs}>
+                  <DatePicker
+                    type="date"
+                    onChange={this.onStartDateChange}
+                    onKeyDown={this.onKeyDown}
+                    label="YYYY-MM-DD"
+                    ref={(ref) => (this.datePickerStart = ref)}
+                    value={this.state.startPublish ? this.state.startPublish : ''}
+                    tabIndex="9"
+                    className={this.classes.datePicker}
+                    sx={{
+                      p: 0,
+                      m: 0,
+                      minWidth: 220,
+                      width: '100%',
+                    }}
+                  />
+                </LocalizationProvider> */}
                 {/* <DatePicker
                     adjustDateOnChange
                     className="sidebar-date"
@@ -1616,8 +1603,7 @@ class Search extends React.Component {
                     // preventOpenOnFocus={true}
                     // openToDate={new Date('12 31 2021')}
                   /> */}
-
-              <div className="sidebar-hr"></div>
+              <Divider />
 
               <div className="filter">
                 <label className="sidebar-label-date">Document Type</label>
@@ -1654,7 +1640,7 @@ class Search extends React.Component {
                   </div>
                   <div className="checkbox-container">
                     <label className="clickable checkbox-text">
-                      <Checkbox
+                      <input
                         type="checkbox"
                         name="typeEA"
                         className="sidebar-checkbox"
@@ -1669,7 +1655,7 @@ class Search extends React.Component {
                   </div>
                   <div className="checkbox-container">
                     <label className="clickable checkbox-text">
-                      <Checkbox
+                      <input
                         type="checkbox"
                         name="typeNOI"
                         className="sidebar-checkbox"
@@ -1699,7 +1685,7 @@ class Search extends React.Component {
                   </div>
                   <div className="checkbox-container">
                     <label className="clickable checkbox-text">
-                      <DatePicker
+                      <input
                         type="checkbox"
                         name="typeScoping"
                         className="sidebar-checkbox"
