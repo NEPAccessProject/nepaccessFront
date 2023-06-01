@@ -26,6 +26,7 @@ import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { InputAdornment } from '@mui/icons-material';
 import { makeStyles,withStyles } from '@mui/styles';
 import dayjs from 'dayjs';
+import SearchFilter from './SearchFilter.jsx';
 //import { DatePicker } from '@mui/lab';
 // import PropTypes from "prop-types";
 const drawerWidth = 200;const _ = require('lodash');
@@ -1163,16 +1164,10 @@ class Search extends React.Component {
               </div>
 
               <div className="sidebar-hr"></div>
-
+{/* 
               <div>
                 <Box className={this.classes.box}>
                   <FormControl variant="filled" className={this.classes.formControl}>
-                    {/* <InputLabel className={this.classes.formLabel} htmlFor="searchAgency">
-                      Lead agency or{' '}
-                      <span className="link" onClick={this.orgClick}>
-                        agencies
-                      </span>
-                    </InputLabel> */}
                     <Autocomplete
                       id="searchAgency"
                       sx={{ width: 300 }}
@@ -1195,9 +1190,31 @@ class Search extends React.Component {
                   </FormControl>
                   <Divider />
                 </Box>
-              </div>
+                <SearchFilter filter={{
+                    id: 'searchAgency',
+                    className: this.classes.formControl,
+                    placeholder: 'Type or Select Lead Agencies',
+                    value: this.state.agencyRaw ? this.state.agencyRaw : '',
+                    label: 'Lead Agency or Agencies',
+                    onChange: this.onAgencyChange,
+                    onClear: () => {},
+                    type: Autocomplete,
+                      options: agencyOptions,
+                }} />
+              </div> */}
               <div>
-                <Box className={this.classes.box}>
+              <SearchFilter filter={{
+                    className: this.classes.formControl,
+                    placeholder: 'Type or Select Lead Agencies',
+                    value: (this.state.agencyRaw ? this.state.agencyRaw : ''),
+                    onChange: this.onAgencyChange,
+                    id: 'searchAgency',
+                    type: Autocomplete,
+                    options : agencyOptions,
+                    label: 'Cooperating Agencies',
+                }} />
+
+                {/* <Box className={this.classes.box}>
                   <FormControl variant="filled" className={this.classes.formControl}>
                     <Autocomplete
                       id="searchAgency"
@@ -1220,8 +1237,19 @@ class Search extends React.Component {
                     />
                   </FormControl>
                   <Divider />
-                </Box>
+                </Box> */}
               </div>
+              <div>
+              <SearchFilter filter={{
+                    className: this.classes.formControl,
+                    placeholder: 'Type or select Cooperating agencies',
+                    value: (this.state.agencyRaw ? this.state.agencyRaw : ''),
+                    onChange: this.onAgencyChange,
+                    id: 'searchAgency',
+                    type: Autocomplete,
+                    options : agencyOptions,
+                    label: 'Cooperating Agencies',
+                }} />
               {/* <Box className={this.classes.box}>
                 <FormControl variant="filled" className={this.classes.formControl}>
                   <Autocomplete
@@ -1254,9 +1282,23 @@ class Search extends React.Component {
                 </FormControl>
                 <Divider />
               </Box> */}
+              </div>
               <Divider />
               <div>
-                <Box className={this.classes.box}>
+            
+              <SearchFilter filter={{
+                    className: this.classes.formControl,
+                    placeholder: 'Type or Select Lead Agencies',
+                    value: (this.state.agencyRaw ? this.state.agencyRaw : ''),
+                    onChange: this.onAgencyChange,
+                    id: 'searchState',
+                    type: Autocomplete,
+                      options: agencyOptions,
+                      label: 'Lead Agency or Agencies',
+                      options: agencyOptions,
+                }} />
+
+                {/* <Box className={this.classes.box}>
                   <FormControl variant="filled" className={this.classes.formControl}>
                     <Autocomplete
                       id="searchState"
@@ -1281,11 +1323,23 @@ class Search extends React.Component {
                     />
                   </FormControl>
                 </Box>
-                <Divider />
+                <Divider /> */}
               </div>
 
               <div>
-                <Box className={this.classes.box}>
+              {/* <SearchFilter filter={{
+                    className: this.classes.formControl,
+                    id: 'searchCounty',
+                    placeholder: 'Type or Select County(s)',
+                    onChange: this.onCountyChange,
+                    onClear: () => {},
+                    type: Autocomplete,
+                      options: stateOptions,
+                      label: 'Type or Select County(s)',
+                      options: this.state.countyOptions,
+                      value:  (countyObj) => this.state.county.includes(countyObj.value)
+                }} /> */}
+                {/* <Box className={this.classes.box}>
                   <FormControl variant="filled" className={this.classes.formControl}>
                     <Autocomplete
                       id="searchCounty"
@@ -1309,7 +1363,7 @@ class Search extends React.Component {
                       )}
                     />
                   </FormControl>
-                </Box>
+                </Box> */}
               </div>
               <Divider />
 
@@ -1512,10 +1566,10 @@ class Search extends React.Component {
                             value={this.state.endPublish}
                             className={this.classes.datePicker}
                             tabIndex="10"
-                            xs={{
-                                mb: 10,
-                                border: 1,
-                            }}
+                            // xs={{
+                            //     mb: 10,
+                            //     border: 1,
+                            // }}
                           />
                         </LocalizationProvider>
                     </Grid>
