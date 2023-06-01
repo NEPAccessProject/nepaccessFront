@@ -1,6 +1,6 @@
 import React from 'react'
 
-import { Paper, Button, Box,  Divider, FormControl, Autocomplete,InputLabel,TextField, Typography,Grid } from '@mui/material';
+import { Paper, Button, Box,  Divider, FormControl, Autocomplete,InputLabel,TextField, Typography,Grid,Container } from '@mui/material';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
@@ -32,32 +32,32 @@ const useStyles = (theme) => ({
     minWidth: 220,
     width: '100%',
   },
-  formControl: {
-    // marginBottom: theme.spacing(2),
-    minWidth: 120,
-    width: '100%',
-  },
+  // formControl: {
+  //   // marginBottom: theme.spacing(2),
+  //   minWidth: 120,
+  //   width: '100%',
+  // },
   submitButton: {
     //margin: theme.spacing(3, 0, 2),},
   },
   formLabel: {
     // fontSize: '1.2em',
     // fontWeight: 'bold',
-    padding: 0,
-    margin: 0,
-    display: 'block',
+    // padding: 0,
+    // margin: 0,
+    // display: 'block',
   },
   box: {
     margin: 5,
     padding: 5,
   },
-  autocomplete: {
-    p: 0,
-    m: 0,
-    width: '100%',
-    minWidth: 300,
-    maxHeight: 50,
-  },
+  // autocomplete: {
+  //   p: 0,
+  //   m: 0,
+  //   width: '100%',
+  //   minWidth: 300,
+  //   maxHeight: 50,
+  // },
   select: {
     border: 'none',
     //backgroundColor: theme.palette.grey[150],
@@ -93,35 +93,59 @@ export default function SearchFilter(props) {
     if(!props.filter){
       console.error('Unable ')
     }
-    const { className,label ,placeholder, options, onChange, value,id } = props.filter;
+    const { className,label ,placeholder, options, onChange, value,id,tabIndex } = props.filter;
     console.log('Received Class Name',className)
     const classes =  useStyles(theme);
     console.log('CLASSES',classes)
 //    console.log('SearchFilter props',props);
 
-    console.log(`${id} options length`,options.length, options[0])
-    if(options.length === 0){
+
+    if(!options || !options.length){
       console.log('The options of the filter are either undefined or have no values ',id);
     }
     return (
-      <div className="search-filter">
-        <Box>
-          <FormControl variant="filled">
-            
-            {/* <InputLabel
+      <div>
+        <Container
+          sx={{
+            id : `container-${id}`,
+            width: '100%',
+            paddingLeft:0,
+            paddingRight:0,
+            mb:1,
+            mt:1,
+            border:2,
+            // flexAlign: 'flext-start',
+            // justifyContent: 'flex-start',
+
+          }}
+        >
+          <FormControl variant="filled"
+            xs={{
+              width: '100%',
+              border: 3,
+              p:0,
+            }}
+          >
+            <InputLabel
                 htmlFor="proximity-select"
+                id={`label-${id}`}
                 className={classes.formLabel}
-            >{label}</InputLabel> */}
+                sx={{
+                  border: 1,
+                  minWidth: 225,
+                  maxHeight: 20,
+                  lineHeight: 18,
+                  color:'black',
+
+                }}
+              >
+              {label}
+            </InputLabel>
+
             <Autocomplete
              id={id}
-              sx={{
-                width: '100%',
-                minWidth: 250,
-                height: 50,
-                p: 0,
-                m: 0,
-              }}
-              // className={className.toString() ? ' disabled' : ''}
+              tabIndex={tabIndex}
+              className={className.autocomplete}
               placeholder={placeholder}
               options={options}
               value={value}
@@ -129,10 +153,14 @@ export default function SearchFilter(props) {
               onChange={onChange}
               getOptionLabel={(option) => option.label || label }
               renderInput={(params) => <TextField {...params} />}
+              sx={{
+                width: '100%',
+                minWidth: 225,
+                p:0,
+              }}
             />
           </FormControl>
-          <Divider />
-        </Box>
+        </Container>
       </div>
     );
 }
