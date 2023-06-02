@@ -1,23 +1,39 @@
 import { createTheme } from '@mui/material/styles';
-import configs from '../project.config.json';
+//import configs from '../project.config.json';
 
 const theme = createTheme({
   palette: {
     mode: 'light',
     primary: {
-      main: configs.PRIMARY_COLOR,
+      main: '#9CAEB3', //configs.PRIMARY_COLOR,
     },
     secondary: {
-      main: configs.SECONDARY_COLOR,
+      main: "#e1e7e8",
+    },
+  },
+  FormLabel: {
+    color: '#000',
+    fontWeight: 600,
+  },
+  typography: {
+    fontFamily: 'Open Sans',
+    subtitle1: {
+      fontSize: '1.1rem',
+      fontWeight: 'bolder'
+    },
+    subtitle2: { 
+      fontSize: '0.8rem',
+      fontFamily: 'Open Sans',
     },
   },
   components: {
     MuiButton: {
       defaultProps: {
         variant: 'contained',
-        disableRipple: true,
+        disableRipple: false,
       },
     },
+
     MuiInputLabel: {
       defaultProps: {
         shrink: true,
@@ -28,6 +44,12 @@ const theme = createTheme({
           transform: 'translate(0px, 0px) scale(0.75)',
         },
       },
+    },
+    MuiAutocomplete:{
+      defaultProps: {
+        p:0,
+        m:0,
+      }
     },
     MuiFormControl: {
       styleOverrides: {

@@ -19,7 +19,7 @@ import persist from '../persist.js';
 import theme from '../styles/theme.js';
 import { withRouter } from "react-router";
 import TippySearchTips from '../TippySearchTips.js';
-import { Paper, Button, Box, Divider, FormControl, Autocomplete, InputLabel, TextField, Typography, Grid,Container } from '@mui/material';
+import { Paper, Button, Box, Divider, FormControl, Autocomplete, InputLabel, TextField, Typography, Grid,Container, FormLabel } from '@mui/material';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
@@ -63,8 +63,9 @@ const styles = (theme) => ({
   },
   datapicker: {
     p: 0,
-    m: 0,
-    minWidth: 220,
+    mt: 1,
+    mb: 1,
+    minWidth: 300,
     width: '100%',
   },
   formControl: {
@@ -1206,11 +1207,15 @@ class Search extends React.Component {
                 flexDirection: 'column',
                 flexGrow: 1,
               }}>
-            <Typography>Date Range:</Typography>
+           <Typography fontFamily='Open Sans' fontWeight='bold'>Date Range:</Typography>
 
 
                   <LocalizationProvider dateAdapter={AdapterDayjs}>
-                    <lable>From:</lable>
+                    <FormLabel sx={{
+                      m:1,
+                      fontWeight: 'bold',
+                    }}>From:
+                    </FormLabel>
                     <DatePicker
                       id="startDate"
                       ref={(ref) => (this.datePickerEnd = ref)}
@@ -1219,6 +1224,7 @@ class Search extends React.Component {
                       placeholder="YYYY-MM-DD"        
                       value={this.state.endPublish}
                       className={this.classes.datePicker}
+                      label='From:'
                       tabIndex="9"
                         sx={{
                           mb: 1,
@@ -1226,8 +1232,13 @@ class Search extends React.Component {
                     />
                   </LocalizationProvider>
                   <LocalizationProvider dateAdapter={AdapterDayjs}>
-                    <lable>To:</lable>
+                  <FormLabel sx={{
+                      m:1,
+                      fontWeight: 'bold',
+                    }}> To:
+                    </FormLabel>
                     <DatePicker
+                      id="endDate"
                       value={this.state.startPublish ? this.state.startPublish : ''}
                       onChange={this.onEndDateChange}
                       onKeyDown={this.onKeyDown}
@@ -1294,7 +1305,7 @@ class Search extends React.Component {
                 </div>
                 <div className="checkbox-container">
                   <label className="clickable checkbox-text">
-                    <input
+                    <Checkbox
                       type="checkbox"
                       name="typeEA"
                       className="sidebar-checkbox"
@@ -1309,9 +1320,9 @@ class Search extends React.Component {
                 </div>
                 <div className="checkbox-container">
                   <label className="clickable checkbox-text">
-                    <input
-                      type="checkbox"
+                    <Checkbox
                       name="typeNOI"
+                      id="typeNOI"
                       className="sidebar-checkbox"
                       tabIndex="14"
                       checked={this.state.typeNOI}
@@ -1324,8 +1335,7 @@ class Search extends React.Component {
                 </div>
                 <div className="checkbox-container">
                   <Checkbox className="clickable checkbox-text">
-                    <input
-                      type="checkbox"
+                    <Checkbox
                       name="typeROD"
                       className="sidebar-checkbox"
                       tabIndex="15"
@@ -1339,7 +1349,7 @@ class Search extends React.Component {
                 </div>
                 <div className="checkbox-container">
                   <label className="clickable checkbox-text">
-                    <input
+                    <Checkbox
                       type="checkbox"
                       name="typeScoping"
                       className="sidebar-checkbox"
