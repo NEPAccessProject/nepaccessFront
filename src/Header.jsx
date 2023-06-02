@@ -418,7 +418,8 @@ import {
     /* RETURN of the main function */
     return (
       <Paper id="paper-root" elevation={2}>
-        <AppBar elevation={1} color='#a0b6c1'  id="header-root-app-bar"  sx={{
+        <AppBar elevation={1}  id="header-root-app-bar"  
+        sx={{
             background: '#a0b6c1',
         }}> 
         <MediaQuery maxWidth={960}>         

@@ -19,7 +19,7 @@ import persist from '../persist.js';
 import theme from '../styles/theme.js';
 import { withRouter } from "react-router";
 import TippySearchTips from '../TippySearchTips.js';
-import { Paper, Button, Box, Divider, FormControl, Autocomplete, InputLabel, TextField, Typography, Grid } from '@mui/material';
+import { Paper, Button, Box, Divider, FormControl, Autocomplete, InputLabel, TextField, Typography, Grid,Container } from '@mui/material';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
@@ -1200,99 +1200,46 @@ class Search extends React.Component {
               <div className="dropdown-group-end" hidden={!Globals.curatorOrHigher()}></div>
             </div>
             <Divider />
-            <InputLabel>Date Range:</InputLabel>
-            <Box className={this.classes.box}>
-              <Grid  container xs={{
-                border: 3,
-                borderColor: 'red',
+            {/* <Box className={this.classes.box}> */}
+              <Container sx={{
+
                 flexDirection: 'column',
                 flexGrow: 1,
               }}>
-                <Grid item>
+            <Typography>Date Range:</Typography>
+
+
                   <LocalizationProvider dateAdapter={AdapterDayjs}>
+                    <lable>From:</lable>
                     <DatePicker
-                      label="From:"
+                      id="startDate"
                       ref={(ref) => (this.datePickerEnd = ref)}
-                      onChange={this.onEndDateChange}
+                      onChange={this.onStartDateChange}
                       onKeyDown={this.onKeyDown}
                       placeholder="YYYY-MM-DD"        
                       value={this.state.endPublish}
                       className={this.classes.datePicker}
-                      tabIndex="10"
-                    xs={{
-                        mb: 10,
-                        border: 1,
+                      tabIndex="9"
+                        sx={{
+                          mb: 1,
                     }}
                     />
                   </LocalizationProvider>
-                </Grid>
-                <Grid item>
                   <LocalizationProvider dateAdapter={AdapterDayjs}>
+                    <lable>To:</lable>
                     <DatePicker
-                      label="To:"
                       value={this.state.startPublish ? this.state.startPublish : ''}
                       onChange={this.onEndDateChange}
                       onKeyDown={this.onKeyDown}
                       ref={(ref) => (this.datePickerStart = ref)}
-                      tabIndex="9"
+                      tabIndex="10"
                       className={this.classes.datePicker}
-                      placeholder="YYYY-MM-DD"                      
+                      placeholder="YYYY-MM-DD"
                     />
                   </LocalizationProvider>
-                </Grid>
-              </Grid>
-              {/* <LocalizationProvider dateAdapter={AdapterDayjs}>
-                  <DatePicker
-                    type="date"
-                    onChange={this.onStartDateChange}
-                    onKeyDown={this.onKeyDown}
-                    label="YYYY-MM-DD"
-                    ref={(ref) => (this.datePickerStart = ref)}
-                    value={this.state.startPublish ? this.state.startPublish : ''}
-                    tabIndex="9"
-                    className={this.classes.datePicker}
-                    sx={{
-                      p: 0,
-                      m: 0,
-                      minWidth: 220,
-                      width: '100%',
-                    }}
-                  />
-                </LocalizationProvider> */}
-              {/* <DatePicker
-                    adjustDateOnChange
-                    className="sidebar-date"
-                    dateFormat="yyyy-MM-dd"
-                    isClearable
-                    onChange={this.onStartDateChange}
-                    onKeyDown={this.onKeyDown}
-                    placeholderText="YYYY-MM-DD"
-                    popperPlacement="right"
-                    ref={(ref) => (this.datePickerStart = ref)}
-                    selected={this.state.startPublish}
-                    showMonthDropdown={true}
-                    showYearDropdown={true}
-                    tabIndex="9"
-                    // preventOpenOnFocus={true}
-                  /> */}
-              {/* <span className="sidebar-date-text">To</span>
-                    <TextField
-                      type= "date"
-                      ref={(ref) => (this.datePickerEnd = ref)}
-                      onChange={this.onEndDateChange}
-                      onKeyDown={this.onKeyDown}
-                      placeholder="YYYY-MM-DD"
-                      value={this.state.endPublish}
-                      className={this.classes.datePicker}
-                      tabIndex="10"
-                      sx={{
-                        p: 0,
-                        m: 0,
-                        minWidth: 220,
-                        width: '100%',
-                      }}
-                    /> */}
-            </Box>
+              </Container>
+            
+            {/* </Box> */}
             {/* <DatePicker
                     ref={(ref) => (this.datePickerEnd = ref)}
                     selected={this.state.endPublish}
