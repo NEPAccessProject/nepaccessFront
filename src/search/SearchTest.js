@@ -1,24 +1,18 @@
 import React from 'react';
 
-import SlidesIframe from './Tutorial/SlidesIframe.js';
-
+import SlidesIframe from '../Tutorial/SlidesIframe.js';
 import axios from 'axios';
-
 import Select from 'react-select';
 import DatePicker from "react-datepicker";
-
-import './css/tabulator.css';
+import '../css/tabulator.css';
 import "./search.css";
-import "./sidebar.css";
-import './survey.css';
-
+import "../sidebar.css";
+import '../survey.css';
 import "react-datepicker/dist/react-datepicker.css";
 import 'tippy.js/dist/tippy.css'; // optional
 import Tippy from '@tippyjs/react';
-
-import Globals from './globals.js';
-import persist from './persist.js';
-
+import Globals from '../globals.js';
+import persist from '../persist.js';
 import { withRouter } from "react-router";
 
 // import PropTypes from "prop-types";

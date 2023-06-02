@@ -1,10 +1,10 @@
 import React from 'react';
 
-import './User/login.css';
-import Globals from './globals.js';
+import '../User/login.css';
+import Globals from '../globals.js';
 
-import DownloadFile from './DownloadFile.js';
-import DownloadFiles from './DownloadFiles';
+import DownloadFile from '../DownloadFile.js';
+import DownloadFiles from '../DownloadFiles';
 
 import Tippy from '@tippyjs/react'
 

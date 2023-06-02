@@ -11,7 +11,7 @@ import {
 } from '@mui/material';
 import { SearchRounded, SearchOffRounded, SearchOutlined, Search } from '@mui/icons-material';
 
-import Globals from './globals.js';
+import Globals from '../globals.js';
 
 // import FlipNumbers from 'react-flip-numbers';
 

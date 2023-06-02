@@ -1,24 +1,24 @@
 import React from 'react';
 
-import SlidesIframe from './Tutorial/SlidesIframe.js';
+import SlidesIframe from '../Tutorial/SlidesIframe.js';
 
 import axios from 'axios';
 
 
-import './css/tabulator.css';
+import '../css/tabulator.css';
 import "./search.css";
-import "./sidebar.css";
-import './survey.css';
+import "../sidebar.css";
+import '../survey.css';
 //import "react-datepicker/dist/react-datepicker.css";
 //import DatePicker from 'react-datepicker';
 import 'tippy.js/dist/tippy.css'; // optional
 import Tippy from '@tippyjs/react';
 import Checkbox from '@mui/material/Checkbox';
-import Globals from './globals.js';
-import persist from './persist.js';
-import theme from './styles/theme.js';
+import Globals from '../globals.js';
+import persist from '../persist.js';
+import theme from '../styles/theme.js';
 import { withRouter } from "react-router";
-import TippySearchTips from './TippySearchTips.js';
+import TippySearchTips from '../TippySearchTips.js';
 import { Paper, Button, Box, Divider, FormControl, Autocomplete, InputLabel, TextField, Typography, Grid } from '@mui/material';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
@@ -26,6 +26,7 @@ import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { InputAdornment } from '@mui/icons-material';
 import { makeStyles, withStyles } from '@mui/styles';
 import dayjs from 'dayjs';
+import Select from 'react-select';
 import SearchFilter from './SearchFilter.jsx';
 //import { DatePicker } from '@mui/lab';
 // import PropTypes from "prop-types";
@@ -917,45 +918,17 @@ class Search extends React.Component {
               </div>
 
               <span id="search-proximity">
-                <Box>
-                  <FormControl variant="filled">
-                    {/* <InputLabel
-                          htmlFor="proximity-select"
-                          //   className={classes.formLabel}
-                        ></InputLabel> */}
-                    <Autocomplete
-                      sx={{
-                        width: '100%',
-                        height: 25,
-                        p: 0,
-                        m: 0,
-                      }}
-                      id="proximity-select"
-                      className={this.state.proximityDisabled ? ' disabled' : ''}
-                      classNamePrefix="react-select control"
-                      placeholder="Find within..."
-                      options={proximityOptions}
-                      value={this.state.proximityOption}
-                      // menuIsOpen={true}
-                      onChange={this.onProximityChange}
-                      getOptionLabel={(option) => option.label}
-                      renderInput={(params) => <TextField {...params} />}
-                    />
-                  </FormControl>
-                  <Divider />
-                </Box>
-                {/* <Select
-                      id="proximity-select"
-                      className={this.state.proximityDisabled ? ' disabled' : ''}
-                      classNamePrefix="react-select control"
-                      placeholder="Find within..."
-                      options={proximityOptions}
-                      value={this.state.proximityOption}
-                      // menuIsOpen={true}
-                      onChange={this.onProximityChange}
-                      isMulti={false}
-                    /> */}
-              </span>
+                            <Select 
+                                id="proximity-select"
+                                className={this.state.proximityDisabled ? " disabled" : ""}
+                                classNamePrefix="react-select control"
+                                placeholder="Find within..."
+                                options={proximityOptions} 
+                                value={this.state.proximityOption}
+                                // menuIsOpen={true}
+                                onChange={this.onProximityChange} 
+                                isMulti={false} />
+                        </span>
               <input
                 id="main-search-bar"
                 ref={(input) => {
@@ -1229,25 +1202,11 @@ class Search extends React.Component {
             <Divider />
             <InputLabel>Date Range:</InputLabel>
             <Box className={this.classes.box}>
-              <span className="sidebar-date-text">From</span>
-              {/* <DatePicker
-                  onChange={this.onStartDateChange}
-                  onKeyDown={this.onKeyDown}
-                  placeholder="YYYY-MM-DD"
-                  ref={(ref) => (this.datePickerStart = ref)}
-                  value={this.state.startPublish}
-                  tabIndex="9"
-                  className={this.classes.datePicker}
-                  sx={{
-                    p: 0,
-                    m: 0,
-                    minWidth: 220,
-                    width: '100%',
-                  }}
-                /> */}
-              <Grid container xs={{
+              <Grid  container xs={{
                 border: 3,
-                borderColor: 'red'
+                borderColor: 'red',
+                flexDirection: 'column',
+                flexGrow: 1,
               }}>
                 <Grid item>
                   <LocalizationProvider dateAdapter={AdapterDayjs}>
@@ -1256,14 +1215,14 @@ class Search extends React.Component {
                       ref={(ref) => (this.datePickerEnd = ref)}
                       onChange={this.onEndDateChange}
                       onKeyDown={this.onKeyDown}
-                      placeholder="YYYY-MM-DD"
+                      placeholder="YYYY-MM-DD"        
                       value={this.state.endPublish}
                       className={this.classes.datePicker}
                       tabIndex="10"
-                    // xs={{
-                    //     mb: 10,
-                    //     border: 1,
-                    // }}
+                    xs={{
+                        mb: 10,
+                        border: 1,
+                    }}
                     />
                   </LocalizationProvider>
                 </Grid>
@@ -1277,7 +1236,7 @@ class Search extends React.Component {
                       ref={(ref) => (this.datePickerStart = ref)}
                       tabIndex="9"
                       className={this.classes.datePicker}
-
+                      placeholder="YYYY-MM-DD"                      
                     />
                   </LocalizationProvider>
                 </Grid>

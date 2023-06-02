@@ -1,11 +1,11 @@
 import React from 'react';
 
-import ResultsHeader from './ResultsHeader.js';
+import ResultsHeader from '../ResultsHeader.js';
 import SearchProcessResult from './SearchProcessResult.js';
 
 import SearchResultsMap from './SearchResultsMap.js';
 
-import Globals from './globals.js';
+import Globals from '../globals.js';
 
 import { ReactTabulator } from 'react-tabulator';
 import { reactFormatter } from "react-tabulator";
@@ -14,9 +14,9 @@ import 'react-tabulator/lib/css/tabulator_site.min.css'; // theme
 
 import Tippy from '@tippyjs/react';
 
-import './loader.css';
+import '../loader.css';
 
-import './cardProcess.css';
+import '../cardProcess.css';
 
 const _ = require('lodash');
 

@@ -53,7 +53,7 @@ import Pairs from './Pairs.js';
 import Pairs2 from './Pairs2';
 import Pairs3 from './Pairs3';
 
-import SearchLogs from './SearchLogs.js';
+import SearchLogs from './search/SearchLogs.js';
 import Surveys from './Surveys.js';
 
 import Excel from './Excel.js';

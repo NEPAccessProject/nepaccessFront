@@ -23,7 +23,7 @@ import {
   import { Helmet } from 'react-helmet';
   import Landing from './Landing';
   import CalloutContainer from './CalloutContainer';
-  import SearcherLanding from './SearcherLanding';
+  import SearcherLanding from './search/SearcherLanding';
     import MediaQuery from 'react-responsive';
   const headersData = [
     {

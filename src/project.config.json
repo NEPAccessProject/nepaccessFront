@@ -3,6 +3,7 @@
   "APP_VERSION": "1.0.0",
   "BRAND_NAME": "ABC Inc.",
   "BRAND_WEBSITE": "https://example.com/",
-  "PRIMARY_COLOR": "#a04343",
-  "SECONDARY_COLOR": "#f50057"
+  "PRIMARY_COLOR": "#000",
+  "SECONDARY_COLOR": "#f50057",
+  "BACKGROUND_COLOR": "#89ABB8"
 }

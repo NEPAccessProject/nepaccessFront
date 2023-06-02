@@ -1,9 +1,9 @@
 import React from 'react';
 import axios from 'axios';
-import './User/login.css';
-import Globals from './globals.js';
-import DownloadFiles from './DownloadFile.js';
-import CardDetailsLink from './CardDetailsLink.js';
+import '../User/login.css';
+import Globals from '../globals.js';
+import DownloadFiles from '../DownloadFile.js';
+import CardDetailsLink from '../CardDetailsLink.js';
 
 class SearchResult extends React.Component {
 

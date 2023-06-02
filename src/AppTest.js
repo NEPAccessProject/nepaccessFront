@@ -4,8 +4,8 @@ import {Helmet} from 'react-helmet';
 
 import axios from 'axios';
 
-import SearchProcessResults from './SearchProcessResults.js';
-import Search from './SearchTest.js';
+import SearchProcessResults from './search/SearchProcessResults.js';
+import Search from './search/SearchTest.js';
 
 import Footer from './Footer.js';
 

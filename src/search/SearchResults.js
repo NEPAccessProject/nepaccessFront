@@ -1,6 +1,6 @@
 import React from 'react';
 
-import ResultsHeader from './ResultsHeader.js';
+import ResultsHeader from '../ResultsHeader.js';
 
 import SearchResult from './SearchResult.js';
 

@@ -2,13 +2,10 @@ import React, { useEffect, useRef } from "react";
 import { Helmet } from "react-helmet";
 
 import { MapContainer, TileLayer, GeoJSON, Popup, Tooltip, useMap, ZoomControl } from "react-leaflet";
-import CustomSearchControl from './CustomSearchControl';
-
+import CustomSearchControl from '../CustomSearchControl';
 // import { LatLngBounds } from "leaflet";
-
-import Globals from './globals.js';
-
-import './leaflet.css';
+import Globals from '../globals.js';
+import '../leaflet.css';
 
 /** geoStatePair[geo_id] = "state abbreviation" */
 let geoStatePair = {};

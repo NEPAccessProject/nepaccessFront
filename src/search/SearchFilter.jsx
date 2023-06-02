@@ -6,7 +6,7 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { InputAdornment } from '@mui/icons-material';
 import { makeStyles,withStyles } from '@mui/styles';
-import theme from './styles/theme';
+import theme from '../styles/theme';
 import dayjs from 'dayjs';
 
 const useStyles = (theme) => ({
@@ -113,7 +113,6 @@ export default function SearchFilter(props) {
             paddingRight:0,
             mb:1,
             mt:1,
-            border:2,
             // flexAlign: 'flext-start',
             // justifyContent: 'flex-start',
 
@@ -122,26 +121,12 @@ export default function SearchFilter(props) {
           <FormControl variant="filled"
             xs={{
               width: '100%',
-              border: 3,
               p:0,
-            }}
-          >
-            <InputLabel
-                htmlFor="proximity-select"
-                id={`label-${id}`}
-                className={classes.formLabel}
-                sx={{
-                  border: 1,
-                  minWidth: 225,
-                  maxHeight: 20,
-                  lineHeight: 18,
-                  color:'black',
-
-                }}
-              >
+            }}>
+   
+            <Typography fontFamily='Open Sans' fontWeight='bold'>
               {label}
-            </InputLabel>
-
+            </Typography>   
             <Autocomplete
              id={id}
               tabIndex={tabIndex}
@@ -155,7 +140,7 @@ export default function SearchFilter(props) {
               renderInput={(params) => <TextField {...params} />}
               sx={{
                 width: '100%',
-                minWidth: 225,
+                minWidth: 300,
                 p:0,
               }}
             />

@@ -2,9 +2,9 @@ import React from 'react';
 import {Helmet} from 'react-helmet';
 import axios from 'axios';
 import Select from 'react-select';
-import Globals from './globals.js';
+import Globals from '../globals.js';
 
-import ChartBar from './ChartBar.js';
+import ChartBar from '../ChartBar.js';
 
 import { ReactTabulator } from 'react-tabulator';
 

@@ -11,7 +11,7 @@ import { ReactTabulator } from 'react-tabulator';
 import { reactFormatter } from "react-tabulator";
 
 // import DownloadFile from '../DownloadFile.js';
-import SearchResult from '../SearchResult.js';
+import SearchResult from '../search/SearchResult.js';
 
 // import RecordDetailsLink from './RecordDetailsLink.js';
 
