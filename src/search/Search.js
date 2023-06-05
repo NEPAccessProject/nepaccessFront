@@ -19,7 +19,8 @@ import persist from '../persist.js';
 import theme from '../styles/theme.js';
 import { withRouter } from "react-router";
 import TippySearchTips from '../TippySearchTips.js';
-import { Paper, Button, Box, Divider, FormControl, Autocomplete, InputLabel, TextField, Typography, Grid,Container, FormLabel } from '@mui/material';
+import { Paper, Button, Input, Box, Divider, FormControl, Autocomplete, InputLabel, TextField, Typography, Container, FormLabel } from '@mui/material';
+import Grid from '@mui/material/Unstable_Grid2';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
@@ -28,6 +29,7 @@ import { makeStyles, withStyles } from '@mui/styles';
 import dayjs from 'dayjs';
 import Select from 'react-select';
 import SearchFilter from './SearchFilter.jsx';
+import SearchBar from './SearchBar.jsx';
 //import { DatePicker } from '@mui/lab';
 // import PropTypes from "prop-types";
 const drawerWidth = 200; const _ = require('lodash');
@@ -874,74 +876,11 @@ class Search extends React.Component {
                   <SlidesIframe />
                 </div>
               </div>
-
-              <span id="search-proximity">
-                            <Select 
-                                id="proximity-select"
-                                className={this.state.proximityDisabled ? " disabled" : ""}
-                                classNamePrefix="react-select control"
-                                placeholder="Find within..."
-                                options={proximityOptions} 
-                                value={this.state.proximityOption}
-                                // menuIsOpen={true}
-                                onChange={this.onProximityChange} 
-                                isMulti={false} />
-                        </span>
-              <input
-                id="main-search-bar"
-                ref={(input) => {
-                  this.inputSearch = input;
-                }}
-                className="search-bar"
-                name="titleRaw"
-                placeholder="Enter search terms (or leave blank to get all results)"
-                tabIndex="1"
-                value={this.state.titleRaw}
-                autoFocus
-                onChange={this.onChangeHandler}
-                onInput={this.onInput}
-                onKeyUp={this.onKeyUp}
-              />
-              <svg
-                id="main-search-icon"
-                onClick={this.onIconClick}
-                className="search-icon"
-                width="39"
-                height="38"
-                viewBox="0 0 39 38"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  fillRule="evenodd"
-                  clipRule="evenodd"
-                  d="M26.4582 24.1397H28.2356L37.7751 33.3063C38.6976 34.1886 38.6976 35.6303 37.7751 36.5125C36.8526 37.3947 35.3452 37.3947 34.4228 36.5125L24.8607 27.3674V25.6675L24.2533 25.065C21.1034 27.6471 16.8061 28.9813 12.2388 28.2496C5.98416 27.2383 0.989399 22.2462 0.224437 16.2212C-0.945506 7.11911 7.0641 -0.541243 16.5811 0.577685C22.8808 1.30929 28.1006 6.08626 29.158 12.0682C29.923 16.4363 28.5281 20.5463 25.8282 23.5588L26.4582 24.1397ZM4.61171 14.4567C4.61171 19.8146 9.13399 24.1397 14.7362 24.1397C20.3384 24.1397 24.8607 19.8146 24.8607 14.4567C24.8607 9.09875 20.3384 4.77366 14.7362 4.77366C9.13399 4.77366 4.61171 9.09875 4.61171 14.4567Z"
-                  fill="black"
-                  fillOpacity="0.54"
-                />
-              </svg>
-              <svg
-                id="main-search-clear"
-                onClick={this.onClearClick}
-                className="cancel-icon"
-                width="24"
-                height="24"
-                viewBox="0 0 24 26"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  className="circle"
-                  d="M12.2689 1.92334C5.63289 1.92334 0.26889 7.28734 0.26889 13.9233C0.26889 20.5593 5.63289 25.9233 12.2689 25.9233C18.9049 25.9233 24.2689 20.5593 24.2689 13.9233C24.2689 7.28734 18.9049 1.92334 12.2689 1.92334Z"
-                  fill="#DADADA"
-                />
-                <path
-                  d="M17.4289 19.0834C16.9609 19.5514 16.2049 19.5514 15.7369 19.0834L12.2689 15.6154L8.80089 19.0834C8.33289 19.5514 7.57689 19.5514 7.10889 19.0834C6.88418 18.8592 6.7579 18.5548 6.7579 18.2374C6.7579 17.9199 6.88418 17.6155 7.10889 17.3914L10.5769 13.9234L7.10889 10.4554C6.88418 10.2312 6.7579 9.92677 6.7579 9.60935C6.7579 9.29193 6.88418 8.98755 7.10889 8.76335C7.57689 8.29535 8.33289 8.29535 8.80089 8.76335L12.2689 12.2314L15.7369 8.76335C16.2049 8.29535 16.9609 8.29535 17.4289 8.76335C17.8969 9.23135 17.8969 9.98735 17.4289 10.4554L13.9609 13.9234L17.4289 17.3914C17.8849 17.8474 17.8849 18.6154 17.4289 19.0834Z"
-                  fill="#737272"
-                />
-              </svg>
-
-              {/* <div className="pre-checkbox-bar"></div> */}
+<Container>
+   <SearchBar/>
+  
+</Container>
+  {/* <div className="pre-checkbox-bar"></div> */}
               <div className="input-bar-2">
                 <div className="input-bar-left">
                   <input
@@ -1119,101 +1058,101 @@ class Search extends React.Component {
               label: 'Cooperating Agencies',
               tabIndex: '4',
             }} />
-            </div>
-              <Divider />
-           <div>
-              <SearchFilter filter={{
-                className: this.classes.formControl,
-                placeholder: 'Type or Select State(s) or Location(s)',
-                value: (stateOptions.filter = (stateObj) => this.state.state.includes(stateObj.value)),
-                onChange: this.onLocationChange,
-                id: 'searchState',
-                name: 'state',
-                type: Autocomplete,
-                options: stateOptions,
-                label: 'State(s) or Location(s)',
-                tabIndex: '5',
-              }} />
+          </div>
+          <Divider />
+          <div>
+            <SearchFilter filter={{
+              className: this.classes.formControl,
+              placeholder: 'Type or Select State(s) or Location(s)',
+              value: (stateOptions.filter = (stateObj) => this.state.state.includes(stateObj.value)),
+              onChange: this.onLocationChange,
+              id: 'searchState',
+              name: 'state',
+              type: Autocomplete,
+              options: stateOptions,
+              label: 'State(s) or Location(s)',
+              tabIndex: '5',
+            }} />
 
-            </div>
+          </div>
 
-            <div>
-              <SearchFilter filter={{
-                className: this.classes.formControl,
-                placeholder: 'Type or Select a County',
-                value:(this.state.countyOptions.filter(countyObj => this.state.county.includes(countyObj.value))),
-                onChange: this.countyChange,
-                id: 'searchCounty',
-                name: 'county',
-                type: Autocomplete,
-                options: this.state.countyOptions,
-                label: 'County / counties',
-                tabIndex: '6',
-              }} />
-              </div>
-              
-            <Divider />
+          <div>
+            <SearchFilter filter={{
+              className: this.classes.formControl,
+              placeholder: 'Type or Select a County',
+              value: (this.state.countyOptions.filter(countyObj => this.state.county.includes(countyObj.value))),
+              onChange: this.countyChange,
+              id: 'searchCounty',
+              name: 'county',
+              type: Autocomplete,
+              options: this.state.countyOptions,
+              label: 'County / counties',
+              tabIndex: '6',
+            }} />
+          </div>
 
-            <div hidden={!Globals.authorized()}>
-              <div className="dropdown-group-end" hidden={!Globals.curatorOrHigher()}></div>
-            </div>
-            <Divider />
-            {/* <Box className={this.classes.box}> */}
-              <Container sx={{
+          <Divider />
 
-                flexDirection: 'column',
-                flexGrow: 1,
-                justifyItems: 'flex-start',
-                alignItems: 'flex-start',
-              }}>
-           <Typography fontFamily='Open Sans' fontWeight='bold'>Date Range:</Typography>
+          <div hidden={!Globals.authorized()}>
+            <div className="dropdown-group-end" hidden={!Globals.curatorOrHigher()}></div>
+          </div>
+          <Divider />
+          {/* <Box className={this.classes.box}> */}
+          <Container sx={{
+
+            flexDirection: 'column',
+            flexGrow: 1,
+            justifyItems: 'flex-start',
+            alignItems: 'flex-start',
+          }}>
+            <Typography fontFamily='Open Sans' fontWeight='bold'>Date Range:</Typography>
 
 
-                  <LocalizationProvider dateAdapter={AdapterDayjs}>
-                    {/* <FormLabel sx={{
+            <LocalizationProvider dateAdapter={AdapterDayjs}>
+              {/* <FormLabel sx={{
                       m:1,
                       p:2,
                       fontWeight: 'bold',
                     }}>From:
                     </FormLabel> */}
-                    <DatePicker
-                      id="startDate"
-                      label="From:"
-                      ref={(ref) => (this.datePickerEnd = ref)}
-                      onChange={this.onStartDateChange}
-                      onKeyDown={this.onKeyDown}
-                      placeholder="YYYY-MM-DD"        
-                      value={this.state.endPublish}
-                      className={this.classes.datePicker}
-                      tabIndex="9"
-                        sx={{
-                          mb: 1,
-                      }}
-                    />
-                  </LocalizationProvider>
-                  <LocalizationProvider dateAdapter={AdapterDayjs}>
-                  {/* <FormLabel sx={{
+              <DatePicker
+                id="startDate"
+                label="From:"
+                ref={(ref) => (this.datePickerEnd = ref)}
+                onChange={this.onStartDateChange}
+                onKeyDown={this.onKeyDown}
+                placeholder="YYYY-MM-DD"
+                value={this.state.endPublish}
+                className={this.classes.datePicker}
+                tabIndex="9"
+                sx={{
+                  mb: 1,
+                }}
+              />
+            </LocalizationProvider>
+            <LocalizationProvider dateAdapter={AdapterDayjs}>
+              {/* <FormLabel sx={{
                       m:1,
                       p:2,
                       fontWeight: 'bold',
                     }}> To:
                     </FormLabel> */}
-                    <DatePicker
-                      id="endDate"
-                      label="To:"
-                      value={this.state.startPublish ? this.state.startPublish : ''}
-                      onChange={this.onEndDateChange}
-                      onKeyDown={this.onKeyDown}
-                      ref={(ref) => (this.datePickerStart = ref)}
-                      tabIndex="10"
-                      className={this.classes.datePicker}
-                      placeholder="YYYY-MM-DD"
-                    />
-                  </LocalizationProvider>
-              </Container>
-            
-            {/* </Box> */}
-            {/* <DatePicker
+              <DatePicker
+                id="endDate"
+                label="To:"
+                value={this.state.startPublish ? this.state.startPublish : ''}
+                onChange={this.onEndDateChange}
+                onKeyDown={this.onKeyDown}
+                ref={(ref) => (this.datePickerStart = ref)}
+                tabIndex="10"
+                className={this.classes.datePicker}
+                placeholder="YYYY-MM-DD"
+              />
+            </LocalizationProvider>
+          </Container>
+
+          {/* </Box> */}
+          {/* <DatePicker
                     ref={(ref) => (this.datePickerEnd = ref)}
                     selected={this.state.endPublish}
                     onChange={this.onEndDateChange}
@@ -1230,117 +1169,117 @@ class Search extends React.Component {
                     // preventOpenOnFocus={true}
                     // openToDate={new Date('12 31 2021')}
                   /> */}
-            <Divider />
+          <Divider />
 
-            <div className="filter">
-              <label className="sidebar-label-date">Document Type</label>
-              <div className="sidebar-checkboxes">
-                <div className="checkbox-container">
-                  <label className="clickable checkbox-text">
-                    <Checkbox
-                      type="checkbox"
-                      name="typeDraft"
-                      className="sidebar-checkbox"
-                      tabIndex="11"
-                      checked={this.state.typeDraft}
-                      onChange={this.onTypeChecked}
-                    />
-                    <span className="checkbox-text">
-                      Draft EIS <i>{this.props.draftCount}</i>
-                    </span>
-                  </label>
-                </div>
-                <div className="checkbox-container">
-                  <label className="clickable checkbox-text">
-                    <Checkbox
-                      type="checkbox"
-                      name="typeFinal"
-                      className="sidebar-checkbox"
-                      tabIndex="12"
-                      checked={this.state.typeFinal}
-                      onChange={this.onTypeChecked}
-                    />
-                    <span className="checkbox-text">
-                      Final EIS <i>{this.props.finalCount}</i>
-                    </span>
-                  </label>
-                </div>
-                <div className="checkbox-container">
-                  <label className="clickable checkbox-text">
-                    <Checkbox
-                      type="checkbox"
-                      name="typeEA"
-                      className="sidebar-checkbox"
-                      tabIndex="13"
-                      checked={this.state.typeEA}
-                      onChange={this.onTypeChecked}
-                    />
-                    <span className="checkbox-text">
-                      EA <i>{this.props.eaCount}</i>
-                    </span>
-                  </label>
-                </div>
-                <div className="checkbox-container">
-                  <label className="clickable checkbox-text">
-                    <Checkbox
-                      name="typeNOI"
-                      id="typeNOI"
-                      className="sidebar-checkbox"
-                      tabIndex="14"
-                      checked={this.state.typeNOI}
-                      onChange={this.onTypeChecked}
-                    />
-                    <span className="checkbox-text">
-                      NOI <i>{this.props.noiCount}</i>
-                    </span>
-                  </label>
-                </div>
-                <div className="checkbox-container">
-                  <Checkbox className="clickable checkbox-text">
-                    <Checkbox
-                      name="typeROD"
-                      className="sidebar-checkbox"
-                      tabIndex="15"
-                      checked={this.state.typeROD}
-                      onChange={this.onTypeChecked}
-                    />
-                    <span className="checkbox-text">
-                      ROD <i>{this.props.rodCount}</i>
-                    </span>
-                  </Checkbox>
-                </div>
-                <div className="checkbox-container">
-                  <label className="clickable checkbox-text">
-                    <Checkbox
-                      type="checkbox"
-                      name="typeScoping"
-                      className="sidebar-checkbox"
-                      tabIndex="16"
-                      checked={this.state.typeScoping}
-                      onChange={this.onTypeChecked}
-                    />
-                    <span className="checkbox-text">
-                      Scoping Report <i>{this.props.scopingCount}</i>
-                    </span>
-                  </label>
-                </div>
+          <div className="filter">
+            <label className="sidebar-label-date">Document Type</label>
+            <div className="sidebar-checkboxes">
+              <div className="checkbox-container">
+                <label className="clickable checkbox-text">
+                  <Checkbox
+                    type="checkbox"
+                    name="typeDraft"
+                    className="sidebar-checkbox"
+                    tabIndex="11"
+                    checked={this.state.typeDraft}
+                    onChange={this.onTypeChecked}
+                  />
+                  <span className="checkbox-text">
+                    Draft EIS <i>{this.props.draftCount}</i>
+                  </span>
+                </label>
               </div>
-            </div>
-
-            <div className="filter" hidden={!Globals.curatorOrHigher()}>
-              <div className="sidebar-hr"></div>
-
-              <label className="sidebar-label-date">Advanced</label>
-              <div className="sidebar-checkboxes">
-                <label className="checkbox-text" htmlFor="typeFinal">
-                  Apply filters to search query
+              <div className="checkbox-container">
+                <label className="clickable checkbox-text">
+                  <Checkbox
+                    type="checkbox"
+                    name="typeFinal"
+                    className="sidebar-checkbox"
+                    tabIndex="12"
+                    checked={this.state.typeFinal}
+                    onChange={this.onTypeChecked}
+                  />
+                  <span className="checkbox-text">
+                    Final EIS <i>{this.props.finalCount}</i>
+                  </span>
+                </label>
+              </div>
+              <div className="checkbox-container">
+                <label className="clickable checkbox-text">
+                  <Checkbox
+                    type="checkbox"
+                    name="typeEA"
+                    className="sidebar-checkbox"
+                    tabIndex="13"
+                    checked={this.state.typeEA}
+                    onChange={this.onTypeChecked}
+                  />
+                  <span className="checkbox-text">
+                    EA <i>{this.props.eaCount}</i>
+                  </span>
+                </label>
+              </div>
+              <div className="checkbox-container">
+                <label className="clickable checkbox-text">
+                  <Checkbox
+                    name="typeNOI"
+                    id="typeNOI"
+                    className="sidebar-checkbox"
+                    tabIndex="14"
+                    checked={this.state.typeNOI}
+                    onChange={this.onTypeChecked}
+                  />
+                  <span className="checkbox-text">
+                    NOI <i>{this.props.noiCount}</i>
+                  </span>
+                </label>
+              </div>
+              <div className="checkbox-container">
+                <Checkbox className="clickable checkbox-text">
+                  <Checkbox
+                    name="typeROD"
+                    className="sidebar-checkbox"
+                    tabIndex="15"
+                    checked={this.state.typeROD}
+                    onChange={this.onTypeChecked}
+                  />
+                  <span className="checkbox-text">
+                    ROD <i>{this.props.rodCount}</i>
+                  </span>
+                </Checkbox>
+              </div>
+              <div className="checkbox-container">
+                <label className="clickable checkbox-text">
+                  <Checkbox
+                    type="checkbox"
+                    name="typeScoping"
+                    className="sidebar-checkbox"
+                    tabIndex="16"
+                    checked={this.state.typeScoping}
+                    onChange={this.onTypeChecked}
+                  />
+                  <span className="checkbox-text">
+                    Scoping Report <i>{this.props.scopingCount}</i>
+                  </span>
                 </label>
               </div>
             </div>
-            <div hidden={this.state.hideOrganization} id="agency-svg-holder">
-              <button onClick={this.orgClick}>x</button>
+          </div>
+
+          <div className="filter" hidden={!Globals.curatorOrHigher()}>
+            <div className="sidebar-hr"></div>
+
+            <label className="sidebar-label-date">Advanced</label>
+            <div className="sidebar-checkboxes">
+              <label className="checkbox-text" htmlFor="typeFinal">
+                Apply filters to search query
+              </label>
             </div>
           </div>
+          <div hidden={this.state.hideOrganization} id="agency-svg-holder">
+            <button onClick={this.orgClick}>x</button>
+          </div>
+        </div>
       </>
     );
   }

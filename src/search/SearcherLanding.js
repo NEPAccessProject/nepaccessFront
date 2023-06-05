@@ -94,57 +94,6 @@ class SearcherLanding extends React.Component {
         }).catch(error => { 
         })
     }
-    // getCounts = () => {
-    //     this.get('stats/earliest_year','firstYear');
-    //     this.get('stats/latest_year','lastYear');
-    //     this.get('stats/total_count','total')
-    // }
-
-    // showFlipNum = () => {
-    //     const numStyle = {
-    //         'fontFamily': "Open Sans",
-    //         'fontSize': "23px",
-    //     };
-
-    //     if(this.state.total) {
-    //         return <div className="under-search-holder">
-    //             <div className="flip">
-    //                 <FlipNumbers 
-    //                     height={44} width={25} color="white" background="rgba(0,0,0,0.5)" 
-    //                     play={true} duration={1} delay={0} numbers={`${this.state.num}`} 
-    //                     perspective={500} 
-    //                     numberStyle={numStyle}
-    //                 /> 
-    //                 <span className="flip-span">
-    //                     NEPA documents and counting
-    //                 </span>
-    //             </div>
-
-    //             <div className="flip">
-    //                 <div className="flip-range flip-top">
-    //                     <span className="transparent-background">
-    //                         {this.state.firstYear}</span> - <span className="transparent-background">{this.state.lastYear}
-    //                     </span>
-    //                 </div>
-    //                 <span className="flip-span">Date range</span>
-    //             </div>
-
-    //             <div className="flip">
-    //                 <div className="transparent-background">
-    //                     <a className="link landing-link" rel="noopener noreferrer" 
-    //                             href={`./available-documents`}>
-    //                         More about Available Files
-    //                     </a>
-    //                 </div>
-    //             </div>
-    //         </div>;
-    //     } else {
-    //         return <></>;
-    //     }
-    // }
-
-
-
     render () {
         return (
 					<div id='landing-search-box-container'>
@@ -197,19 +146,7 @@ class SearcherLanding extends React.Component {
                             />
                             <path d="M17.4289 19.0834C16.9609 19.5514 16.2049 19.5514 15.7369 19.0834L12.2689 15.6154L8.80089 19.0834C8.33289 19.5514 7.57689 19.5514 7.10889 19.0834C6.88418 18.8592 6.7579 18.5548 6.7579 18.2374C6.7579 17.9199 6.88418 17.6155 7.10889 17.3914L10.5769 13.9234L7.10889 10.4554C6.88418 10.2312 6.7579 9.92677 6.7579 9.60935C6.7579 9.29193 6.88418 8.98755 7.10889 8.76335C7.57689 8.29535 8.33289 8.29535 8.80089 8.76335L12.2689 12.2314L15.7369 8.76335C16.2049 8.29535 16.9609 8.29535 17.4289 8.76335C17.8969 9.23135 17.8969 9.98735 17.4289 10.4554L13.9609 13.9234L17.4289 17.3914C17.8849 17.8474 17.8849 18.6154 17.4289 19.0834Z" fill="#737272"/>
                         </svg> */}
-								<Grid container>
-									<Grid
-										item
-										xs={12}
-										md={6}
-										lg={6}
-										sx={{
-											backgroundColor: 'transparent',
-											border: 'none',
-											mt: 5,
-										}}
-									></Grid>
-								</Grid>
+
 							</div>
 						</div>
 
@@ -217,29 +154,6 @@ class SearcherLanding extends React.Component {
 					</div>
 				);
     }
-    
-    // componentDidMount() {
-    //     this.getCounts();
-
-    //     this.timer = setInterval(() => {
-    //         if(this.state.num < this.state.total) {
-    //             let increment = 1;
-    //             if(this.state.total - this.state.num > 1000) {
-    //                 increment = 111;
-    //             } else if(this.state.total - this.state.num > 100) {
-    //                 increment = 11;
-    //             }
-
-    //             this.setState({
-    //                 num: this.state.num + increment
-    //             });
-    //         }
-    //     }, 10);
-    // }
-    
-    // componentWillUnmount() {
-    //     clearInterval(this.timer);
-    // }
 }
 
 export default SearcherLanding;

@@ -14,16 +14,18 @@ const theme = createTheme({
   FormLabel: {
     color: '#000',
     fontWeight: 600,
+    mt: 1,
   },
   typography: {
     fontFamily: 'Open Sans',
     subtitle1: {
       fontSize: '1.1rem',
-      fontWeight: 'bolder'
+      fontWeight: 'bold'
     },
     subtitle2: { 
       fontSize: '0.8rem',
       fontFamily: 'Open Sans',
+      fontWeight: 'bold'
     },
   },
   components: {

@@ -1,6 +1,8 @@
 {
     "user": {
-        "get_role": "admin"
+        "get_role": {
+            "role":"admin"
+        }
     },
     "get_highlights": 
         [

@@ -94,58 +94,56 @@ export default function SearchFilter(props) {
       console.error('Unable ')
     }
     const { className,label ,placeholder, options, onChange, value,id,tabIndex } = props.filter;
-    console.log('Received Class Name',className)
+    console.log(`placeholder ${placeholder}`);
+    console.log(`label ${label}`);
+    console.log('value:',value);
     const classes =  useStyles(theme);
-    console.log('CLASSES',classes)
-//    console.log('SearchFilter props',props);
-
+    //hack so we can use the placeholder initialy otherwise the placeholder is overwritten by the value text,
+    if(value === label){
+      value = placeholder
+    }
 
     if(!options || !options.length){
-      console.log('The options of the filter are either undefined or have no values ',id);
+      console.error('The options of the filter are either undefined or have no values ',id);
     }
     return (
       <div>
-        <Container
-          sx={{
-            id : `container-${id}`,
-            width: '100%',
-            paddingLeft:0,
-            paddingRight:0,
-            mb:1,
-            mt:1,
-            // flexAlign: 'flext-start',
-            // justifyContent: 'flex-start',
-
-          }}
-        >
           <FormControl variant="filled"
             xs={{
               width: '100%',
+              border: 1,
               p:0,
             }}>
    
-            <Typography fontFamily='Open Sans' fontWeight='bold'>
-              {label}
+            <Typography variant="subtitle1" fontWeight={600}  fontFamily='Open Sans'>
+              {label}:
             </Typography>   
             <Autocomplete
              id={id}
               tabIndex={tabIndex}
               className={className.autocomplete}
-              placeholder={placeholder}
               options={options}
-              value={value}
+              // value={value}
               // menuIsOpen={true}
               onChange={onChange}
               getOptionLabel={(option) => option.label || label }
-              renderInput={(params) => <TextField {...params} />}
+              renderInput={(params) => <TextField {...params} 
+                sx={{
+                  width: '100%',
+                  p:0,
+                  mt:1,
+                  mb:1,
+                }}
+                placeholder={placeholder}
+              />}
               sx={{
                 width: '100%',
-                minWidth: 300,
                 p:0,
+                m:0,
+                minWidth: 275,
               }}
             />
           </FormControl>
-        </Container>
       </div>
     );
 }

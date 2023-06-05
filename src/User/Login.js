@@ -183,6 +183,7 @@ class Login extends React.Component {
                 // Set role
                 this.setState({ user: {} }, () => { // clear
                     const checkURL = new URL('user/get_role', Globals.currentHost);
+                    console.log(`Current Global Host ${Globals.currentHost}`);
                     axios.post(checkURL)
                     .then(response => {
                         const verified = response && response.status === 200;
