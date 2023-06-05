@@ -119,7 +119,6 @@ class Search extends React.Component {
 
   constructor(props) {
     super(props);
-    console.log('SEARCH PROPS', props);
     this.classes = props.classes;
     this.state = {
       titleRaw: '',
@@ -822,48 +821,6 @@ class Search extends React.Component {
       { value: -1, label: 'any distance (default)' }
     ];
 
-    // const fragmentOptions = [
-    //     {value: 0, label: 'Small'},
-    //     {value: 1, label: 'Medium'},
-    //     {value: 2, label: 'Large'},
-    //     {value: 3, label: 'Huge'}
-    // ]
-
-    // const tooltipTitle = "<div class=tooltip-header>Search word connectors <button className=>x</button></div>"
-    // + "<table class=tooltip-table><tbody>"
-    //     + "<tr class=tooltip-line>"
-    //         + "<td>&nbsp;</td><td>&nbsp;</td>"
-    //     + "</tr>"
-    //     + "<tr class=tooltip-line><td class=tooltip-connector>AND</td>"
-    //         + "<td>This is the default. <span class=bold>All</span> words you enter must be found together to return a result.</td>"
-    //     + "</tr>"
-    //     + "<tr class=tooltip-line>"
-    //         + "<td>&nbsp;</td><td>&nbsp;</td>"
-    //     + "</tr>"
-    //     + "<tr class=tooltip-line><td class=tooltip-connector>OR</td>"
-    //         + "<td>(all caps) to search for <span class=bold>any</span> of those words.</td>"
-    //     + "</tr>"
-    //     + "<tr class=tooltip-line>"
-    //         + "<td>&nbsp;</td><td>&nbsp;</td>"
-    //     + "</tr>"
-    //     + "<tr class=tooltip-line><td class=tooltip-connector>NOT</td>"
-    //         + "<td>(all caps) to <span class=bold>exclude</span> a word or phrase.</td>"
-    //     + "</tr>"
-    //     + "<tr class=tooltip-line>"
-    //         + "<td>&nbsp;</td><td>&nbsp;</td>"
-    //     + "</tr>"
-    //     + "<tr class=tooltip-line><td class=tooltip-connector>&quot; &quot;</td>"
-    //         + "<td>Surround words with quotes (&quot; &quot;) to search for an <span class=bold>exact phrase.</td>"
-    //     + "</tr>"
-    //     + "<tr class=tooltip-line>"
-    //         + "<td>&nbsp;</td><td>&nbsp;</td>"
-    //     + "</tr>"
-    //     + "<tr class=tooltip-line><td class=tooltip-connector></td>"
-    //         + "<td><a href=search-tips target=_blank rel=noopener noreferrer>More search tips.</a></td>"
-    //     + "</tr>"
-    // + "</tbody></table>";
-
-
 
     return (
       <>
@@ -1206,39 +1163,44 @@ class Search extends React.Component {
 
                 flexDirection: 'column',
                 flexGrow: 1,
+                justifyItems: 'flex-start',
+                alignItems: 'flex-start',
               }}>
            <Typography fontFamily='Open Sans' fontWeight='bold'>Date Range:</Typography>
 
 
                   <LocalizationProvider dateAdapter={AdapterDayjs}>
-                    <FormLabel sx={{
+                    {/* <FormLabel sx={{
                       m:1,
+                      p:2,
                       fontWeight: 'bold',
                     }}>From:
-                    </FormLabel>
+                    </FormLabel> */}
                     <DatePicker
                       id="startDate"
+                      label="From:"
                       ref={(ref) => (this.datePickerEnd = ref)}
                       onChange={this.onStartDateChange}
                       onKeyDown={this.onKeyDown}
                       placeholder="YYYY-MM-DD"        
                       value={this.state.endPublish}
                       className={this.classes.datePicker}
-                      label='From:'
                       tabIndex="9"
                         sx={{
                           mb: 1,
-                    }}
+                      }}
                     />
                   </LocalizationProvider>
                   <LocalizationProvider dateAdapter={AdapterDayjs}>
-                  <FormLabel sx={{
+                  {/* <FormLabel sx={{
                       m:1,
+                      p:2,
                       fontWeight: 'bold',
                     }}> To:
-                    </FormLabel>
+                    </FormLabel> */}
                     <DatePicker
                       id="endDate"
+                      label="To:"
                       value={this.state.startPublish ? this.state.startPublish : ''}
                       onChange={this.onEndDateChange}
                       onKeyDown={this.onKeyDown}
