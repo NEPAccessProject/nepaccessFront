@@ -68,6 +68,7 @@ import PropTypes from "prop-types";
 
 import ImporterAlignment from './ImporterAlignment';
 import Header from './Header'
+import Playground from './examples/Playground';
 
 const _ = require('lodash');
 
@@ -277,7 +278,7 @@ class Main extends React.Component {
             <Route path="/up_geo" component={ImporterGeo} />
             <Route path="/up_geo_links" component={ImporterGeoLinks} />
             <Route path="/up_alignment" component={ImporterAlignment} />
-
+            <Route path="/playground" component={Playground} />
             <Route path="/" component={Landing}/>
         </Switch>
         )
