@@ -195,7 +195,7 @@ export default class ProcessDetailsTab extends React.Component {
         return filenames.map((_filename, i) => {
             if(i === 0) {
                 if(!showMore) {
-                    return <span className="show-more-link" onClick={() => {this.showMoreToggle(_id)}}>Show individual file downloads</span>
+                    return <span key={i} className="show-more-link" onClick={() => {this.showMoreToggle(_id)}}>Show individual file downloads</span>
                 } else {
                     return <>
                         <span className="show-more-link" onClick={() => {this.showMoreToggle(_id)}}>Hide individual file downloads</span>
