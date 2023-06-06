@@ -11,13 +11,13 @@ return(
     <h3>Auto Layout</h3>
     <Grid container spacing={3}>
       <Grid xs>
-        <Item>xs</Item>
+        <Grid item>xs</Grid>
       </Grid>
-      <Grid xs={6}>
-        <Item>xs=6</Item>
+      <Grid  xs={6}>
+        <Grid item>xs=6</Grid>
       </Grid>
-      <Grid xs>
-        <Item>xs</Item>
+      <Grid >
+        <Grid item>xs</Grid>
       </Grid>
     </Grid>
     <h3>Variable Width Content</h3>
