@@ -51,7 +51,7 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "mockAPI": "json-server --watch ./src/search/mockData.json --port 8443"
+    "mockAPI": "json-server --watch ./src/search/mockData/db.json --port 8443"
   },
   "eslintConfig": {
     "extends": "react-app"
