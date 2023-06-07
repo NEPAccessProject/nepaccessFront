@@ -17,27 +17,45 @@ const theme = createTheme({
     mt: 1,
   },
   typography: {
+    fontFamily :'open sans',
     poster: {
       fontSize: 64,
       color: 'red',
     },
     h2: {
       fontSize: 32,
-      color: 'red',
     },
     h3: {
       fontSize: 28,
-      color: 'red',
     },
     h4: {
       fontSize: 28,
-      color: 'blue',
+    },
+    title: {
+      fontSize: 34,
+      fontFamily :'open sans'
     },
     subtitle1: {
-      fontSize: 60,
+      fontSize: '1.5rem',
+      fontFamily :'open sans'
     },
     subtitle2: {
       fontSize: 48,
+    },
+    searchResultTitle:{
+      fontSize: '1.5rem',
+      color: '#000',
+      fontFamily :'open sans',
+      fontSize: 25,
+
+      p:2,
+    },
+    filterLabel: {
+      fontSize: '1rem',
+      color: '#000',
+      fontFamily :'open sans',
+      display: 'block',
+      p:10,
     }
   },
   components: {
@@ -61,7 +79,7 @@ const theme = createTheme({
     },
     MuiTypography: {
       defaultProps: {
-        
+
         variantMapping: {
           // Map the new variant to render a <h1> by default
           poster: 'h1',

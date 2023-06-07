@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Paper, Button, Input, Box, Divider, FormControl,Select, Autocomplete, InputLabel,ListItem,IconButton, TextField, Typography, Container, FormLabel } from '@mui/material';
-import { styled } from '@mui/material/styles';
+import { ThemeProvider, styled } from '@mui/material/styles';
 import theme from '../styles/theme';
 //import Grid from '@mui/material/Grid'; // Grid version 1
 import Grid from '@mui/material/Unstable_Grid2';
@@ -72,44 +72,45 @@ const onProximityChange = (evt) => {
 export default function GridV2(props) {
 
   return (
-    <>
-      <Container disableGutters={true} sx={{ flexGrow: 1 }}>
-        <Grid alignContent={'center'} minWidth={150} container spacing={1}>
-          <Grid xs={12} md={3}>
-            <Item>
-              <Box elevation={0}>
-                <ListItem>Search Tips</ListItem>
-                <ListItem>available files</ListItem>
-                <ListItem>Quick-start guide</ListItem>
-              </Box>
-            </Item>
-          </Grid>
-          <Grid md={9} xs={12} flexGrow={1} flexShrink={1} flexWrap={'nowrap'} justifyContent="center">
-            <Item>
-            <Box mt={1} mb={1} elevation={0}>
-                <SearchBar />
-              </Box>
-            </Item>
-          </Grid>
-        </Grid>
-        <Grid mt={2} textAlign={'left'} alignContent={'flex-start'} spacing={1} rowSpacing={1} justifyContent={'flex-start'} container >
-          <Grid xs={3} p={0} >
-            <Paper>
-            <SideBarFilters/>
-            </Paper>
-          <Divider />
-          </Grid>
-          <Grid xs={9}>
-            <Item>
-              <ResponsiveSearchResults/>
-            </Item>
-          </Grid>
-          <Grid>
 
+      <ThemeProvider theme={theme}>
+        <Container disableGutters={true} sx={{ flexGrow: 1 }}>
+          <Grid alignContent={'center'} minWidth={150} container spacing={1}>
+            <Grid xs={12} md={3}>
+              <Item>
+                <Box elevation={0}>
+                  <ListItem>Search Tips</ListItem>
+                  <ListItem>available files</ListItem>
+                  <ListItem>Quick-start guide</ListItem>
+                </Box>
+              </Item>
+            </Grid>
+            <Grid md={9} xs={12} flexGrow={1} flexShrink={1} flexWrap={'nowrap'} justifyContent="center">
+              <Item>
+              <Box mt={1} mb={1} elevation={0}>
+                  <SearchBar />
+                </Box>
+              </Item>
+            </Grid>
           </Grid>
-        </Grid>
-      </Container>
-    </>
+          <Grid mt={2} textAlign={'left'} alignContent={'flex-start'} spacing={1} rowSpacing={1} justifyContent={'flex-start'} container >
+            <Grid xs={3} p={0} >
+              <Paper>
+              <SideBarFilters/>
+              </Paper>
+            <Divider />
+            </Grid>
+            <Grid xs={9}>
+              <Item>
+                <ResponsiveSearchResults/>
+              </Item>
+            </Grid>
+            <Grid>
+  
+            </Grid>
+          </Grid>
+        </Container>
+      </ThemeProvider>
   );
 }
 export function ProximitySelect(props) {

@@ -31,6 +31,7 @@ import {
   countyOptions,
 } from '../search/options';
 import SearchFilter from './SearchFilter';
+import SearchResultItems from './SearchResultsItems';
 import { makeStyles,withStyles } from '@mui/styles';
 
 const countyChange = (evt) => {
@@ -153,7 +154,11 @@ export default function ResponsiveSearchResults(props) {
                 County: <b>AZ: Pima; AZ: Santa Cruz; AZ: Yavapai</b>
               </Item>
             </Grid>
-
+          <SearchResultItems
+            title= 'Environmental Impact Statement'
+            id={17704}
+            status='Draft'
+          />
             <Grid xs={12} container spacing={1}>
               <Typography className={classes.itemHeader} textAlign={'center'} p={1} mt={1} mb={1} variant="h6">
                 <a href="https://www.nepaccess.org/record-details?id=17704">
@@ -161,13 +166,13 @@ export default function ResponsiveSearchResults(props) {
                 </a>
               </Typography>
             </Grid>
-
-            
             <Container>
               <Box bgcolor="#f4f4f4" padding={1} border={1} borderColor={'lightgray'} borderRadius={1}>
                     
                   Probability That Monthly Flow below Lake Ralph Hall Dam at Bakers Creek Exceeds
                   Channel Pool Volume of 175 ac-ft: 62.2% 73.0%Probability That Monthly Flow at North
+                  ...
+                  <Box visibility={'none'}>
                   Sulphur River Gage near Cooper Exceeds Channel Pool Volume of 175 ac-ft: 82.1%
                   83.8%PER- EXCEED-CENTILE ENCEPROBA-BILITY From From From From From From From From From
                   From From FromRiverWare WAM RiverWare WAM RiverWare WAM RiverWare WAM RiverWare WAM
@@ -178,20 +183,19 @@ export default function ResponsiveSearchResults(props) {
                   423 527 5907.0% 93.0% 13 8 3 9 22 28 63 57 455 473 720 75110.0% 90.0% 27 17 5 19 45 54
                   114 121 658 587 1,046 1,18015.0% 85.0% 76 48 14 47 115 149 288 364 1,051 1,053 1,740
                   1,91916.2% 83.8% 90 57 18 53 147 175 329 425 1,151 1,201
+                  </Box>
               </Box>
             </Container>
           </Grid>
           <Divider/>
-          <Grid container xs={10}>
+          <Grid container xs={10}>            
             <Grid xs={12} container spacing={1}>
-              <Typography className={classes.itemHeader} textAlign={'center'} p={1} mt={1} mb={1} variant="h6">
+              <Typography variant="searchResultTitle" variantMapping={'h6'}>
                 <a href="https://www.nepaccess.org/record-details?id=17704">
                 Final Environmental Impact Statement
                 </a>
               </Typography>
-            </Grid>
-
-            
+            </Grid>          
             <Container>
               <Box bgcolor="#f4f4f4" padding={1} border={1} borderColor={'lightgray'} borderRadius={1}>
                     

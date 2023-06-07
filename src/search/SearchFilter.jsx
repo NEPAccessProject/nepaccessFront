@@ -102,12 +102,7 @@ export default function SearchFilter(props) {
               mt: 1,
             }}>
    
-            <Typography mt={1} fontWeight={'bolder'} fontSize={'0.9rem'} fontFamily={'open sans'} 
-              paddingLeft={1} 
-              paddingRight={1}
-              paddingBottom={0.5} 
-              variant='h4' 
-              textAlign={'left'}>
+            <Typography pb={1} variant='filterLabel' variantMapping="h6"> 
               {label}:
             </Typography>   
             <Autocomplete

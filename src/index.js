@@ -11,11 +11,11 @@ import * as serviceWorker from './serviceWorker';
 
 
 ReactDOM.render(
+     <BrowserRouter>
     <ThemeProvider theme={theme}>
-    <BrowserRouter>
         <Main />
-    </BrowserRouter>
     </ThemeProvider>
+    </BrowserRouter>
     , document.getElementById('root')
 );
 

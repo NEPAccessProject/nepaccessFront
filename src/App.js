@@ -13,6 +13,7 @@ import './User/login.css';
 
 import Globals from './globals.js';
 import persist from './persist.js';
+import { ThemeProvider } from '@mui/styles';
 
 const _ = require('lodash');
 
