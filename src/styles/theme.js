@@ -19,11 +19,18 @@ const theme = createTheme({
   typography: {
     fontFamily: 'Open Sans',
     subtitle1: {
-      fontSize: '1.1rem',
+      fontSize: '1.0rem',
       fontWeight: 'bold',
       alignItems: 'flex-start',
       textAlign: 'left',
-      display: 'inline-flex',
+      // display: 'inline-flex',
+    },
+    caption: {
+      fontFamily: 'Open Sans',
+      fontSize: '1.0rem',
+      fontWeight: 'bold',
+      alignItems: 'flex-start',
+      textAlign: 'left',
     },
     subtitle2: { 
       fontSize: '0.8rem',

@@ -110,11 +110,14 @@ export default function SearchFilter(props) {
       <>
           <FormControl variant="filled"
             xs={{
-              minWidth: 245,
+              minWidth: 255,
               p:0,
+              border: 1,
+              borderColor: 'grey.500',
+              borderRadius: 1,
             }}>
    
-            <Typography textAlign={'left'}  fontWeight={600}  fontFamily='Open Sans'>
+            <Typography variant='caption' textAlign={'left'}  fontWeight={600}  fontFamily='Open Sans'>
               {label}:
             </Typography>   
             <Autocomplete

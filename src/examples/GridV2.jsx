@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
-import { Paper, Button, Input, Box, Divider, FormControl, Autocomplete, InputLabel,ListItem,IconButton, TextField, Typography, Container, FormLabel } from '@mui/material';
+import { Paper, Button, Input, Box, Divider, FormControl,Select, Autocomplete, InputLabel,ListItem,IconButton, TextField, Typography, Container, FormLabel } from '@mui/material';
 import { styled } from '@mui/material/styles';
-import Select from 'react-select';
 import theme from '../styles/theme';
 //import Grid from '@mui/material/Grid'; // Grid version 1
 import Grid from '@mui/material/Unstable_Grid2';
@@ -15,7 +14,11 @@ const Item = styled(Paper)(({ theme }) => ({
   padding: theme.spacing(1),
   // textAlign: 'center',
   color: theme.palette.text.secondary,
-  elevation:0
+  elevation:0,
+  border: 0, 
+  borderRadius: 1,
+  mt: 1,
+  mb: 1,
 }));
 
 const useStyles = (theme) => ({
@@ -69,7 +72,7 @@ const classes = useStyles(theme);
         <Grid alignContent={'center'} minWidth={150} container spacing={1}>
           <Grid xs={12} md={3}>
             <Item>
-              <Box elevation={0} height={'100%'}>
+              <Box elevation={0}>
                 <ListItem>Search Tips</ListItem>
                 <ListItem>available files</ListItem>
                 <ListItem>Quick-start guide</ListItem>
@@ -182,6 +185,12 @@ export function ProximitySelect(props) {
         isMulti={false}
         xs={{
           border:0,
+          minWidth: 270,
+          p:0,
+          ml:0,
+          mr:0,
+          mt:1,
+          mb:1,
         }}
       />
     </>
