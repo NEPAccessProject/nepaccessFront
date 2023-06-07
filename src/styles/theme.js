@@ -8,7 +8,7 @@ const theme = createTheme({
       main: '#9CAEB3', //configs.PRIMARY_COLOR,
     },
     secondary: {
-      main: "#e1e7e8",
+      main: '#e1e7e8',
     },
   },
   FormLabel: {
@@ -17,7 +17,7 @@ const theme = createTheme({
     mt: 1,
   },
   typography: {
-    fontFamily :'open sans',
+    fontFamily: 'open sans',
     poster: {
       fontSize: 64,
       color: 'red',
@@ -33,30 +33,37 @@ const theme = createTheme({
     },
     title: {
       fontSize: 34,
-      fontFamily :'open sans'
+      fontFamily: 'open sans',
     },
     subtitle1: {
       fontSize: '1.5rem',
-      fontFamily :'open sans'
+      fontFamily: 'open sans',
     },
     subtitle2: {
       fontSize: 48,
     },
-    searchResultTitle:{
+    searchResultTitle: {
       fontSize: '1.5rem',
       color: '#000',
-      fontFamily :'open sans',
+      fontFamily: 'open sans',
       fontSize: 25,
 
-      p:2,
+      p: 2,
+    },
+    searchResultSubTitle: {
+      fontSize: '1.5rem',
+      color: '#000',
+      fontFamily: 'open sans',
+      fontSize: 20,
+      p: 2,
     },
     filterLabel: {
       fontSize: '1rem',
       color: '#000',
-      fontFamily :'open sans',
+      fontFamily: 'open sans',
       display: 'block',
-      p:10,
-    }
+      p: 10,
+    },
   },
   components: {
     MuiButton: {
@@ -79,22 +86,21 @@ const theme = createTheme({
     },
     MuiTypography: {
       defaultProps: {
-
         variantMapping: {
           // Map the new variant to render a <h1> by default
           poster: 'h1',
-          "h2": "h2",
-          "h3": "h3",
-          "subtitle1": "h4",
-          "subtitle2": "h5",
+          h2: 'h2',
+          h3: 'h3',
+          subtitle1: 'h4',
+          subtitle2: 'h5',
         },
       },
-    },    
-    MuiAutocomplete:{
+    },
+    MuiAutocomplete: {
       defaultProps: {
-        p:0,
-        m:0,
-      }
+        p: 0,
+        m: 0,
+      },
     },
     MuiFormControl: {
       styleOverrides: {
