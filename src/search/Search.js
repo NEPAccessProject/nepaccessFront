@@ -31,8 +31,9 @@ import Select from 'react-select';
 import SearchFilter from './SearchFilter.jsx';
 import SearchBar from './SearchBar.jsx';
 //import { DatePicker } from '@mui/lab';
+const _ = require('lodash');
+const drawerWidth = 200; 
 // import PropTypes from "prop-types";
-const drawerWidth = 200; const _ = require('lodash');
 
 const FULLSTYLE = {
   display: 'block',

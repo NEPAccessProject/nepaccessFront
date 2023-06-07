@@ -107,15 +107,14 @@ export default function SearchFilter(props) {
       console.error('The options of the filter are either undefined or have no values ',id);
     }
     return (
-      <div>
+      <>
           <FormControl variant="filled"
             xs={{
-              width: '100%',
-              border: 1,
+              minWidth: 245,
               p:0,
             }}>
    
-            <Typography variant="subtitle1" fontWeight={600}  fontFamily='Open Sans'>
+            <Typography textAlign={'left'}  fontWeight={600}  fontFamily='Open Sans'>
               {label}:
             </Typography>   
             <Autocomplete
@@ -131,19 +130,16 @@ export default function SearchFilter(props) {
                 sx={{
                   width: '100%',
                   p:0,
-                  mt:1,
-                  mb:1,
                 }}
                 placeholder={placeholder}
               />}
               sx={{
                 width: '100%',
                 p:0,
-                m:0,
-                minWidth: 275,
+                minWidth: 245,
               }}
             />
           </FormControl>
-      </div>
+      </>
     );
 }

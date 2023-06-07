@@ -20,7 +20,10 @@ const theme = createTheme({
     fontFamily: 'Open Sans',
     subtitle1: {
       fontSize: '1.1rem',
-      fontWeight: 'bold'
+      fontWeight: 'bold',
+      alignItems: 'flex-start',
+      textAlign: 'left',
+      display: 'inline-flex',
     },
     subtitle2: { 
       fontSize: '0.8rem',
