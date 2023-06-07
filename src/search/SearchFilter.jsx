@@ -5,7 +5,6 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { InputAdornment } from '@mui/icons-material';
-import { makeStyles,withStyles } from '@mui/styles';
 import theme from '../styles/theme';
 import dayjs from 'dayjs';
 
@@ -58,36 +57,21 @@ const useStyles = (theme) => ({
   //   minWidth: 300,
   //   maxHeight: 50,
   // },
-  select: {
-    border: 'none',
+  autoComplete: {
+    border: 0,
     //backgroundColor: theme.palette.grey[150],
     '&:hover': {
       p: 0,
       //   backgroundColor: theme.palette.grey[100],
-      '&:hover': {
-        // backgroundColor: theme.palette.grey[150],
-        // boxShadow: theme.palette.grey[300],
+        backgroundColor: theme.palette.grey[150],
+        boxShadow: theme.palette.grey[300],
         cursor: 'pointer',
-      },
+        borderColor: theme.palette.grey[100],
     },
   },
 });
 
 const drawerWidth = 200;
-
-//[TODO] validate required key / values
-// const filter = {
-  // className: '',
-  // placeholder: '',
-  // value: this.state.proximityDisabled,
-  // onChange: () => {},
-  // onClear: () => {},
-  // type: Autocomplete,
-  // id: 'searchAgency'
-  //   options: [],
-  //   label: '',
-  //   options: []
-// };
 
 export default function SearchFilter(props) {
     if(!props.filter){
@@ -108,23 +92,35 @@ export default function SearchFilter(props) {
     }
     return (
       <>
-          <FormControl variant="filled"
+          <FormControl fullWidth
             xs={{
-              minWidth: 255,
-              p:0,
-              border: 1,
+              p:1,
+              border: 0,
               borderColor: 'grey.500',
               borderRadius: 1,
+              mb: 1,
+              mt: 1,
             }}>
    
-            <Typography variant='caption' textAlign={'left'}  fontWeight={600}  fontFamily='Open Sans'>
+            <Typography mt={1} fontWeight={'bolder'} fontSize={'0.9rem'} fontFamily={'open sans'} 
+              paddingLeft={1} 
+              paddingRight={1}
+              paddingBottom={0.5} 
+              variant='h4' 
+              textAlign={'left'}>
               {label}:
             </Typography>   
             <Autocomplete
              id={id}
+              fullWidth
+              
+              autoComplete={true}
+              // autoHighlight={true}
+              variant= ""
               tabIndex={tabIndex}
               className={className.autocomplete}
-              options={options}
+              options={(options) ? options : []}
+              disablePortal={true}
               // value={value}
               // menuIsOpen={true}
               onChange={onChange}
@@ -136,13 +132,9 @@ export default function SearchFilter(props) {
                 }}
                 placeholder={placeholder}
               />}
-              sx={{
-                width: '100%',
-                p:0,
-                minWidth: 245,
-              }}
             />
           </FormControl>
+          <Divider />
       </>
     );
 }

@@ -6,7 +6,9 @@ import theme from '../styles/theme';
 import Grid from '@mui/material/Unstable_Grid2';
 import { InputAdornment, SearchOutlined } from '@mui/icons-material';
 import { proximityOptions, actionOptions, decisionOptions,agencyOptions,stateOptions,countyOptions} from '../search/options';
-import SearchFilter from '../search/SearchFilter';
+import {withStyles} from '@mui/styles'
+import SideBarFilters from '../search/SideBarFilters';
+import ResponsiveSearchResults from '../search/ResponsivSearchResults';
 
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
@@ -16,10 +18,19 @@ const Item = styled(Paper)(({ theme }) => ({
   color: theme.palette.text.secondary,
   elevation:0,
   border: 0, 
-  borderRadius: 1,
+  borderRadius: 0,
   mt: 1,
   mb: 1,
-}));
+  pl: 0,
+  pr:0,
+  "&:hover": {
+    //           backgroundColor: //theme.palette.grey[200],
+      boxShadow: '0px 4px 8px rgba(0.5, 0.5, 0.5, 0.15)',
+      cursor: "pointer",
+      "& .addIcon": {
+        color: "darkgrey"
+      }
+    }}));
 
 const useStyles = (theme) => ({
   formControl:{
@@ -59,13 +70,7 @@ const onProximityChange = (evt) => {
 };
 
 export default function GridV2(props) {
-  const [search, setSearch] = useState('');
-  const [county, setCounty] = useState('');
-  const [location, setLocation] = useState('');
-  const [proximity, setProximity] = useState('');
-  const [selectedCounty, setSelectedCounty] = useState('');
-  const [agencyRaw, setAgencyRaw] = useState('');
-const classes = useStyles(theme);
+
   return (
     <>
       <Container disableGutters={true} sx={{ flexGrow: 1 }}>
@@ -81,7 +86,7 @@ const classes = useStyles(theme);
           </Grid>
           <Grid md={9} xs={12} flexGrow={1} flexShrink={1} flexWrap={'nowrap'} justifyContent="center">
             <Item>
-            <Box pt={1} elevation={0}>
+            <Box mt={1} mb={1} elevation={0}>
                 <SearchBar />
               </Box>
             </Item>
@@ -89,75 +94,17 @@ const classes = useStyles(theme);
         </Grid>
         <Grid mt={2} textAlign={'left'} alignContent={'flex-start'} spacing={1} rowSpacing={1} justifyContent={'flex-start'} container >
           <Grid xs={3} p={0} >
+            <Paper>
+            <SideBarFilters/>
+            </Paper>
+          <Divider />
+          </Grid>
+          <Grid xs={9}>
             <Item>
-            <ProximitySelect />
-          <Divider />
-            <Item>
-            <SearchFilter filter={{
-              className: classes.formControl,
-              placeholder: 'Type or Select Lead Agencies',
-              value: (agencyRaw ? agencyRaw : ''),
-              onChange: onAgencyChange,
-              id: 'searchAgency',
-              type: Autocomplete,
-              options: agencyOptions,
-              label: 'Lead Agencies',
-              tabIndex: '3',
-            }} />
-
-          </Item>
-          <Item>
-            <SearchFilter filter={{
-              className: classes.formControl,
-              placeholder: 'Type or select Cooperating agencies',
-              value: (agencyRaw ? agencyRaw : ''),
-              onChange: onAgencyChange,
-              id: 'searchAgency',
-              name: 'cooperatingAgency',
-              type: Autocomplete,
-              options: agencyOptions,
-              label: 'Cooperating Agencies',
-              tabIndex: '4',
-            }} />
-          </Item>
-          <Divider />
-          <Item>
-            <SearchFilter filter={{
-              className: classes.formControl,
-              placeholder: 'Type or Select State(s) or Location(s)',
-              value: (stateOptions.filter = (stateObj) => state.includes(stateObj.value)),
-              onChange: onLocationChange,
-              id: 'searchState',
-              name: 'state',
-              type: Autocomplete,
-              options: stateOptions,
-              label: 'State(s) or Location(s)',
-              tabIndex: '5',
-            }} />
-
-          </Item>
-
-          <Item>
-            <SearchFilter filter={{
-              className: classes.formControl,
-              placeholder: 'Type or Select a County',
-              value: (countyOptions.filter(countyObj => county.includes(countyObj.value))),
-              onChange: countyChange,
-              id: 'searchCounty',
-              name: 'county',
-              type: Autocomplete,
-              options: countyOptions,
-              label: 'County / counties',
-              tabIndex: '6',
-            }} />
-          </Item>
-
-          <Divider />
-
+              <ResponsiveSearchResults/>
             </Item>
           </Grid>
-          <Grid xs={8}>
-            <Item><h4>Search Results</h4></Item>
+          <Grid>
 
           </Grid>
         </Grid>
@@ -185,7 +132,6 @@ export function ProximitySelect(props) {
         isMulti={false}
         xs={{
           border:0,
-          minWidth: 270,
           p:0,
           ml:0,
           mr:0,

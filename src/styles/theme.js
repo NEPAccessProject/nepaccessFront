@@ -17,26 +17,28 @@ const theme = createTheme({
     mt: 1,
   },
   typography: {
-    fontFamily: 'Open Sans',
+    poster: {
+      fontSize: 64,
+      color: 'red',
+    },
+    h2: {
+      fontSize: 32,
+      color: 'red',
+    },
+    h3: {
+      fontSize: 28,
+      color: 'red',
+    },
+    h4: {
+      fontSize: 28,
+      color: 'blue',
+    },
     subtitle1: {
-      fontSize: '1.0rem',
-      fontWeight: 'bold',
-      alignItems: 'flex-start',
-      textAlign: 'left',
-      // display: 'inline-flex',
+      fontSize: 60,
     },
-    caption: {
-      fontFamily: 'Open Sans',
-      fontSize: '1.0rem',
-      fontWeight: 'bold',
-      alignItems: 'flex-start',
-      textAlign: 'left',
-    },
-    subtitle2: { 
-      fontSize: '0.8rem',
-      fontFamily: 'Open Sans',
-      fontWeight: 'bold'
-    },
+    subtitle2: {
+      fontSize: 48,
+    }
   },
   components: {
     MuiButton: {
@@ -57,6 +59,19 @@ const theme = createTheme({
         },
       },
     },
+    MuiTypography: {
+      defaultProps: {
+        
+        variantMapping: {
+          // Map the new variant to render a <h1> by default
+          poster: 'h1',
+          "h2": "h2",
+          "h3": "h3",
+          "subtitle1": "h4",
+          "subtitle2": "h5",
+        },
+      },
+    },    
     MuiAutocomplete:{
       defaultProps: {
         p:0,
