@@ -12,73 +12,63 @@ import Globals from '../globals';
 
 
       const [state,setState] = useState({
-        agencyRaw: '',
-        startPublish: null,
-        endPublish: null,
-        stateRaw: '',
-        countyRaw: '',
+        action: [],
         actionRaw: '',
-        decision : '',
-        decisionRaw: '',
-        endComment: null,
-        startComment: null,
         agency: [],
+        agencyRaw: '',
         agencyRaw: [],
         cooperatingAgency: [],
         cooperatingAgencyRaw: [],
-        state: [],
-        stateRaw: [],
         county: [],
+        countyRaw: '',
         countyRaw: [],
-        action: [],
-        typeAll: true,
-        typeFinal : true,
-        typeDraft : true,
-        typeEA : true,
-        typeNOI : false,
-        typeROD : false,
-        typeRODFinal : false,
-        typeEAFinal : false,
-        typeNOIFinal : false,
-        typeRODFinalFinal : false,
-        typeEAFinalFinal : false,
-        typeOther: false,
-        typeScoping: false,
+        decision : '',
+        decisionRaw: '',
+        endComment: null,
+        endPublish: null,
+        fragmentSizeValue: 2,
+        hideOrganization: false,
+        iconClassName: 'icon icon--effect',
+        isDirty: false,
+        limit: 100,
+        markup: true,
+        needsComments: false,
         needsComments: false,
         needsDocument: false,
-        typeScoping: false, 
-        typeScoping: false, 
-        optionsChecked: true,
-        needsComments: false,
         needsDocument: false,  
-        optionsChecked: true,
-        iconClassName: 'icon icon--effect',
-        limit: 100,
         offset: 0,
+        optionsChecked: true,
+        optionsChecked: true,
+        proximityDisabled: true,
+        proximityOptions: null,
         search: '',
-        test: Globals.enum.options,
         searchOptions: [],
         searchOptionsChecked: false,
         searchOptionsChecked: false,
-        tooltipOpen: undefined,
-        proximityOptions: null,
-        proximityDisabled: true,
-        hideOrganization: false,
-        markup: true,
-        fragmentSizeValue: 2,
-        isDirty: false,
+        startComment: null,
+        startPublish: null,
+        state: [],
+        stateRaw: '',
+        stateRaw: [],
         surveyChecked: true,
         surveyDone: false,
+        test: Globals.enum.options,
+        tooltipOpen: undefined,
+        typeAll: true,
+        typeDraft : true,
+        typeEA : true,
+        typeEAFinal : false,
+        typeEAFinalFinal : false,
+        typeFinal : true,
+        typeNOI : false,
+        typeNOIFinal : false,
+        typeOther: false,
+        typeROD : false,
+        typeRODFinal : false,
+        typeRODFinalFinal : false,
+        typeScoping: false, 
         
       }),
-      markup, setMarkup] =  useState(true);
-      fragmentSizeValue, setFragmentSizeValue] =  useState(2);
-      isDirty, setIsDirty] =  useState(false);
-      surveyChecked, setServerChecked] =  useState(true),
-      surveyDone, setSurveryDone] =  useState(false);
-      surveyResult, setSurveyResult] = useState("Haven't searched yet");
-      filtersHidden, SetFiltersHidden] =  useState(false);
-      countyOptions, setCountOptions] =  useState(Globals.counties)
       const debouncedSearch = _.debounce(props.search, 300);
       const filterBy = props.filterResultsBy;
   // this.filterBy = _.debounce(this.props.filterResultsBy, 200);
@@ -88,12 +78,16 @@ import Globals from '../globals';
   this.myRef = React.createRef();
 
 doSearch = (terms) => {
-      const _lastSearchTerms = terms;
-      setTitleRaw(parseTerms(terms));
-      setLastSearchedTerm(parseTerms(terms));
-      setSurveyChecked(false);
-      setsetSurveryDone(false);
-      setIsDirty(true);
+      setState({ ...state, 
+        search: terms ,
+        searchOptionsChecked: false,
+        _lastSearchTerms: terms,
+        titleRaw: parseTerms(terms),
+        _lastSearchedTerm: parseTerms(terms),
+        surveyChecked : false,
+        surveyDone : false,
+        isDirty : true,
+      })
       debouncedSearch(state);
 }
 
@@ -165,7 +159,7 @@ onClearClick = (evt) => {
 }
 
 onClearFiltersClick = () => {
-  this.setState({
+  setState(...{
       // titleRaw: '',
       StartPublish: null,
       EndPublish: null,
@@ -404,30 +398,25 @@ narrowCountyOptions = (stateValues) => {
 onCountyChange = (evt, item) => {
 var countyValues = [];
 for(var i = 0; i < evt.length; i++){
-countyValues.push(evt[i].value);
+  countyValues.push(evt[i].value);
+}
+ setState(...state, 
+{ 
+  county: countyValues,
+  countyRaw: evt
+});
 }
 
-  this.setState( 
-{ 
-county: countyValues,
-      countyRaw: evt
-}, () => { 
-this.filterBy(this.state);
-  });
-}
 onProximityChange = (evt) => {
   if(evt.value === -1) {
-      this.setState({
+      this.setState(...{
           proximityOption: null
       });
   } else {
-      this.setState( 
-      { 
+      this.setState({ ...state, 
           proximityOption: evt,
-      }, () => { 
-          // console.log(proximityOption);
-      });
-  }
+      })
+}
 }
 
 onTitleOnlyChecked = (evt) => {
@@ -436,7 +425,7 @@ onTitleOnlyChecked = (evt) => {
           searchOption: "C" // Title only
       });
   } else {
-      this.setState({
+      setState(...state,{
           searchOption: "B" // Both fields, Lucene default scoring
       });
   }

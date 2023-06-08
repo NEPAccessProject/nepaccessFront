@@ -174,7 +174,7 @@ export default function ResponsiveSearchResults(props) {
                 County: <b>AZ: Pima; AZ: Santa Cruz; AZ: Yavapai</b>
               </Item>
             </Grid>
-            <SearchResultItems title="Environmental Impact Statement" id={17704} status="Draft" content="Probability That Monthly Flow below Lake Ralph Hall Dam at Bakers Creek Exceeds
+            <SearchResultItems title="Environmental Impact Statement" id={17704} status="Pending" content="Probability That Monthly Flow below Lake Ralph Hall Dam at Bakers Creek Exceeds
                 Channel Pool Volume of 175 ac-ft: 62.2% 73.0%Probability That Monthly Flow at North
                 Sulphur River Gage near Cooper Exceeds Channel Pool Volume of 175 ac-ft: 82.1%
                 83.8%PER- EXCEED-CENTILE ENCEPROBA-BILITY From From From From From From From From
