@@ -5,7 +5,7 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { InputAdornment } from '@mui/icons-material';
-import theme from '../styles/theme';
+import theme from '../../styles/theme';
 import dayjs from 'dayjs';
 
 const useStyles = (theme) => ({
@@ -74,10 +74,10 @@ const useStyles = (theme) => ({
 const drawerWidth = 200;
 
 export default function SearchFilter(props) {
-    if(!props.filter){
-      console.error('Unable ')
-    }
-    const { className,label ,placeholder, options, onChange, value,id,tabIndex } = props.filter;
+
+    let { className,label ,placeholder, options, onChange, value,id,tabIndex } = props.filter;
+    (options) ? options : [];
+    console.log('Filter Options:',options);
     console.log(`placeholder ${placeholder}`);
     console.log(`label ${label}`);
     console.log('value:',value);

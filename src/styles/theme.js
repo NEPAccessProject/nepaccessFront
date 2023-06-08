@@ -18,6 +18,9 @@ const theme = createTheme({
   },
   typography: {
     fontFamily: 'open sans',
+    body1: {
+      
+    },
     poster: {
       fontSize: 64,
       color: 'red',

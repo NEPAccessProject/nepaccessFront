@@ -65,7 +65,7 @@ import Globals from './globals.js';
 import { Link, Switch, Route, withRouter } from 'react-router-dom';
 
 import PropTypes from "prop-types";
-import GridV2 from './examples/GridV2'
+import Search from './search/MainSearch/Search.jsx'
 import ImporterAlignment from './ImporterAlignment';
 import Header from './Header'
 import Playground from './examples/Playground';
@@ -278,7 +278,7 @@ class Main extends React.Component {
             <Route path="/up_geo" component={ImporterGeo} />
             <Route path="/up_geo_links" component={ImporterGeoLinks} />
             <Route path="/up_alignment" component={ImporterAlignment} />
-            <Route path="/grid" component={GridV2} />
+            <Route path="/grid" component={Search} />
             <Route path="/" component={Landing}/>
         </Switch>
         )

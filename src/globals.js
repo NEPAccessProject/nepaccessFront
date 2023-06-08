@@ -13398,8 +13398,6 @@ const Globals = {
 /** Filters */
 
 
-
-
 // Process oriented version of the hasDocument filter.
 const hasDocument = (item) => {
     let hasDocument = false;

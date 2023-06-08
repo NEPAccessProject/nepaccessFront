@@ -24,21 +24,18 @@ export default function SearchResultItems(props){
     return (
         <>
         <Box>
-        <Grid xs={12} container spacing={1}>
+
               <Typography p={2} pl={4} variant="searchResultTitle">
                 <a href={"https://www.nepaccess.org/record-details?id=" + id}>
                     {`${status} ${title}`}
                 </a>
               </Typography>
-            </Grid>
-
             
             <Container>
               <Box bgcolor="#f4f4f4" padding={1} border={1} borderColor={'lightgray'} borderRadius={1}>
-                  {content}
+                 {content}
               </Box>
             </Container>
-
         </Box>
         </>
     )

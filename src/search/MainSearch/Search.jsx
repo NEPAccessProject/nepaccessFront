@@ -1,18 +1,18 @@
 import React, { useState } from 'react';
 import { Paper, Button, Input, Box, Divider, FormControl,Select, Autocomplete, InputLabel,ListItem,IconButton, TextField, Typography, Container, FormLabel } from '@mui/material';
 import { ThemeProvider, styled } from '@mui/material/styles';
-import theme from '../styles/theme';
+import theme from '../../styles/theme';
 //import Grid from '@mui/material/Grid'; // Grid version 1
 import Grid from '@mui/material/Unstable_Grid2';
 import { InputAdornment, SearchOutlined } from '@mui/icons-material';
-import { proximityOptions, actionOptions, decisionOptions,agencyOptions,stateOptions,countyOptions} from '../search/options';
+import { proximityOptions, actionOptions, decisionOptions,agencyOptions,stateOptions,countyOptions} from '../options';
 import {withStyles} from '@mui/styles'
-import SideBarFilters from '../search/SideBarFilters';
-import ResponsiveSearchResults from '../search/ResponsivSearchResults';
+import SideBarFilters from './SideBarFilters';
+import ResponsiveSearchResults from './ResponsivSearchResults';
 
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
-  ...theme.typography.body2,
+  // ...theme.typography.body2,
   padding: theme.spacing(1),
   // textAlign: 'center',
   color: theme.palette.text.secondary,
@@ -69,8 +69,8 @@ const onProximityChange = (evt) => {
   evt.preventDefault();
 };
 
-export default function GridV2(props) {
-
+export default function Search(props) {
+  console.log('searchState Options:', stateOptions);
   return (
 
       <ThemeProvider theme={theme}>
@@ -96,7 +96,13 @@ export default function GridV2(props) {
           <Grid mt={2} textAlign={'left'} alignContent={'flex-start'} spacing={1} rowSpacing={1} justifyContent={'flex-start'} container >
             <Grid xs={3} p={0} >
               <Paper>
-              <SideBarFilters/>
+              <SideBarFilters 
+                countyOptions={countyOptions}
+                stateOptions={stateOptions}
+                agencyOptions={agencyOptions}
+                actionOptions={actionOptions}
+                decisionOptions={decisionOptions}
+              />
               </Paper>
             <Divider />
             </Grid>
