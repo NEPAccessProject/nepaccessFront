@@ -54,7 +54,8 @@ const theme = createTheme({
       fontSize: '1.5rem',
       color: '#000',
       fontFamily: 'open sans',
-      fontSize: 20,
+      fontSize: '1.5rem',
+      border: 1,
       p: 2,
     },
     filterLabel: {
@@ -62,7 +63,6 @@ const theme = createTheme({
       color: '#000',
       fontFamily: 'open sans',
       display: 'block',
-      p: 10,
     },
   },
   components: {
