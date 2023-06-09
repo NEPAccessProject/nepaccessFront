@@ -34,7 +34,7 @@ import SideBarFilters from './SideBarFilters';
 import ResponsiveSearchResults from './ResponsivSearchResults';
 import { lightBlue } from '@mui/material/colors';
 
-const Item = styled(Paper)(({ theme }) => ({
+const Item = styled(Box)(({ theme }) => ({
   backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
   // ...theme.typography.body2,
   padding: theme.spacing(1),
@@ -89,34 +89,75 @@ const onProximityChange = (evt) => {
   evt.preventDefault();
 };
 
+const styles = {
+  fontFamily: 'sans-serif',
+  textAlign: 'center',
+};
+const section = {
+  height: '100%',
+  paddingTop: 5,
+  backgroundColor: '#fff',
+};
+const summary = {
+  marginTop: 15,
+  marginBottom: 15,
+  padding: 10,
+  backgroundColor: '#d4d4d4',
+};
+
 export default function Search(props) {
   console.log('searchState Options:', stateOptions);
   return (
     <ThemeProvider theme={theme}>
       <Container disableGutters={true} sx={{}}>
-        <Grid id="top-search-contro" container spacing={1}>
-          <Grid xs={3}>
-            <Item id={'top-tips-item'}>
-              <ListItem>Search Tips</ListItem>
-              <ListItem>available files</ListItem>
-              <ListItem>Quick-start guide</ListItem>
-            </Item>
+        <div style={styles}>
+          <Grid container layout={'row'} spacing={1}>
+            <Grid item xs={3}>
+              <div style={section}>
+                {' '}
+                <ListItem>Search Tips</ListItem>
+                <ListItem>Search Tips</ListItem>
+                <ListItem>Search Tips</ListItem>
+              </div>
+            </Grid>
+
+            <Grid item xs={9}>
+              <div style={section}>
+                {' '}
+                <Box
+                  display={'flex'}
+                  justifyContent={'center'}
+                  justifyItems={'center'}
+                  alignItems={'center'}
+                  alignContent={'center'}
+                  height={125}
+                  paddingLeft={2}
+                  paddingRight={2}
+                >
+                  {' '}
+                  <TextField
+                    fullWidth
+                    backgroundColor={'white'}
+                    id="main-search-text-field"
+                    variant="standard"
+                    onInput={onInput}
+                    onKeyUp={onKeyUp}
+                    placeholder="Search for NEPA documents"
+                    value={'titleRaw'}
+                    autoFocus
+                    InputProps={{
+                      endAdornment: (
+                        <IconButton onClick={(evt) => onChangeHandler(evt)}>
+                          <SearchOutlined />
+                        </IconButton>
+                      ),
+                    }}
+                  />
+                </Box>
+              </div>
+            </Grid>
           </Grid>
-          <Grid id="search-controls-grid" xs={9}>
-            <Item>
-              <Grid id={'search-grid-container'} container spacing={0} border={1} borderColor={'gray'}>
-                <Grid xs={2} id="search-distance-grid">
-                  <Item id="search-distance-item">Search Distance</Item>
-                </Grid>
-                <Grid xs={10} id="main-search-grid">
-                  <Item id="main-search-item">
-                      <SearchBar/>
-                  </Item>
-                </Grid>
-              </Grid>
-            </Item>
-          </Grid>
-        </Grid>
+        </div>
 
         <Grid
           mt={2}
