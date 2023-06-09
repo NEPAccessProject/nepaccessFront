@@ -34,13 +34,13 @@ import SideBarFilters from './SideBarFilters';
 import ResponsiveSearchResults from './ResponsivSearchResults';
 import { lightBlue } from '@mui/material/colors';
 
-const Item = styled(Box)(({ theme }) => ({
+const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
   // ...theme.typography.body2,
   padding: theme.spacing(1),
   // textAlign: 'center',
   color: theme.palette.text.secondary,
-  elevation: 0,
+  elevation: 1,
   borderRadius: 0,
   mt: 1,
   mb: 1,
@@ -110,54 +110,75 @@ export default function Search(props) {
   return (
     <ThemeProvider theme={theme}>
       <Container disableGutters={true} sx={{}}>
-        <div style={styles}>
-          <Grid container layout={'row'} spacing={1}>
-            <Grid item xs={3}>
-              <div style={section}>
-                {' '}
-                <ListItem>Search Tips</ListItem>
-                <ListItem>Search Tips</ListItem>
-                <ListItem>Search Tips</ListItem>
-              </div>
-            </Grid>
-
-            <Grid item xs={9}>
-              <div style={section}>
-                {' '}
-                <Box
-                  display={'flex'}
-                  justifyContent={'center'}
-                  justifyItems={'center'}
-                  alignItems={'center'}
-                  alignContent={'center'}
-                  height={125}
-                  paddingLeft={2}
-                  paddingRight={2}
-                >
+<Item>
+          <div style={styles}>
+            <Grid container layout={'row'} backgroundColor={'transparent'} spacing={1} border={0}>
+              <Grid
+                item
+                xs={2}
+                border={0}
+                backgroundColor="transparent"
+                height={115}
+                borderRadius={2}
+                borderColor={'#CCC'}
+              >
+                <div style={section}>
                   {' '}
-                  <TextField
-                    fullWidth
-                    backgroundColor={'white'}
-                    id="main-search-text-field"
-                    variant="standard"
-                    onInput={onInput}
-                    onKeyUp={onKeyUp}
-                    placeholder="Search for NEPA documents"
-                    value={'titleRaw'}
-                    autoFocus
-                    InputProps={{
-                      endAdornment: (
-                        <IconButton onClick={(evt) => onChangeHandler(evt)}>
-                          <SearchOutlined />
-                        </IconButton>
-                      ),
-                    }}
-                  />
-                </Box>
-              </div>
+                  <ListItem>Search Tips</ListItem>
+                  <ListItem>Search Tips</ListItem>
+                  <ListItem>Search Tips</ListItem>
+                </div>
+              </Grid>
+              <Grid item xs={2}>
+<Box width={'100%'} border={1}>
+                  <ProximitySelect proximityOptions={proximityOptions}/>
+  
+</Box>
+              </Grid>
+              <Grid item xs={8} border={0}>
+                <div style={section}>
+                  <Box
+                    xs={12}
+                    display={'flex'}
+                    justifyContent={'center'}
+                    justifyItems={'center'}
+                    alignItems={'center'}
+                    alignContent={'center'}
+                    height={115}
+                    paddingLeft={2}
+                    paddingRight={2}
+                    padding={1}
+                    elevation={1}
+                    borderRadius={1}
+                    border={0}
+                    borderColor={'#CCC'}
+                    backgroundColor="transparent"
+                  >
+                    {' '}
+                    <TextField
+                      fullWidth
+                      backgroundColor={'white'}
+                      id="main-search-text-field"
+                      variant="standard"
+                      onInput={onInput}
+                      onKeyUp={onKeyUp}
+                      placeholder="Search for NEPA documents"
+                      value={'titleRaw'}
+                      autoFocus
+                      InputProps={{
+                        endAdornment: (
+                          <IconButton onClick={(evt) => onChangeHandler(evt)}>
+                            <SearchOutlined />
+                          </IconButton>
+                        ),
+                      }}
+                    />
+                  </Box>
+                </div>
+              </Grid>
             </Grid>
-          </Grid>
-        </div>
+          </div>
+</Item>
 
         <Grid
           mt={2}
@@ -191,8 +212,7 @@ export default function Search(props) {
   );
 }
 export function ProximitySelect(props) {
-  const [proximityDisabled, setProximityDisabled] = React.useState(false);
-  const [proximityOption, setProximityOption] = React.useState(null);
+  const { proximityOptions,proximityDisabled } = props;
   const [proximityOptionValue, setProximityOptionValue] = React.useState(null);
   return (
     <>
@@ -204,7 +224,7 @@ export function ProximitySelect(props) {
         // classNamePrefix="react-select control"
         placeholder="Find within..."
         options={proximityOptions}
-        value={proximityOptionValue}
+        value={'test'}
         // menuIsOpen={true}
         onChange={onProximityChange}
         isMulti={false}

@@ -680,7 +680,7 @@ export default function SideBarFilters(props) {
     }
   };
 
-  const Item = styled(Paper)(({ theme }) => ({
+  const Item = styled(Box)(({ theme }) => ({
     backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
     ...theme.typography.body2,
     padding: theme.spacing(1),
@@ -689,8 +689,8 @@ export default function SideBarFilters(props) {
     elevation: 0,
     border: 0,
     borderRadius: 0,
-    mt: 1,
-    mb: 1,
+    mt: 2,
+    mb: 2,
     pl: 0,
     pr: 0,
     '&:hover': {
