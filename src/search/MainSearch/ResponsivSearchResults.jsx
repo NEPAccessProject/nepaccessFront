@@ -16,6 +16,7 @@ import {
   Container,
   FormLabel,
   Chip,
+  Checkbox,
 } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import theme from '../../styles/theme';
@@ -175,7 +176,7 @@ export default function ResponsiveSearchResults(props) {
             </Grid>
               
               <Grid xs={12} container>
-                <Item xs={10}>
+                <Item xs={12}>
                   <SearchResultItems title="Environmental Impact Statement" id={17704} status="Pending" content="Probability That Monthly Flow below Lake Ralph Hall Dam at Bakers Creek Exceeds
                       Channel Pool Volume of 175 ac-ft: 62.2% 73.0%Probability That Monthly Flow at North
                       Sulphur River Gage near Cooper Exceeds Channel Pool Volume of 175 ac-ft: 82.1%
@@ -189,17 +190,11 @@ export default function ResponsiveSearchResults(props) {
                       27 17 5 19 45 54 114 121 658 587 1,046 1,18015.0% 85.0% 76 48 14 47 115 149 288 364
                       1,051 1,053 1,740 1,91916.2% 83.8% 90 57 18 53 147 175 329 425 1,151 1,201"/>
                 </Item>
-                <Item xs={2}>
-                  <Button>Download</Button>
-                </Item>
               </Grid>
               <Grid>
-                <Item xs={10}>
+                <Item xs={12}>
                   <SearchResultItems title="Environmental Impact Statement" id={17704} status="Draft" content="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Mi proin sed libero enim. Morbi tincidunt ornare massa eget. Venenatis lectus magna fringilla urna porttitor. Habitasse platea dictumst vestibulum rhoncus. Neque sodales ut etiam sit amet nisl. Tincidunt dui ut ornare lectus sit amet est. Suspendisse in est ante in. Et malesuada fames ac turpis egestas maecenas. Gravida in fermentum et sollicitudin ac orci phasellus. Risus viverra adipiscing at in tellus integer. Sem et tortor consequat id porta nibh venenatis. Porttitor leo a diam sollicitudin tempor id eu nisl." />
-                  </Item>
-                  <Item xs={2}>
-                    <Button>Download</Button>
-                  </Item>
+                </Item>
               </Grid>
             </Grid>
           </Grid>

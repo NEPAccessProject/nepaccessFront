@@ -15,7 +15,12 @@ import {
   Typography,
   Container,
   FormLabel,
+ 
+  
 } from '@mui/material';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import Checkbox from '@mui/material/Checkbox';
+
 import { styled } from '@mui/material/styles';
 import theme from '../../styles/theme';
 //import Grid from '@mui/material/Grid'; // Grid version 1
@@ -29,8 +34,6 @@ const _ = require('lodash');
 export default function SideBarFilters(props) {
   console.log('SideBarFilters props', props);
   const {proximityOptions, actionOptions, decisionOptions,searchOptions, agencyOptions, countyOptions, stateOptions} = props;
-  console.log('state options', stateOptions);
-  console.log('county options', countyOptions);
   const [searchState, setSearchState] = useState({
     action: [],
     actionRaw: '',
@@ -708,11 +711,14 @@ export default function SideBarFilters(props) {
 
   const classes = useStyles(theme);
   console.log('SearchState', searchState);
-  const { proximityOptionValue, agencyRaw,stateRaw,county,actionRaw,typeFinal,typeDraft,typeEA,typeNOI,typeROD,typeScoping,typeOther,needsComments,needsDocument} = searchState;
-  const proximityDisabled = true;
+  let { proximityDisabled,proximityOptionValue,markup, agencyRaw,stateRaw,county,actionRaw,typeFinal,typeDraft,typeEA,typeNOI,typeROD,typeScoping,typeOther,needsComments,needsDocument} = searchState;
+  console.log('proximityDisabled',proximityDisabled);
   return (
-
     <>
+      <Item>
+      <FormControlLabel control={<Checkbox  checked={searchOptions} onChange={onTitleOnlyChecked}/>} label="Has downloadable items" />
+      <FormControlLabel control={<Checkbox checked={markup} onChange={onMarkupChange} />} label="Search only within titles" />
+       </Item>
       <Item>
         <SearchFilter
           filter={{

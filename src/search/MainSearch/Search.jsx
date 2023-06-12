@@ -15,6 +15,11 @@ import {
   Typography,
   Container,
   FormLabel,
+  Dialog,
+  DialogContent,
+  DialogTitle,
+  DialogContentText,
+  DialogActions,
 } from '@mui/material';
 import { ThemeProvider, styled } from '@mui/material/styles';
 import theme from '../../styles/theme';
@@ -31,6 +36,7 @@ import {
 } from '../options';
 import { withStyles } from '@mui/styles';
 import SideBarFilters from './SideBarFilters';
+import SearchFilter from './SearchFilter';
 import ResponsiveSearchResults from './ResponsivSearchResults';
 import { lightBlue } from '@mui/material/colors';
 
@@ -89,6 +95,36 @@ const onProximityChange = (evt) => {
   evt.preventDefault();
 };
 
+const SearchTipsDialog = (props) => {
+  const isOpen = props.isOpen || false;
+
+  console.log(`showSearchTipsDialog isOpen : ${isOpen}`);
+  return (
+    <Dialog open={isOpen}>
+      <DialogTitle>Subscribe</DialogTitle>
+      <DialogContent>
+        <DialogContentText>
+          To subscribe to this website, please enter your email address here. We will send updates
+          occasionally.
+        </DialogContentText>
+        <TextField
+          autoFocus
+          margin="dense"
+          id="name"
+          label="Email Address"
+          type="email"
+          fullWidth
+          variant="standard"
+        />
+      </DialogContent>
+      {/* <DialogActions>
+        <Button onClick={handleClose}>Cancel</Button>
+        <Button onClick={handleClose}>Subscribe</Button>
+      </DialogActions> */}
+    </Dialog>
+  );
+};
+
 const styles = {
   fontFamily: 'sans-serif',
   textAlign: 'center',
@@ -106,15 +142,37 @@ const summary = {
 };
 
 export default function Search(props) {
-  console.log('searchState Options:', stateOptions);
+  const [titleRaw, setTitleRaw] = useState('');
+  const [dialogIsOpen, setDialogIsOpen] = useState(false);
+  console.log('Proximity Options:', proximityOptions);
+
+  const onDialogClose = () => {
+    console.log('onDialogClose');
+    setDialogIsOpen(false);
+  };
+  const onDialogOpen = () => {
+    console.log('onDialogOpen');
+    setDialogIsOpen(true);
+  };
+
   return (
     <ThemeProvider theme={theme}>
       <Container disableGutters={true} sx={{}}>
-<Item>
-          <div style={styles}>
-            <Grid container layout={'row'} backgroundColor={'transparent'} spacing={1} border={0}>
+        <Item>
+          <div style={styles} id="search-text-div">
+            <Grid
+              id="search-text-grid-container"
+              display={'flex-root'}
+              alignItems={'center'}
+              container={true}
+              layout={'row'}
+              backgroundColor={'transparent'}
+              spacing={0.5}
+              border={0}
+            >
               <Grid
-                item
+                id="search-text-grid-item"
+                item={true}
                 xs={2}
                 border={0}
                 backgroundColor="transparent"
@@ -124,61 +182,65 @@ export default function Search(props) {
               >
                 <div style={section}>
                   {' '}
-                  <ListItem>Search Tips</ListItem>
-                  <ListItem>Search Tips</ListItem>
-                  <ListItem>Search Tips</ListItem>
+                  <ListItem onClick={onDialogOpen}>Search Tips</ListItem>
+                  <ListItem onClick={onDialogOpen}>Available Files</ListItem>
+                  <ListItem onClick={onDialogOpen}>Quick-start guide</ListItem>
                 </div>
               </Grid>
-              <Grid item xs={2}>
-<Box width={'100%'} border={1}>
-                  <ProximitySelect proximityOptions={proximityOptions}/>
-  
-</Box>
+              <Grid item={true} xs={2}>
+                <Box
+                  id="proximity-search-box"
+                  width={'100%'}
+                  display={'flex'}
+                  alignItems={'center'}
+                  border={0}
+                  justifyContent={'flex-end'}
+                >
+                  <ProximitySelect options={proximityOptions} />
+                </Box>
               </Grid>
-              <Grid item xs={8} border={0}>
-                <div style={section}>
-                  <Box
-                    xs={12}
-                    display={'flex'}
-                    justifyContent={'center'}
-                    justifyItems={'center'}
-                    alignItems={'center'}
-                    alignContent={'center'}
-                    height={115}
-                    paddingLeft={2}
-                    paddingRight={2}
-                    padding={1}
-                    elevation={1}
-                    borderRadius={1}
-                    border={0}
-                    borderColor={'#CCC'}
-                    backgroundColor="transparent"
-                  >
-                    {' '}
-                    <TextField
-                      fullWidth
-                      backgroundColor={'white'}
-                      id="main-search-text-field"
-                      variant="standard"
-                      onInput={onInput}
-                      onKeyUp={onKeyUp}
-                      placeholder="Search for NEPA documents"
-                      value={'titleRaw'}
-                      autoFocus
-                      InputProps={{
-                        endAdornment: (
-                          <IconButton onClick={(evt) => onChangeHandler(evt)}>
-                            <SearchOutlined />
-                          </IconButton>
-                        ),
-                      }}
-                    />
-                  </Box>
-                </div>
+              <Grid item={true} xs={8} border={0} id="search-box-grid-item">
+                <Box
+                  id="search-box-box-item"
+                  xs={12}
+                  display={'flex'}
+                  justifyContent={'center'}
+                  justifyItems={'center'}
+                  alignItems={'center'}
+                  alignContent={'center'}
+                  height={115}
+                  paddingLeft={2}
+                  paddingRight={2}
+                  padding={1}
+                  elevation={1}
+                  borderRadius={1}
+                  border={0}
+                  borderColor={'#CCC'}
+                >
+                  {' '}
+                  <TextField
+                    fullWidth
+                    backgroundColor={'white'}
+                    id="main-search-text-field"
+                    variant="standard"
+                    onInput={onInput}
+                    onKeyUp={onKeyUp}
+                    placeholder="Search for NEPA documents"
+                    value={titleRaw ? titleRaw : ''}
+                    autoFocus
+                    InputProps={{
+                      endAdornment: (
+                        <IconButton onClick={(evt) => onChangeHandler(evt)}>
+                          <SearchOutlined />
+                        </IconButton>
+                      ),
+                    }}
+                  />
+                </Box>
               </Grid>
             </Grid>
           </div>
-</Item>
+        </Item>
 
         <Grid
           mt={2}
@@ -187,9 +249,9 @@ export default function Search(props) {
           spacing={1}
           rowSpacing={1}
           justifyContent={'flex-start'}
-          container
+          container={true}
         >
-          <Grid xs={3} p={0}>
+          <Grid xs={3} p={0} item={true}>
             <Paper>
               <SideBarFilters
                 countyOptions={countyOptions}
@@ -207,63 +269,78 @@ export default function Search(props) {
             </Item>
           </Grid>
         </Grid>
+        <Dialog open={dialogIsOpen} onClose={onDialogClose}>
+          <DialogTitle>Search word Connectors</DialogTitle>
+          <DialogContent>
+            <DialogContentText>
+              <Grid container={true} spacing={1}>
+                <Grid item={true} xs={2}>
+                  <b>AND</b>
+                </Grid>
+                <Grid item={true} xs={10}>
+                  This is the default. <b>all</b> words you enter must be found together to return a
+                  result.
+                </Grid>
+              </Grid>
+              <Grid container={true} spacing={1}>
+                <Grid item={true} xs={2}>
+                  <b>OR</b>
+                </Grid>
+                <Grid item={true} xs={10}>
+                  (all caps) to search for <b>any</b> of those words.
+                </Grid>
+              </Grid>
+              <Grid container={true} spacing={1}>
+                <Grid item={true} xs={2}>
+                  <b>NOT</b>
+                </Grid>
+                <Grid item={true} xs={10}>
+                  (all caps) to search to <b>exclude</b>words or a phrase.
+                </Grid>
+              </Grid>
+              <Grid container={true} spacing={1}>
+                <Grid item={true} xs={2}>
+                  <b>" "</b>
+                </Grid>
+                <Grid item={true} xs={10}>
+                  Surround words with quotes (" ") to search for an exact phrase.
+                </Grid>
+              </Grid>
+            </DialogContentText>
+          </DialogContent>
+        </Dialog>
       </Container>
     </ThemeProvider>
   );
 }
+
 export function ProximitySelect(props) {
-  const { proximityOptions,proximityDisabled } = props;
-  const [proximityOptionValue, setProximityOptionValue] = React.useState(null);
+  const { options, proximityDisabled } = props;
+  const [proximityOptionValue, setProximityOptionValue] = React.useState(proximityOptions[0]);
+  console.log('ProximitySelect options', proximityOptions ? proximityOptions.length : 0);
+  const classes = useStyles(theme);
+  const isDisabled = proximityDisabled ? false : true;
+  // (props.proximityOptionValue) ? setProximityOptionValue(props.proximityOptionValue) : setProximityOptionValue(proximityOptions[0]);
   return (
     <>
-      <Select
-        // width={'100%'}
-        variant="standard"
-        id="proximity-select"
-        className={proximityDisabled ? ' disabled' : ''}
-        // classNamePrefix="react-select control"
-        placeholder="Find within..."
-        options={proximityOptions}
-        value={'test'}
+      <Autocomplete
+        id={'proximity-select-autocomplete'}
+        fullWidth={true}
+        autoComplete={true}
+        autoHighlight={true}
+        tabIndex={3}
+        className={classes.autocomplete}
+        options={options ? options : []}
+        disablePortal={true}
+        // value={value}
         // menuIsOpen={true}
         onChange={onProximityChange}
-        isMulti={false}
-        xs={{
-          border: 0,
+        getOptionLabel={(option) => option.label || label}
+        renderInput={(params) => <TextField placeholder="Search Within..." {...params} />}
+        sx={{
           p: 0,
-          ml: 0,
-          mr: 0,
-          mt: 1,
-          mb: 1,
         }}
       />
-    </>
-  );
-}
-export function SearchBar(props) {
-  const [titleRaw, setTitleRaw] = React.useState(props.titleRaw);
-  return (
-    <>
-      <FormControl id={'search-form-control'} fullWidth>
-        <TextField
-          fullWidth
-          backgroundColor={'white'}
-          id="main-search-bar"
-          variant="outlined"
-          onInput={onInput}
-          onKeyUp={onKeyUp}
-          placeholder="Search for NEPA documents"
-          value={titleRaw}
-          autoFocus
-          InputProps={{
-            endAdornment: (
-              <IconButton onClick={(evt) => onChangeHandler(evt)}>
-                <SearchOutlined />
-              </IconButton>
-            ),
-          }}
-        />
-      </FormControl>
     </>
   );
 }
