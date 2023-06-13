@@ -78,8 +78,8 @@ export default function SearchFilter(props) {
     let { className,label ,placeholder, options, onChange, value,id,tabIndex } = props.filter;
 
     (options) ? options : [];
-    console.log(`label: ${label} - value: ${value}`);
-    console.log('value:',value);
+    // console.log(`label: ${label} - value: ${value}`);
+    // console.log('value:',value);
     const classes =  useStyles(theme);
     //hack so we can use the placeholder initialy otherwise the placeholder is overwritten by the value text,
     if(value === label){

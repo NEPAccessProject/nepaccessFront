@@ -99,7 +99,7 @@ export default function Search(props) {
       agencyRaw: [],
       cooperatingAgency: [],
       cooperatingAgencyRaw: [],
-      county: [],
+      county: countyOptions,
       countyRaw: '',
       countyRaw: [],
       decision: '',
@@ -150,8 +150,8 @@ export default function Search(props) {
       typeScoping: false,
     });
     const filterBy = props.filterResultsBy;
-    const myRef = React.createRef();
-  
+    const myRef = React.createRef();  
+    console.log('SEARCH STATE',searchState);
     const doSearch = (terms) => {
       setSearchState({
         ...searchState,
@@ -397,14 +397,11 @@ export default function Search(props) {
         agencyLabels.push(evt[i].label.replace(/ \([A-Z]*\)/gi, ''));
       }
   
-      setSearchState(...searchState,
+      setSearchState(
         {
           agency: agencyLabels,
           agencyRaw: evt,
-        },
-        () => {
-          filterBy(searchState);
-        },
+        }
       );
     };
     const onCooperatingAgencyChange = (evt) => {
@@ -780,20 +777,19 @@ export default function Search(props) {
                   <ListItem onClick={onDialogOpen}>Quick-start guide</ListItem>
                 </div>
               </Grid>
-              <Grid item={true} xs={2}>
+              <Grid item={true} xs={2} >
                 <Box
                   id="proximity-search-box"
                   width={'100%'}
                   display={'flex'}
                   alignItems={'center'}
-                  border={0}
                   justifyContent={'flex-end'}
                   paddingLeft={1}
                 >
                   <ProximitySelect onProximityChange={onProximityChange} options={proximityOptions} />
                 </Box>
               </Grid>
-              <Grid item={true} xs={8} border={0} id="search-box-grid-item">
+              <Grid item={true} xs={8} borderLeft={0} id="search-box-grid-item">
                 <Box
                   id="search-box-box-item"
                   xs={12}
@@ -807,9 +803,11 @@ export default function Search(props) {
                   paddingRight={2}
                   padding={1}
                   elevation={1}
-                  borderRadius={1}
-                  border={0}
+                  borderRadius={0}
                   borderColor={'#CCC'}
+                  borderLeft={0}
+                  marginLeft={0}
+                  marginRight={0}
                 >
                   {' '}
                   <TextField
@@ -847,7 +845,7 @@ export default function Search(props) {
         >
           <Grid xs={3} p={0} item={true}>
             <Paper>
-            <Item alignItems="center">
+            <Item>
         <Box marginBottom={0}>
           <FormControlLabel
             control={<Checkbox checked={searchState.searchOption} onChange={onTitleOnlyChecked} />}
@@ -1151,6 +1149,7 @@ export function ProximitySelect(props) {
         className={classes.autocomplete}
         options={options ? options : []}
         disablePortal={true}
+
         // value={value}
         // menuIsOpen={true}
         onChange={onProximityChange}
