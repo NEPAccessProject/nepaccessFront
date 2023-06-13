@@ -719,7 +719,7 @@ export default function SideBarFilters(props) {
   return (
     <>
       <Item alignItems="center">
-        <Box marginBottom={2}>
+        <Box marginBottom={0}>
           <FormControlLabel
             control={<Checkbox checked={searchOptions} onChange={onTitleOnlyChecked} />}
             label="Has downloadable items"
@@ -822,12 +822,12 @@ export default function SideBarFilters(props) {
         <Box display={'flex'} xs={12} flexDirection={'column'} border={0} padding={0} margin={0} width={'100%'}>
           <LocalizationProvider dateAdapter={AdapterDayjs}>
             <Box marginBottom={2} components={['DatePicker']} padding={0} width="100%">
-              <DatePicker id="date-picker-from" label="From:" />
+              <DatePicker onChange={onStartDateChange} id="date-picker-from" label="From:" />
             </Box>
           </LocalizationProvider>
           <LocalizationProvider dateAdapter={AdapterDayjs}>
             <Box components={['DatePicker']} padding={0} width="100%">
-              <DatePicker id="date-picker-to" label="To:" />
+              <DatePicker on={onEndDateChange} id="date-picker-to" label="To:" />
             </Box>
           </LocalizationProvider>
         </Box>

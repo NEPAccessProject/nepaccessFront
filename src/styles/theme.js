@@ -51,23 +51,20 @@ const theme = createTheme({
       fontFamily: 'open sans',
     },
     searchResultTitle: {
-      fontSize: '1.5rem',
+      fontSize: '1.25rem',
       color: '#000',
       fontFamily: 'open sans',
-      fontSize: 25,
-
       p: 2,
     },
     searchResultSubTitle: {
-      fontSize: '1.5rem',
       color: '#000',
       fontFamily: 'open sans',
-      fontSize: '1.5rem',
+      fontSize: '1.15rem',
       border: 1,
       p: 2,
     },
     filterLabel: {
-      fontSize: '1rem',
+      fontSize: '0.9rem',
       color: '#000',
       fontFamily: 'open sans',
       display: 'block',

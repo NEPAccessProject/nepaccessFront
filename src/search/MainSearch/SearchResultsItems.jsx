@@ -27,7 +27,7 @@ export default function SearchResultItems(props) {
     <>
       <Box>
         <Box border={0} margin={0} padding={1} paddingLeft={3}>
-          <Typography variant="searchResultTitle">
+          <Typography variant="searchResultSubTitle">
             <a href={'https://www.nepaccess.org/record-details?id=' + id}>{`${status} ${title}`}</a>
           </Typography>
         </Box>

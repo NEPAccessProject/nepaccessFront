@@ -134,8 +134,8 @@ export default function ResponsiveSearchResults(props) {
             <Typography variant="searchResultSubTitle">
               Lake Ralph Hall Regional Water Supply Reservoir Project
             </Typography>
-            <Divider />
 </Box>
+            <Divider />
           <Grid container xs={12}>
             <Grid
               padding={2}
