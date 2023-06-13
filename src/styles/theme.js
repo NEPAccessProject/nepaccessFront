@@ -15,27 +15,31 @@ const theme = createTheme({
     color: '#000',
     fontWeight: 600,
     mt: 1,
+    fontFamily: 'open sans',
   },
   typography: {
     fontFamily: 'open sans',
-    body1: {
-      
-    },
+    body1: {},
     poster: {
       fontSize: 64,
       color: 'red',
+      fontFamily: 'open sans',
     },
     h2: {
       fontSize: 32,
+      fontFamily: 'open sans',
     },
     h3: {
       fontSize: 28,
+      fontFamily: 'open sans',
     },
     h4: {
       fontSize: 28,
+      fontFamily: 'open sans',
     },
     title: {
       fontSize: 34,
+      fontFamily: 'open sans',
       fontFamily: 'open sans',
     },
     subtitle1: {
@@ -44,6 +48,7 @@ const theme = createTheme({
     },
     subtitle2: {
       fontSize: 48,
+      fontFamily: 'open sans',
     },
     searchResultTitle: {
       fontSize: '1.5rem',
@@ -66,6 +71,7 @@ const theme = createTheme({
       color: '#000',
       fontFamily: 'open sans',
       display: 'block',
+      fontWeight: 600,
     },
   },
   components: {

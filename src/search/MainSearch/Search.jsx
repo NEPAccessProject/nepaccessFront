@@ -166,9 +166,9 @@ export default function Search(props) {
               alignItems={'center'}
               container={true}
               layout={'row'}
-              backgroundColor={'transparent'}
-              spacing={0.5}
+              spacing={1}
               border={0}
+              borderColor={'#CCC'}
             >
               <Grid
                 id="search-text-grid-item"
@@ -177,8 +177,9 @@ export default function Search(props) {
                 border={0}
                 backgroundColor="transparent"
                 height={115}
-                borderRadius={2}
+                borderRadius={0}
                 borderColor={'#CCC'}
+                borderRight={1}
               >
                 <div style={section}>
                   {' '}
@@ -195,6 +196,7 @@ export default function Search(props) {
                   alignItems={'center'}
                   border={0}
                   justifyContent={'flex-end'}
+                  paddingLeft={1}
                 >
                   <ProximitySelect options={proximityOptions} />
                 </Box>

@@ -26,10 +26,11 @@ export default function SearchResultItems(props) {
   return (
     <>
       <Box>
-        <Typography p={2} pl={4} variant="searchResultTitle">
-          <a href={'https://www.nepaccess.org/record-details?id=' + id}>{`${status} ${title}`}</a>
-        </Typography>
-
+        <Box border={0} margin={0} padding={1} paddingLeft={3}>
+          <Typography variant="searchResultTitle">
+            <a href={'https://www.nepaccess.org/record-details?id=' + id}>{`${status} ${title}`}</a>
+          </Typography>
+        </Box>
         <Grid container xs={12}>
           <Grid item xs={10}>
             <Container>
@@ -45,19 +46,25 @@ export default function SearchResultItems(props) {
             </Container>
           </Grid>
           <Grid item xs={2}>
-            <Button color="primary" onClick={handleDownloadClick(id)} 
+            <Button
+              color="primary"
+              onClick={handleDownloadClick(id)}
               sx={{
-                width: '100%'
+                width: '100%',
               }}
             >
               Download
             </Button>
-            <Button color={"secondary"}
+            <Button
+              color={'secondary'}
               sx={{
                 width: '100%',
-                mt:1
+                mt: 1,
               }}
-            > Preview </Button>
+            >
+              {' '}
+              Preview{' '}
+            </Button>
           </Grid>
         </Grid>
       </Box>

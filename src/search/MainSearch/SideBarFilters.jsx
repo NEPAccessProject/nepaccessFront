@@ -29,6 +29,9 @@ import { InputAdornment, SearchOutlined } from '@mui/icons-material';
 import SearchFilter from './SearchFilter';
 import { makeStyles } from '@mui/styles';
 import Globals from '../../globals';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 const _ = require('lodash');
 
 export default function SideBarFilters(props) {
@@ -54,7 +57,7 @@ export default function SideBarFilters(props) {
     iconClassName: 'icon icon--effect',
     isDirty: false,
     limit: 100,
-    markup: true,
+    markup: false,
     needsComments: false,
     needsComments: false,
     needsDocument: false,
@@ -712,13 +715,21 @@ export default function SideBarFilters(props) {
   const classes = useStyles(theme);
   console.log('SearchState', searchState);
   let { proximityDisabled,proximityOptionValue,markup, agencyRaw,stateRaw,county,actionRaw,typeFinal,typeDraft,typeEA,typeNOI,typeROD,typeScoping,typeOther,needsComments,needsDocument} = searchState;
-  console.log('proximityDisabled',proximityDisabled);
+  console.log('proximityDisabled',proximityDisabled,'markup',markup);
   return (
     <>
-      <Item>
-      <FormControlLabel control={<Checkbox  checked={searchOptions} onChange={onTitleOnlyChecked}/>} label="Has downloadable items" />
-      <FormControlLabel control={<Checkbox checked={markup} onChange={onMarkupChange} />} label="Search only within titles" />
-       </Item>
+      <Item alignItems="center">
+        <Box marginBottom={2}>
+          <FormControlLabel
+            control={<Checkbox checked={searchOptions} onChange={onTitleOnlyChecked} />}
+            label="Has downloadable items"
+          />
+        </Box>
+        <FormControlLabel
+          control={<Checkbox checked={markup} onChange={onMarkupChange} />}
+          label="Search only within titles"
+        />
+      </Item>
       <Item>
         <SearchFilter
           filter={{
@@ -729,7 +740,7 @@ export default function SideBarFilters(props) {
             className: proximityDisabled ? ' disabled' : '',
             // classNamePrefix="react-select control"
             placeholder: 'Keyword distance',
-            options: proximityOptions ,
+            options: proximityOptions,
             // menuIsOpen={true}
             onChange: onProximityChange,
             label: 'Distance between search terms',
@@ -802,6 +813,24 @@ export default function SideBarFilters(props) {
             tabIndex: '6',
           }}
         />
+      </Item>
+      <Divider />
+      <Item>
+        <Typography pb={1} variant="filterLabel">
+          Date Range:
+        </Typography>
+        <Box display={'flex'} xs={12} flexDirection={'column'} border={0} padding={0} margin={0} width={'100%'}>
+          <LocalizationProvider dateAdapter={AdapterDayjs}>
+            <Box marginBottom={2} components={['DatePicker']} padding={0} width="100%">
+              <DatePicker id="date-picker-from" label="From:" />
+            </Box>
+          </LocalizationProvider>
+          <LocalizationProvider dateAdapter={AdapterDayjs}>
+            <Box components={['DatePicker']} padding={0} width="100%">
+              <DatePicker id="date-picker-to" label="To:" />
+            </Box>
+          </LocalizationProvider>
+        </Box>
       </Item>
     </>
   );
