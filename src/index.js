@@ -6,17 +6,13 @@ import './index.css';
 import theme from './styles/theme.js';
 import Main from './Main.js';
 import { ThemeProvider } from'@mui/styles';
-import {store} from './store.js';
-import {Provider} from 'react-redux';
 import * as serviceWorker from './serviceWorker';
 
 
 ReactDOM.render(
      <BrowserRouter>
     <ThemeProvider theme={theme}>
-    <Provider store={store}>
         <Main />
-    </Provider>
     </ThemeProvider>
     </BrowserRouter>
     , document.getElementById('root')
