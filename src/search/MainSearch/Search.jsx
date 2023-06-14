@@ -47,6 +47,7 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import SearchResultItems from './SearchResultsItems';
 import CloseIcon from '@mui/icons-material/Close';
+import SearchContext from './SearchContext';
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
   // ...theme.typography.body2,
@@ -199,13 +200,10 @@ export default function Search(props) {
   };
 
   const doSearchFromParams = () => {
-    // console.log("Stored terms", _lastSearchTerms);
-    // console.log("State.", state);
 
     var queryString = Globals.getParameterByName('q');
     if (!props.count && (queryString === null || queryString === '')) {
       // No query param/blank terms: Launch no-term search - Only if we have no results saved here already
-      // console.log("No query parameters, doing blank search.", props.count);
       doSearch('');
     } else if (queryString) {
       // Query terms: Handle proximity dropdown logic, launch search
@@ -223,7 +221,6 @@ export default function Search(props) {
       setInputMessage(proximityValues._inputMessage);
 
       if (titleRaw) {
-        // console.log("Firing search with query param");
         setDebouncedSearch(state);
       }
     }
@@ -551,6 +548,7 @@ export default function Search(props) {
   };
 
   const onProximityChange = (evt) => {
+    console.log('OnProximityChange', evt);
     if (evt.value === -1) {
       setSearchState(
         {
@@ -790,354 +788,246 @@ export default function Search(props) {
       );
     }
   };
-  
+  const {markup,
+  proximityDisabled,
+  agencyRaw,state,county} = searchState;
 // #region Return Method
+
+const value = {searchState, searchState};
   return (
-    <ThemeProvider theme={theme}>
-      <Container disableGutters={true} sx={{}}>
-        <Paper>
-          <div style={styles} id="search-text-div">
-            <Grid
-              id="search-text-grid-container"
-              display={'flex-root'}
-              alignItems={'center'}
-              container={true}
-              layout={'row'}
-              spacing={1}
-              border={0}
-              borderColor={'#CCC'}
-            >
+    <SearchContext.Provider value={value}>
+      <ThemeProvider theme={theme}>
+        <Container disableGutters={true} sx={{}}>
+          <Paper>
+            <div style={styles} id="search-text-div">
               <Grid
-                id="search-text-grid-item"
-                item={true}
-                xs={2}
+                id="search-text-grid-container"
+                display={'flex-root'}
+                alignItems={'center'}
+                container={true}
+                layout={'row'}
+                spacing={1}
                 border={0}
-                backgroundColor="transparent"
-                height={115}
-                borderRadius={0}
                 borderColor={'#CCC'}
-                borderRight={1}
               >
-            
-                <div style={section}>
-                  {' '}
-                  <ListItem >Search Tips</ListItem>
-                  <ListItem >Available Files</ListItem>
-                  <ListItem>Quick-start guide</ListItem>
-                </div>
-              </Grid>
-              <Grid item={true} xs={2}>
-                <Box
-                  id="proximity-search-box"
-                  width={'100%'}
-                  display={'flex'}
-                  alignItems={'center'}
-                  justifyContent={'flex-end'}
-                  paddingLeft={1}
-                >
-                  <ProximitySelect
-                    onProximityChange={(evt)=>onProximityChange(evt)}
-                    options={proximityOptions}
-                  />
-                </Box>
-              </Grid>
-              <Grid item={true} xs={8} borderLeft={0} id="search-box-grid-item">
-                <Box
-                  id="search-box-box-item"
-                  xs={12}
-                  display={'flex'}
-                  justifyContent={'center'}
-                  justifyItems={'center'}
-                  alignItems={'center'}
-                  alignContent={'center'}
+                <Grid
+                  id="search-text-grid-item"
+                  item={true}
+                  xs={2}
+                  border={0}
+                  backgroundColor="transparent"
                   height={115}
-                  paddingLeft={2}
-                  paddingRight={2}
-                  padding={1}
-                  elevation={1}
                   borderRadius={0}
                   borderColor={'#CCC'}
-                  borderLeft={0}
-                  marginLeft={0}
-                  marginRight={0}
+                  borderRight={1}
                 >
-                  {' '}
-                  <TextField
-                    fullWidth
-                    backgroundColor={'white'}
-                    id="main-search-text-field"
-                    variant="standard"
-                    onInput={onInput}
-                    onKeyUp={onKeyUp}
-                    placeholder="Search for NEPA documents"
-                    value={searchState.titleRaw ? searchState.titleRaw : ''}
-                    autoFocus
-                    InputProps={{
-                      endAdornment: (
-                        <IconButton onClick={(evt) => onChangeHandler(evt)}>
-                          <SearchOutlined />
-                        </IconButton>
-                      ),
-                    }}
-                  />
-                </Box>
-              </Grid>
-            </Grid>
-          </div>
-        </Paper>
-
-        <Grid
-          mt={2}
-          textAlign={'left'}
-          alignContent={'flex-start'}
-          spacing={2}
-          justifyContent={'flex-start'}
-          container={true}
-        >
- {/* #region SideBarFilters */}
-          <Grid xs={3} p={0} item={true}>
-            <Box>
-              <Item>
-                <Box marginBottom={0}>
-                  <FormControlLabel
-                    control={
-                      <Checkbox checked={searchState.searchOption} onChange={onTitleOnlyChecked} />
-                    }
-                    label="Has Downloadable Items"
-                  />
-                </Box>
-                <FormControlLabel
-                  control={<Checkbox checked={searchState.markup} onChange={onMarkupChange} />}
-                  label="Search Only Within Titles"
-                />
-              </Item>
-              <FilterItem>
-                <SearchFilter
-                  filter={{
-                    className: classes.formControl,
-                    placeholder: 'Find within',
-                    variant: 'standard',
-                    id: 'proximity-select',
-                    className: searchState.proximityDisabled ? ' disabled' : '',
-                    // classNamePrefix="react-select control"
-                    placeholder: 'Keyword distance',
-                    options: proximityOptions,
-                    // menuIsOpen={true}
-                    onChange: onProximityChange,
-                    label: 'Distance Between Search Terms',
-                    tabIndex: '1',
-                  }}
-                />
-              </FilterItem>
-
-              <FilterItem>
-                <SearchFilter
-                  filter={{
-                    className: classes.formControl,
-                    placeholder: 'Type or Select Lead Agencies',
-                    value: searchState.agencyRaw ? searchState.agencyRaw : '',
-                    onChange: onAgencyChange,
-                    id: 'searchAgency',
-                    type: Autocomplete,
-                    options: agencyOptions,
-                    label: 'Lead Agencies',
-                    tabIndex: '3',
-                  }}
-                />
-              </FilterItem>
-              <FilterItem>
-                <SearchFilter
-                  filter={{
-                    className: classes.formControl,
-                    placeholder: 'Type or select Cooperating agencies',
-                    value: searchState.agencyRaw ? searchState.agencyRaw : '',
-                    onChange: onAgencyChange,
-                    id: 'searchAgency',
-                    name: 'cooperatingAgency',
-                    type: Autocomplete,
-                    options: agencyOptions,
-                    label: 'Cooperating Agencies',
-                    tabIndex: '4',
-                  }}
-                />
-              </FilterItem>
-              <Divider />
-              <FilterItem>
-                <SearchFilter
-                  filter={{
-                    className: classes.formControl,
-                    placeholder: 'Type or Select State(s) or Location(s)',
-                    value: (stateOptions.filter = (stateObj) => state.includes(stateObj.value)),
-                    onChange: onLocationChange,
-                    id: 'searchState',
-                    name: 'state',
-                    type: Autocomplete,
-                    options: stateOptions,
-                    label: 'State(s) or Location(s)',
-                    tabIndex: '5',
-                  }}
-                />
-              </FilterItem>
-
-              <FilterItem>
-                <SearchFilter
-                  filter={{
-                    className: classes.formControl,
-                    placeholder: 'Type or Select a County',
-                    value: countyOptions.filter((countyObj) =>
-                      searchState.county.includes(countyObj.value),
-                    ),
-                    onChange: onCountyChange,
-                    id: 'searchCounty',
-                    name: 'county',
-                    type: Autocomplete,
-                    options: countyOptions,
-                    label: 'County / counties',
-                    tabIndex: '6',
-                  }}
-                />
-              </FilterItem>
-              <Divider />
-              <FilterItem>
-                <Typography pb={1} variant="filterLabel">
-                  Date Range:
-                </Typography>
-                <Box
-                  display={'flex'}
-                  xs={12}
-                  flexDirection={'column'}
-                  border={0}
-                  padding={0}
-                  margin={0}
-                  width={'100%'}
-                >
-                  <LocalizationProvider dateAdapter={AdapterDayjs}>
-                    <Box marginBottom={2} components={['DatePicker']} padding={0} width="100%">
-                      <DatePicker
-                        onChange={onStartDateChange}
-                        id="date-picker-from"
-                        label="From:"
-                      />
-                    </Box>
-                  </LocalizationProvider>
-                  <LocalizationProvider dateAdapter={AdapterDayjs}>
-                    <Box components={['DatePicker']} padding={0} width="100%">
-                      <DatePicker on={onEndDateChange} id="date-picker-to" label="To:" />
-                    </Box>
-                  </LocalizationProvider>
-                </Box>
-              </FilterItem>
-            </Box>
-            <Divider />
-          </Grid>
-{/* #endregion */}
-          {/* #region Search Results */}
-          <Grid xs={9}>
-            <Paper>
-              <Box
-                sx={{
-                  height: '100%',
-                }}
-              >
-                <Box padding={1} marginTop={0} marginBottom={0}>
-                  <Typography
-                    variant="searchResultTitle"
-                    paddingTop={1}
-                    paddingBottom={1}
-                    marginTop={2}
-                    marginBottom={2}
+              
+                  <div style={section}>
+                    {' '}
+                    <ListItem >Search Tips</ListItem>
+                    <ListItem >Available Files</ListItem>
+                    <ListItem>Quick-start guide</ListItem>
+                  </div>
+                </Grid>
+                <Grid item={true} xs={2}>
+                  <Box
+                    id="proximity-search-box"
+                    width={'100%'}
+                    display={'flex'}
+                    alignItems={'center'}
+                    justifyContent={'flex-end'}
+                    paddingLeft={1}
                   >
-                    Search Results
-                  </Typography>
-                </Box>
-                <Divider />
-                <Grid container>
-                  <Box p={1} marginTop={1} marginBottom={1}>
-                    <Typography variant="searchResultSubTitle">
-                      Lake Ralph Hall Regional Water Supply Reservoir Project
+                    <ProximitySelect
+                      onProximityChange={(evt)=>onProximityChange(evt)}
+                      options={proximityOptions}
+                    />
+                  </Box>
+                </Grid>
+                <Grid item={true} xs={8} borderLeft={0} id="search-box-grid-item">
+                  <Box
+                    id="search-box-box-item"
+                    xs={12}
+                    display={'flex'}
+                    justifyContent={'center'}
+                    justifyItems={'center'}
+                    alignItems={'center'}
+                    alignContent={'center'}
+                    height={115}
+                    paddingLeft={2}
+                    paddingRight={2}
+                    padding={1}
+                    elevation={1}
+                    borderRadius={0}
+                    borderColor={'#CCC'}
+                    borderLeft={0}
+                    marginLeft={0}
+                    marginRight={0}
+                  >
+                    {' '}
+                    <TextField
+                      fullWidth
+                      backgroundColor={'white'}
+                      id="main-search-text-field"
+                      variant="standard"
+                      onInput={onInput}
+                      onKeyUp={onKeyUp}
+                      placeholder="Search for NEPA documents"
+                      value={searchState.titleRaw ? searchState.titleRaw : ''}
+                      autoFocus
+                      InputProps={{
+                        endAdornment: (
+                          <IconButton onClick={(evt) => onChangeHandler(evt)}>
+                            <SearchOutlined />
+                          </IconButton>
+                        ),
+                      }}
+                    />
+                  </Box>
+                </Grid>
+              </Grid>
+            </div>
+          </Paper>
+  
+          <Grid
+            mt={2}
+            textAlign={'left'}
+            alignContent={'flex-start'}
+            spacing={2}
+            justifyContent={'flex-start'}
+            container={true}
+          >
+   {/* #region SideBarFilters */}
+            <Grid xs={3} p={0} item={true}>
+                  <SideBarFilters 
+                  context = {SearchContext}
+                  values = {{
+                    markup,
+                    proximityDisabled,
+                    agencyRaw,
+                    county,
+                    state,
+                  }}
+  
+                  onTitleOnlyChecked = {onTitleOnlyChecked}
+                  onMarkupChange=  {onMarkupChange}
+                  onAgencyChange=  {onAgencyChange}
+                  onCooperatingAgencyChange ={onCooperatingAgencyChange}
+                  onCountyChange= {onCountyChange}
+                  onLocationChange=  {onLocationChange}
+                   onDecisionChange= {onDecisionChange}
+                  />
+              <Divider />
+            </Grid>
+  {/* #endregion */}
+            {/* #region Search Results */}
+            <Grid xs={9}>
+              <Paper>
+                <Box
+                  sx={{
+                    height: '100%',
+                  }}
+                >
+                  <Box padding={1} marginTop={0} marginBottom={0}>
+                    <Typography
+                      variant="searchResultTitle"
+                      paddingTop={1}
+                      paddingBottom={1}
+                      marginTop={2}
+                      marginBottom={2}
+                    >
+                      Search Results
                     </Typography>
                   </Box>
                   <Divider />
-                  <Grid container xs={12}>
-                    <Grid
-                      padding={2}
-                      flexWrap={'wrap'}
-                      container
-                      xs={12}
-                      flexDirection={'row'}
-                      flex={1}
-                      border={0}
-                    >
-                      <Item>
-                        Status: <b>Final</b>
-                      </Item>
-                      <Item>
-                        Date: <b>2020-01-01</b>
-                      </Item>
-                      <Item>
-                        State: <b>TX</b>
-                      </Item>
-                      <Item>
-                        County: <b>TX: Fannin</b>
-                      </Item>
-                      <Item>
-                        Action: <b>Water Work</b>
-                      </Item>
-                      <Item>
-                        Decision <b>Project</b>
-                      </Item>
-                      <Item>
-                        Action: <b>Transportation</b>
-                      </Item>
-                      <Item>
-                        Decision <b>Project</b>
-                      </Item>
-                      <Item>
-                        County: <b>AZ: Pima; AZ: Santa Cruz; AZ: Yavapai</b>
-                      </Item>
-                    </Grid>
-
-                    <Grid xs={12} container>
-                      <Item xs={12}>
-                        <SearchResultItems
-                          title="Environmental Impact Statement"
-                          id={17704}
-                          status="Pending"
-                          content="Probability That Monthly Flow below Lake Ralph Hall Dam at Bakers Creek Exceeds
-                      Channel Pool Volume of 175 ac-ft: 62.2% 73.0%Probability That Monthly Flow at North
-                      Sulphur River Gage near Cooper Exceeds Channel Pool Volume of 175 ac-ft: 82.1%
-                      83.8%PER- EXCEED-CENTILE ENCEPROBA-BILITY From From From From From From From From
-                      From From From FromRiverWare WAM RiverWare WAM RiverWare WAM RiverWare WAM RiverWare
-                      WAM RiverWare WAM% % ac-ft/mon ac-ft/mon ac-ft/mon ac-ft/mon ac-ft/mon ac-ft/mon
-                      ac-ft/mon ac-ft/mon ac-ft/mon ac-ft/mon ac-ft/mon ac-ft/mon1.0% 99.0% 0 0 0 0 0 2 1
-                      3 308 208 308 2842.0% 98.0% 0 0 0 0 0 3 5 4 316 310 341 4163.0% 97.0% 0 0 0 0 0 4 11
-                      10 343 378 369 4724.0% 96.0% 3 2 1 3 4 9 30 23 350 384 442 5095.0% 95.0% 5 4 1 5 9
-                      16 38 34 394 423 527 5907.0% 93.0% 13 8 3 9 22 28 63 57 455 473 720 75110.0% 90.0%
-                      27 17 5 19 45 54 114 121 658 587 1,046 1,18015.0% 85.0% 76 48 14 47 115 149 288 364
-                      1,051 1,053 1,740 1,91916.2% 83.8% 90 57 18 53 147 175 329 425 1,151 1,201"
-                        />
-                      </Item>
-                    </Grid>
-                    <Grid>
-                      <Item xs={12}>
-                        <SearchResultItems
-                          title="Environmental Impact Statement"
-                          id={17704}
-                          status="Draft"
-                          content="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Mi proin sed libero enim. Morbi tincidunt ornare massa eget. Venenatis lectus magna fringilla urna porttitor. Habitasse platea dictumst vestibulum rhoncus. Neque sodales ut etiam sit amet nisl. Tincidunt dui ut ornare lectus sit amet est. Suspendisse in est ante in. Et malesuada fames ac turpis egestas maecenas. Gravida in fermentum et sollicitudin ac orci phasellus. Risus viverra adipiscing at in tellus integer. Sem et tortor consequat id porta nibh venenatis. Porttitor leo a diam sollicitudin tempor id eu nisl."
-                        />
-                      </Item>
+                  <Grid container>
+                    <Box p={1} marginTop={1} marginBottom={1}>
+                      <Typography variant="searchResultSubTitle">
+                        Lake Ralph Hall Regional Water Supply Reservoir Project
+                      </Typography>
+                    </Box>
+                    <Divider />
+                    <Grid container xs={12}>
+                      <Grid
+                        padding={2}
+                        flexWrap={'wrap'}
+                        container
+                        xs={12}
+                        flexDirection={'row'}
+                        flex={1}
+                        border={0}
+                      >
+                        <Item>
+                          Status: <b>Final</b>
+                        </Item>
+                        <Item>
+                          Date: <b>2020-01-01</b>
+                        </Item>
+                        <Item>
+                          State: <b>TX</b>
+                        </Item>
+                        <Item>
+                          County: <b>TX: Fannin</b>
+                        </Item>
+                        <Item>
+                          Action: <b>Water Work</b>
+                        </Item>
+                        <Item>
+                          Decision <b>Project</b>
+                        </Item>
+                        <Item>
+                          Action: <b>Transportation</b>
+                        </Item>
+                        <Item>
+                          Decision <b>Project</b>
+                        </Item>
+                        <Item>
+                          County: <b>AZ: Pima; AZ: Santa Cruz; AZ: Yavapai</b>
+                        </Item>
+                      </Grid>
+  
+                      <Grid xs={12} container>
+                        <Item xs={12}>
+                          <SearchResultItems
+                            title="Environmental Impact Statement"
+                            id={17704}
+                            status="Pending"
+                            content="Probability That Monthly Flow below Lake Ralph Hall Dam at Bakers Creek Exceeds
+                        Channel Pool Volume of 175 ac-ft: 62.2% 73.0%Probability That Monthly Flow at North
+                        Sulphur River Gage near Cooper Exceeds Channel Pool Volume of 175 ac-ft: 82.1%
+                        83.8%PER- EXCEED-CENTILE ENCEPROBA-BILITY From From From From From From From From
+                        From From From FromRiverWare WAM RiverWare WAM RiverWare WAM RiverWare WAM RiverWare
+                        WAM RiverWare WAM% % ac-ft/mon ac-ft/mon ac-ft/mon ac-ft/mon ac-ft/mon ac-ft/mon
+                        ac-ft/mon ac-ft/mon ac-ft/mon ac-ft/mon ac-ft/mon ac-ft/mon1.0% 99.0% 0 0 0 0 0 2 1
+                        3 308 208 308 2842.0% 98.0% 0 0 0 0 0 3 5 4 316 310 341 4163.0% 97.0% 0 0 0 0 0 4 11
+                        10 343 378 369 4724.0% 96.0% 3 2 1 3 4 9 30 23 350 384 442 5095.0% 95.0% 5 4 1 5 9
+                        16 38 34 394 423 527 5907.0% 93.0% 13 8 3 9 22 28 63 57 455 473 720 75110.0% 90.0%
+                        27 17 5 19 45 54 114 121 658 587 1,046 1,18015.0% 85.0% 76 48 14 47 115 149 288 364
+                        1,051 1,053 1,740 1,91916.2% 83.8% 90 57 18 53 147 175 329 425 1,151 1,201"
+                          />
+                        </Item>
+                      </Grid>
+                      <Grid>
+                        <Item xs={12}>
+                          <SearchResultItems
+                            title="Environmental Impact Statement"
+                            id={17704}
+                            status="Draft"
+                            content="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Mi proin sed libero enim. Morbi tincidunt ornare massa eget. Venenatis lectus magna fringilla urna porttitor. Habitasse platea dictumst vestibulum rhoncus. Neque sodales ut etiam sit amet nisl. Tincidunt dui ut ornare lectus sit amet est. Suspendisse in est ante in. Et malesuada fames ac turpis egestas maecenas. Gravida in fermentum et sollicitudin ac orci phasellus. Risus viverra adipiscing at in tellus integer. Sem et tortor consequat id porta nibh venenatis. Porttitor leo a diam sollicitudin tempor id eu nisl."
+                          />
+                        </Item>
+                      </Grid>
                     </Grid>
                   </Grid>
-                </Grid>
-              </Box>
-            </Paper>
+                </Box>
+              </Paper>
+            </Grid>
+          {/* #endregion */}
           </Grid>
-        {/* #endregion */}
-        </Grid>
-      </Container>
-         {/* <SearchTipsDialog isOpen={searchState.isSearchTipsDialogIsOpen} /> */}
-    </ThemeProvider>
+        </Container>
+           {/* <SearchTipsDialog isOpen={searchState.isSearchTipsDialogIsOpen} /> */}
+      </ThemeProvider>
+    </SearchContext.Provider>
   );
 // #endregion
 }// #region SubComponents
@@ -1145,7 +1035,6 @@ export default function Search(props) {
 export function ProximitySelect(props) {
   const { options, proximityDisabled, onProximityChange } = props;
   const [proximityOptionValue, setProximityOptionValue] = React.useState(proximityOptions[0]);
-  console.log('ProximitySelect options', proximityOptions ? proximityOptions.length : 0);
   const classes = useStyles(theme);
   const isDisabled = proximityDisabled ? false : true;
   // (props.proximityOptionValue) ? setProximityOptionValue(props.proximityOptionValue) : setProximityOptionValue(proximityOptions[0]);
@@ -1163,7 +1052,7 @@ export function ProximitySelect(props) {
         disablePortal={true}
         // value={value}
         // menuIsOpen={true}
-        onChange={onProximityChange}
+        onChange={(evt)=>onProximityChange(evt)}
         getOptionLabel={(option) => option.label || label}
         renderInput={(params) => <TextField placeholder="Distance Between Keywords" {...params} />}
         sx={{
@@ -1174,7 +1063,6 @@ export function ProximitySelect(props) {
   );
 }
 export function SearchTipsDialog(props){
-  console.log('SearchTipsDialog props', props);
   return (
     <Dialog open={props.isOpen} onClose={props.onDialogClose}>
     <Grid container={true} spacing={1}>

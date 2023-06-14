@@ -74,18 +74,15 @@ const useStyles = (theme) => ({
 const drawerWidth = 200;
 
 export default function SearchFilter(props) {
-
+  console.log(`Search Filter Context`,props.context);
     let { className,label ,placeholder, options, onChange, value,id,tabIndex } = props.filter;
-
     (options) ? options : [];
-    // console.log(`label: ${label} - value: ${value}`);
-    // console.log('value:',value);
     const classes =  useStyles(theme);
     //hack so we can use the placeholder initialy otherwise the placeholder is overwritten by the value text,
     if(value === label){
       value = placeholder
     }
-    console.log(`Label: ${label} - length ${(options) ? options.length : 0}`);
+    //console.log(`Label: ${label} - length ${(options) ? options.length : 0}`);
     if(!options || !options.length){
       console.warn('The options of the filter are either undefined or have no values ',id);
     }
