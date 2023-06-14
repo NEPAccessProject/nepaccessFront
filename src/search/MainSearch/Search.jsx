@@ -54,7 +54,7 @@ const Item = styled(Paper)(({ theme }) => ({
   // textAlign: 'center',
   color: theme.palette.text.secondary,
   elevation: 1,
-  borderRadius: 0,
+  borderRadius: 1,
   mt: 1,
   mb: 1,
   pl: 0,
@@ -211,7 +211,8 @@ export default function Search(props) {
       // Query terms: Handle proximity dropdown logic, launch search
       setProximityValues(handleProximityValues(queryString));
 
-      setSearchState(...searchState, {
+      setSearchState({
+        ...searchState,
         _lastSearchTerms: queryString,
         titleRaw: parseTerms(queryString),
         proximityDisabled: proximityValues.disableValue,
@@ -258,7 +259,8 @@ export default function Search(props) {
   };
   /** clears and disables proximity search option as well as clearing text */
   const onClearClick = (evt) => {
-    setSearchState(...searchState, {
+    setSearchState({
+      ...searchState,
       titleRaw: '',
       proximityDisabledSet: true,
       proximityOption: null,
@@ -270,8 +272,8 @@ export default function Search(props) {
 
   const onClearFiltersClick = () => {
     setSearchState(
-      ...searchState,
       {
+        ...searchState,
         // titleRaw: '',
         startPublish: null,
         endPublish: null,
@@ -309,7 +311,7 @@ export default function Search(props) {
   };
 
   const onRadioChange = (evt) => {
-    setSearchState(...searchState, { [evt.target.name]: evt.target.value }, () => {
+    setSearchState({ ...searchState,[evt.target.name]: evt.target.value }, () => {
       // debouncedSearch(state);
     });
   };
@@ -334,7 +336,8 @@ export default function Search(props) {
   };
   const onMarkupChange = (evt) => {
     let checked = evt.target.checked;
-    setSearchState(...searchState, {
+    setSearchState({
+      ...searchState,
       markup: checked,
     });
   };
@@ -347,8 +350,8 @@ export default function Search(props) {
     //get the evt.target.name (defined by name= in input)
     //and use it to target the key on our `state` object with the same name, using bracket syntax
     setSearchState(
-      ...searchState,
       {
+        ...searchState,
         [evt.target.name]: userInput,
         proximityDisabled: proximityValues.disableValue,
         inputMessage: proximityValues._inputMessage,
@@ -369,14 +372,14 @@ export default function Search(props) {
   };
   const toggleSearchTipDialogClose = (isOpen) => {
     (isOpen == true) 
-      ?  setSearchState(prevState => ({
-            ...prevState,    // keep all other key-value pairs
+      ?  setSearchState({
+            ...searchState,    // keep all other key-value pairs
             isSearchTipsDialogIsOpen: false       // update the value of specific key
-        }))
-      :  setSearchState(prevState => ({
+        })
+      :  setSearchState({
         ...prevState,    // keep all other key-value pairs
         isSearchTipsDialogIsOpen: true       // update the value of specific key
-    }))
+    });
 
   };
   const onDialogOpen = () => {
@@ -426,7 +429,7 @@ export default function Search(props) {
 
   const onFragmentSizeChange = (evt) => {
     console.log('Val', evt.value);
-    setSearchState(...searchState, {
+    setSearchState({...searchState,
       fragmentSizeValue: evt.value,
       fragmentSize: evt,
     });
@@ -439,6 +442,7 @@ export default function Search(props) {
     }
 
     setSearchState({
+      ...searchState,
       agency: agencyLabels,
       agencyRaw: evt,
     });
@@ -449,8 +453,8 @@ export default function Search(props) {
       agencyLabels.push(evt[i].label.replace(/ \([A-Z]*\)/gi, ''));
     }
     setSearchState(
-      ...searchState,
       {
+        ...searchState,
         cooperatingAgency: agencyLabels,
         cooperatingAgencyRaw: evt,
       },
@@ -465,8 +469,8 @@ export default function Search(props) {
       actionLabels.push(evt[i].label.replace(/ \([A-Z]*\)/gi, ''));
     }
     setSearchState(
-      ...searchState,
       {
+        ...searchState,
         action: actionLabels,
         actionRaw: evt,
       },
@@ -481,8 +485,8 @@ export default function Search(props) {
       decisionLabels.push(evt[i].label.replace(/ \([A-Z]*\)/gi, ''));
     }
     setSearchState(
-      ...searchState,
       {
+        ...searchState,
         decision: decisionLabels,
         decisionRaw: evt,
       },
@@ -498,8 +502,8 @@ export default function Search(props) {
     }
 
     setSearchState(
-      ...searchState,
       {
+        ...searchState,
         state: stateValues,
         stateRaw: evt,
         countyOptions: narrowCountyOptions(stateValues),
@@ -540,7 +544,7 @@ export default function Search(props) {
     for (var i = 0; i < evt.length; i++) {
       countyValues.push(evt[i].value);
     }
-    setSearchState(...searchState, {
+    setSearchState({...searchState,
       county: countyValues,
       countyRaw: evt,
     });
@@ -549,23 +553,23 @@ export default function Search(props) {
   const onProximityChange = (evt) => {
     if (evt.value === -1) {
       setSearchState(
-        ...searchState,
-        ...{
+        {
+          ...searchState,
           proximityOption: null,
         },
       );
     } else {
-      setSearchState(...searchState, { ...state, proximityOption: evt });
+      setSearchState({ ...searchState, proximityOption: evt });
     }
   };
 
   const onTitleOnlyChecked = (evt) => {
     if (evt.target.checked) {
-      setSearchState(...searchState, {
+      setSearchState({...searchState, 
         searchOption: 'C', // Title only
       });
     } else {
-      setSearchState(...searchState, {
+      setSearchState({...searchState,
         searchOption: 'B', // Both fields, Lucene default scoring
       });
     }
@@ -586,8 +590,8 @@ export default function Search(props) {
 
   const onNeedsDocumentChecked = (evt) => {
     setSearchState(
-      ...searchState,
       {
+        ...searchState,
         needsDocument: !needsDocument,
       },
       () => {
@@ -598,14 +602,14 @@ export default function Search(props) {
 
   const onTypeChecked = (evt) => {
     if (evt.target.name === 'optionsChecked') {
-      setSearchState(...searchState, {
+      setSearchState({...searchState,
         [evt.target.name]: evt.target.checked,
       });
     } else if (evt.target.name === 'typeAll' && evt.target.checked) {
       // All: Check all, uncheck others
       setSearchState(
-        ...searchState,
         {
+          ...searchState,
           typeAll: true,
           typeFinal: false,
           typeDraft: false,
@@ -619,8 +623,8 @@ export default function Search(props) {
     } else {
       // Not all: Check target, uncheck all
       setSearchState(
-        ...searchState,
         {
+          ...searchState,
           [evt.target.name]: evt.target.checked,
           typeAll: false,
         },
@@ -637,7 +641,7 @@ export default function Search(props) {
   // }
 
   const onStartDateChange = (date) => {
-    setSearchState(...searchState, { startPublish: date }, () => {
+    setSearchState({...searchState, startPublish: date }, () => {
       filterBy(searchState);
       // debouncedSearch(state);
     });
@@ -645,29 +649,30 @@ export default function Search(props) {
   // Tried quite a bit but I can't force the calendar to Dec 31 of a year as it's typed in without editing the library code itself.
   // I can change the value but the popper state won't update to reflect it (even when I force it to update).
   const onEndDateChange = (date, evt) => {
-    setSearchState(...searchState, { endPublish: date }, () => {
+    setSearchState({...searchState, endPublish: date }, () => {
       filterBy(searchState);
-      // debouncedSearch(state);
+      debouncedSearch(state);
     });
     // }
   };
   const onStartCommentChange = (date) => {
-    setSearchState(...searchState, { startComment: date }, () => {
+    setSearchState({...searchState, startComment: date }, () => {
       filterBy(searchState);
-      // debouncedSearch(state);
+        debouncedSearch(state);
     });
   };
   const onEndCommentChange = (date) => {
-    setSearchState(...searchState, { endComment: date }, () => {
+    setSearchState({ ...searchState, endComment: date }, () => {
       filterBy(searchState);
-      // debouncedSearch(state);
+      debouncedSearch(state);
     });
   };
   const tooltipTrigger = (evt) => {
-    setSearchState(...searchState, { tooltipOpen: !tooltipOpen });
+    setSearchState( {...searchState, tooltipOpen: !tooltipOpen });
   };
   const closeTooltip = () => {
-    setSearchState(...searchState, {
+    setSearchState({
+      ...searchState,
       tooltipOpen: false,
     });
   };
@@ -686,7 +691,7 @@ export default function Search(props) {
     })
       .then((_response) => {
         const rsp = _response.data;
-        setSearchState(...searchState, { [stateName]: rsp });
+        setSearchState({...searchState, [stateName]: rsp });
       })
       .catch((error) => {});
   };
@@ -761,8 +766,8 @@ export default function Search(props) {
 
   const toggleFiltersHidden = () => {
     setSearchState(
-      ...searchState,
       {
+        ...searchState,
         filtersHidden: !filtersHidden,
       },
       () => {
@@ -770,7 +775,8 @@ export default function Search(props) {
       },
     );
   };
-  const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
+  //[TODO] We can use this to create a full screen modal if needed
+ //const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
   const renderClearFiltersButton = () => {
     if (filtersActive()) {
       return (
@@ -830,7 +836,7 @@ export default function Search(props) {
                   paddingLeft={1}
                 >
                   <ProximitySelect
-                    onProximityChange={onProximityChange}
+                    onProximityChange={(evt)=>onProximityChange(evt)}
                     options={proximityOptions}
                   />
                 </Box>
@@ -897,12 +903,12 @@ export default function Search(props) {
                     control={
                       <Checkbox checked={searchState.searchOption} onChange={onTitleOnlyChecked} />
                     }
-                    label="Has downloadable items"
+                    label="Has Downloadable Items"
                   />
                 </Box>
                 <FormControlLabel
                   control={<Checkbox checked={searchState.markup} onChange={onMarkupChange} />}
-                  label="Search only within titles"
+                  label="Search Only Within Titles"
                 />
               </Item>
               <FilterItem>
@@ -1159,7 +1165,7 @@ export function ProximitySelect(props) {
         // menuIsOpen={true}
         onChange={onProximityChange}
         getOptionLabel={(option) => option.label || label}
-        renderInput={(params) => <TextField placeholder="Search Within..." {...params} />}
+        renderInput={(params) => <TextField placeholder="Distance Between Keywords" {...params} />}
         sx={{
           p: 0,
         }}

@@ -115,10 +115,12 @@ export default function SearchFilter(props) {
               options={(options) ? options : []}
               disablePortal={true}
               // value={value}
+              variant='standard'
               // menuIsOpen={true}
               onChange={onChange}
               getOptionLabel={(option) => option.label || label }
               renderInput={(params) => <TextField {...params} 
+              variant='outlined'
                 sx={{
                   width: '100%',
                   p:0,

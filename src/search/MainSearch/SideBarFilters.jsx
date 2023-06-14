@@ -37,7 +37,7 @@ const _ = require('lodash');
 export default function SideBarFilters(props) {
   console.log('SideBarFilters props', props);
   const {proximityOptions, actionOptions, decisionOptions,searchOptions, agencyOptions, countyOptions, stateOptions} = props;
-  const [searchState, setSearchState] = useState({
+  const [state, setstate] = useState({
     action: [],
     actionRaw: '',
     agency: [],
@@ -98,8 +98,8 @@ export default function SideBarFilters(props) {
   const myRef = React.createRef();
 
   const doSearch = (terms) => {
-    setSearchState({
-      ...searchState,
+    setstate({
+      ...state,
       search: terms,
       searchOptionsChecked: false,
       _lastSearchTerms: terms,
@@ -109,7 +109,7 @@ export default function SideBarFilters(props) {
       surveyDone: false,
       isDirty: true,
     });
-    debouncedSearch(searchState);
+    debouncedSearch(state);
   };
 
   const doSearchFromParams = () => {
@@ -125,7 +125,7 @@ export default function SideBarFilters(props) {
       // Query terms: Handle proximity dropdown logic, launch search
       setProximityValues(handleProximityValues(queryString));
 
-      setSearchState(...searchState, {
+      setstate(...state, {
         _lastSearchTerms: queryString,
         titleRaw: parseTerms(queryString),
         proximityDisabled: proximityValues.disableValue,
@@ -172,7 +172,7 @@ export default function SideBarFilters(props) {
   };
   /** clears and disables proximity search option as well as clearing text */
   const onClearClick = (evt) => {
-    setSearchState(...searchState, {
+    setstate(...state, {
       titleRaw: '',
       proximityDisabledSet: true,
       proximityOption : null,
@@ -183,8 +183,8 @@ export default function SideBarFilters(props) {
   };
 
   const onClearFiltersClick = () => {
-    setSearchState(
-      ...searchState,{
+    setstate(
+      ...state,{
         // titleRaw: '',
         startPublish: null,
         endPublish: null,
@@ -216,13 +216,13 @@ export default function SideBarFilters(props) {
         countyOptions: Globals.counties,
       },
       () => {
-        filterBy(searchState);
+        filterBy(state);
       },
     );
   };
 
   const onRadioChange = (evt) => {
-    setSearchState(...searchState,{ [evt.target.name]: evt.target.value }, () => {
+    setstate(...state,{ [evt.target.name]: evt.target.value }, () => {
       // debouncedSearch(state);
     });
   };
@@ -247,7 +247,7 @@ export default function SideBarFilters(props) {
   };
   const onMarkupChange = (evt) => {
     let checked = evt.target.checked;
-    setSearchState(...searchState,{
+    setstate(...state,{
       markup: checked,
     });
   };
@@ -259,7 +259,7 @@ export default function SideBarFilters(props) {
 
     //get the evt.target.name (defined by name= in input)
     //and use it to target the key on our `state` object with the same name, using bracket syntax
-    setSearchState(...searchState,
+    setstate(...state,
       {
         [evt.target.name]: userInput,
         proximityDisabled: proximityValues.disableValue,
@@ -323,7 +323,7 @@ export default function SideBarFilters(props) {
 
   const onFragmentSizeChange = (evt) => {
     console.log('Val', evt.value);
-    setSearchState(...searchState,{
+    setstate(...state,{
       fragmentSizeValue: evt.value,
       fragmentSize: evt,
     });
@@ -335,13 +335,13 @@ export default function SideBarFilters(props) {
       agencyLabels.push(evt[i].label.replace(/ \([A-Z]*\)/gi, ''));
     }
 
-    setSearchState(...searchState,
+    setstate(...state,
       {
         agency: agencyLabels,
         agencyRaw: evt,
       },
       () => {
-        filterBy(searchState);
+        filterBy(state);
       },
     );
   };
@@ -350,14 +350,14 @@ export default function SideBarFilters(props) {
     for (var i = 0; i < evt.length; i++) {
       agencyLabels.push(evt[i].label.replace(/ \([A-Z]*\)/gi, ''));
     }
-    setSearchState(
-      ...searchState,
+    setstate(
+      ...state,
       {
         cooperatingAgency: agencyLabels,
         cooperatingAgencyRaw: evt,
       },
       () => {
-        filterBy(searchState);
+        filterBy(state);
       },
     );
   };
@@ -366,14 +366,14 @@ export default function SideBarFilters(props) {
     for (var i = 0; i < evt.length; i++) {
       actionLabels.push(evt[i].label.replace(/ \([A-Z]*\)/gi, ''));
     }
-    setSearchState(
-      ...searchState,
+    setstate(
+      ...state,
       {
         action: actionLabels,
         actionRaw: evt,
       },
       () => {
-        filterBy(searchState);
+        filterBy(state);
       },
     );
   };
@@ -382,14 +382,14 @@ export default function SideBarFilters(props) {
     for (var i = 0; i < evt.length; i++) {
       decisionLabels.push(evt[i].label.replace(/ \([A-Z]*\)/gi, ''));
     }
-    setSearchState(
-      ...searchState,
+    setstate(
+      ...state,
       {
         decision: decisionLabels,
         decisionRaw: evt,
       },
       () => {
-        filterBy(searchState);
+        filterBy(state);
       },
     );
   };
@@ -399,15 +399,15 @@ export default function SideBarFilters(props) {
       stateValues.push(evt[i].value);
     }
 
-    setSearchState(
-      ...searchState,
+    setstate(
+      ...state,
       {
         state: stateValues,
         stateRaw: evt,
         countyOptions: narrowCountyOptions(stateValues),
       },
       () => {
-        // filterBy(searchState);
+        // filterBy(state);
         // Purge invalid counties, which will then run filterBy
         onCountyChange(countyOptions.filter((countyObj) => county.includes(countyObj.value)));
       },
@@ -442,7 +442,7 @@ export default function SideBarFilters(props) {
     for (var i = 0; i < evt.length; i++) {
       countyValues.push(evt[i].value);
     }
-    setSearchState(...searchState, {
+    setstate(...state, {
       county: countyValues,
       countyRaw: evt,
     });
@@ -450,24 +450,31 @@ export default function SideBarFilters(props) {
 
   const onProximityChange = (evt) => {
     if (evt.value === -1) {
-      setSearchState(
-        ...searchState,
-        ...{
+      setstate(prevState => ({
+        ...prevState,
           proximityOption: null,
         },
-      );
+        () => {
+          filterBy(state);
+        }));
     } else {
-      setSearchState(...searchState, { ...state, proximityOption: evt });
+      setstate(prevState => ({
+        ...prevState,
+          proximityOption: evt,
+        },
+        () => {
+          filterBy(state);
+        }));
     }
   };
 
   const onTitleOnlyChecked = (evt) => {
     if (evt.target.checked) {
-      setSearchState(...searchState, {
+      setstate(...state, {
         searchOption: 'C', // Title only
       });
     } else {
-      setSearchState(...searchState, {
+      setstate(...state, {
         searchOption: 'B', // Both fields, Lucene default scoring
       });
     }
@@ -487,26 +494,26 @@ export default function SideBarFilters(props) {
   };
 
   const onNeedsDocumentChecked = (evt) => {
-    setSearchState(
-      ...searchState,
+    setstate(
+      ...state,
       {
         needsDocument: !needsDocument,
       },
       () => {
-        filterBy(searchState);
+        filterBy(state);
       },
     );
   };
 
   const onTypeChecked = (evt) => {
     if (evt.target.name === 'optionsChecked') {
-      setSearchState(...searchState, {
+      setstate(...state, {
         [evt.target.name]: evt.target.checked,
       });
     } else if (evt.target.name === 'typeAll' && evt.target.checked) {
       // All: Check all, uncheck others
-      setSearchState(
-        ...searchState,
+      setstate(
+        ...state,
         {
           typeAll: true,
           typeFinal: false,
@@ -514,20 +521,20 @@ export default function SideBarFilters(props) {
           typeOther: false,
         },
         () => {
-            filterBy(searchState);
+            filterBy(state);
           /**debouncedSearch(state);*/
         },
       );
     } else {
       // Not all: Check target, uncheck all
-      setSearchState(
-        ...searchState,
+      setstate(
+        ...state,
         {
           [evt.target.name]: evt.target.checked,
           typeAll: false,
         },
         () => {
-          filterBy(setSearchState);
+          filterBy(setstate);
           // debouncedSearch(state);
         },
       );
@@ -535,41 +542,41 @@ export default function SideBarFilters(props) {
   };
 
   // onChecked = (evt) => {
-  //     setSearchState(...searchState, { [evt.target.name]: evt.target.checked}, () => { debouncedSearch(state); });
+  //     setstate(...state, { [evt.target.name]: evt.target.checked}, () => { debouncedSearch(state); });
   // }
 
   const onStartDateChange = (date) => {
-    setSearchState(...searchState, { startPublish: date }, () => {
-      filterBy(searchState);
+    setstate(...state, { startPublish: date }, () => {
+      filterBy(state);
       // debouncedSearch(state);
     });
   };
   // Tried quite a bit but I can't force the calendar to Dec 31 of a year as it's typed in without editing the library code itself.
   // I can change the value but the popper state won't update to reflect it (even when I force it to update).
   const onEndDateChange = (date, evt) => {
-    setSearchState(...searchState, { endPublish: date }, () => {
-      filterBy(searchState);
+    setstate(...state, { endPublish: date }, () => {
+      filterBy(state);
       // debouncedSearch(state);
     });
     // }
   };
   const onStartCommentChange = (date) => {
-    setSearchState(...searchState, { startComment: date }, () => {
-      filterBy(searchState);
+    setstate(...state, { startComment: date }, () => {
+      filterBy(state);
       // debouncedSearch(state);
     });
   };
   const onEndCommentChange = (date) => {
-    setSearchState(...searchState, { endComment: date }, () => {
-      filterBy(searchState);
+    setstate(...state, { endComment: date }, () => {
+      filterBy(state);
       // debouncedSearch(state);
     });
   };
   const tooltipTrigger = (evt) => {
-    setSearchState(...searchState, { tooltipOpen: !tooltipOpen });
+    setstate(...state, { tooltipOpen: !tooltipOpen });
   };
   const closeTooltip = () => {
-    setSearchState(...searchState, {
+    setstate(...state, {
       tooltipOpen: false,
     });
   };
@@ -588,7 +595,7 @@ export default function SideBarFilters(props) {
     })
       .then((_response) => {
         const rsp = _response.data;
-        setSearchState(...searchState, { [stateName]: rsp });
+        setstate(...state, { [stateName]: rsp });
       })
       .catch((error) => {});
   };
@@ -637,32 +644,32 @@ export default function SideBarFilters(props) {
 
   const filtersActive = () => {
     if (
-      searchState.startPublish ||
-      searchState.endPublish ||
-      searchState.startComment ||
-      searchState.endComment ||
-      searchState.agency.length > 0 ||
-      searchState.cooperatingAgency.length > 0 ||
-      searchState.state.length > 0 ||
-      searchState.county.length > 0 ||
-      searchState.decision.length > 0 ||
-      searchState.action.length > 0 ||
-      searchState.typeFinal ||
-      searchState.typeDraft ||
-      searchState.typeEA ||
-      searchState.typeNOI ||
-      searchState.typeROD ||
-      searchState.typeScoping ||
-      searchState.typeOther ||
-      searchState.needsComments ||
-      searchState.needsDocument
+      state.startPublish ||
+      state.endPublish ||
+      state.startComment ||
+      state.endComment ||
+      state.agency.length > 0 ||
+      state.cooperatingAgency.length > 0 ||
+      state.state.length > 0 ||
+      state.county.length > 0 ||
+      state.decision.length > 0 ||
+      state.action.length > 0 ||
+      state.typeFinal ||
+      state.typeDraft ||
+      state.typeEA ||
+      state.typeNOI ||
+      state.typeROD ||
+      state.typeScoping ||
+      state.typeOther ||
+      state.needsComments ||
+      state.needsDocument
     ) {
       return true;
     }
   };
 
   const toggleFiltersHidden = () => {
-    setSearchState(...searchState,
+    setstate(...state,
       {
         filtersHidden: !filtersHidden,
       },
@@ -713,8 +720,8 @@ export default function SideBarFilters(props) {
   }));
 
   const classes = useStyles(theme);
-  console.log('SearchState', searchState);
-  let { proximityDisabled,proximityOptionValue,markup, agencyRaw,stateRaw,county,actionRaw,typeFinal,typeDraft,typeEA,typeNOI,typeROD,typeScoping,typeOther,needsComments,needsDocument} = searchState;
+  console.log('state', state);
+  let { proximityDisabled,proximityOptionValue,markup, agencyRaw,stateRaw,county,actionRaw,typeFinal,typeDraft,typeEA,typeNOI,typeROD,typeScoping,typeOther,needsComments,needsDocument} = state;
   console.log('proximityDisabled',proximityDisabled,'markup',markup);
   return (
     <>
@@ -743,7 +750,7 @@ export default function SideBarFilters(props) {
             options: proximityOptions,
             // menuIsOpen={true}
             onChange: onProximityChange,
-            label: 'Distance between search terms',
+            label: 'Distance Between Search Terms',
             tabIndex: '1',
           }}
         />
@@ -788,7 +795,7 @@ export default function SideBarFilters(props) {
             placeholder: 'Type or Select State(s) or Location(s)',
             value: (stateOptions.filter = (stateObj) => state.includes(stateObj.value)),
             onChange: onLocationChange,
-            id: 'searchState',
+            id: 'state',
             name: 'state',
             type: Autocomplete,
             options: stateOptions,
