@@ -60,14 +60,39 @@ const Item = styled(Paper)(({ theme }) => ({
   pl: 0,
   pr: 0,
   '&:hover': {
+    // //           backgroundColor: //theme.palette.grey[200],
+    // boxShadow: '0px 4px 8px rgba(0.5, 0.5, 0.5, 0.25)',
+    // backgroundColor: '#eee',
+    // cursor: 'pointer',
+    // '& .addIcon': {
+    //   color: 'darkgrey',
+    // },
+  },
+}));
+
+const FilterItem = styled(Paper)(({ theme }) => ({
+  backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
+  // ...theme.typography.body2,
+  padding: theme.spacing(1),
+  // textAlign: 'center',
+  color: theme.palette.text.secondary,
+  elevation: 1,
+  borderRadius: 0,
+  mt: 1,
+  mb: 1,
+  pl: 0,
+  pr: 0,
+  '&:hover': {
     //           backgroundColor: //theme.palette.grey[200],
-    boxShadow: '0px 4px 8px rgba(0.5, 0.5, 0.5, 0.15)',
+    boxShadow: '0px 4px 8px rgba(0.5, 0.5, 0.5, 0.25)',
+    backgroundColor: '#eee',
     cursor: 'pointer',
     '& .addIcon': {
       color: 'darkgrey',
     },
   },
 }));
+
 
 const useStyles = (theme) => ({
   formControl: {},
@@ -92,6 +117,7 @@ const summary = {
 
 export default function Search(props) {
   const classes = useStyles(theme);
+// #region State Declaration
   const [searchState, setSearchState] = useState({
     action: [],
     actionRaw: '',
@@ -154,6 +180,7 @@ export default function Search(props) {
     isQuickStartDialogIsopen : false,
   });
 
+// #endregion
   const filterBy = props.filterResultsBy;
   const myRef = React.createRef();
   const doSearch = (terms) => {
@@ -757,10 +784,12 @@ export default function Search(props) {
       );
     }
   };
+  
+// #region Return Method
   return (
     <ThemeProvider theme={theme}>
       <Container disableGutters={true} sx={{}}>
-        <Item>
+        <Paper>
           <div style={styles} id="search-text-div">
             <Grid
               id="search-text-grid-container"
@@ -849,19 +878,19 @@ export default function Search(props) {
               </Grid>
             </Grid>
           </div>
-        </Item>
+        </Paper>
 
         <Grid
           mt={2}
           textAlign={'left'}
           alignContent={'flex-start'}
-          spacing={1}
-          rowSpacing={1}
+          spacing={2}
           justifyContent={'flex-start'}
           container={true}
         >
+ {/* #region SideBarFilters */}
           <Grid xs={3} p={0} item={true}>
-            <Paper>
+            <Box>
               <Item>
                 <Box marginBottom={0}>
                   <FormControlLabel
@@ -876,7 +905,7 @@ export default function Search(props) {
                   label="Search only within titles"
                 />
               </Item>
-              <Item>
+              <FilterItem>
                 <SearchFilter
                   filter={{
                     className: classes.formControl,
@@ -889,13 +918,13 @@ export default function Search(props) {
                     options: proximityOptions,
                     // menuIsOpen={true}
                     onChange: onProximityChange,
-                    label: 'Distance between search terms',
+                    label: 'Distance Between Search Terms',
                     tabIndex: '1',
                   }}
                 />
-              </Item>
+              </FilterItem>
 
-              <Item>
+              <FilterItem>
                 <SearchFilter
                   filter={{
                     className: classes.formControl,
@@ -909,8 +938,8 @@ export default function Search(props) {
                     tabIndex: '3',
                   }}
                 />
-              </Item>
-              <Item>
+              </FilterItem>
+              <FilterItem>
                 <SearchFilter
                   filter={{
                     className: classes.formControl,
@@ -925,9 +954,9 @@ export default function Search(props) {
                     tabIndex: '4',
                   }}
                 />
-              </Item>
+              </FilterItem>
               <Divider />
-              <Item>
+              <FilterItem>
                 <SearchFilter
                   filter={{
                     className: classes.formControl,
@@ -942,9 +971,9 @@ export default function Search(props) {
                     tabIndex: '5',
                   }}
                 />
-              </Item>
+              </FilterItem>
 
-              <Item>
+              <FilterItem>
                 <SearchFilter
                   filter={{
                     className: classes.formControl,
@@ -961,9 +990,9 @@ export default function Search(props) {
                     tabIndex: '6',
                   }}
                 />
-              </Item>
+              </FilterItem>
               <Divider />
-              <Item>
+              <FilterItem>
                 <Typography pb={1} variant="filterLabel">
                   Date Range:
                 </Typography>
@@ -991,18 +1020,20 @@ export default function Search(props) {
                     </Box>
                   </LocalizationProvider>
                 </Box>
-              </Item>
-            </Paper>
+              </FilterItem>
+            </Box>
             <Divider />
           </Grid>
+{/* #endregion */}
+          {/* #region Search Results */}
           <Grid xs={9}>
-            <Item>
+            <Paper>
               <Box
                 sx={{
                   height: '100%',
                 }}
               >
-                <Box padding={1} marginTop={0} marginBottom={1}>
+                <Box padding={1} marginTop={0} marginBottom={0}>
                   <Typography
                     variant="searchResultTitle"
                     paddingTop={1}
@@ -1094,14 +1125,17 @@ export default function Search(props) {
                   </Grid>
                 </Grid>
               </Box>
-            </Item>
-          </Grid>searchTipsDialogIsOpen
+            </Paper>
+          </Grid>
+        {/* #endregion */}
         </Grid>
       </Container>
          {/* <SearchTipsDialog isOpen={searchState.isSearchTipsDialogIsOpen} /> */}
     </ThemeProvider>
   );
-}
+// #endregion
+}// #region SubComponents
+
 export function ProximitySelect(props) {
   const { options, proximityDisabled, onProximityChange } = props;
   const [proximityOptionValue, setProximityOptionValue] = React.useState(proximityOptions[0]);
@@ -1203,3 +1237,4 @@ export function SearchTipsDialog(props){
     </Dialog>
   ) 
 }
+// #endregion

@@ -51,7 +51,7 @@ const theme = createTheme({
       fontFamily: 'open sans',
     },
     searchResultTitle: {
-      fontSize: '1.25rem',
+      fontSize: '1.5rem',
       color: '#000',
       fontFamily: 'open sans',
       p: 2,
