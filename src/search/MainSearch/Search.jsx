@@ -22,6 +22,7 @@ import {
   DialogActions,
   FormControlLabel,
   Checkbox,
+  useMediaQuery,
 } from '@mui/material';
 import { ThemeProvider, styled } from '@mui/material/styles';
 import theme from '../../styles/theme';
@@ -45,6 +46,7 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import SearchResultItems from './SearchResultsItems';
+import CloseIcon from '@mui/icons-material/Close';
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
   // ...theme.typography.body2,
@@ -98,7 +100,7 @@ export default function Search(props) {
     agencyRaw: [],
     cooperatingAgency: [],
     cooperatingAgencyRaw: [],
-    county: [],
+    county: countyOptions,
     countyRaw: '',
     countyRaw: [],
     decision: '',
@@ -147,29 +149,26 @@ export default function Search(props) {
     typeRODFinal: false,
     typeRODFinalFinal: false,
     typeScoping: false,
+    isSearchTipsDialogIsOpen : false,
+    isFilesTipsDialogIsOpen : false,
+    isQuickStartDialogIsopen : false,
   });
+
   const filterBy = props.filterResultsBy;
   const myRef = React.createRef();
-
   const doSearch = (terms) => {
-setSearchState(
-  ...searchState,
-  {
-    ...searchState,
-    search: terms,
-    searchOptionsChecked: false,
-    _lastSearchTerms: terms,
-    titleRaw: parseTerms(terms),
-    _lastSearchedTerm: parseTerms(terms),
-    surveyChecked: false,
-    surveyDone: false,
-    isDirty: true,
-  },
-  () => {
-    debouncedSearch(state);
-  },
-);
-
+    setSearchState({
+      ...searchState,
+      search: terms,
+      searchOptionsChecked: false,
+      _lastSearchTerms: terms,
+      titleRaw: parseTerms(terms),
+      _lastSearchedTerm: parseTerms(terms),
+      surveyChecked: false,
+      surveyDone: false,
+      isDirty: true,
+    });
+    debouncedSearch(searchState);
   };
 
   const doSearchFromParams = () => {
@@ -184,18 +183,15 @@ setSearchState(
     } else if (queryString) {
       // Query terms: Handle proximity dropdown logic, launch search
       setProximityValues(handleProximityValues(queryString));
-setSearchState(
-  ...searchState,
-  {
-    ...searchState,
-      _lastSearchTerms: queryString,
+
+      setSearchState(...searchState, {
+        _lastSearchTerms: queryString,
         titleRaw: parseTerms(queryString),
         proximityDisabled: proximityValues.disableValue,
         surveyChecked: false,
         surveyDone: false,
         isDirty: true,
-  });
-
+      });
       setInputMessage(proximityValues._inputMessage);
 
       if (titleRaw) {
@@ -235,30 +231,21 @@ setSearchState(
   };
   /** clears and disables proximity search option as well as clearing text */
   const onClearClick = (evt) => {
-    setSearchState(
-  ...searchState,
-  {
-    ...searchState,
-     titleRaw: '',
+    setSearchState(...searchState, {
+      titleRaw: '',
       proximityDisabledSet: true,
       proximityOption: null,
       inputMessage: '',
-  });
-
-      setInputMessage(proximityValues._inputMessage);
-
-      if (titleRaw) {
-        // console.log("Firing search with query param");
-        setDebouncedSearch(state);
-      }
-    }
-
+    });
+    inputSearch.focus();
+    // debouncedSuggest();
+  };
 
   const onClearFiltersClick = () => {
-        setSearchState(
-  ...searchState,
-  {
-    ...searchState,
+    setSearchState(
+      ...searchState,
+      {
+        // titleRaw: '',
         startPublish: null,
         endPublish: null,
         startComment: null,
@@ -286,17 +273,17 @@ setSearchState(
         needsComments: false,
         needsDocument: false,
         optionsChecked: true,
-  },
-  () => {
-    filterBy(searchState);
-  }
-  );
-
+        countyOptions: Globals.counties,
+      },
+      () => {
+        filterBy(searchState);
+      },
+    );
   };
 
   const onRadioChange = (evt) => {
     setSearchState(...searchState, { [evt.target.name]: evt.target.value }, () => {
-    debouncedSearch(state);
+      // debouncedSearch(state);
     });
   };
 
@@ -320,11 +307,9 @@ setSearchState(
   };
   const onMarkupChange = (evt) => {
     let checked = evt.target.checked;
-       setSearchState((searchState) => ({
-      ...searchState,
+    setSearchState(...searchState, {
       markup: checked,
-    }));
-
+    });
   };
 
   const onInput = (evt) => {
@@ -334,42 +319,42 @@ setSearchState(
 
     //get the evt.target.name (defined by name= in input)
     //and use it to target the key on our `state` object with the same name, using bracket syntax
-    console.log('SEARCH STATE ONINPUT', searchState);
-    console.log('evt.target.name', evt.target);
-    setSearchState((searchState) => ({
+    setSearchState(
       ...searchState,
-      [evt.target.name]: userInput,
-      proximityDisabled: proximityValues.disableValue,
-      inputMessage: proximityValues._inputMessage,
-    }));
-
-    // setSearchState(...searchState,
-    //   {
-    //     [evt.target.name]: userInput,
-    //     proximityDisabled: proximityValues.disableValue,
-    //     inputMessage: proximityValues._inputMessage,
-    //   },
-    //   () => {
-    // auto-searching is currently too expensive until asynchronous results
-    // debouncedSearch(state);
-    // autocomplete/suggest/other functionality fires, starting here
-    // TODO: May want to take out any special characters that never appear in titles or are otherwise unnecessary
-    // debouncedSuggest(titleRaw);
-    //   },
-    // );
+      {
+        [evt.target.name]: userInput,
+        proximityDisabled: proximityValues.disableValue,
+        inputMessage: proximityValues._inputMessage,
+      },
+      () => {
+        // auto-searching is currently too expensive until asynchronous results
+        // debouncedSearch(state);
+        // autocomplete/suggest/other functionality fires, starting here
+        // TODO: May want to take out any special characters that never appear in titles or are otherwise unnecessary
+        // debouncedSuggest(titleRaw);
+      },
+    );
   };
 
   // suppress warning that there's no onChange event, handler (despite onChange rarely being the best event to take advantage of)
   const onChangeHandler = (evt) => {
     // do nothing
   };
-  const onDialogClose = () => {
-    console.log('onDialogClose');
-    setDialogIsOpen(false);
+  const toggleSearchTipDialogClose = (isOpen) => {
+    (isOpen == true) 
+      ?  setSearchState(prevState => ({
+            ...prevState,    // keep all other key-value pairs
+            isSearchTipsDialogIsOpen: false       // update the value of specific key
+        }))
+      :  setSearchState(prevState => ({
+        ...prevState,    // keep all other key-value pairs
+        isSearchTipsDialogIsOpen: true       // update the value of specific key
+    }))
+
   };
   const onDialogOpen = () => {
     console.log('onDialogOpen');
-    setDialogIsOpen(true);
+    setDialogOpen(true);
   };
   const geoFilter = (geodata) => {
     // console.log(geodata.name, geodata.abbrev);
@@ -414,7 +399,6 @@ setSearchState(
 
   const onFragmentSizeChange = (evt) => {
     console.log('Val', evt.value);
-    
     setSearchState(...searchState, {
       fragmentSizeValue: evt.value,
       fragmentSize: evt,
@@ -427,39 +411,25 @@ setSearchState(
       agencyLabels.push(evt[i].label.replace(/ \([A-Z]*\)/gi, ''));
     }
 
-    setSearchState((searchState) => ({
-      ...searchState,
+    setSearchState({
       agency: agencyLabels,
       agencyRaw: evt,
-    }));
-    //          filterBy(searchState);
-    // setSearchState(...searchState,
-    //   {
-    //     agency: agencyLabels,
-    //     agencyRaw: evt,
-    //   },
-    //   () => {
-    //     filterBy(searchState);
-    //   },
-    // );
+    });
   };
   const onCooperatingAgencyChange = (evt) => {
     var agencyLabels = [];
     for (var i = 0; i < evt.length; i++) {
       agencyLabels.push(evt[i].label.replace(/ \([A-Z]*\)/gi, ''));
     }
-
     setSearchState(
-      (searchState) => (
-        {
-          ...searchState,
-          cooperatingAgency: agencyLabels,
-          cooperatingAgencyRaw: evt,
-        },
-        () => {
-          filterBy(searchState);
-        }
-      ),
+      ...searchState,
+      {
+        cooperatingAgency: agencyLabels,
+        cooperatingAgencyRaw: evt,
+      },
+      () => {
+        filterBy(searchState);
+      },
     );
   };
   const onActionChange = (evt) => {
@@ -467,18 +437,15 @@ setSearchState(
     for (var i = 0; i < evt.length; i++) {
       actionLabels.push(evt[i].label.replace(/ \([A-Z]*\)/gi, ''));
     }
-
     setSearchState(
-      (searchState) => (
-        {
-          ...searchState,
-          action: actionLabels,
-          actionRaw: evt,
-        },
-        () => {
-          filterBy(searchState);
-        }
-      ),
+      ...searchState,
+      {
+        action: actionLabels,
+        actionRaw: evt,
+      },
+      () => {
+        filterBy(searchState);
+      },
     );
   };
   const onDecisionChange = (evt) => {
@@ -486,43 +453,35 @@ setSearchState(
     for (var i = 0; i < evt.length; i++) {
       decisionLabels.push(evt[i].label.replace(/ \([A-Z]*\)/gi, ''));
     }
-
-    setSearchState((searchState) => ({
+    setSearchState(
       ...searchState,
-      decision: decisionLabels,
-      decisionRaw: evt,
-    }));
-
-    // setSearchState(d
-    //   ...searchState,
-    //   {
-    //     decision: decisionLabels,
-    //     decisionRaw: evt,
-    //   },
-    //   () => {
-    //     filterBy(searchState);
-    //   },
-    // );
+      {
+        decision: decisionLabels,
+        decisionRaw: evt,
+      },
+      () => {
+        filterBy(searchState);
+      },
+    );
   };
   const onLocationChange = (evt, item) => {
     var stateValues = [];
     for (var i = 0; i < evt.length; i++) {
       stateValues.push(evt[i].value);
     }
-    console.log('evt.target.name', evt.target);
+
     setSearchState(
-      (searchState) => (
-        {
-          ...searchState,
-          state: stateValues,
-          stateRaw: evt,
-          countyOptions: narrowCountyOptions(stateValues),
-          inputMessage: proximityValues._inputMessage,
-        },
-        () => {
-          onCountyChange(countyOptions.filter((countyObj) => county.includes(countyObj.value)));
-        }
-      ),
+      ...searchState,
+      {
+        state: stateValues,
+        stateRaw: evt,
+        countyOptions: narrowCountyOptions(stateValues),
+      },
+      () => {
+        // filterBy(searchState);
+        // Purge invalid counties, which will then run filterBy
+        onCountyChange(countyOptions.filter((countyObj) => county.includes(countyObj.value)));
+      },
     );
   };
   /** Helper method for onLocationChange limits county options to selected states in filter,
@@ -554,53 +513,34 @@ setSearchState(
     for (var i = 0; i < evt.length; i++) {
       countyValues.push(evt[i].value);
     }
-        setSearchState((searchState) => ({
-          ...searchState,
-          [evt.target.name]: userInput,
-          county: countyValues,
-          countyRaw: evt,
-        }));
+    setSearchState(...searchState, {
+      county: countyValues,
+      countyRaw: evt,
+    });
   };
 
   const onProximityChange = (evt) => {
     if (evt.value === -1) {
       setSearchState(
-        (searchState) => (
-          {
-            ...searchState,
-            proximityOption: null,
-          },
-          () => {
-            onCountyChange(countyOptions.filter((countyObj) => county.includes(countyObj.value)));
-          }
-        ),
+        ...searchState,
+        ...{
+          proximityOption: null,
+        },
       );
     } else {
-      setSearchState(
-        (searchState) => (
-          {
-            ...searchState,
-            proximityOption: null,
-          },
-          () => {
-            setSearchState(...searchState, { ...state, proximityOption: evt });
-          }
-        ),
-      );
+      setSearchState(...searchState, { ...state, proximityOption: evt });
     }
   };
 
   const onTitleOnlyChecked = (evt) => {
     if (evt.target.checked) {
-      setSearchState((searchState) => ({
-        ...searchState,
-        searchOption: 'C',
-      }));
+      setSearchState(...searchState, {
+        searchOption: 'C', // Title only
+      });
     } else {
-      setSearchState((searchState) => ({
-        ...searchState,
-        searchOption: 'B',
-      }));
+      setSearchState(...searchState, {
+        searchOption: 'B', // Both fields, Lucene default scoring
+      });
     }
   };
 
@@ -619,40 +559,35 @@ setSearchState(
 
   const onNeedsDocumentChecked = (evt) => {
     setSearchState(
-      (searchState) => (
-        {
-          ...searchState,
-          needsDocument: !needsDocument,
-        },
-        () => {
-          filterBy(searchState);
-        }
-      ),
+      ...searchState,
+      {
+        needsDocument: !needsDocument,
+      },
+      () => {
+        filterBy(searchState);
+      },
     );
   };
 
   const onTypeChecked = (evt) => {
     if (evt.target.name === 'optionsChecked') {
-      setSearchState((searchState) => ({
-        ...searchState,
+      setSearchState(...searchState, {
         [evt.target.name]: evt.target.checked,
-      }));
+      });
     } else if (evt.target.name === 'typeAll' && evt.target.checked) {
       // All: Check all, uncheck others
       setSearchState(
-        (searchState) => (
-          {
-            ...searchState,
-            typeAll: true,
-            typeFinal: false,
-            typeDraft: false,
-            typeOther: false,
-          },
-          () => {
-            filterBy(searchState);
-            debouncedSearch(state);
-          }
-        ),
+        ...searchState,
+        {
+          typeAll: true,
+          typeFinal: false,
+          typeDraft: false,
+          typeOther: false,
+        },
+        () => {
+          filterBy(searchState);
+          /**debouncedSearch(state);*/
+        },
       );
     } else {
       // Not all: Check target, uncheck all
@@ -675,70 +610,39 @@ setSearchState(
   // }
 
   const onStartDateChange = (date) => {
-    setSearchState(
-      ...searchState,
-      {
-        startPublish: date,
-      },
-      () => {
-        filterBy(setSearchState);
-        // debouncedSearch(state);
-      },
-    );
+    setSearchState(...searchState, { startPublish: date }, () => {
+      filterBy(searchState);
+      // debouncedSearch(state);
+    });
   };
   // Tried quite a bit but I can't force the calendar to Dec 31 of a year as it's typed in without editing the library code itself.
   // I can change the value but the popper state won't update to reflect it (even when I force it to update).
   const onEndDateChange = (date, evt) => {
-    setSearchState(
-      ...searchState,
-      {
-        endPublish: date,
-      },
-      () => {
-        filterBy(setSearchState);
-        // debouncedSearch(state);
-      },
-    );
+    setSearchState(...searchState, { endPublish: date }, () => {
+      filterBy(searchState);
+      // debouncedSearch(state);
+    });
+    // }
   };
   const onStartCommentChange = (date) => {
-    setSearchState(
-      ...searchState,
-      {
-        startComment: date,
-      },
-      () => {
-        filterBy(searchState);
-        // debouncedSearch(state);
-      },
-    );
+    setSearchState(...searchState, { startComment: date }, () => {
+      filterBy(searchState);
+      // debouncedSearch(state);
+    });
   };
   const onEndCommentChange = (date) => {
-    setSearchState(
-      ...searchState,
-      {
-        endPublish: date,
-      },
-      () => {
-        filterBy(searchState);
-        // debouncedSearch(state);
-      },
-    );
+    setSearchState(...searchState, { endComment: date }, () => {
+      filterBy(searchState);
+      // debouncedSearch(state);
+    });
   };
   const tooltipTrigger = (evt) => {
-    setSearchState(
-      ...searchState,
-      {
-        tooltipOpen: !tooltipOpen,
-      }
-    );
+    setSearchState(...searchState, { tooltipOpen: !tooltipOpen });
   };
   const closeTooltip = () => {
-    setSearchState(
-      ...searchState,
-      {
-        tooltipOpen: false,
-      },
-    );
+    setSearchState(...searchState, {
+      tooltipOpen: false,
+    });
   };
 
   const getCounts = () => {
@@ -755,12 +659,7 @@ setSearchState(
     })
       .then((_response) => {
         const rsp = _response.data;
-        setSearchState(
-          ...searchState,
-          {
-            [stateName]: rsp,
-          },
-        );
+        setSearchState(...searchState, { [stateName]: rsp });
       })
       .catch((error) => {});
   };
@@ -834,19 +733,17 @@ setSearchState(
   };
 
   const toggleFiltersHidden = () => {
-setSearchState(
-  ...searchState,
-  {
-    filtersHidden: !filtersHidden,
-  },
-  () => {
-    filterToggle(filtersHidden);
-    // debouncedSearch(state);
-  },
-);
-
+    setSearchState(
+      ...searchState,
+      {
+        filtersHidden: !filtersHidden,
+      },
+      () => {
+        props.filterToggle(filtersHidden);
+      },
+    );
   };
-
+  const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
   const renderClearFiltersButton = () => {
     if (filtersActive()) {
       return (
@@ -886,11 +783,12 @@ setSearchState(
                 borderColor={'#CCC'}
                 borderRight={1}
               >
+            
                 <div style={section}>
                   {' '}
-                  <ListItem onClick={onDialogOpen}>Search Tips</ListItem>
-                  <ListItem onClick={onDialogOpen}>Available Files</ListItem>
-                  <ListItem onClick={onDialogOpen}>Quick-start guide</ListItem>
+                  <ListItem >Search Tips</ListItem>
+                  <ListItem >Available Files</ListItem>
+                  <ListItem>Quick-start guide</ListItem>
                 </div>
               </Grid>
               <Grid item={true} xs={2}>
@@ -899,7 +797,6 @@ setSearchState(
                   width={'100%'}
                   display={'flex'}
                   alignItems={'center'}
-                  border={0}
                   justifyContent={'flex-end'}
                   paddingLeft={1}
                 >
@@ -909,7 +806,7 @@ setSearchState(
                   />
                 </Box>
               </Grid>
-              <Grid item={true} xs={8} border={0} id="search-box-grid-item">
+              <Grid item={true} xs={8} borderLeft={0} id="search-box-grid-item">
                 <Box
                   id="search-box-box-item"
                   xs={12}
@@ -923,19 +820,20 @@ setSearchState(
                   paddingRight={2}
                   padding={1}
                   elevation={1}
-                  borderRadius={1}
-                  border={0}
+                  borderRadius={0}
                   borderColor={'#CCC'}
+                  borderLeft={0}
+                  marginLeft={0}
+                  marginRight={0}
                 >
                   {' '}
                   <TextField
                     fullWidth
-                    name="titleRaw"
                     backgroundColor={'white'}
                     id="main-search-text-field"
                     variant="standard"
-                    onInput={(evt) => onInput(evt)}
-                    onKeyUp={(evt) => onKeyUp(evt)}
+                    onInput={onInput}
+                    onKeyUp={onKeyUp}
                     placeholder="Search for NEPA documents"
                     value={searchState.titleRaw ? searchState.titleRaw : ''}
                     autoFocus
@@ -964,7 +862,7 @@ setSearchState(
         >
           <Grid xs={3} p={0} item={true}>
             <Paper>
-              <Item alignItems="center">
+              <Item>
                 <Box marginBottom={0}>
                   <FormControlLabel
                     control={
@@ -1197,83 +1095,13 @@ setSearchState(
                 </Grid>
               </Box>
             </Item>
-          </Grid>
+          </Grid>searchTipsDialogIsOpen
         </Grid>
-        <Dialog open={searchState.dialogIsOpen} onClose={onDialogClose}>
-          <DialogTitle>Search word Connectors</DialogTitle>
-          <DialogContent>
-            <DialogContentText>
-              <Grid container={true} spacing={1}>
-                <Grid item={true} xs={2}>
-                  <b>AND</b>
-                </Grid>
-                <Grid item={true} xs={10}>
-                  This is the default. <b>all</b> words you enter must be found together to return a
-                  result.
-                </Grid>
-              </Grid>
-              <Grid container={true} spacing={1}>
-                <Grid item={true} xs={2}>
-                  <b>OR</b>
-                </Grid>
-                <Grid item={true} xs={10}>
-                  (all caps) to search for <b>any</b> of those words.
-                </Grid>
-              </Grid>
-              <Grid container={true} spacing={1}>
-                <Grid item={true} xs={2}>
-                  <b>NOT</b>
-                </Grid>
-                <Grid item={true} xs={10}>
-                  (all caps) to search to <b>exclude</b>words or a phrase.
-                </Grid>
-              </Grid>
-              <Grid container={true} spacing={1}>
-                <Grid item={true} xs={2}>
-                  <b>" "</b>
-                </Grid>
-                <Grid item={true} xs={10}>
-                  Surround words with quotes (" ") to search for an exact phrase.
-                </Grid>
-              </Grid>
-            </DialogContentText>
-          </DialogContent>
-        </Dialog>
       </Container>
+         {/* <SearchTipsDialog isOpen={searchState.isSearchTipsDialogIsOpen} /> */}
     </ThemeProvider>
   );
 }
-
-const SearchTipsDialog = (props) => {
-  const isOpen = props.isOpen || false;
-
-  console.log(`showSearchTipsDialog isOpen : ${isOpen}`);
-  return (
-    <Dialog open={isOpen}>
-      <DialogTitle>Subscribe</DialogTitle>
-      <DialogContent>
-        <DialogContentText>
-          To subscribe to this website, please enter your email address here. We will send updates
-          occasionally.
-        </DialogContentText>
-        <TextField
-          autoFocus
-          margin="dense"
-          id="name"
-          label="Email Address"
-          type="email"
-          fullWidth
-          variant="standard"
-        />
-      </DialogContent>
-      {/* <DialogActions>
-        <Button onClick={handleClose}>Cancel</Button>
-        <Button onClick={handleClose}>Subscribe</Button>
-      </DialogActions> */}
-    </Dialog>
-  );
-};
-
 export function ProximitySelect(props) {
   const { options, proximityDisabled, onProximityChange } = props;
   const [proximityOptionValue, setProximityOptionValue] = React.useState(proximityOptions[0]);
@@ -1287,6 +1115,7 @@ export function ProximitySelect(props) {
         id={'proximity-select-autocomplete'}
         fullWidth={true}
         autoComplete={true}
+        cc
         autoHighlight={true}
         tabIndex={3}
         className={classes.autocomplete}
@@ -1303,4 +1132,74 @@ export function ProximitySelect(props) {
       />
     </>
   );
+}
+export function SearchTipsDialog(props){
+  console.log('SearchTipsDialog props', props);
+  return (
+    <Dialog open={props.isOpen} onClose={props.onDialogClose}>
+    <Grid container={true} spacing={1}>
+            <Grid item={true} xs={11} flexDirection="row" flexWrap={'nowrap'} alignItems={'center'} alignContent={'center'} justifyContent={'center'} >
+              <Box paddingLeft={2}><Typography fontSize={'large'} fontWeight={'bold'}>Search word Connectors</Typography></Box>
+            </Grid>
+            {/* <Grid item={true} xs={1} justifyContent={'center'}>
+              <IconButton onClick={onDialogClose}><Typography fontSize={'medium'}>X</Typography></IconButton>
+            </Grid> */}
+          </Grid>
+          <Grid container={true} spacing={1}>
+            <Grid item={true} xs={11}>
+              <b>Search Word Connectors</b>
+            </Grid>
+            <Grid item={true} xs={1}>
+              X
+            </Grid>
+          </Grid>
+      <DialogContent>
+      
+        <DialogContentText>
+        <Grid container={true} spacing={1}>
+            <Grid item={true} xs={2}>
+              <b>AND</b>
+            </Grid>
+            <Grid item={true} xs={10}>
+              This is the default. <b>all</b> words you enter must be found together to return a
+              result.
+            </Grid>
+          </Grid>
+          <Grid container={true} spacing={1}>
+            <Grid item={true} xs={2}>
+              <b>AND</b>
+            </Grid>
+            <Grid item={true} xs={10}>
+              This is the default. <b>all</b> words you enter must be found together to return a
+              result.
+            </Grid>
+          </Grid>
+          <Grid container={true} spacing={1}>
+            <Grid item={true} xs={2}>
+              <b>OR</b>
+            </Grid>
+            <Grid item={true} xs={10}>
+              (all caps) to search for <b>any</b> of those words.
+            </Grid>
+          </Grid>
+          <Grid container={true} spacing={1}>
+            <Grid item={true} xs={2}>
+              <b>NOT</b>
+            </Grid>
+            <Grid item={true} xs={10}>
+              (all caps) to search to <b>exclude</b>words or a phrase.
+            </Grid>
+          </Grid>
+          <Grid container={true} spacing={1}>
+            <Grid item={true} xs={2}>
+              <b>{'" "'}</b>
+            </Grid>
+            <Grid item={true} xs={10}>
+              Surround words with quotes (" ") to search for an exact phrase.
+            </Grid>
+          </Grid>
+        </DialogContentText>
+      </DialogContent>
+    </Dialog>
+  ) 
 }
