@@ -86,8 +86,6 @@ export default function SideBarFilters(props) {
   } = useContext(SearchContext);
   const { agencyRaw,state, county,stateOptions,countyOptions, proximityDisabled, markup, cooperatingAgencyRaw } = searchState;
 
-  console.log('State options', stateOptions);
-  console.log('County options', countyOptions);
   const classes = useStyles(theme);
   return (
     <>
@@ -153,23 +151,7 @@ export default function SideBarFilters(props) {
             )}
           />
         </FormControl>
-          {/* <SearchFilter
-            onChange={(evt) => onProximityChange(evt)}
-            value={searchState.proximity}
-            filter={{
-              className: classes.formControl,
-              variant: 'standard',
-              id: 'proximity-select',
-              className: proximityDisabled ? ' disabled' : '',
-              // classNamePrefix="react-select control"
-              placeholder: 'Keyword distance',
-              options: proximityOptions,
-              // menuIsOpen={true}
-              onChange: { onProximityChange },
-              label: 'Distance Between Search Terms',
-              tabIndex: '1',
-            }}
-          /> */}
+
         </Item>
 {/* #endregion */}
       </Box>
@@ -219,19 +201,6 @@ export default function SideBarFilters(props) {
           />
         </FormControl>
 {/* #endregion */}
-        {/* <SearchFilter
-          onChange={onAgencyChange}
-          value ={Object.keys(searchState.agencyRaw)}
-          filter={{
-            className: classes.formControl,
-            placeholder: 'Type or Select Lead Agencies',
-            id: 'searchAgency',
-            type: Autocomplete,
-            options: agencyOptions,
-            label: 'Lead Agencies',
-            tabIndex: '3',
-          }}
-        /> */}
       </Item>
       <Item>
         <FormControl
@@ -276,21 +245,6 @@ export default function SideBarFilters(props) {
             )}
           />
         </FormControl>
-
-        {/* <SearchFilter
-          onChange={onCooperatingAgencyChange}
-          value={searchState.agencyRaw}
-          filter={{
-            className: classes.formControl,
-            placeholder: 'Type or select Cooperating agencies',
-            id: 'searchAgency',
-            name: 'cooperatingAgency',
-            type: Autocomplete,
-            options: agencyOptions,
-            label: 'Cooperating Agencies',
-            tabIndex: '4',
-          }}
-        /> */}
       </Item>
       <Divider />
       <Item>
@@ -336,20 +290,6 @@ export default function SideBarFilters(props) {
             )}
           />
         </FormControl>
-        {/* <SearchFilter
-          onChange={onLocationChange}
-          value={(stateOptions.filter = (stateObj) => state.includes(stateObj.value))}
-          filter={{
-            className: classes.formControl,
-            placeholder: 'Type or Select State(s) or Location(s)',
-            id: 'state',
-            name: 'state',
-            type: Autocomplete,
-            options: stateOptions,
-            label: 'State(s) or Location(s)',
-            tabIndex: '5',
-          }}
-        /> */}
       </Item>
 
       <Item>
@@ -395,20 +335,6 @@ export default function SideBarFilters(props) {
             )}
           />
         </FormControl>
-        {/* <SearchFilter
-          onChange={onCountyChange}
-          value={(countyOptions.filter = (countyObj) => county.includes(countyObj.value))}
-          filter={{
-            className: classes.formControl,
-            placeholder: 'Type or Select a County',
-            id: 'searchCounty',
-            name: 'county',
-            type: Autocomplete,
-            options: countyOptions,
-            label: 'County / counties',
-            tabIndex: '6',
-          }}
-        /> */}
       </Item>
       <Divider />
       <Item>
