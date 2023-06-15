@@ -32,38 +32,20 @@ const useStyles = (theme) => ({
     minWidth: 220,
     width: '100%',
   },
-  // formControl: {
-  //   // marginBottom: theme.spacing(2),
-  //   minWidth: 120,
-  //   width: '100%',
-  // },
-  submitButton: {
-    //margin: theme.spacing(3, 0, 2),},
-  },
-  formLabel: {
-    // fontSize: '1.2em',
-    // fontWeight: 'bold',
-    // padding: 0,
-    // margin: 0,
-    // display: 'block',
+  formControl: {
+    // marginBottom: theme.spacing(2),
+    minWidth: 120,
+    width: '100%',
   },
   box: {
     margin: 5,
     padding: 5,
   },
-  // autocomplete: {
-  //   p: 0,
-  //   m: 0,
-  //   width: '100%',
-  //   minWidth: 300,
-  //   maxHeight: 50,
-  // },
   autoComplete: {
     border: 0,
     //backgroundColor: theme.palette.grey[150],
     '&:hover': {
       p: 0,
-      //   backgroundColor: theme.palette.grey[100],
         backgroundColor: theme.palette.grey[150],
         boxShadow: theme.palette.grey[300],
         cursor: 'pointer',
@@ -76,17 +58,16 @@ const drawerWidth = 200;
 
 export default function SearchFilter(props) {
   const {searchState,setSearchState} = useContext(SearchContext);
-    let { className,label ,placeholder, options, value,id,tabIndex } = props.filter;
-    const onChange = props.onChange;
-    // console.log('SEARCH FILTER CONTEXT',searchState);
-    // console.log('SEARCH FILTER ON CHANGE',onChange);
+    let { className,label ,placeholder, options,id,tabIndex } = props.filter;
+    const {onChange,value} = props;
+
     (options) ? options : [];
     const classes =  useStyles(theme);
     //hack so we can use the placeholder initialy otherwise the placeholder is overwritten by the value text,
     if(value === label){
       value = placeholder
     }
-    console.log(`Label: ${label} - value`,value);
+    console.log(`Label: ${label} - value ${value} options.length ${options.length}`);
     if(!options || !options.length){
       console.warn('The options of the filter are either undefined or have no values ',id);
     }
@@ -103,7 +84,7 @@ export default function SearchFilter(props) {
             }}>
    
             <Typography pb={1} variant='filterLabel'> 
-              {label}:
+              {label}: Value: {value}
             </Typography>   
             <Autocomplete
              id={id}
@@ -113,12 +94,12 @@ export default function SearchFilter(props) {
               // autoHighlight={true}
               tabIndex={tabIndex}
               className={className.autocomplete}
-              options={(options) ? options : []}
+              options={options}
               disablePortal={true}
               value={value}
               variant='standard'
               // menuIsOpen={true}
-              onChange={onChange}
+              onChange={(evt)=>onChange(evt)}
               getOptionLabel={(option) => option.label || label }
               renderInput={(params) => <TextField {...params} 
               variant='outlined'
