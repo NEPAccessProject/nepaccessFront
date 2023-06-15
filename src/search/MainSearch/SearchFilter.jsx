@@ -1,4 +1,4 @@
-import React from 'react'
+import React,{useContext} from 'react'
 
 import { Paper, Button, Box,  Divider, FormControl, Autocomplete,InputLabel,TextField, Typography,Grid,Container } from '@mui/material';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
@@ -7,6 +7,7 @@ import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { InputAdornment } from '@mui/icons-material';
 import theme from '../../styles/theme';
 import dayjs from 'dayjs';
+import SearchContext from './SearchContext';
 
 const useStyles = (theme) => ({
   root: {
@@ -74,15 +75,18 @@ const useStyles = (theme) => ({
 const drawerWidth = 200;
 
 export default function SearchFilter(props) {
-  console.log(`Search Filter Context`,props.context);
-    let { className,label ,placeholder, options, onChange, value,id,tabIndex } = props.filter;
+  const {searchState,setSearchState} = useContext(SearchContext);
+    let { className,label ,placeholder, options, value,id,tabIndex } = props.filter;
+    const onChange = props.onChange;
+    // console.log('SEARCH FILTER CONTEXT',searchState);
+    // console.log('SEARCH FILTER ON CHANGE',onChange);
     (options) ? options : [];
     const classes =  useStyles(theme);
     //hack so we can use the placeholder initialy otherwise the placeholder is overwritten by the value text,
     if(value === label){
       value = placeholder
     }
-    //console.log(`Label: ${label} - length ${(options) ? options.length : 0}`);
+    console.log(`Label: ${label} - value`,value);
     if(!options || !options.length){
       console.warn('The options of the filter are either undefined or have no values ',id);
     }
@@ -111,7 +115,7 @@ export default function SearchFilter(props) {
               className={className.autocomplete}
               options={(options) ? options : []}
               disablePortal={true}
-              // value={value}
+              value={value}
               variant='standard'
               // menuIsOpen={true}
               onChange={onChange}

@@ -1,0 +1,72 @@
+import React from 'react';
+import {Dialog,DialogContext,DialogContent,DialogTitle,DialogContentText,DialogActions,Grid,Box,Typography,IconButton} from '@mui/material';
+export default function SearchTipsDialog(props) {
+            return (
+              <Dialog open={props.isOpen} onClose={props.onDialogClose}>
+              <Grid container={true} spacing={1}>
+                      <Grid item={true} xs={11} flexDirection="row" flexWrap={'nowrap'} alignItems={'center'} alignContent={'center'} justifyContent={'center'} >
+                        <Box paddingLeft={2}><Typography fontSize={'large'} fontWeight={'bold'}>Search word Connectors</Typography></Box>
+                      </Grid>
+                      {/* <Grid item={true} xs={1} justifyContent={'center'}>
+                        <IconButton onClick={onDialogClose}><Typography fontSize={'medium'}>X</Typography></IconButton>
+                      </Grid> */}
+                    </Grid>
+                    <Grid container={true} spacing={1}>
+                      <Grid item={true} xs={11}>
+                        <b>Search Word Connectors</b>
+                      </Grid>
+                      <Grid item={true} xs={1}>
+                        X
+                      </Grid>
+                    </Grid>
+                <DialogContent>
+                
+                  <DialogContentText>
+                  <Grid container={true} spacing={1}>
+                      <Grid item={true} xs={2}>
+                        <b>AND</b>
+                      </Grid>
+                      <Grid item={true} xs={10}>
+                        This is the default. <b>all</b> words you enter must be found together to return a
+                        result.
+                      </Grid>
+                    </Grid>
+                    <Grid container={true} spacing={1}>
+                      <Grid item={true} xs={2}>
+                        <b>AND</b>
+                      </Grid>
+                      <Grid item={true} xs={10}>
+                        This is the default. <b>all</b> words you enter must be found together to return a
+                        result.
+                      </Grid>
+                    </Grid>
+                    <Grid container={true} spacing={1}>
+                      <Grid item={true} xs={2}>
+                        <b>OR</b>
+                      </Grid>
+                      <Grid item={true} xs={10}>
+                        (all caps) to search for <b>any</b> of those words.
+                      </Grid>
+                    </Grid>
+                    <Grid container={true} spacing={1}>
+                      <Grid item={true} xs={2}>
+                        <b>NOT</b>
+                      </Grid>
+                      <Grid item={true} xs={10}>
+                        (all caps) to search to <b>exclude</b>words or a phrase.
+                      </Grid>
+                    </Grid>
+                    <Grid container={true} spacing={1}>
+                      <Grid item={true} xs={2}>
+                        <b>{'" "'}</b>
+                      </Grid>
+                      <Grid item={true} xs={10}>
+                        Surround words with quotes (" ") to search for an exact phrase.
+                      </Grid>
+                    </Grid>
+                  </DialogContentText>
+                </DialogContent>
+              </Dialog>
+            ) 
+          }
+ 

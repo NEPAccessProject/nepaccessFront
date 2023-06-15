@@ -48,6 +48,9 @@ import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import SearchResultItems from './SearchResultsItems';
 import CloseIcon from '@mui/icons-material/Close';
 import SearchContext from './SearchContext';
+import SearchTipsDialog from '../SearchTipDialog';
+import ProximitySelect from './ProximitySelect';
+
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
   // ...theme.typography.body2,
@@ -331,14 +334,7 @@ export default function Search(props) {
       }
     }
   };
-  const onMarkupChange = (evt) => {
-    let checked = evt.target.checked;
-    setSearchState({
-      ...searchState,
-      markup: checked,
-    });
-  };
-
+  
   const onInput = (evt) => {
     let userInput = evt.target.value;
 
@@ -432,34 +428,6 @@ export default function Search(props) {
     });
   };
 
-  const onAgencyChange = (evt) => {
-    var agencyLabels = [];
-    for (var i = 0; i < evt.length; i++) {
-      agencyLabels.push(evt[i].label.replace(/ \([A-Z]*\)/gi, ''));
-    }
-
-    setSearchState({
-      ...searchState,
-      agency: agencyLabels,
-      agencyRaw: evt,
-    });
-  };
-  const onCooperatingAgencyChange = (evt) => {
-    var agencyLabels = [];
-    for (var i = 0; i < evt.length; i++) {
-      agencyLabels.push(evt[i].label.replace(/ \([A-Z]*\)/gi, ''));
-    }
-    setSearchState(
-      {
-        ...searchState,
-        cooperatingAgency: agencyLabels,
-        cooperatingAgencyRaw: evt,
-      },
-      () => {
-        filterBy(searchState);
-      },
-    );
-  };
   const onActionChange = (evt) => {
     var actionLabels = [];
     for (var i = 0; i < evt.length; i++) {
@@ -492,26 +460,6 @@ export default function Search(props) {
       },
     );
   };
-  const onLocationChange = (evt, item) => {
-    var stateValues = [];
-    for (var i = 0; i < evt.length; i++) {
-      stateValues.push(evt[i].value);
-    }
-
-    setSearchState(
-      {
-        ...searchState,
-        state: stateValues,
-        stateRaw: evt,
-        countyOptions: narrowCountyOptions(stateValues),
-      },
-      () => {
-        // filterBy(searchState);
-        // Purge invalid counties, which will then run filterBy
-        onCountyChange(countyOptions.filter((countyObj) => county.includes(countyObj.value)));
-      },
-    );
-  };
   /** Helper method for onLocationChange limits county options to selected states in filter,
    * or resets to all counties if no states selected */
   const narrowCountyOptions = (stateValues) => {
@@ -536,42 +484,8 @@ export default function Search(props) {
 
     return filteredCounties;
   };
-  const onCountyChange = (evt, item) => {
-    var countyValues = [];
-    for (var i = 0; i < evt.length; i++) {
-      countyValues.push(evt[i].value);
-    }
-    setSearchState({...searchState,
-      county: countyValues,
-      countyRaw: evt,
-    });
-  };
 
-  const onProximityChange = (evt) => {
-    console.log('OnProximityChange', evt);
-    if (evt.value === -1) {
-      setSearchState(
-        {
-          ...searchState,
-          proximityOption: null,
-        },
-      );
-    } else {
-      setSearchState({ ...searchState, proximityOption: evt });
-    }
-  };
 
-  const onTitleOnlyChecked = (evt) => {
-    if (evt.target.checked) {
-      setSearchState({...searchState, 
-        searchOption: 'C', // Title only
-      });
-    } else {
-      setSearchState({...searchState,
-        searchOption: 'B', // Both fields, Lucene default scoring
-      });
-    }
-  };
 
   const getSearchBarText = () => {
     if (searchOption && searchOption === 'C') {
@@ -597,7 +511,123 @@ export default function Search(props) {
       },
     );
   };
+  const onProximityChange = (evt) => {
+    console.log('OnProximityChange', evt.target.value);
+    if (evt.value === -1) {
+      setSearchState(
+        {
+          ...searchState,
+          proximityOption: null,
+        },
+      );
+    } else {
+      setSearchState({ ...searchState, proximityOption: evt.target });
+    }
+  };
+  const onLocationChange = (evt, item) => {
+    console.log("🚀 ~ file: SideBarFilters.jsx:86 ~ onLocationChange ~ evt:", evt)
+    var stateValues = [];
+    for (var i = 0; i < evt.length; i++) {
+      stateValues.push(evt[i].value);
+    }
 
+    setSearchState(
+      {
+        ...searchState,
+        state: stateValues,
+        stateRaw: evt,
+        countyOptions: narrowCountyOptions(stateValues),
+      },
+      () => {
+        // filterBy(searchState);
+        // Purge invalid counties, which will then run filterBy
+        onCountyChange(countyOptions.filter((countyObj) => county.includes(countyObj.value)));
+      },
+    );
+  };
+  const onAgencyChange = (evt) => {
+    console.log("🚀 ~ file: SideBarFilters.jsx:106 ~ onAgencyChange ~ evt value:", evt.target.value)
+    var agencyLabels = [];
+    for (var i = 0; i < evt.length; i++) {
+      agencyLabels.push(evt[i].label.replace(/ \([A-Z]*\)/gi, ''));
+    }
+
+    setSearchState({
+      ...searchState,
+      agency: agencyLabels,
+      agencyRaw: evt,
+    });
+  };
+  const onStartDateChange = (evt,date) => {
+    console.log('onStartDateChange EVT',evt.target.value);
+    console.log('onStartDateChange', date);
+    setSearchState({...searchState, startPublish: date }, () => {
+      filterBy(searchState);
+      // debouncedSearch(state);
+    });
+  };
+
+  // Tried quite a bit but I can't force the calendar to Dec 31 of a year as it's typed in without editing the library code itself.
+  // I can change the value but the popper state won't update to reflect it (even when I force it to update).
+  const onEndDateChange = (date, evt) => {
+    console.log(evt.current.target.value);
+    console.log('onEndDateChange', date, evt.current.target.value);
+    setSearchState({...searchState, endPublish: date }, () => {
+      filterBy(searchState);
+      debouncedSearch(state);
+    });
+    // }
+  };
+  
+  const onCountyChange = (evt, item) => {
+    console.log('onCountyChange', evt.target.value);
+    var countyValues = [];
+    for (var i = 0; i < evt.length; i++) {
+      countyValues.push(evt[i].value);
+    }
+    setSearchState({...searchState,
+      county: countyValues,
+      countyRaw: evt,
+    });
+  };
+  const onCooperatingAgencyChange = (evt) => {
+    console.log('onCooperatingAgencyChange', evt);
+    var agencyLabels = [];
+    for (var i = 0; i < evt.length; i++) {
+      agencyLabels.push(evt[i].label.replace(/ \([A-Z]*\)/gi, ''));
+    }
+    setSearchState(
+      {
+        ...searchState,
+        cooperatingAgency: agencyLabels,
+        cooperatingAgencyRaw: evt,
+      },
+      () => {
+        filterBy(searchState);
+      },
+    );
+  };
+  const onTitleOnlyChecked = (evt) => {
+    console.log('onTitleOnlyChecked', evt.target.checked);
+    if (evt.target.checked) {
+      setSearchState({...searchState, 
+        searchOption: 'C', // Title only
+      });
+    } else {
+      setSearchState({...searchState,
+        searchOption: 'B', // Both fields, Lucene default scoring
+      });
+    }
+  };
+
+  const onMarkupChange = (evt) => {
+    console.log('onMarkupChange', evt.target.checked);
+    let checked = evt.target.checked;
+    setSearchState({
+      ...searchState,
+      markup: checked,
+    });
+  };
   const onTypeChecked = (evt) => {
     if (evt.target.name === 'optionsChecked') {
       setSearchState({...searchState,
@@ -638,21 +668,7 @@ export default function Search(props) {
   //     setSearchState(...searchState, { [evt.target.name]: evt.target.checked}, () => { debouncedSearch(state); });
   // }
 
-  const onStartDateChange = (date) => {
-    setSearchState({...searchState, startPublish: date }, () => {
-      filterBy(searchState);
-      // debouncedSearch(state);
-    });
-  };
-  // Tried quite a bit but I can't force the calendar to Dec 31 of a year as it's typed in without editing the library code itself.
-  // I can change the value but the popper state won't update to reflect it (even when I force it to update).
-  const onEndDateChange = (date, evt) => {
-    setSearchState({...searchState, endPublish: date }, () => {
-      filterBy(searchState);
-      debouncedSearch(state);
-    });
-    // }
-  };
+
   const onStartCommentChange = (date) => {
     setSearchState({...searchState, startComment: date }, () => {
       filterBy(searchState);
@@ -790,11 +806,12 @@ export default function Search(props) {
   };
   const {markup,
   proximityDisabled,
-  agencyRaw,state,county} = searchState;
+  agencyRaw,state,county,proximityOption} = searchState;
 // #region Return Method
 
-const value = {searchState, searchState};
-  return (
+const value = {searchState, setSearchState,onProximityChange,onTitleOnlyChecked,onMarkupChange,onProximityChange,onCooperatingAgencyChange ,onAgencyChange,onLocationChange,onCountyChange,onStartDateChange,onEndDateChange,onClearFiltersClick,onTitleOnlyChecked,proximityDisabled,agencyRaw,state,county};
+console.log('SEARCH SearchState',searchState);  
+return (
     <SearchContext.Provider value={value}>
       <ThemeProvider theme={theme}>
         <Container disableGutters={true} sx={{}}>
@@ -837,10 +854,11 @@ const value = {searchState, searchState};
                     alignItems={'center'}
                     justifyContent={'flex-end'}
                     paddingLeft={1}
+                    value={searchState.proximityOptions}
                   >
                     <ProximitySelect
                       onProximityChange={(evt)=>onProximityChange(evt)}
-                      options={proximityOptions}
+                      options={searchState.proximityOption}
                     />
                   </Box>
                 </Grid>
@@ -899,24 +917,7 @@ const value = {searchState, searchState};
           >
    {/* #region SideBarFilters */}
             <Grid xs={3} p={0} item={true}>
-                  <SideBarFilters 
-                  context = {SearchContext}
-                  values = {{
-                    markup,
-                    proximityDisabled,
-                    agencyRaw,
-                    county,
-                    state,
-                  }}
-  
-                  onTitleOnlyChecked = {onTitleOnlyChecked}
-                  onMarkupChange=  {onMarkupChange}
-                  onAgencyChange=  {onAgencyChange}
-                  onCooperatingAgencyChange ={onCooperatingAgencyChange}
-                  onCountyChange= {onCountyChange}
-                  onLocationChange=  {onLocationChange}
-                   onDecisionChange= {onDecisionChange}
-                  />
+                  <SideBarFilters />
               <Divider />
             </Grid>
   {/* #endregion */}
@@ -1030,105 +1031,4 @@ const value = {searchState, searchState};
     </SearchContext.Provider>
   );
 // #endregion
-}// #region SubComponents
-
-export function ProximitySelect(props) {
-  const { options, proximityDisabled, onProximityChange } = props;
-  const [proximityOptionValue, setProximityOptionValue] = React.useState(proximityOptions[0]);
-  const classes = useStyles(theme);
-  const isDisabled = proximityDisabled ? false : true;
-  // (props.proximityOptionValue) ? setProximityOptionValue(props.proximityOptionValue) : setProximityOptionValue(proximityOptions[0]);
-  return (
-    <>
-      <Autocomplete
-        id={'proximity-select-autocomplete'}
-        fullWidth={true}
-        autoComplete={true}
-        cc
-        autoHighlight={true}
-        tabIndex={3}
-        className={classes.autocomplete}
-        options={options ? options : []}
-        disablePortal={true}
-        // value={value}
-        // menuIsOpen={true}
-        onChange={(evt)=>onProximityChange(evt)}
-        getOptionLabel={(option) => option.label || label}
-        renderInput={(params) => <TextField placeholder="Distance Between Keywords" {...params} />}
-        sx={{
-          p: 0,
-        }}
-      />
-    </>
-  );
 }
-export function SearchTipsDialog(props){
-  return (
-    <Dialog open={props.isOpen} onClose={props.onDialogClose}>
-    <Grid container={true} spacing={1}>
-            <Grid item={true} xs={11} flexDirection="row" flexWrap={'nowrap'} alignItems={'center'} alignContent={'center'} justifyContent={'center'} >
-              <Box paddingLeft={2}><Typography fontSize={'large'} fontWeight={'bold'}>Search word Connectors</Typography></Box>
-            </Grid>
-            {/* <Grid item={true} xs={1} justifyContent={'center'}>
-              <IconButton onClick={onDialogClose}><Typography fontSize={'medium'}>X</Typography></IconButton>
-            </Grid> */}
-          </Grid>
-          <Grid container={true} spacing={1}>
-            <Grid item={true} xs={11}>
-              <b>Search Word Connectors</b>
-            </Grid>
-            <Grid item={true} xs={1}>
-              X
-            </Grid>
-          </Grid>
-      <DialogContent>
-      
-        <DialogContentText>
-        <Grid container={true} spacing={1}>
-            <Grid item={true} xs={2}>
-              <b>AND</b>
-            </Grid>
-            <Grid item={true} xs={10}>
-              This is the default. <b>all</b> words you enter must be found together to return a
-              result.
-            </Grid>
-          </Grid>
-          <Grid container={true} spacing={1}>
-            <Grid item={true} xs={2}>
-              <b>AND</b>
-            </Grid>
-            <Grid item={true} xs={10}>
-              This is the default. <b>all</b> words you enter must be found together to return a
-              result.
-            </Grid>
-          </Grid>
-          <Grid container={true} spacing={1}>
-            <Grid item={true} xs={2}>
-              <b>OR</b>
-            </Grid>
-            <Grid item={true} xs={10}>
-              (all caps) to search for <b>any</b> of those words.
-            </Grid>
-          </Grid>
-          <Grid container={true} spacing={1}>
-            <Grid item={true} xs={2}>
-              <b>NOT</b>
-            </Grid>
-            <Grid item={true} xs={10}>
-              (all caps) to search to <b>exclude</b>words or a phrase.
-            </Grid>
-          </Grid>
-          <Grid container={true} spacing={1}>
-            <Grid item={true} xs={2}>
-              <b>{'" "'}</b>
-            </Grid>
-            <Grid item={true} xs={10}>
-              Surround words with quotes (" ") to search for an exact phrase.
-            </Grid>
-          </Grid>
-        </DialogContentText>
-      </DialogContent>
-    </Dialog>
-  ) 
-}
-// #endregion

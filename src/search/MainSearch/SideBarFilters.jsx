@@ -1,4 +1,4 @@
-import React, { useState, useEffect,useContext } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import {
   Paper,
   Button,
@@ -30,29 +30,34 @@ import Globals from '../../globals';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
-import { proximityOptions,actionOptions,
+import {
+  proximityOptions,
+  actionOptions,
   decisionOptions,
   agencyOptions,
   countyOptions,
-  stateOptions } from '../options';
+  stateOptions,
+} from '../options';
 const _ = require('lodash');
 import SearchContext from './SearchContext';
 
 export default function SideBarFilters(props) {
-  const {searchState,setSearchState} = useContext(SearchContext);
-  console.log('SideBarFilters context values', searchState);
-
-  const {agencyRaw,county,proximityDisabled,markup} = searchState;
   const {
-    onTitleOnlyChecked,
+    searchState,
+    setSearchState,
     onMarkupChange,
-    onProximityChange,
     onAgencyChange,
     onLocationChange,
     onCountyChange,
     onStartDateChange,
-    onEndDateChange
-  } = props;
+    onEndDateChange,
+    onClearFiltersClick,
+    onTitleOnlyChecked,
+    onProximityChange,
+    onCooperatingAgencyChange,
+  } = useContext(SearchContext);
+  console.log('SEARCH STATE', searchState);
+  const { agencyRaw, county, proximityDisabled, markup } = searchState;
   const Item = styled(Box)(({ theme }) => ({
     backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
     ...theme.typography.body2,
@@ -80,16 +85,19 @@ export default function SideBarFilters(props) {
   }));
 
   const classes = useStyles(theme);
-  
+
   return (
     <>
       <Box>
         <Item alignItems="center">
           <Box marginBottom={0}>
             <FormControlLabel
-              control={<Checkbox 
-                // checked={searchOptions} 
-                onChange={onTitleOnlyChecked} />}
+              control={
+                <Checkbox
+                  // checked={searchOptions}
+                  onChange={onTitleOnlyChecked}
+                />
+              }
               label="Has downloadable items"
             />
           </Box>
@@ -100,16 +108,18 @@ export default function SideBarFilters(props) {
         </Item>
         <Item>
           <SearchFilter
+            onChange={(evt) => onProximityChange(evt)}
             filter={{
               className: classes.formControl,
               variant: 'standard',
               id: 'proximity-select',
               className: proximityDisabled ? ' disabled' : '',
+              value: searchState.proximity,
               // classNamePrefix="react-select control"
               placeholder: 'Keyword distance',
               options: proximityOptions,
               // menuIsOpen={true}
-              onChange: {onProximityChange},
+              onChange: { onProximityChange },
               label: 'Distance Between Search Terms',
               tabIndex: '1',
             }}
@@ -119,11 +129,11 @@ export default function SideBarFilters(props) {
 
       <Item>
         <SearchFilter
+          onChange={(evt) => onAgencyChange(evt)}
           filter={{
             className: classes.formControl,
             placeholder: 'Type or Select Lead Agencies',
-            value: agencyRaw ? agencyRaw : '',
-            onChange: onAgencyChange,
+            value: searchState.agencyRaw ? searchState.agencyRaw : '',
             id: 'searchAgency',
             type: Autocomplete,
             options: agencyOptions,
@@ -134,11 +144,11 @@ export default function SideBarFilters(props) {
       </Item>
       <Item>
         <SearchFilter
+          onChange={(evt) => onCooperatingAgencyChange(evt)}
           filter={{
             className: classes.formControl,
             placeholder: 'Type or select Cooperating agencies',
-            value: agencyRaw ? agencyRaw : '',
-            onChange: onAgencyChange,
+            value: searchState.agencyRaw ? searchState.agencyRaw : '',
             id: 'searchAgency',
             name: 'cooperatingAgency',
             type: Autocomplete,
@@ -151,11 +161,11 @@ export default function SideBarFilters(props) {
       <Divider />
       <Item>
         <SearchFilter
+          onChange={(evt) => onLocationChange(evt)}
           filter={{
             className: classes.formControl,
             placeholder: 'Type or Select State(s) or Location(s)',
             value: (stateOptions.filter = (stateObj) => state.includes(stateObj.value)),
-            onChange: onLocationChange,
             id: 'state',
             name: 'state',
             type: Autocomplete,
@@ -168,11 +178,11 @@ export default function SideBarFilters(props) {
 
       <Item>
         <SearchFilter
+          onChange={(evt) => onCountyChange(evt)}
           filter={{
             className: classes.formControl,
             placeholder: 'Type or Select a County',
             value: countyOptions.filter((countyObj) => county.includes(countyObj.value)),
-            onChange: onCountyChange,
             id: 'searchCounty',
             name: 'county',
             type: Autocomplete,
@@ -198,12 +208,16 @@ export default function SideBarFilters(props) {
         >
           <LocalizationProvider dateAdapter={AdapterDayjs}>
             <Box marginBottom={2} components={['DatePicker']} padding={0} width="100%">
-              <DatePicker onChange={onStartDateChange} id="date-picker-from" label="From:" />
+              <DatePicker
+                onChange={(evt) => onStartDateChange(evt)}
+                id="date-picker-from"
+                label="From:"
+              />
             </Box>
           </LocalizationProvider>
           <LocalizationProvider dateAdapter={AdapterDayjs}>
             <Box components={['DatePicker']} padding={0} width="100%">
-              <DatePicker on={onEndDateChange} id="date-picker-to" label="To:" />
+              <DatePicker on={(evt) => onEndDateChange(evt)} id="date-picker-to" label="To:" />
             </Box>
           </LocalizationProvider>
         </Box>
