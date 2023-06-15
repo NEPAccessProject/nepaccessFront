@@ -56,9 +56,7 @@ import AvailableFilesDialog from './AvailableFilesDialog';
 
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
-  // ...theme.typography.body2,
   padding: theme.spacing(1),
-  // textAlign: 'center',
   color: theme.palette.text.secondary,
   elevation: 1,
   borderRadius: 1,
@@ -293,22 +291,17 @@ export default function Search(props) {
         needsDocument: false,
         optionsChecked: true,
         countyOptions: Globals.counties,
-      },
-      () => {
-        filterBy(searchState);
-      },
+      }
     );
   };
 
   const onRadioChange = (evt) => {
-    setSearchState({ ...searchState,[evt.target.name]: evt.target.value }, () => {
-      // debouncedSearch(state);
-    });
+    setSearchState({ ...searchState,[evt.target.name]: evt.target.value });
   };
 
   const onKeyUp = (evt) => {
     if (evt.keyCode === 13) {
-      evt.preventDefault();
+      //evt.preventDefault();
       doSearch(titleRaw);
     }
   };
@@ -338,14 +331,7 @@ export default function Search(props) {
         [evt.target.name]: userInput,
         proximityDisabled: proximityValues.disableValue,
         inputMessage: proximityValues._inputMessage,
-      },
-      () => {
-        // auto-searching is currently too expensive until asynchronous results
-        // debouncedSearch(state);
-        // autocomplete/suggest/other functionality fires, starting here
-        // TODO: May want to take out any special characters that never appear in titles or are otherwise unnecessary
-        // debouncedSuggest(titleRaw);
-      },
+      }
     );
   };
 
@@ -428,10 +414,7 @@ export default function Search(props) {
         ...searchState,
         action: actionLabels,
         actionRaw: evt,
-      },
-      () => {
-        filterBy(searchState);
-      },
+      }
     );
   };
   const onDecisionChange = (evt) => {
@@ -444,10 +427,7 @@ export default function Search(props) {
         ...searchState,
         decision: decisionLabels,
         decisionRaw: evt,
-      },
-      () => {
-        filterBy(searchState);
-      },
+      }
     );
   };
   /** Helper method for onLocationChange limits county options to selected states in filter,
@@ -496,14 +476,11 @@ export default function Search(props) {
         ...searchState,
         needsDocument: !needsDocument,
       },
-      () => {
-        filterBy(searchState);
-      },
     );
   };
   const onProximityChange = (evt) => {
     console.log('OnProximityChange', evt.target.value);
-    if (evt.value === -1) {
+    if (evt.target.value === -1) {
       setSearchState(
         {
           ...searchState,
@@ -511,7 +488,12 @@ export default function Search(props) {
         },
       );
     } else {
-      setSearchState({ ...searchState, proximityOption: evt.target.value });
+      console.log('OnProximityChange searchState proximityOption before update', searchState.proximityOption);
+      setSearchState(
+        { 
+          ...searchState, 
+          proximityOption: evt,
+        });
     }
   };
   const onLocationChange = (evt, item) => {
@@ -527,17 +509,7 @@ export default function Search(props) {
         state: stateValues,
         stateRaw: evt,
         countyOptions: narrowCountyOptions(stateValues),
-      },
-      () => {
-        // filterBy(searchState);
-        // Purge invalid counties, which will then run filterBy
-        console.log('State Raw', searchState.stateRaw);
-        onCountyChange(
-          searchState.countyOptions.filter(
-            (countyObj) => county.includes(countyObj.value)
-            )
-          );
-      },
+      }
     );
   };
   
@@ -547,10 +519,7 @@ export default function Search(props) {
   const onEndDateChange = (date, evt) => {
     console.log(evt.current.target.value);
     console.log('onEndDateChange', date, evt.current.target.value);
-    setSearchState({...searchState, endPublish: date }, () => {
-      filterBy(searchState);
-      debouncedSearch(state);
-    });
+    setSearchState({...searchState, endPublish: date });
     // }
   };
   
@@ -563,32 +532,25 @@ export default function Search(props) {
     setSearchState({...searchState,
       county: countyValues,
       countyRaw: evt,
-    });
-  };
+    }); 
+   };
   const onAgencyChange = (evt) => {
-    console.log("🚀 ~ file: SideBarFilters.jsx:106 ~ onAgencyChange ~ evt value:", evt.target.value)
+    console.log(`onAgencyChange evt.length: ${evt.length} evt.target.value`, evt.target.value)
     var agencyLabels = [];
     for (var i = 0; i < evt.length; i++) {
       agencyLabels.push(evt[i].label.replace(/ \([A-Z]*\)/gi, ''));
     }
-    console.log('# of agency labels', agencyLabels.length);
-    debugger;
+    console.log('agency labels', agencyLabels);
     setSearchState({
       ...searchState,
       agency: agencyLabels,
-      agencyRaw: evt.target.value,
-    }, () => {
-      console.log('Updated AgencyRaw', searchState.agencyRaw);
-      filterBy(searchState);
+      agencyRaw: evt
     });
   };
   const onStartDateChange = (evt,date) => {
     console.log('onStartDateChange EVT',evt.target.value);
     console.log('onStartDateChange', date);
-    setSearchState({...searchState, startPublish: date }, () => {
-      filterBy(searchState);
-      // debouncedSearch(state);
-    });
+    setSearchState({...searchState, startPublish: date })
   };
   const onCooperatingAgencyChange = (evt) => {
     console.log('onCooperatingAgencyChange', evt.target.value);
@@ -601,10 +563,7 @@ export default function Search(props) {
         ...searchState,
         cooperatingAgency: agencyLabels,
         cooperatingAgencyRaw: evt.target.value,
-      },
-      () => {
-        filterBy(searchState);
-      },
+      }
     );
   };
   const onTitleOnlyChecked = (evt) => {
@@ -642,11 +601,7 @@ export default function Search(props) {
           typeFinal: false,
           typeDraft: false,
           typeOther: false,
-        },
-        () => {
-          filterBy(searchState);
-          /**debouncedSearch(state);*/
-        },
+        }
       );
     } else {
       // Not all: Check target, uncheck all
@@ -655,10 +610,6 @@ export default function Search(props) {
           ...searchState,
           [evt.target.name]: evt.target.checked,
           typeAll: false,
-        },
-        () => {
-          filterBy(setSearchState);
-          // debouncedSearch(state);
         },
       );
     }
@@ -670,16 +621,11 @@ export default function Search(props) {
 
 
   const onStartCommentChange = (date) => {
-    setSearchState({...searchState, startComment: date }, () => {
-      filterBy(searchState);
-        debouncedSearch(state);
-    });
+    setSearchState({...searchState, startComment: date })
   };
   const onEndCommentChange = (date) => {
-    setSearchState({ ...searchState, endComment: date }, () => {
-      filterBy(searchState);
-      debouncedSearch(state);
-    });
+    setSearchState({ ...searchState, endComment: date }
+    );
   };
   const tooltipTrigger = (evt) => {
     setSearchState( {...searchState, tooltipOpen: !tooltipOpen });
@@ -783,10 +729,7 @@ export default function Search(props) {
       {
         ...searchState,
         filtersHidden: !filtersHidden,
-      },
-      () => {
-        props.filterToggle(filtersHidden);
-      },
+      }
     );
   };
   //[TODO] We can use this to create a full screen modal if needed
