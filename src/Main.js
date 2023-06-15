@@ -69,6 +69,7 @@ import Search from './search/MainSearch/Search.jsx'
 import ImporterAlignment from './ImporterAlignment';
 import Header from './Header'
 import Playground from './examples/Playground';
+import ContextExample from './examples/Context';
 
 const _ = require('lodash');
 
@@ -279,6 +280,7 @@ class Main extends React.Component {
             <Route path="/up_geo_links" component={ImporterGeoLinks} />
             <Route path="/up_alignment" component={ImporterAlignment} />
             <Route path="/grid" component={Search} />
+            <Route path="/context" component={ContextExample} />
             <Route path="/" component={Landing}/>
         </Switch>
         )
