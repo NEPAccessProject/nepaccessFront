@@ -239,10 +239,6 @@ export default function Search(props) {
     return valuesResult;
   };
 
-  /**
-   * Event handlers
-   */
-
   const onIconClick = (evt) => {
     doSearch(titleRaw);
   };
