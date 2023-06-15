@@ -155,6 +155,7 @@ export default function Search(props) {
             startPublish: null,
             state: [],
             stateRaw: [],
+            stateOptions: Globals.locations,
             surveyChecked: true,
             surveyDone: true,
             surveyResult: "Haven't searched yet",
@@ -750,7 +751,7 @@ export default function Search(props) {
   const {markup,
   proximityDisabled,
   agencyRaw,state,county,proximityOption} = searchState;
-  const value = {searchState, setSearchState,onProximityChange,onTitleOnlyChecked,onMarkupChange,onProximityChange,onCooperatingAgencyChange ,onAgencyChange,onLocationChange,onCountyChange,onStartDateChange,onEndDateChange,onClearFiltersClick,onTitleOnlyChecked,proximityDisabled,agencyRaw,state,county};
+  const value = {searchState ,setSearchState,onProximityChange,onTitleOnlyChecked,onMarkupChange,onProximityChange,onCooperatingAgencyChange ,onAgencyChange,onLocationChange,onCountyChange,onStartDateChange,onEndDateChange,onClearFiltersClick,onTitleOnlyChecked,proximityDisabled,agencyRaw,state,county};
   //console.log('SEARCH SearchState',searchState);  
   // #region Return Method
 return (

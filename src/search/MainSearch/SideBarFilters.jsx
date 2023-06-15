@@ -35,11 +35,39 @@ import {
   actionOptions,
   decisionOptions,
   agencyOptions,
-  countyOptions,
-  stateOptions,
 } from '../options';
 const _ = require('lodash');
 import SearchContext from './SearchContext';
+
+
+const stateOptions = Globals.stateOptions;
+
+const Item = styled(Box)(({ theme }) => ({
+  backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
+  ...theme.typography.body2,
+  padding: theme.spacing(1),
+  // textAlign: 'center',
+  color: theme.palette.text.secondary,
+  elevation: 0,
+  border: 0,
+  borderRadius: 0,
+  mt: 2,
+  mb: 2,
+  pl: 0,
+  pr: 0,
+  '&:hover': {
+    //           backgroundColor: //theme.palette.grey[200],
+    boxShadow: '0px 4px 8px rgba(0.5, 0.5, 0.5, 0.15)',
+    cursor: 'pointer',
+    '& .addIcon': {
+      color: 'purple',
+    },
+  },
+}));
+
+const useStyles = makeStyles((theme) => ({
+  formControl: {},
+}));
 
 export default function SideBarFilters(props) {
   const {
@@ -56,36 +84,11 @@ export default function SideBarFilters(props) {
     onProximityChange,
     onCooperatingAgencyChange,
   } = useContext(SearchContext);
-  console.log('SEARCH STATE', searchState);
-  const { agencyRaw, county, proximityDisabled, markup } = searchState;
-  const Item = styled(Box)(({ theme }) => ({
-    backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
-    ...theme.typography.body2,
-    padding: theme.spacing(1),
-    // textAlign: 'center',
-    color: theme.palette.text.secondary,
-    elevation: 0,
-    border: 0,
-    borderRadius: 0,
-    mt: 2,
-    mb: 2,
-    pl: 0,
-    pr: 0,
-    '&:hover': {
-      //           backgroundColor: //theme.palette.grey[200],
-      boxShadow: '0px 4px 8px rgba(0.5, 0.5, 0.5, 0.15)',
-      cursor: 'pointer',
-      '& .addIcon': {
-        color: 'purple',
-      },
-    },
-  }));
-  const useStyles = makeStyles((theme) => ({
-    formControl: {},
-  }));
+  const { agencyRaw,state, county,stateOptions,countyOptions, proximityDisabled, markup, cooperatingAgencyRaw } = searchState;
 
+  console.log('State options', stateOptions);
+  console.log('County options', countyOptions);
   const classes = useStyles(theme);
-
   return (
     <>
       <Box>
@@ -106,15 +109,58 @@ export default function SideBarFilters(props) {
             label="Search Only Within Titles"
           />
         </Item>
+{/* #region Proximity Filter */}
         <Item>
-          <SearchFilter
+        <FormControl
+          fullWidth
+          xs={{
+            p: 1,
+            border: 0,
+            borderColor: 'grey.500',
+            borderRadius: 1,
+            mb: 1,
+            mt: 1,
+          }}
+        >
+          <Typography pb={1} variant="filterLabel">
+          Distance Between Search Terms:
+          </Typography>
+          <Autocomplete
+            id="proximity-select"
+            fullWidth
+            autoComplete={true}
+            // autoHighlight={true}
+            tabIndex={11}
+            className={classes.autocomplete}
+            options={proximityOptions}
+            disablePortal={true}
+            // value={searchState.agencyRaw}
+            variant="standard"
+            // menuIsOpen={true}
+            onChange={onProximityChange}
+            getOptionLabel={(proximityOptions) => proximityOptions.label}
+            renderInput={(params) => (
+              <TextField
+                {...params}
+                value={searchState.proximity}
+                variant="outlined"
+                sx={{
+                  width: '100%',
+                  p: 0,
+                }}
+                placeholder="Type or Select a Word Distance"
+              />
+            )}
+          />
+        </FormControl>
+          {/* <SearchFilter
             onChange={(evt) => onProximityChange(evt)}
+            value={searchState.proximity}
             filter={{
               className: classes.formControl,
               variant: 'standard',
               id: 'proximity-select',
               className: proximityDisabled ? ' disabled' : '',
-              value: searchState.proximity,
               // classNamePrefix="react-select control"
               placeholder: 'Keyword distance',
               options: proximityOptions,
@@ -123,32 +169,120 @@ export default function SideBarFilters(props) {
               label: 'Distance Between Search Terms',
               tabIndex: '1',
             }}
-          />
+          /> */}
         </Item>
+{/* #endregion */}
       </Box>
 
       <Item>
-        <SearchFilter
-          onChange={(evt) => onAgencyChange(evt)}
+{/* #region Lead Agencies Filter */}
+        <FormControl
+          fullWidth
+          xs={{
+            p: 1,
+            border: 0,
+            borderColor: 'grey.500',
+            borderRadius: 1,
+            mb: 1,
+            mt: 1,
+          }}
+        >
+          <Typography pb={1} variant="filterLabel">
+            Lead Agencies:
+          </Typography>
+          <Autocomplete
+            id="searchAgency"
+            fullWidth
+            autoComplete={true}
+            // autoHighlight={true}
+            tabIndex={11}
+            className={classes.autocomplete}
+            options={agencyOptions}
+            disablePortal={true}
+            // value={searchState.agencyRaw}
+            variant="standard"
+            // menuIsOpen={true}
+            onChange={onAgencyChange}
+            getOptionLabel={(agencyOptions) => agencyOptions.label}
+            renderInput={(params) => (
+              <TextField
+                {...params}
+                value={searchState.agencyRaw}
+                variant="outlined"
+                sx={{
+                  width: '100%',
+                  p: 0,
+                }}
+                placeholder="Type or Select Lead Agencies"
+              />
+            )}
+          />
+        </FormControl>
+{/* #endregion */}
+        {/* <SearchFilter
+          onChange={onAgencyChange}
+          value ={Object.keys(searchState.agencyRaw)}
           filter={{
             className: classes.formControl,
             placeholder: 'Type or Select Lead Agencies',
-            value: searchState.agencyRaw ? searchState.agencyRaw : '',
             id: 'searchAgency',
             type: Autocomplete,
             options: agencyOptions,
             label: 'Lead Agencies',
             tabIndex: '3',
           }}
-        />
+        /> */}
       </Item>
       <Item>
-        <SearchFilter
-          onChange={(evt) => onCooperatingAgencyChange(evt)}
+        <FormControl
+          fullWidth
+          xs={{
+            p: 1,
+            border: 0,
+            borderColor: 'grey.500',
+            borderRadius: 1,
+            mb: 1,
+            mt: 1,
+          }}
+        >
+          <Typography pb={1} variant="filterLabel">
+            Cooperating Agencies:
+          </Typography>
+          <Autocomplete
+            id="searchAgency"
+            fullWidth
+            autoComplete={true}
+            // autoHighlight={true}
+            tabIndex={11}
+            className={classes.autocomplete}
+            options={agencyOptions}
+            disablePortal={true}
+            // value={searchState.agencyRaw}
+            variant="standard"
+            // menuIsOpen={true}
+            onChange={onCooperatingAgencyChange}
+            getOptionLabel={(agencyOptions) => agencyOptions.label}
+            renderInput={(params) => (
+              <TextField
+                {...params}
+                value={searchState.agencyRaw}
+                variant="outlined"
+                sx={{
+                  width: '100%',
+                  p: 0,
+                }}
+                placeholder="Type or Select Cooperating Agencies"
+              />
+            )}
+          />
+        </FormControl>
+
+        {/* <SearchFilter
+          onChange={onCooperatingAgencyChange}
+          value={searchState.agencyRaw}
           filter={{
             className: classes.formControl,
             placeholder: 'Type or select Cooperating agencies',
-            value: searchState.agencyRaw ? searchState.agencyRaw : '',
             id: 'searchAgency',
             name: 'cooperatingAgency',
             type: Autocomplete,
@@ -156,16 +290,58 @@ export default function SideBarFilters(props) {
             label: 'Cooperating Agencies',
             tabIndex: '4',
           }}
-        />
+        /> */}
       </Item>
       <Divider />
       <Item>
-        <SearchFilter
-          onChange={(evt) => onLocationChange(evt)}
+      <FormControl
+          fullWidth
+          xs={{
+            p: 1,
+            border: 0,
+            borderColor: 'grey.500',
+            borderRadius: 1,
+            mb: 1,
+            mt: 1,
+          }}
+        >
+          <Typography pb={1} variant="filterLabel">
+            State(s) or Location(s):
+          </Typography>
+          <Autocomplete
+            id="state"
+            fullWidth
+            autoComplete={true}
+            // autoHighlight={true}
+            tabIndex={11}
+            className={classes.autocomplete}
+            options={stateOptions}
+            disablePortal={true}
+            // value={searchState.agencyRaw}
+            variant="standard"
+            // menuIsOpen={true}
+            onChange={onLocationChange}
+            getOptionLabel={(stateOptions) => stateOptions.label}
+            renderInput={(params) => (
+              <TextField
+                {...params}
+                value={(stateOptions.filter = (stateObj) => searchState.state.includes(stateObj.value))}
+                variant="outlined"
+                sx={{
+                  width: '100%',
+                  p: 0,
+                }}
+                placeholder="Type or Select States(s) and Agencies"
+              />
+            )}
+          />
+        </FormControl>
+        {/* <SearchFilter
+          onChange={onLocationChange}
+          value={(stateOptions.filter = (stateObj) => state.includes(stateObj.value))}
           filter={{
             className: classes.formControl,
             placeholder: 'Type or Select State(s) or Location(s)',
-            value: (stateOptions.filter = (stateObj) => state.includes(stateObj.value)),
             id: 'state',
             name: 'state',
             type: Autocomplete,
@@ -173,16 +349,58 @@ export default function SideBarFilters(props) {
             label: 'State(s) or Location(s)',
             tabIndex: '5',
           }}
-        />
+        /> */}
       </Item>
 
       <Item>
-        <SearchFilter
-          onChange={(evt) => onCountyChange(evt)}
+        <FormControl
+          fullWidth
+          xs={{
+            p: 1,
+            border: 0,
+            borderColor: 'grey.500',
+            borderRadius: 1,
+            mb: 1,
+            mt: 1,
+          }}
+        >
+          <Typography pb={1} variant="filterLabel">
+            County or Counties Value:
+          </Typography>
+          <Autocomplete
+            id="searchCounty"
+            fullWidth
+            autoComplete={true}
+            // autoHighlight={true}
+            tabIndex={11}
+            className={classes.autocomplete}
+            options={searchState.countyOptions}
+            disablePortal={true}
+            // value={searchState.agencyRaw}
+            variant="standard"
+            // menuIsOpen={true}
+            onChange={onCountyChange}
+            getOptionLabel={(countyOptions) => countyOptions.label}
+            renderInput={(params) => (
+              <TextField
+                {...params}
+                value={(countyOptions.filter = (countyObj) => searchState.county.includes(countyObj.value))}
+                variant="outlined"
+                sx={{
+                  width: '100%',
+                  p: 0,
+                }}
+                placeholder="Type or Select a Counties"
+              />
+            )}
+          />
+        </FormControl>
+        {/* <SearchFilter
+          onChange={onCountyChange}
+          value={(countyOptions.filter = (countyObj) => county.includes(countyObj.value))}
           filter={{
             className: classes.formControl,
             placeholder: 'Type or Select a County',
-            value: countyOptions.filter((countyObj) => county.includes(countyObj.value)),
             id: 'searchCounty',
             name: 'county',
             type: Autocomplete,
@@ -190,7 +408,7 @@ export default function SideBarFilters(props) {
             label: 'County / counties',
             tabIndex: '6',
           }}
-        />
+        /> */}
       </Item>
       <Divider />
       <Item>
@@ -209,15 +427,21 @@ export default function SideBarFilters(props) {
           <LocalizationProvider dateAdapter={AdapterDayjs}>
             <Box marginBottom={2} components={['DatePicker']} padding={0} width="100%">
               <DatePicker
-                onChange={(evt) => onStartDateChange(evt)}
+                onChange={onStartDateChange}
                 id="date-picker-from"
                 label="From:"
+                value={searchState.startDate}
               />
             </Box>
           </LocalizationProvider>
           <LocalizationProvider dateAdapter={AdapterDayjs}>
             <Box components={['DatePicker']} padding={0} width="100%">
-              <DatePicker on={(evt) => onEndDateChange(evt)} id="date-picker-to" label="To:" />
+              <DatePicker
+                value={searchState.endDate}
+                on={(evt) => onEndDateChange(evt)}
+                id="date-picker-to"
+                label="To:"
+              />
             </Box>
           </LocalizationProvider>
         </Box>
