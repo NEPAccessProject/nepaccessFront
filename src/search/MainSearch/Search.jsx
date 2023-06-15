@@ -1,3 +1,59 @@
+import CloseIcon from '@mui/icons-material/Close';
+import Globals from '../../globals';
+//import Grid from '@mui/material/Grid'; // Grid version 1
+import Grid from '@mui/material/Unstable_Grid2';
+import ProximitySelect from './ProximitySelect';
+import React, { useState, useReducer, useContext } from 'react';
+import ResponsiveSearchResults from './ResponsivSearchResults';
+import SearchContext from './SearchContext';
+import SearchFilter from './SearchFilter';
+import SearchResultItems from './SearchResultsItems';
+import SearchTipsDialog from './SearchTipDialog';
+import SideBarFilters from './SideBarFilters';
+import theme from '../../styles/theme';
+import {
+  Paper,
+  Button,
+  Input,
+  Box,
+  Divider,
+  FormControl,
+  Select,
+  Autocomplete,
+  InputLabel,
+  ListItem,
+  IconButton,
+  TextField,
+  Typography,
+  Container,
+  FormLabel,
+  Dialog,
+  DialogContent,
+  DialogTitle,
+  DialogContentText,
+  DialogActions,
+  FormControlLabel,
+  Checkbox,
+  useMediaQuery,
+} from '@mui/material';
+import {
+  proximityOptions,
+  actionOptions,
+  decisionOptions,
+  agencyOptions,
+  stateOptions,
+  countyOptions,
+} from '../options';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import { InputAdornment, SearchOutlined } from '@mui/icons-material';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { ThemeProvider, styled } from '@mui/material/styles';
+import { lightBlue } from '@mui/material/colors';
+import { withStyles } from '@mui/styles';
+import QuickStartDialog from './QuickStartDialog';
+import AvailableFilesDialog from './AvailableFilesDialog';
+
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
   // ...theme.typography.body2,
@@ -71,7 +127,7 @@ export default function Search(props) {
 // #region State Declaration
   const [searchState, setSearchState] = useState({
     // test: Globals.enum.options,
-    action: [],
+            action: [],
             actionRaw: [],
             agency: [],
             agencyRaw: [],
@@ -208,7 +264,7 @@ export default function Search(props) {
     setSearchState(
       {
         ...searchState,
-        // titleRaw: '',
+        titleRaw: '',
         startPublish: null,
         endPublish: null,
         startComment: null,
@@ -975,56 +1031,3 @@ return (
   );
 // #endregion
 }
-import CloseIcon from '@mui/icons-material/Close';
-import Globals from '../../globals';
-//import Grid from '@mui/material/Grid'; // Grid version 1
-import Grid from '@mui/material/Unstable_Grid2';
-import ProximitySelect from './ProximitySelect';
-import React, { useState, useReducer, useContext } from 'react';
-import ResponsiveSearchResults from './ResponsivSearchResults';
-import SearchContext from './SearchContext';
-import SearchFilter from './SearchFilter';
-import SearchResultItems from './SearchResultsItems';
-import SearchTipsDialog from '../SearchTipDialog';
-import SideBarFilters from './SideBarFilters';
-import theme from '../../styles/theme';
-import {
-  Paper,
-  Button,
-  Input,
-  Box,
-  Divider,
-  FormControl,
-  Select,
-  Autocomplete,
-  InputLabel,
-  ListItem,
-  IconButton,
-  TextField,
-  Typography,
-  Container,
-  FormLabel,
-  Dialog,
-  DialogContent,
-  DialogTitle,
-  DialogContentText,
-  DialogActions,
-  FormControlLabel,
-  Checkbox,
-  useMediaQuery,
-} from '@mui/material';
-import {
-  proximityOptions,
-  actionOptions,
-  decisionOptions,
-  agencyOptions,
-  stateOptions,
-  countyOptions,
-} from '../options';
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import { DatePicker } from '@mui/x-date-pickers/DatePicker';
-import { InputAdornment, SearchOutlined } from '@mui/icons-material';
-import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { ThemeProvider, styled } from '@mui/material/styles';
-import { lightBlue } from '@mui/material/colors';
-import { withStyles } from '@mui/styles';
