@@ -1,56 +1,3 @@
-import React, { useState, useReducer, useContext } from 'react';
-import {
-  Paper,
-  Button,
-  Input,
-  Box,
-  Divider,
-  FormControl,
-  Select,
-  Autocomplete,
-  InputLabel,
-  ListItem,
-  IconButton,
-  TextField,
-  Typography,
-  Container,
-  FormLabel,
-  Dialog,
-  DialogContent,
-  DialogTitle,
-  DialogContentText,
-  DialogActions,
-  FormControlLabel,
-  Checkbox,
-  useMediaQuery,
-} from '@mui/material';
-import { ThemeProvider, styled } from '@mui/material/styles';
-import theme from '../../styles/theme';
-//import Grid from '@mui/material/Grid'; // Grid version 1
-import Grid from '@mui/material/Unstable_Grid2';
-import { InputAdornment, SearchOutlined } from '@mui/icons-material';
-import {
-  proximityOptions,
-  actionOptions,
-  decisionOptions,
-  agencyOptions,
-  stateOptions,
-  countyOptions,
-} from '../options';
-import { withStyles } from '@mui/styles';
-import SideBarFilters from './SideBarFilters';
-import SearchFilter from './SearchFilter';
-import ResponsiveSearchResults from './ResponsivSearchResults';
-import { lightBlue } from '@mui/material/colors';
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { DatePicker } from '@mui/x-date-pickers/DatePicker';
-import SearchResultItems from './SearchResultsItems';
-import CloseIcon from '@mui/icons-material/Close';
-import SearchContext from './SearchContext';
-import SearchTipsDialog from '../SearchTipDialog';
-import ProximitySelect from './ProximitySelect';
-
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
   // ...theme.typography.body2,
@@ -123,65 +70,52 @@ export default function Search(props) {
   const classes = useStyles(theme);
 // #region State Declaration
   const [searchState, setSearchState] = useState({
-    action: [],
-    actionRaw: '',
-    agency: [],
-    agencyRaw: '',
-    agencyRaw: [],
-    cooperatingAgency: [],
-    cooperatingAgencyRaw: [],
-    county: countyOptions,
-    countyRaw: '',
-    countyRaw: [],
-    decision: '',
-    decisionRaw: '',
-    dialogIsOpen: false,
-    endComment: null,
-    endPublish: null,
-    fragmentSizeValue: 2,
-    hideOrganization: false,
-    iconClassName: 'icon icon--effect',
-    isDirty: false,
-    limit: 100,
-    markup: false,
-    needsComments: false,
-    needsComments: false,
-    needsDocument: false,
-    needsDocument: false,
-    offset: 0,
-    optionsChecked: true,
-    optionsChecked: true,
-    proximityDisabled: true,
-    proximityOptions: proximityOptions,
-    search: '',
-    searchOption: 'B',
-    searchOptionsChecked: false,
-    searchOptionsChecked: false,
-    startComment: null,
-    startPublish: null,
-    state: [],
-    stateRaw: '',
-    stateRaw: [],
-    surveyChecked: true,
-    surveyDone: false,
     // test: Globals.enum.options,
-    tooltipOpen: undefined,
-    typeAll: true,
-    typeDraft: true,
-    typeEA: true,
-    typeEAFinal: false,
-    typeEAFinalFinal: false,
-    typeFinal: true,
-    typeNOI: false,
-    typeNOIFinal: false,
-    typeOther: false,
-    typeROD: false,
-    typeRODFinal: false,
-    typeRODFinalFinal: false,
-    typeScoping: false,
-    isSearchTipsDialogIsOpen : false,
-    isFilesTipsDialogIsOpen : false,
-    isQuickStartDialogIsopen : false,
+    action: [],
+            actionRaw: [],
+            agency: [],
+            agencyRaw: [],
+            cooperatingAgency: [],
+            cooperatingAgencyRaw: [],
+            county: [],
+            countyRaw: [],
+            decision: [],
+            decisionRaw: [],
+            endComment: null,
+            endPublish: null,
+            filtersHidden: false,
+            fragmentSizeValue: 2,
+            hideOrganization: true,
+            iconClassName: 'icon icon--effect',
+            isDirty: false,
+            limit: 100,
+            markup: true,
+            needsComments: false,
+            needsDocument: false,
+            offset: 0,
+            optionsChecked: true,
+            proximityDisabled: true,
+            proximityOption: null,
+            searchOption: "B",
+            startComment: null,
+            startPublish: null,
+            state: [],
+            stateRaw: [],
+            surveyChecked: true,
+            surveyDone: true,
+            surveyResult: "Haven't searched yet",
+            test: Globals.anEnum.options,
+            titleRaw: '',
+            tooltipOpen: undefined,
+            typeAll: true,
+            typeDraft: false,
+            typeEA: false,
+            typeFinal: false,
+            typeNOI: false,
+            typeOther: false,
+            typeROD: false,
+            typeScoping: false,
+            countyOptions: Globals.counties
   });
 
 // #endregion
@@ -521,7 +455,7 @@ export default function Search(props) {
         },
       );
     } else {
-      setSearchState({ ...searchState, proximityOption: evt.target });
+      setSearchState({ ...searchState, proximityOption: evt.target.value });
     }
   };
   const onLocationChange = (evt, item) => {
@@ -530,7 +464,7 @@ export default function Search(props) {
     for (var i = 0; i < evt.length; i++) {
       stateValues.push(evt[i].value);
     }
-
+    console.log('State Values Length', stateValues.length);
     setSearchState(
       {
         ...searchState,
@@ -541,31 +475,16 @@ export default function Search(props) {
       () => {
         // filterBy(searchState);
         // Purge invalid counties, which will then run filterBy
-        onCountyChange(countyOptions.filter((countyObj) => county.includes(countyObj.value)));
+        console.log('State Raw', searchState.stateRaw);
+        onCountyChange(
+          searchState.countyOptions.filter(
+            (countyObj) => county.includes(countyObj.value)
+            )
+          );
       },
     );
   };
-  const onAgencyChange = (evt) => {
-    console.log("🚀 ~ file: SideBarFilters.jsx:106 ~ onAgencyChange ~ evt value:", evt.target.value)
-    var agencyLabels = [];
-    for (var i = 0; i < evt.length; i++) {
-      agencyLabels.push(evt[i].label.replace(/ \([A-Z]*\)/gi, ''));
-    }
-
-    setSearchState({
-      ...searchState,
-      agency: agencyLabels,
-      agencyRaw: evt,
-    });
-  };
-  const onStartDateChange = (evt,date) => {
-    console.log('onStartDateChange EVT',evt.target.value);
-    console.log('onStartDateChange', date);
-    setSearchState({...searchState, startPublish: date }, () => {
-      filterBy(searchState);
-      // debouncedSearch(state);
-    });
-  };
+  
 
   // Tried quite a bit but I can't force the calendar to Dec 31 of a year as it's typed in without editing the library code itself.
   // I can change the value but the popper state won't update to reflect it (even when I force it to update).
@@ -580,7 +499,7 @@ export default function Search(props) {
   };
   
   const onCountyChange = (evt, item) => {
-    console.log('onCountyChange', evt.target.value);
+    console.log('onCountyChange - Value:', evt.target.value);
     var countyValues = [];
     for (var i = 0; i < evt.length; i++) {
       countyValues.push(evt[i].value);
@@ -590,8 +509,33 @@ export default function Search(props) {
       countyRaw: evt,
     });
   };
+  const onAgencyChange = (evt) => {
+    console.log("🚀 ~ file: SideBarFilters.jsx:106 ~ onAgencyChange ~ evt value:", evt.target.value)
+    var agencyLabels = [];
+    for (var i = 0; i < evt.length; i++) {
+      agencyLabels.push(evt[i].label.replace(/ \([A-Z]*\)/gi, ''));
+    }
+    console.log('# of agency labels', agencyLabels.length);
+    debugger;
+    setSearchState({
+      ...searchState,
+      agency: agencyLabels,
+      agencyRaw: evt.target.value,
+    }, () => {
+      console.log('Updated AgencyRaw', searchState.agencyRaw);
+      filterBy(searchState);
+    });
+  };
+  const onStartDateChange = (evt,date) => {
+    console.log('onStartDateChange EVT',evt.target.value);
+    console.log('onStartDateChange', date);
+    setSearchState({...searchState, startPublish: date }, () => {
+      filterBy(searchState);
+      // debouncedSearch(state);
+    });
+  };
   const onCooperatingAgencyChange = (evt) => {
-    console.log('onCooperatingAgencyChange', evt);
+    console.log('onCooperatingAgencyChange', evt.target.value);
     var agencyLabels = [];
     for (var i = 0; i < evt.length; i++) {
       agencyLabels.push(evt[i].label.replace(/ \([A-Z]*\)/gi, ''));
@@ -600,7 +544,7 @@ export default function Search(props) {
       {
         ...searchState,
         cooperatingAgency: agencyLabels,
-        cooperatingAgencyRaw: evt,
+        cooperatingAgencyRaw: evt.target.value,
       },
       () => {
         filterBy(searchState);
@@ -807,10 +751,9 @@ export default function Search(props) {
   const {markup,
   proximityDisabled,
   agencyRaw,state,county,proximityOption} = searchState;
-// #region Return Method
-
-const value = {searchState, setSearchState,onProximityChange,onTitleOnlyChecked,onMarkupChange,onProximityChange,onCooperatingAgencyChange ,onAgencyChange,onLocationChange,onCountyChange,onStartDateChange,onEndDateChange,onClearFiltersClick,onTitleOnlyChecked,proximityDisabled,agencyRaw,state,county};
-console.log('SEARCH SearchState',searchState);  
+  const value = {searchState, setSearchState,onProximityChange,onTitleOnlyChecked,onMarkupChange,onProximityChange,onCooperatingAgencyChange ,onAgencyChange,onLocationChange,onCountyChange,onStartDateChange,onEndDateChange,onClearFiltersClick,onTitleOnlyChecked,proximityDisabled,agencyRaw,state,county};
+  //console.log('SEARCH SearchState',searchState);  
+  // #region Return Method
 return (
     <SearchContext.Provider value={value}>
       <ThemeProvider theme={theme}>
@@ -1032,3 +975,56 @@ return (
   );
 // #endregion
 }
+import CloseIcon from '@mui/icons-material/Close';
+import Globals from '../../globals';
+//import Grid from '@mui/material/Grid'; // Grid version 1
+import Grid from '@mui/material/Unstable_Grid2';
+import ProximitySelect from './ProximitySelect';
+import React, { useState, useReducer, useContext } from 'react';
+import ResponsiveSearchResults from './ResponsivSearchResults';
+import SearchContext from './SearchContext';
+import SearchFilter from './SearchFilter';
+import SearchResultItems from './SearchResultsItems';
+import SearchTipsDialog from '../SearchTipDialog';
+import SideBarFilters from './SideBarFilters';
+import theme from '../../styles/theme';
+import {
+  Paper,
+  Button,
+  Input,
+  Box,
+  Divider,
+  FormControl,
+  Select,
+  Autocomplete,
+  InputLabel,
+  ListItem,
+  IconButton,
+  TextField,
+  Typography,
+  Container,
+  FormLabel,
+  Dialog,
+  DialogContent,
+  DialogTitle,
+  DialogContentText,
+  DialogActions,
+  FormControlLabel,
+  Checkbox,
+  useMediaQuery,
+} from '@mui/material';
+import {
+  proximityOptions,
+  actionOptions,
+  decisionOptions,
+  agencyOptions,
+  stateOptions,
+  countyOptions,
+} from '../options';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import { InputAdornment, SearchOutlined } from '@mui/icons-material';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { ThemeProvider, styled } from '@mui/material/styles';
+import { lightBlue } from '@mui/material/colors';
+import { withStyles } from '@mui/styles';
