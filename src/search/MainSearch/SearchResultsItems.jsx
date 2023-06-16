@@ -19,9 +19,7 @@ import {
 } from '@mui/material';
 import Grid from '@mui/material/Unstable_Grid2';
 const handleDownloadClick = (id,evt) => {
-  console.log('Download EVT Value',evt.target.value)
-  evt.preventDefault();
-  console.log('handleDownloadClick', id);
+  console.log('Download ID Value',id)
 };
 export default function SearchResultItems(props) {
   const { status, id, title, content, link, resultsText } = props;
@@ -48,15 +46,15 @@ export default function SearchResultItems(props) {
             </Container>
           </Grid>
           <Grid item xs={2}>
-            {/* <Button
+            <Button
               color="primary"
-              onClick={(evt)=>handleDownloadClick(evt,id)}
+              onClick={handleDownloadClick(id)}
               sx={{
                 width: '100%',
               }}
             >
               Download
-            </Button> */}
+            </Button>
             <Button
               color={'secondary'}
               sx={{

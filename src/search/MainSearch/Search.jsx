@@ -49,10 +49,7 @@ import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { InputAdornment, SearchOutlined } from '@mui/icons-material';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { ThemeProvider, styled } from '@mui/material/styles';
-import { lightBlue } from '@mui/material/colors';
-import { withStyles } from '@mui/styles';
-import QuickStartDialog from './QuickStartDialog';
-import AvailableFilesDialog from './AvailableFilesDialog';
+import SearchHeader from './SearchHeader';
 
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
@@ -98,7 +95,6 @@ const FilterItem = styled(Paper)(({ theme }) => ({
   },
 }));
 
-
 const useStyles = (theme) => ({
   formControl: {},
   autocomplete: {},
@@ -122,58 +118,58 @@ const summary = {
 
 export default function Search(props) {
   const classes = useStyles(theme);
-// #region State Declaration
+  // #region State Declaration
   const [searchState, setSearchState] = useState({
     // test: Globals.enum.options,
-            action: [],
-            actionRaw: [],
-            agency: [],
-            agencyRaw: [],
-            cooperatingAgency: [],
-            cooperatingAgencyRaw: [],
-            county: [],
-            countyRaw: [],
-            decision: [],
-            decisionRaw: [],
-            endComment: null,
-            endPublish: null,
-            filtersHidden: false,
-            fragmentSizeValue: 2,
-            hideOrganization: true,
-            iconClassName: 'icon icon--effect',
-            isDirty: false,
-            limit: 100,
-            markup: true,
-            needsComments: false,
-            needsDocument: false,
-            offset: 0,
-            optionsChecked: true,
-            proximityDisabled: true,
-            proximityOption: null,
-            searchOption: "B",
-            startComment: null,
-            startPublish: null,
-            state: [],
-            stateRaw: [],
-            stateOptions: Globals.locations,
-            surveyChecked: true,
-            surveyDone: true,
-            surveyResult: "Haven't searched yet",
-            test: Globals.anEnum.options,
-            titleRaw: '',
-            tooltipOpen: undefined,
-            typeAll: true,
-            typeDraft: false,
-            typeEA: false,
-            typeFinal: false,
-            typeNOI: false,
-            typeOther: false,
-            typeROD: false,
-            typeScoping: false,
-            countyOptions: Globals.counties
+    action: [],
+    actionRaw: [],
+    agency: [],
+    agencyRaw: [],
+    cooperatingAgency: [],
+    cooperatingAgencyRaw: [],
+    county: [],
+    countyRaw: [],
+    decision: [],
+    decisionRaw: [],
+    endComment: null,
+    endPublish: null,
+    filtersHidden: false,
+    fragmentSizeValue: 2,
+    hideOrganization: true,
+    iconClassName: 'icon icon--effect',
+    isDirty: false,
+    limit: 100,
+    markup: true,
+    needsComments: false,
+    needsDocument: false,
+    offset: 0,
+    optionsChecked: true,
+    proximityDisabled: true,
+    proximityOption: null,
+    searchOption: 'B',
+    startComment: null,
+    startPublish: null,
+    state: [],
+    stateRaw: [],
+    stateOptions: Globals.locations,
+    surveyChecked: true,
+    surveyDone: true,
+    surveyResult: "Haven't searched yet",
+    test: Globals.anEnum.options,
+    titleRaw: '',
+    tooltipOpen: undefined,
+    typeAll: true,
+    typeDraft: false,
+    typeEA: false,
+    typeFinal: false,
+    typeNOI: false,
+    typeOther: false,
+    typeROD: false,
+    typeScoping: false,
+    countyOptions: Globals.counties,
   });
 
-// #endregion
+  // #endregion
   const filterBy = props.filterResultsBy;
   const myRef = React.createRef();
   const doSearch = (terms) => {
@@ -192,7 +188,6 @@ export default function Search(props) {
   };
 
   const doSearchFromParams = () => {
-
     var queryString = Globals.getParameterByName('q');
     if (!props.count && (queryString === null || queryString === '')) {
       // No query param/blank terms: Launch no-term search - Only if we have no results saved here already
@@ -256,44 +251,42 @@ export default function Search(props) {
   };
 
   const onClearFiltersClick = () => {
-    setSearchState(
-      {
-        ...searchState,
-        titleRaw: '',
-        startPublish: null,
-        endPublish: null,
-        startComment: null,
-        endComment: null,
-        agency: [],
-        agencyRaw: [],
-        cooperatingAgency: [],
-        cooperatingAgencyRaw: [],
-        state: [],
-        stateRaw: [],
-        county: [],
-        countyRaw: [],
-        decision: [],
-        decisionRaw: [],
-        action: [],
-        actionRaw: [],
-        typeAll: true,
-        typeFinal: false,
-        typeDraft: false,
-        typeEA: false,
-        typeNOI: false,
-        typeROD: false,
-        typeScoping: false,
-        typeOther: false,
-        needsComments: false,
-        needsDocument: false,
-        optionsChecked: true,
-        countyOptions: Globals.counties,
-      }
-    );
+    setSearchState({
+      ...searchState,
+      titleRaw: '',
+      startPublish: null,
+      endPublish: null,
+      startComment: null,
+      endComment: null,
+      agency: [],
+      agencyRaw: [],
+      cooperatingAgency: [],
+      cooperatingAgencyRaw: [],
+      state: [],
+      stateRaw: [],
+      county: [],
+      countyRaw: [],
+      decision: [],
+      decisionRaw: [],
+      action: [],
+      actionRaw: [],
+      typeAll: true,
+      typeFinal: false,
+      typeDraft: false,
+      typeEA: false,
+      typeNOI: false,
+      typeROD: false,
+      typeScoping: false,
+      typeOther: false,
+      needsComments: false,
+      needsDocument: false,
+      optionsChecked: true,
+      countyOptions: Globals.counties,
+    });
   };
 
   const onRadioChange = (evt) => {
-    setSearchState({ ...searchState,[evt.target.name]: evt.target.value });
+    setSearchState({ ...searchState, [evt.target.name]: evt.target.value });
   };
 
   const onKeyUp = (evt) => {
@@ -314,7 +307,7 @@ export default function Search(props) {
       }
     }
   };
-  
+
   const onInput = (evt) => {
     let userInput = evt.target.value;
 
@@ -322,14 +315,12 @@ export default function Search(props) {
 
     //get the evt.target.name (defined by name= in input)
     //and use it to target the key on our `state` object with the same name, using bracket syntax
-    setSearchState(
-      {
-        ...searchState,
-        [evt.target.name]: userInput,
-        proximityDisabled: proximityValues.disableValue,
-        inputMessage: proximityValues._inputMessage,
-      }
-    );
+    setSearchState({
+      ...searchState,
+      [evt.target.name]: userInput,
+      proximityDisabled: proximityValues.disableValue,
+      inputMessage: proximityValues._inputMessage,
+    });
   };
 
   // suppress warning that there's no onChange event, handler (despite onChange rarely being the best event to take advantage of)
@@ -337,16 +328,15 @@ export default function Search(props) {
     // do nothing
   };
   const toggleSearchTipDialogClose = (isOpen) => {
-    (isOpen == true) 
-      ?  setSearchState({
-            ...searchState,    // keep all other key-value pairs
-            isSearchTipsDialogIsOpen: false       // update the value of specific key
+    isOpen == true
+      ? setSearchState({
+          ...searchState, // keep all other key-value pairs
+          isSearchTipsDialogIsOpen: false, // update the value of specific key
         })
-      :  setSearchState({
-        ...prevState,    // keep all other key-value pairs
-        isSearchTipsDialogIsOpen: true       // update the value of specific key
-    });
-
+      : setSearchState({
+          ...prevState, // keep all other key-value pairs
+          isSearchTipsDialogIsOpen: true, // update the value of specific key
+        });
   };
   const onDialogOpen = () => {
     console.log('onDialogOpen');
@@ -395,10 +385,7 @@ export default function Search(props) {
 
   const onFragmentSizeChange = (evt) => {
     console.log('Val', evt.value);
-    setSearchState({...searchState,
-      fragmentSizeValue: evt.value,
-      fragmentSize: evt,
-    });
+    setSearchState({ ...searchState, fragmentSizeValue: evt.value, fragmentSize: evt });
   };
 
   const onActionChange = (evt) => {
@@ -406,26 +393,22 @@ export default function Search(props) {
     for (var i = 0; i < evt.length; i++) {
       actionLabels.push(evt[i].label.replace(/ \([A-Z]*\)/gi, ''));
     }
-    setSearchState(
-      {
-        ...searchState,
-        action: actionLabels,
-        actionRaw: evt,
-      }
-    );
+    setSearchState({
+      ...searchState,
+      action: actionLabels,
+      actionRaw: evt,
+    });
   };
   const onDecisionChange = (evt) => {
     var decisionLabels = [];
     for (var i = 0; i < evt.length; i++) {
       decisionLabels.push(evt[i].label.replace(/ \([A-Z]*\)/gi, ''));
     }
-    setSearchState(
-      {
-        ...searchState,
-        decision: decisionLabels,
-        decisionRaw: evt,
-      }
-    );
+    setSearchState({
+      ...searchState,
+      decision: decisionLabels,
+      decisionRaw: evt,
+    });
   };
   /** Helper method for onLocationChange limits county options to selected states in filter,
    * or resets to all counties if no states selected */
@@ -452,8 +435,6 @@ export default function Search(props) {
     return filteredCounties;
   };
 
-
-
   const getSearchBarText = () => {
     if (searchOption && searchOption === 'C') {
       // title only
@@ -468,58 +449,53 @@ export default function Search(props) {
   };
 
   const onNeedsDocumentChecked = (evt) => {
-    setSearchState(
-      {
-        ...searchState,
-        needsDocument: !needsDocument,
-      },
-    );
+    setSearchState({
+      ...searchState,
+      needsDocument: !needsDocument,
+    });
   };
   const onProximityChange = (evt) => {
     console.log('OnProximityChange', evt.target.value);
     if (evt.target.value === -1) {
-      setSearchState(
-        {
-          ...searchState,
-          proximityOption: null,
-        },
-      );
+      setSearchState({
+        ...searchState,
+        proximityOption: null,
+      });
     } else {
-      console.log('OnProximityChange searchState proximityOption before update', searchState.proximityOption);
-      setSearchState(
-        { 
-          ...searchState, 
-          proximityOption: evt,
-        });
+      console.log(
+        'OnProximityChange searchState proximityOption before update',
+        searchState.proximityOption,
+      );
+      setSearchState({
+        ...searchState,
+        proximityOption: evt,
+      });
     }
   };
   const onLocationChange = (evt, item) => {
-    console.log("🚀 ~ file: SideBarFilters.jsx:86 ~ onLocationChange ~ evt:", evt)
+    console.log('🚀 ~ file: SideBarFilters.jsx:86 ~ onLocationChange ~ evt:', evt);
     var stateValues = [];
     for (var i = 0; i < evt.length; i++) {
       stateValues.push(evt[i].value);
     }
     console.log('State Values Length', stateValues.length);
-    setSearchState(
-      {
-        ...searchState,
-        state: stateValues,
-        stateRaw: evt,
-        countyOptions: narrowCountyOptions(stateValues),
-      }
-    );
+    setSearchState({
+      ...searchState,
+      state: stateValues,
+      stateRaw: evt,
+      countyOptions: narrowCountyOptions(stateValues),
+    });
   };
-  
 
   // Tried quite a bit but I can't force the calendar to Dec 31 of a year as it's typed in without editing the library code itself.
   // I can change the value but the popper state won't update to reflect it (even when I force it to update).
   const onEndDateChange = (date, evt) => {
     console.log(evt.current.target.value);
     console.log('onEndDateChange', date, evt.current.target.value);
-    setSearchState({...searchState, endPublish: date });
+    setSearchState({ ...searchState, endPublish: date });
     // }
   };
-  
+
   const onCountyChange = (evt, item) => {
     debugger;
     console.log('onCountyChange - Value:', evt);
@@ -527,14 +503,11 @@ export default function Search(props) {
     for (var i = 0; i < evt.length; i++) {
       countyValues.push(evt[i].value);
     }
-    console.log("🚀 ~ file: Search.jsx:528 ~ onCountyChange ~ countyValues:", countyValues)
-    setSearchState({...searchState,
-      county: countyValues,
-      countyRaw: evt,
-    }); 
-   };
+    console.log('🚀 ~ file: Search.jsx:528 ~ onCountyChange ~ countyValues:', countyValues);
+    setSearchState({ ...searchState, county: countyValues, countyRaw: evt });
+  };
   const onAgencyChange = (evt) => {
-    console.log(`onAgencyChange evt.length: ${evt.length} evt.target.value`, evt.target.value)
+    console.log(`onAgencyChange evt.length: ${evt.length} evt.target.value`, evt.target.value);
     var agencyLabels = [];
     for (var i = 0; i < evt.length; i++) {
       agencyLabels.push(evt[i].label.replace(/ \([A-Z]*\)/gi, ''));
@@ -543,13 +516,13 @@ export default function Search(props) {
     setSearchState({
       ...searchState,
       agency: agencyLabels,
-      agencyRaw: evt
+      agencyRaw: evt,
     });
   };
-  const onStartDateChange = (evt,date) => {
-    console.log('onStartDateChange EVT',evt.target.value);
+  const onStartDateChange = (evt, date) => {
+    console.log('onStartDateChange EVT', evt.target.value);
     console.log('onStartDateChange', date);
-    setSearchState({...searchState, startPublish: date })
+    setSearchState({ ...searchState, startPublish: date });
   };
   const onCooperatingAgencyChange = (evt) => {
     console.log('onCooperatingAgencyChange', evt.target.value);
@@ -557,22 +530,22 @@ export default function Search(props) {
     for (var i = 0; i < evt.length; i++) {
       agencyLabels.push(evt[i].label.replace(/ \([A-Z]*\)/gi, ''));
     }
-    setSearchState(
-      {
-        ...searchState,
-        cooperatingAgency: agencyLabels,
-        cooperatingAgencyRaw: evt.target.value,
-      }
-    );
+    setSearchState({
+      ...searchState,
+      cooperatingAgency: agencyLabels,
+      cooperatingAgencyRaw: evt.target.value,
+    });
   };
   const onTitleOnlyChecked = (evt) => {
     console.log('onTitleOnlyChecked', evt.target.checked);
     if (evt.target.checked) {
-      setSearchState({...searchState, 
+      setSearchState({
+        ...searchState,
         searchOption: 'C', // Title only
       });
     } else {
-      setSearchState({...searchState,
+      setSearchState({
+        ...searchState,
         searchOption: 'B', // Both fields, Lucene default scoring
       });
     }
@@ -588,29 +561,23 @@ export default function Search(props) {
   };
   const onTypeChecked = (evt) => {
     if (evt.target.name === 'optionsChecked') {
-      setSearchState({...searchState,
-        [evt.target.name]: evt.target.checked,
-      });
+      setSearchState({ ...searchState, [evt.target.name]: evt.target.checked });
     } else if (evt.target.name === 'typeAll' && evt.target.checked) {
       // All: Check all, uncheck others
-      setSearchState(
-        {
-          ...searchState,
-          typeAll: true,
-          typeFinal: false,
-          typeDraft: false,
-          typeOther: false,
-        }
-      );
+      setSearchState({
+        ...searchState,
+        typeAll: true,
+        typeFinal: false,
+        typeDraft: false,
+        typeOther: false,
+      });
     } else {
       // Not all: Check target, uncheck all
-      setSearchState(
-        {
-          ...searchState,
-          [evt.target.name]: evt.target.checked,
-          typeAll: false,
-        },
-      );
+      setSearchState({
+        ...searchState,
+        [evt.target.name]: evt.target.checked,
+        typeAll: false,
+      });
     }
   };
 
@@ -618,16 +585,14 @@ export default function Search(props) {
   //     setSearchState(...searchState, { [evt.target.name]: evt.target.checked}, () => { debouncedSearch(state); });
   // }
 
-
   const onStartCommentChange = (date) => {
-    setSearchState({...searchState, startComment: date })
+    setSearchState({ ...searchState, startComment: date });
   };
   const onEndCommentChange = (date) => {
-    setSearchState({ ...searchState, endComment: date }
-    );
+    setSearchState({ ...searchState, endComment: date });
   };
   const tooltipTrigger = (evt) => {
-    setSearchState( {...searchState, tooltipOpen: !tooltipOpen });
+    setSearchState({ ...searchState, tooltipOpen: !tooltipOpen });
   };
   const closeTooltip = () => {
     setSearchState({
@@ -650,7 +615,7 @@ export default function Search(props) {
     })
       .then((_response) => {
         const rsp = _response.data;
-        setSearchState({...searchState, [stateName]: rsp });
+        setSearchState({ ...searchState, [stateName]: rsp });
       })
       .catch((error) => {});
   };
@@ -724,15 +689,13 @@ export default function Search(props) {
   };
 
   const toggleFiltersHidden = () => {
-    setSearchState(
-      {
-        ...searchState,
-        filtersHidden: !filtersHidden,
-      }
-    );
+    setSearchState({
+      ...searchState,
+      filtersHidden: !filtersHidden,
+    });
   };
   //[TODO] We can use this to create a full screen modal if needed
- //const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
+  //const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
   const renderClearFiltersButton = () => {
     if (filtersActive()) {
       return (
@@ -746,108 +709,40 @@ export default function Search(props) {
       );
     }
   };
-  const {markup,
-  proximityDisabled,
-  agencyRaw,state,county,proximityOption} = searchState;
-  const value = {searchState ,setSearchState,onProximityChange,onTitleOnlyChecked,onMarkupChange,onProximityChange,onCooperatingAgencyChange ,onAgencyChange,onLocationChange,onCountyChange,onStartDateChange,onEndDateChange,onClearFiltersClick,onTitleOnlyChecked,proximityDisabled,agencyRaw,state,county};
-  //console.log('SEARCH SearchState',searchState);  
+  const { markup, proximityDisabled, agencyRaw, state, county, proximityOption } = searchState;
+  const value = {
+    searchState,
+    onKeyDown,
+    onKeyUp,
+		onInput,
+    setSearchState,
+    onProximityChange,
+    onTitleOnlyChecked,
+    onMarkupChange,
+    onProximityChange,
+    onCooperatingAgencyChange,
+    onAgencyChange,
+    onLocationChange,
+    onCountyChange,
+    onStartDateChange,
+    onEndDateChange,
+    onClearFiltersClick,
+    onTitleOnlyChecked,
+    proximityDisabled,
+    agencyRaw,
+    state,
+    county,
+  };
+  //console.log('SEARCH SearchState',searchState);
   // #region Return Method
-return (
+  return (
     <SearchContext.Provider value={value}>
       <ThemeProvider theme={theme}>
-        <Container disableGutters={true} sx={{}}>
+        <Container id="search-container" fixed maxWidth="xl" spacing={0} disableGutters={false}>
           <Paper>
-            <div style={styles} id="search-text-div">
-              <Grid
-                id="search-text-grid-container"
-                display={'flex-root'}
-                alignItems={'center'}
-                container={true}
-                layout={'row'}
-                spacing={1}
-                border={0}
-                borderColor={'#CCC'}
-              >
-                <Grid
-                  id="search-text-grid-item"
-                  item={true}
-                  xs={2}
-                  border={0}
-                  backgroundColor="transparent"
-                  height={115}
-                  borderRadius={0}
-                  borderColor={'#CCC'}
-                  borderRight={1}
-                >
-              
-                  <div style={section}>
-                    {' '}
-                    <ListItem >Search Tips</ListItem>
-                    <ListItem >Available Files</ListItem>
-                    <ListItem>Quick-start guide</ListItem>
-                  </div>
-                </Grid>
-                <Grid item={true} xs={2}>
-                  <Box
-                    id="proximity-search-box"
-                    width={'100%'}
-                    display={'flex'}
-                    alignItems={'center'}
-                    justifyContent={'flex-end'}
-                    paddingLeft={1}
-                    value={searchState.proximityOptions}
-                  >
-                    <ProximitySelect
-                      onProximityChange={(evt)=>onProximityChange(evt)}
-                      options={searchState.proximityOption}
-                    />
-                  </Box>
-                </Grid>
-                <Grid item={true} xs={8} borderLeft={0} id="search-box-grid-item">
-                  <Box
-                    id="search-box-box-item"
-                    xs={12}
-                    display={'flex'}
-                    justifyContent={'center'}
-                    justifyItems={'center'}
-                    alignItems={'center'}
-                    alignContent={'center'}
-                    height={115}
-                    paddingLeft={2}
-                    paddingRight={2}
-                    padding={1}
-                    elevation={1}
-                    borderRadius={0}
-                    borderColor={'#CCC'}
-                    borderLeft={0}
-                    marginLeft={0}
-                    marginRight={0}
-                  >
-                    {' '}
-                    <TextField
-                      fullWidth
-                      backgroundColor={'white'}
-                      id="main-search-text-field"
-                      variant="standard"
-                      onInput={onInput}
-                      onKeyUp={onKeyUp}
-                      placeholder="Search for NEPA documents"
-                      value={searchState.titleRaw ? searchState.titleRaw : ''}
-                      autoFocus
-                      InputProps={{
-                        endAdornment: (
-                          <IconButton onClick={(evt) => onChangeHandler(evt)}>
-                            <SearchOutlined />
-                          </IconButton>
-                        ),
-                      }}
-                    />
-                  </Box>
-                </Grid>
-              </Grid>
-            </div>
+            <SearchHeader />
           </Paper>
-  
+
           <Grid
             mt={2}
             textAlign={'left'}
@@ -856,12 +751,13 @@ return (
             justifyContent={'flex-start'}
             container={true}
           >
-   {/* #region SideBarFilters */}
-            <Grid xs={3} p={0} item={true}>
-                  <SideBarFilters />
-              <Divider />
+            {/* #region SideBarFilters */}
+            <Grid id="side-bar-filters-container">
+              <Paper id="side-bar-filters-paper" elevation={2}>
+                <SideBarFilters />
+              </Paper>
             </Grid>
-  {/* #endregion */}
+            {/* #endregion */}
             {/* #region Search Results */}
             <Grid xs={9}>
               <Paper>
@@ -870,106 +766,29 @@ return (
                     height: '100%',
                   }}
                 >
-                  <Box padding={1} marginTop={0} marginBottom={0}>
-                    <Typography
-                      variant="searchResultTitle"
-                      paddingTop={1}
-                      paddingBottom={1}
-                      marginTop={2}
-                      marginBottom={2}
-                    >
-                      Search Results
-                    </Typography>
-                  </Box>
                   <Divider />
                   <Grid container>
-                    <Box p={1} marginTop={1} marginBottom={1}>
-                      <Typography variant="searchResultSubTitle">
-                        Lake Ralph Hall Regional Water Supply Reservoir Project
-                      </Typography>
-                    </Box>
-                    <Divider />
                     <Grid container xs={12}>
-                      <Grid
-                        padding={2}
-                        flexWrap={'wrap'}
-                        container
-                        xs={12}
-                        flexDirection={'row'}
-                        flex={1}
-                        border={0}
-                      >
-                        <Item>
-                          Status: <b>Final</b>
-                        </Item>
-                        <Item>
-                          Date: <b>2020-01-01</b>
-                        </Item>
-                        <Item>
-                          State: <b>TX</b>
-                        </Item>
-                        <Item>
-                          County: <b>TX: Fannin</b>
-                        </Item>
-                        <Item>
-                          Action: <b>Water Work</b>
-                        </Item>
-                        <Item>
-                          Decision <b>Project</b>
-                        </Item>
-                        <Item>
-                          Action: <b>Transportation</b>
-                        </Item>
-                        <Item>
-                          Decision <b>Project</b>
-                        </Item>
-                        <Item>
-                          County: <b>AZ: Pima; AZ: Santa Cruz; AZ: Yavapai</b>
-                        </Item>
-                      </Grid>
-  
                       <Grid xs={12} container>
-                        <Item xs={12}>
-                          <SearchResultItems
-                            title="Environmental Impact Statement"
-                            id={17704}
-                            status="Pending"
-                            content="Probability That Monthly Flow below Lake Ralph Hall Dam at Bakers Creek Exceeds
-                        Channel Pool Volume of 175 ac-ft: 62.2% 73.0%Probability That Monthly Flow at North
-                        Sulphur River Gage near Cooper Exceeds Channel Pool Volume of 175 ac-ft: 82.1%
-                        83.8%PER- EXCEED-CENTILE ENCEPROBA-BILITY From From From From From From From From
-                        From From From FromRiverWare WAM RiverWare WAM RiverWare WAM RiverWare WAM RiverWare
-                        WAM RiverWare WAM% % ac-ft/mon ac-ft/mon ac-ft/mon ac-ft/mon ac-ft/mon ac-ft/mon
-                        ac-ft/mon ac-ft/mon ac-ft/mon ac-ft/mon ac-ft/mon ac-ft/mon1.0% 99.0% 0 0 0 0 0 2 1
-                        3 308 208 308 2842.0% 98.0% 0 0 0 0 0 3 5 4 316 310 341 4163.0% 97.0% 0 0 0 0 0 4 11
-                        10 343 378 369 4724.0% 96.0% 3 2 1 3 4 9 30 23 350 384 442 5095.0% 95.0% 5 4 1 5 9
-                        16 38 34 394 423 527 5907.0% 93.0% 13 8 3 9 22 28 63 57 455 473 720 75110.0% 90.0%
-                        27 17 5 19 45 54 114 121 658 587 1,046 1,18015.0% 85.0% 76 48 14 47 115 149 288 364
-                        1,051 1,053 1,740 1,91916.2% 83.8% 90 57 18 53 147 175 329 425 1,151 1,201"
-                          />
-                        </Item>
-                      </Grid>
-                      <Grid>
-                        <Item xs={12}>
-                          <SearchResultItems
-                            title="Environmental Impact Statement"
-                            id={17704}
-                            status="Draft"
-                            content="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Mi proin sed libero enim. Morbi tincidunt ornare massa eget. Venenatis lectus magna fringilla urna porttitor. Habitasse platea dictumst vestibulum rhoncus. Neque sodales ut etiam sit amet nisl. Tincidunt dui ut ornare lectus sit amet est. Suspendisse in est ante in. Et malesuada fames ac turpis egestas maecenas. Gravida in fermentum et sollicitudin ac orci phasellus. Risus viverra adipiscing at in tellus integer. Sem et tortor consequat id porta nibh venenatis. Porttitor leo a diam sollicitudin tempor id eu nisl."
-                          />
-                        </Item>
+                        <ResponsiveSearchResults
+                          title="Environmental Impact Statement"
+                          id={17704}
+                          status="Final"
+                          content="Probability That Monthly Flow below Lake Ralph Hall Dam at Bakers Creek Exceeds"
+                        />
                       </Grid>
                     </Grid>
                   </Grid>
                 </Box>
               </Paper>
             </Grid>
-          {/* #endregion */}
+            {/* #endregion */}
           </Grid>
         </Container>
-           {/* <SearchTipsDialog isOpen={searchState.isSearchTipsDialogIsOpen} /> */}
+        ``
+        {/* <SearchTipsDialog isOpen={searchState.isSearchTipsDialogIsOpen} /> */}
       </ThemeProvider>
     </SearchContext.Provider>
   );
-// #endregion
+  // #endregion
 }
