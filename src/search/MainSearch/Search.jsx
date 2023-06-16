@@ -521,11 +521,13 @@ export default function Search(props) {
   };
   
   const onCountyChange = (evt, item) => {
-    console.log('onCountyChange - Value:', evt.target.value);
+    debugger;
+    console.log('onCountyChange - Value:', evt);
     var countyValues = [];
     for (var i = 0; i < evt.length; i++) {
       countyValues.push(evt[i].value);
     }
+    console.log("🚀 ~ file: Search.jsx:528 ~ onCountyChange ~ countyValues:", countyValues)
     setSearchState({...searchState,
       county: countyValues,
       countyRaw: evt,

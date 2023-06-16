@@ -23,7 +23,7 @@ import { styled } from '@mui/material/styles';
 import theme from '../../styles/theme';
 //import Grid from '@mui/material/Grid'; // Grid version 1
 import Grid from '@mui/material/Unstable_Grid2';
-import { InputAdornment, SearchOutlined } from '@mui/icons-material';
+import { InputAdornment, SearchOutlined, Clear } from '@mui/icons-material';
 import SearchFilter from './SearchFilter';
 import { makeStyles } from '@mui/styles';
 import Globals from '../../globals';
@@ -38,10 +38,10 @@ import {
 } from '../options';
 const _ = require('lodash');
 import SearchContext from './SearchContext';
+import { SearchControl } from 'leaflet-geosearch';
 
 
 const stateOptions = Globals.stateOptions;
-
 const Item = styled(Box)(({ theme }) => ({
   backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
   ...theme.typography.body2,
@@ -68,7 +68,7 @@ const Item = styled(Box)(({ theme }) => ({
 const useStyles = makeStyles((theme) => ({
   formControl: {},
 }));
-
+const counties = Globals.counties;
 export default function SideBarFilters(props) {
   const {
     searchState,
@@ -84,8 +84,7 @@ export default function SideBarFilters(props) {
     onProximityChange,
     onCooperatingAgencyChange,
   } = useContext(SearchContext);
-  const { agencyRaw,state, county,stateOptions,countyOptions, proximityDisabled, markup, cooperatingAgencyRaw } = searchState;
-
+  const { agencyRaw,state, county,stateOptions,countyOptions ,proximityDisabled, markup, cooperatingAgencyRaw } = searchState;
   const classes = useStyles(theme);
   return (
     <>
@@ -229,7 +228,7 @@ export default function SideBarFilters(props) {
             // value={searchState.agencyRaw}
             variant="standard"
             // menuIsOpen={true}
-            onChange={onCooperatingAgencyChange}
+            onChange={agencyOptions}
             getOptionLabel={(agencyOptions) => agencyOptions.label}
             renderInput={(params) => (
               <TextField
@@ -248,93 +247,69 @@ export default function SideBarFilters(props) {
       </Item>
       <Divider />
       <Item>
-      <FormControl
-          fullWidth
-          xs={{
-            p: 1,
-            border: 0,
-            borderColor: 'grey.500',
-            borderRadius: 1,
-            mb: 1,
-            mt: 1,
-          }}
-        >
-          <Typography pb={1} variant="filterLabel">
-            State(s) or Location(s):
+      <Typography pb={1} variant="filterLabel">
+                State(s) or location(s):
           </Typography>
           <Autocomplete
-            id="state"
+            id="state-select"
             fullWidth
             autoComplete={true}
             // autoHighlight={true}
             tabIndex={11}
             className={classes.autocomplete}
-            options={stateOptions}
+            options={searchState.stateOptions}
             disablePortal={true}
             // value={searchState.agencyRaw}
             variant="standard"
             // menuIsOpen={true}
             onChange={onLocationChange}
-            getOptionLabel={(stateOptions) => stateOptions.label}
+            getOptionLabel={(stateOptions) => `${stateOptions.label}`}
             renderInput={(params) => (
               <TextField
                 {...params}
-                value={(stateOptions.filter = (stateObj) => searchState.state.includes(stateObj.value))}
+          
                 variant="outlined"
                 sx={{
                   width: '100%',
                   p: 0,
                 }}
-                placeholder="Type or Select States(s) and Agencies"
+                placeholder={`Type or Select a State`} 
               />
             )}
           />
-        </FormControl>
       </Item>
-
       <Item>
-        <FormControl
-          fullWidth
-          xs={{
-            p: 1,
-            border: 0,
-            borderColor: 'grey.500',
-            borderRadius: 1,
-            mb: 1,
-            mt: 1,
-          }}
-        >
-          <Typography pb={1} variant="filterLabel">
-            County or Counties Value:
+      <Typography pb={1} variant="filterLabel">
+            County/counties
           </Typography>
           <Autocomplete
-            id="searchCounty"
+            id="county-select"
             fullWidth
             autoComplete={true}
             // autoHighlight={true}
             tabIndex={11}
             className={classes.autocomplete}
-            options={searchState.countyOptions}
+            options={countyOptions}
             disablePortal={true}
             // value={searchState.agencyRaw}
             variant="standard"
             // menuIsOpen={true}
             onChange={onCountyChange}
-            getOptionLabel={(countyOptions) => countyOptions.label}
+            getOptionLabel={(countyOptions) => `${countyOptions.label}`}
+
             renderInput={(params) => (
               <TextField
                 {...params}
-                value={(countyOptions.filter = (countyObj) => searchState.county.includes(countyObj.value))}
+                // value= {countyOptions.filter = (countyObj) => counties.includes(countyObj.value)}          
                 variant="outlined"
                 sx={{
                   width: '100%',
                   p: 0,
                 }}
-                placeholder="Type or Select a Counties"
+                placeholder={`Type or Select a County`} 
               />
             )}
           />
-        </FormControl>
       </Item>
       <Divider />
       <Item>
