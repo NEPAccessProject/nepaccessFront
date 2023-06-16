@@ -11972,10 +11972,6 @@ const Globals = {
             "label": "VA: Fairfax"
         },
         {
-            "value": "VA: Fairfax",
-            "label": "VA: Fairfax"
-        },
-        {
             "value": "VA: Falls Church",
             "label": "VA: Falls Church"
         },
