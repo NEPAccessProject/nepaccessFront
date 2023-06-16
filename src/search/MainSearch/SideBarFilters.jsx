@@ -339,7 +339,7 @@ export default function SideBarFilters(props) {
             <Box components={['DatePicker']} padding={0} width="100%">
               <DatePicker
                 value={searchState.endDate}
-                on={(evt) => onEndDateChange(evt)}
+                on={onEndDateChange}
                 id="date-picker-to"
                 label="To:"
               />

@@ -14,16 +14,17 @@ export default function ProximitySelect(props) {
           id={'proximity-select-autocomplete'}
           fullWidth={true}
           autoComplete={true}
-          cc
           autoHighlight={true}
+          border={1}
           tabIndex={3}
           options={proximityOptions ? proximityOptions : []}
           disablePortal={true}
+          variant={'outlined'}
           // value={value}
           // menuIsOpen={true}
           onChange={(evt)=>onProximityChange(evt)}
           getOptionLabel={(option) => option.label || label}
-          renderInput={(params) => <TextField placeholder="Distance Between Keywords" {...params} />}
+          renderInput={(params) => <TextField  variant='outlined' placeholder="Distance Between Keywords" {...params} />}
           sx={{
             p: 0,
           }}

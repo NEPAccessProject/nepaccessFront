@@ -45,10 +45,10 @@ return(
           <ListItem >Available Files</ListItem>
           <ListItem>Quick-start guide</ListItem>
       </Grid>
-      <Grid item={true} xs={2}>
+      <Grid item xs={2}>
         <Box
           id="proximity-search-box"
-          width={'100%'}
+        //   width={'100%'}
           display={'flex'}
           alignItems={'center'}
           justifyContent={'flex-end'}
@@ -61,7 +61,7 @@ return(
           />
         </Box>
       </Grid>
-      <Grid item={true} xs={8} borderLeft={0} id="search-box-grid-item">
+      <Grid item xs={8} borderLeft={0} id="search-box-grid-item">
         <Box
           id="search-box-box-item"
           xs={12}
@@ -86,7 +86,8 @@ return(
             fullWidth
             backgroundColor={'white'}
             id="main-search-text-field"
-            variant="standard"
+            variant="outlined"
+            focused
             onInput={onInput}
             onKeyUp={onKeyUp}
             placeholder="Search for NEPA documents"
