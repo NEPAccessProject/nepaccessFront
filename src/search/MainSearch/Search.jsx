@@ -738,22 +738,24 @@ export default function Search(props) {
   return (
     <SearchContext.Provider value={value}>
       <ThemeProvider theme={theme}>
-        <Container id="search-container" fixed maxWidth="xl" spacing={0} disableGutters={false}>
-          <Paper>
-            <SearchHeader />
-          </Paper>
+        <Container id="search-container" disableGutters={true} maxWidth="lg" fixed>
+
 
           <Grid
             mt={2}
-            textAlign={'left'}
-            alignContent={'flex-start'}
+            // textAlign={'left'}
+            // alignContent={'flex-start'}
             spacing={2}
-            justifyContent={'flex-start'}
+            // justifyContent={'flex-start'}
             container={true}
           >
+            <Grid item xs={12}>
+                <Item><SearchHeader /></Item>
+
+            </Grid>
             {/* #region SideBarFilters */}
-            <Grid id="side-bar-filters-container">
-              <Paper id="side-bar-filters-paper" elevation={2}>
+            <Grid xs={3} id="side-bar-filters-container">
+              <Paper id="side-bar-filters-paper" elevation={1}>
                 <SideBarFilters />
               </Paper>
             </Grid>
@@ -767,6 +769,7 @@ export default function Search(props) {
                   }}
                 >
                   <Divider />
+                 
                   <Grid container>
                     <Grid container xs={12}>
                       <Grid xs={12} container>
