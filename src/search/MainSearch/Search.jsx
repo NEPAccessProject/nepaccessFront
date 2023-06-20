@@ -50,6 +50,7 @@ import { InputAdornment, SearchOutlined } from '@mui/icons-material';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { ThemeProvider, styled } from '@mui/material/styles';
 import SearchHeader from './SearchHeader';
+import { set } from 'lodash';
 
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
@@ -119,55 +120,7 @@ const summary = {
 export default function Search(props) {
   const classes = useStyles(theme);
   // #region State Declaration
-  const [searchState, setSearchState] = useState({
-    // test: Globals.enum.options,
-    action: [],
-    actionRaw: [],
-    agency: [],
-    agencyRaw: [],
-    cooperatingAgency: [],
-    cooperatingAgencyRaw: [],
-    county: [],
-    countyRaw: [],
-    decision: [],
-    decisionRaw: [],
-    endComment: null,
-    endPublish: null,
-    filtersHidden: false,
-    fragmentSizeValue: 2,
-    hideOrganization: true,
-    iconClassName: 'icon icon--effect',
-    isDirty: false,
-    limit: 100,
-    markup: true,
-    needsComments: false,
-    needsDocument: false,
-    offset: 0,
-    optionsChecked: true,
-    proximityDisabled: true,
-    proximityOption: null,
-    searchOption: 'B',
-    startComment: null,
-    startPublish: null,
-    state: [],
-    stateRaw: [],
-    stateOptions: Globals.locations,
-    surveyChecked: true,
-    surveyDone: true,
-    surveyResult: "Haven't searched yet",
-    test: Globals.anEnum.options,
-    titleRaw: '',
-    tooltipOpen: undefined,
-    typeAll: true,
-    typeDraft: false,
-    typeEA: false,
-    typeFinal: false,
-    typeNOI: false,
-    typeOther: false,
-    typeROD: false,
-    typeScoping: false,
-    countyOptions: Globals.counties,
-  });
+
 
   // #endregion
   const filterBy = props.filterResultsBy;
@@ -709,6 +662,79 @@ export default function Search(props) {
       );
     }
   };
+
+  const toggleSearchTipsDialog = () => {
+    console.log('toggleSearchTipsDialog');
+    setSearchState({
+      ...searchState,
+      isSearchTipsDialogIsOpen: !searchState.isSearchTipsDialogIsOpen,
+    });
+  };
+  const toggleAvailableFiltersDialog = () => {
+    console.log('toggleAvailableFiltersDialog');
+    setSearchState({
+      ...searchState,
+      isAvailableFiltersDialogOpen: !searchState.isAvailableFiltersDialogOpen,
+  });
+}
+  const toggleQuickStartDialog = () => {
+    setSearchState({
+      ...searchState,
+      isQuickStartDialogOpen: !searchState.isQuickStartDialogOpen,
+  });
+}
+const [searchState, setSearchState] = useState({
+  // test: Globals.enum.options,
+  isQuickStartDialogOpen: false,
+  isSearchTipsDialogIsOpen: false,
+  isAvailableFiltersDialogOpen: false,
+  action: [],
+  actionRaw: [],
+  agency: [],
+  agencyRaw: [],
+  cooperatingAgency: [],
+  cooperatingAgencyRaw: [],
+  county: [],
+  countyRaw: [],
+  decision: [],
+  decisionRaw: [],
+  endComment: null,
+  endPublish: null,
+  filtersHidden: false,
+  fragmentSizeValue: 2,
+  hideOrganization: true,
+  iconClassName: 'icon icon--effect',
+  isDirty: false,
+  limit: 100,
+  markup: true,
+  needsComments: false,
+  needsDocument: false,
+  offset: 0,
+  optionsChecked: true,
+  proximityDisabled: true,
+  proximityOption: null,
+  searchOption: 'B',
+  startComment: null,
+  startPublish: null,
+  state: [],
+  stateRaw: [],
+  stateOptions: Globals.locations,
+  surveyChecked: true,
+  surveyDone: true,
+  surveyResult: "Haven't searched yet",
+  test: Globals.anEnum.options,
+  titleRaw: '',
+  tooltipOpen: undefined,
+  typeAll: true,
+  typeDraft: false,
+  typeEA: false,
+  typeFinal: false,
+  typeNOI: false,
+  typeOther: false,
+  typeROD: false,
+  typeScoping: false,
+  countyOptions: Globals.counties,
+});
   const { markup, proximityDisabled, agencyRaw, state, county, proximityOption } = searchState;
   const value = {
     searchState,
@@ -732,6 +758,9 @@ export default function Search(props) {
     agencyRaw,
     state,
     county,
+    toggleQuickStartDialog,
+    toggleAvailableFiltersDialog,
+    toggleSearchTipsDialog,
   };
   //console.log('SEARCH SearchState',searchState);
   // #region Return Method
