@@ -70,7 +70,7 @@ import ImporterAlignment from './ImporterAlignment';
 import Header from './Header'
 import Playground from './examples/Playground';
 import ContextExample from './examples/Context';
-import SimpleListMenu from './examples/SimpleListMenu';
+import ReactDropdownExample from './examples/ReactDropdownExample';
 
 const _ = require('lodash');
 
@@ -285,6 +285,7 @@ class Main extends React.Component {
             <Route path="/up_alignment" component={ImporterAlignment} />
             <Route path="/grid" component={Search} />
             <Route path="/context" component={ContextExample} />
+            <Route path="/dropdown" component={ReactDropdownExample} />
             <Route path="/" component={Landing}/>
         </Switch>
         )

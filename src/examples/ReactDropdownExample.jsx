@@ -1,8 +1,8 @@
 import React, { Component } from 'react'
-import Dropdown from '../index.js'
-import ReactDropdown from 'react-dropdown'
+// import Dropdown from '../index.js'
+import Dropdown from 'react-dropdown'
 
-class ReactDropdownExample extends Component {
+export default class ReactDropdownExample extends Component {
   constructor (props) {
     super(props)
     this.state = {
@@ -115,4 +115,3 @@ const options = [
   }
 }
 
-export default ReactDropdownExample;
