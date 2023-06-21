@@ -121,12 +121,15 @@ class Main extends React.Component {
             }
         })
         .catch((err) => { // Token expired or invalid, or server is down
-            console.log(err);
-            if(err.message === "Network Error") {
+            console.log(`Error retriving your credentials: ${err.message}`,err.code);
+            if(err.code === "ERR_BAD_REQUEST") {
                 // do nothing
+                //[TODO][REFACTOR] This is only for testing purposes, remove before going live
+                this.setState({ role: 'admin', loggedIn: true, anonymous: false });
             } else { // token problem
                 localStorage.clear();
-                this.setState({ role: undefined, loggedIn: false, anonymous: true });
+                //[TODO][REFACTOR] This is only for testing purposes, remove before going live
+                this.setState({ role: 'admin', loggedIn: true, anonymous: false });
             }
         });
     }
