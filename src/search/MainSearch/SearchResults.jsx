@@ -46,7 +46,7 @@ const onLocationChange = (evt) => {
 const onAgencyChange = (evt) => {
   console.log('onAgencyChange', evt.target.value);
 };
-const onInput = (evt) => {
+const onInput = (evt) => {s
   console.log('onInput', evt.target.value);
   evt.preventDefault();
 };
@@ -73,10 +73,22 @@ const Item = styled(Paper)(({ theme }) => ({
   elevation: 0,
   border: 0,
   borderRadius: 0,
-  mt: 1,
-  mb: 1,
-  pl: 0,
-  pr: 0,
+  marginTrim: 1,
+  marginBottom: 1,
+  paddingLeft: 1,
+  paddingRight: 1,
+}));
+
+const CardItem = styled(Paper)(({ theme }) => ({
+  backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
+  ...theme.typography.body2,
+  padding: theme.spacing(1),
+  // textAlign: 'center',
+  color: theme.palette.text.secondary,
+  elevation: 1,
+  margin:0.5,
+  padding:1,
+  elevation: 1,
 }));
 
 
@@ -92,22 +104,32 @@ const useStyles = makeStyles((theme) => ({
       resultItemHeader:{
         fontSize: 25,
         fontWeight: 'bold',
+        margin:0.5,
+        padding:1,
+        elevation: 1,
       },
       itemHeader: {
         fontFamily: 'open sans',
         fontSize: 40,
         fontWeight: 'bold',
+        margin:0.5,
+        padding:1,
+        elevation: 1,
         p:1,
         '&:hover': {
-            textDecoration: 'underline'
-        }
+            //textDecoration: 'underline'
+            boxShadow: '0px 4px 8px rgba(0.5, 0.5, 0.5, 0.15)',
+        },
+      infoCard: {
+        padding: 1,
+        margin: 1,
+      }
 
       }
 }));
 
-export default function ResponsiveSearchResults(props) {
+export default function SearchResults(props) {
   const classes = useStyles(theme);
-  console.log('Search Results classes',theme.typography);
   return (
     <>
       <Box
@@ -146,31 +168,67 @@ export default function ResponsiveSearchResults(props) {
               flex={1}
               border={0}
             >
-              <Item>
+              <Item className={classes.itemHeader} sx={{
+                 margin:0.5,
+                 padding:1,
+                 elevation: 1,
+              }}>
                 Status: <b>Final</b>
               </Item>
-              <Item>
+              <Item className={classes.itemHeader}  sx={{
+  margin:0.5,
+  padding:1,
+  elevation: 1,
+              }}>
                 Date: <b>2020-01-01</b>
               </Item>
-              <Item>
+              <Item className={classes.itemHeader}  sx={{
+                margin:0.5,
+                padding:1,
+                elevation: 1,
+              }}>
                 State: <b>TX</b>
               </Item>
-              <Item>
+              <Item className={classes.itemHeader}  sx={{
+                margin:0.5,
+                padding:1,
+                elevation: 1,
+              }}>
                 County: <b>TX: Fannin</b>
               </Item>
-              <Item>
+              <Item className={classes.itemHeader}  sx={{
+                margin:0.5,
+                padding:1,
+                elevation: 1,
+              }}>
                 Action: <b>Water Work</b>
               </Item>
-              <Item>
+              <Item className={classes.itemHeader}  sx={{
+                margin:0.5,
+                padding:1,
+                elevation: 1,
+              }}>
                 Decision <b>Project</b>
               </Item>
-              <Item>
+              <Item className={classes.itemHeader}  sx={{
+                margin:0.5,
+                padding:1,
+                elevation: 1,
+              }}>
                 Action: <b>Transportation</b>
               </Item>
-              <Item>
+              <Item className={classes.itemHeader}  sx={{
+                margin:0.5,
+                padding:1,
+                elevation: 1,
+              }}>
                 Decision <b>Project</b>
               </Item>
-              <Item>
+              <Item className={classes.itemHeader}  sx={{
+                margin:0.5,
+                padding:1,
+                elevation: 1,
+              }}>
                 County: <b>AZ: Pima; AZ: Santa Cruz; AZ: Yavapai</b>
               </Item>
             </Grid>
