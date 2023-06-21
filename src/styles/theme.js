@@ -69,6 +69,8 @@ const theme = createTheme({
       fontFamily: 'open sans',
       display: 'block',
       fontWeight: 600,
+      marginTop: 1,
+      marginBottom: 1,
     },
   },
   components: {
