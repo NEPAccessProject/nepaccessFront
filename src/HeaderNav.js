@@ -23,7 +23,6 @@ import './index.css';
 import { Helmet } from 'react-helmet';
 import Landing from './Landing';
 import CalloutContainer from './CalloutContainer';
-import SearcherLanding from './SearcherLanding';
 const headersData = [
   {
     label: 'Search',
@@ -252,7 +251,6 @@ export default function HeaderNav() {
         </Toolbar>
         <div id="callout-card-container">
           <>
-            <SearcherLanding />
             <CalloutContainer />
           </>
         </div>
@@ -275,12 +273,14 @@ export default function HeaderNav() {
             color: 'black',
             fontWeight: 600,
           }}
+          key={label+idx}
         >
           <MenuItem
             xs={{
               color: 'black',
             }}
             className="menu-item"
+            key={label}
           >
             {label}
 
@@ -388,12 +388,12 @@ export default function HeaderNav() {
         {/* <Landing /> */}
         <Container id='mobile-content-container'>
           <Container id="mobile-search-container">
-            <SearcherLanding />
+            {/* <SearcherLanding /> */}
           </Container>
 
-          <Container id="mobile-call-out-container">
+          {/* <Container id="mobile-call-out-container">
             <CalloutContainer />
-          </Container>
+          </Container> */}
         </Container>
       </>
     );
@@ -409,6 +409,7 @@ export default function HeaderNav() {
             component: RouterLink,
             className: menuButton,
           }}
+          key={label}
         >
           {label}
         </Button>
