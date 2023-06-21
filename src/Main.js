@@ -70,6 +70,7 @@ import ImporterAlignment from './ImporterAlignment';
 import Header from './Header'
 import Playground from './examples/Playground';
 import ContextExample from './examples/Context';
+import SimpleListMenu from './examples/SimpleListMenu';
 
 const _ = require('lodash');
 
@@ -226,7 +227,7 @@ class Main extends React.Component {
             </Helmet>
 
             <div id="header" className={this.getHeaderCss() + this.state.headerLandingCss}>
-                <Header/>                
+                <Header/>
             </div>
             <span>{this.renderRoutes()}</span>
         </div>
