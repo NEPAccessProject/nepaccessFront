@@ -70,7 +70,7 @@ function TopNav(props) {
           >
           
             {navItems.map((item, index) => (
-              <MenuItem>{item.label}</MenuItem>
+              <MenuItem key={index + ' ' + item.label}>{item.label}</MenuItem>
             ))}
           </Container>
           <Button
@@ -100,7 +100,7 @@ function TopNav(props) {
             <MenuItem onClick={handleMenuClose}>My account</MenuItem>
             <MenuItem onClick={handleMenuClose}>Logout</MenuItem>
             {navItems.map((item, index) => (
-              <MenuItem>{item.label}</MenuItem>
+              <MenuItem key={`${index}-${item.label}`}>{item.label}</MenuItem>
             ))}
           </Menu>
         </Toolbar>
