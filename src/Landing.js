@@ -12,6 +12,7 @@ import './User/login.css';
 import IframeResizer from 'iframe-resizer-react';
 import Media from './iframes/Media';
 import { Grid } from '@material-ui/core';
+import CalloutContainer from './CalloutContainer';
 
 class Landing extends React.Component {
 
@@ -70,6 +71,8 @@ class Landing extends React.Component {
                             onClick={this.handleClick}
                             value={this.state.rawInput}
                         />
+                    <CalloutContainer/>
+
                 </div>
    </MediaQuery>
 
