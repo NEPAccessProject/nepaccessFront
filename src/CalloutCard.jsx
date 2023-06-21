@@ -1,5 +1,5 @@
 import React from 'react';
-import { CardActions, CardHeader, Card, Button, CardContent, Paper } from '@mui/material';
+import { CardActions, CardHeader, Card, Button, CardContent, Paper, Typography } from '@mui/material';
 import { AlignVerticalCenter } from '@mui/icons-material';
 import { useTheme } from '@mui/styles';
 import { useStyles } from '@mui/material'
@@ -7,7 +7,7 @@ import { useStyles } from '@mui/material'
 export default function CalloutCard(props) {
   const { header, content, buttonText, buttonLink, key, sx } = props;
   const theme = useTheme();
-  console.log('USE theme', theme);
+
   return (
     <>
       <Card key={key} 
@@ -19,7 +19,8 @@ export default function CalloutCard(props) {
 //          backgroundColor: //theme.palette.grey[150],
           "&:hover": {
  //           backgroundColor: //theme.palette.grey[200],
-            boxShadow: '0px 4px 8px rgba(0.5, 0.5, 0.5, 0.15)',
+            boxShadow: '0px 4px 8px rgba(0.5, 0.5, 0.5, 0.5)',
+            backgroundColor:'#fbfeff',
             cursor: "pointer",
             "& .addIcon": {
               color: "purple"
@@ -27,8 +28,8 @@ export default function CalloutCard(props) {
           }
         }}
        >
-        <CardHeader title={header}>{header}</CardHeader>
-        <CardContent>{content}</CardContent>
+        <CardHeader title={header}><Typography fontFamily={'open sans'}>{header}</Typography></CardHeader>
+        <CardContent><Typography fontFamily={'open sans'}>{content}</Typography></CardContent>
         <CardActions
           sx={{
 
