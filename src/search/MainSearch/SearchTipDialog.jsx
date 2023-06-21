@@ -2,15 +2,16 @@ import React,{useContext} from 'react';
 import {Dialog,DialogContext,DialogContent,DialogTitle,DialogContentText,DialogActions,Grid,Box,Typography,IconButton} from '@mui/material';
 import SearchContext from './SearchContext';
 export default function SearchTipsDialog(props) {
-            const {searchState,setSearchState,toggleSearchTipsDialog} = useContext(SearchContext);
+            const {searchState,setSearchState} = useContext(SearchContext);
+            const {isOpen,onDialogClose} = props;
             return (
-              <Dialog open={props.isOpen}>
+              <Dialog open={isOpen}>
               <Grid container={true} spacing={1}>
                       <Grid item={true} xs={11} flexDirection="row" flexWrap={'nowrap'} alignItems={'center'} alignContent={'center'} justifyContent={'center'} >
                         <Box paddingLeft={2}><Typography fontSize={'large'} fontWeight={'bold'}>Search word Connectors</Typography></Box>
                       </Grid>
                       <Grid item={true} xs={1} justifyContent={'center'}>
-                        <IconButton onClick={toggleSearchTipsDialog}><Typography fontSize={'medium'}>X</Typography></IconButton>
+                        <IconButton onClick={onDialogClose}><Typography fontSize={'medium'}>X</Typography></IconButton>
                       </Grid>
                     </Grid>
                 <DialogContent>
