@@ -42,7 +42,7 @@ export default function SearchResultItems(props) {
                 borderColor={'lightgray'}
                 borderRadius={1}
               >
-                {content}
+                {(content.length > 500) ? content.substring(0,550) + ' click to see more...' : content}
               </Box>
             </Container>
           </Grid>
@@ -51,7 +51,7 @@ export default function SearchResultItems(props) {
               color="primary"
               onClick={(evt) => handleDownloadClick(evt,id)}
               sx={{
-                width: '100%',
+                width: '90%',
               }}
             >
               Download
@@ -59,8 +59,8 @@ export default function SearchResultItems(props) {
             <Button
               color={'secondary'}
               sx={{
-                width: '100%',
                 mt: 1,
+                width: '90%',
               }}
             >
               {' '}
