@@ -1,0 +1,6 @@
+{    "user": {
+        "get_role": {
+            "role": "admin"
+        }
+    }
+}
