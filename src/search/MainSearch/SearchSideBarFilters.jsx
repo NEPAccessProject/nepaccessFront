@@ -69,7 +69,7 @@ const useStyles = makeStyles((theme) => ({
   formControl: {},
 }));
 const counties = Globals.counties;
-export default function SideBarFilters(props) {
+export default function SearchSideBarFilters(props) {
   const {
     searchState,
     setSearchState,
@@ -77,14 +77,28 @@ export default function SideBarFilters(props) {
     onAgencyChange,
     onLocationChange,
     onCountyChange,
-    onStartDateChange,
-    onEndDateChange,
     onClearFiltersClick,
     onTitleOnlyChecked,
     onProximityChange,
     onCooperatingAgencyChange,
   } = useContext(SearchContext);
   const { agencyRaw,state, county,stateOptions,countyOptions ,proximityDisabled, markup, cooperatingAgencyRaw } = searchState;
+  // Tried quite a bit but I can't force the calendar to Dec 31 of a year as it's typed in without editing the library code itself.
+  // I can change the value but the popper state won't update to reflect it (even when I force it to update).
+
+  // #region Date Handlers
+  const onEndDateChange = (date,evt) => {
+    console.log('onEndDateChange',date);
+    setSearchState({ ...searchState, endPublish: date.toLocaleString() });
+    // }
+  };
+  const onStartDateChange = (date,evt) => {
+    console.log('onStartDateChange date', date);
+    setSearchState({ ...searchState, startPublish: date.toLocaleString });
+  };
+
+// #endregion  
+// region Render Return
   const classes = useStyles(theme);
   return (
     <>
@@ -312,41 +326,56 @@ export default function SideBarFilters(props) {
           />
       </Item>
       <Divider />
-      <Item>
-        <Typography pb={1} variant="filterLabel">
-          Date Range:
-        </Typography>
-        <Box
-          display={'flex'}
-          xs={12}
-          flexDirection={'column'}
-          border={0}
-          padding={0}
-          margin={0}
-          width={'100%'}
-        >
-          <LocalizationProvider dateAdapter={AdapterDayjs}>
-            <Box marginBottom={2} components={['DatePicker']} padding={0} width="100%">
-              <DatePicker
-                onChange={onStartDateChange}
-                id="date-picker-from"
-                label="From:"
-                value={searchState.startDate}
-              />
-            </Box>
-          </LocalizationProvider>
-          <LocalizationProvider dateAdapter={AdapterDayjs}>
-            <Box components={['DatePicker']} padding={0} width="100%">
-              <DatePicker
-                value={searchState.endDate}
-                on={onEndDateChange}
-                id="date-picker-to"
-                label="To:"
-              />
-            </Box>
-          </LocalizationProvider>
-        </Box>
-      </Item>
+        <Item>
+          <Typography pb={1} variant="filterLabel">
+            Date Range:
+          </Typography>
+          <Box
+            display={'flex'}
+            xs={12}
+            flexDirection={'column'}
+            border={0}
+            padding={0}
+            margin={0}
+            width={'100%'}
+            alignContent={'center'}
+            justifyItems={'center'}
+          >
+            <LocalizationProvider dateAdapter={AdapterDayjs}>
+              <Box item marginBottom={2} components={['DatePicker']} padding={0} width="100%">
+                <DatePicker
+                  name="startDate"
+                  onChange={(newValue,evt)=>onStartDateChange(newValue,evt)}
+                  id="date-picker-from"
+                  label="From:"
+                  value={searchState.startDate}
+                  sx={{
+                    width: '100%',
+                  }}
+                />
+              </Box>
+            </LocalizationProvider>
+            <LocalizationProvider dateAdapter={AdapterDayjs}>
+              <Box components={['DatePicker']} padding={0} width="100%">
+                <DatePicker
+                  name="endDate"
+                  value={searchState.endDate}
+                  onChange={(newValue,evt)=> onEndDateChange(newValue,evt)}
+                  id="date-picker-to"
+                  label="To:"
+                  
+                  sx={{
+                    width: '100%',
+
+
+                  }}
+                />
+              </Box>
+            </LocalizationProvider>
+          </Box>
+        </Item>
+
     </>
+    //endregion
   );
 }
