@@ -3,13 +3,13 @@ import Globals from '../../globals';
 //import Grid from '@mui/material/Grid'; // Grid version 1
 import Grid from '@mui/material/Unstable_Grid2';
 import ProximitySelect from './ProximitySelect';
-import React, { useState, useReducer, useContext } from 'react';
-import ResponsiveSearchResults from './ResponsivSearchResults';
+import React, { useState, useReducer, useContext, useEffect } from 'react';
+import ResponsiveSearchResults from './SearchResults';
 import SearchContext from './SearchContext';
 import SearchFilter from './SearchFilter';
 import SearchResultItems from './SearchResultsItems';
 import SearchTipsDialog from './SearchTipDialog';
-import SideBarFilters from './SideBarFilters';
+import SearchSideBarFilters from './SearchSideBarFilters';
 import theme from '../../styles/theme';
 import {
   Paper,
@@ -51,6 +51,7 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { ThemeProvider, styled } from '@mui/material/styles';
 import SearchHeader from './SearchHeader';
 import { set } from 'lodash';
+import axios from 'axios';
 
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
@@ -126,6 +127,7 @@ export default function Search(props) {
   const filterBy = props.filterResultsBy;
   const myRef = React.createRef();
   const doSearch = (terms) => {
+    console.log('doSearch terms', terms);
     setSearchState({
       ...searchState,
       search: terms,
@@ -160,7 +162,7 @@ export default function Search(props) {
       });
       setInputMessage(proximityValues._inputMessage);
 
-      if (titleRaw) {
+      if (searchState.titleRaw) {
         setDebouncedSearch(state);
       }
     }
@@ -263,8 +265,9 @@ export default function Search(props) {
 
   const onInput = (evt) => {
     let userInput = evt.target.value;
-
     let proximityValues = handleProximityValues(userInput);
+    console.log("🚀 ~ file: Search.jsx:268 ~ onInput ~ proximityValues:", proximityValues)
+    console.log('onInput', userInput);
 
     //get the evt.target.name (defined by name= in input)
     //and use it to target the key on our `state` object with the same name, using bracket syntax
@@ -278,6 +281,7 @@ export default function Search(props) {
 
   // suppress warning that there's no onChange event, handler (despite onChange rarely being the best event to take advantage of)
   const onChangeHandler = (evt) => {
+    console.log('onChangeHandler', evt.target.value);
     // do nothing
   };
   const toggleSearchTipDialogClose = (isOpen) => {
@@ -440,14 +444,7 @@ export default function Search(props) {
     });
   };
 
-  // Tried quite a bit but I can't force the calendar to Dec 31 of a year as it's typed in without editing the library code itself.
-  // I can change the value but the popper state won't update to reflect it (even when I force it to update).
-  const onEndDateChange = (date, evt) => {
-    console.log(evt.current.target.value);
-    console.log('onEndDateChange', date, evt.current.target.value);
-    setSearchState({ ...searchState, endPublish: date });
-    // }
-  };
+
 
   const onCountyChange = (evt, item) => {
     debugger;
@@ -472,11 +469,7 @@ export default function Search(props) {
       agencyRaw: evt,
     });
   };
-  const onStartDateChange = (evt, date) => {
-    console.log('onStartDateChange EVT', evt.target.value);
-    console.log('onStartDateChange', date);
-    setSearchState({ ...searchState, startPublish: date });
-  };
+  
   const onCooperatingAgencyChange = (evt) => {
     console.log('onCooperatingAgencyChange', evt.target.value);
     var agencyLabels = [];
@@ -561,6 +554,7 @@ export default function Search(props) {
   };
   const get = (url, stateName) => {
     const _url = new URL(url, Globals.currentHost);
+    console.log('Calling URL',_url);
     axios({
       url: _url,
       method: 'GET',
@@ -570,7 +564,9 @@ export default function Search(props) {
         const rsp = _response.data;
         setSearchState({ ...searchState, [stateName]: rsp });
       })
-      .catch((error) => {});
+      .catch((error) => {
+        console.log('Error getting Results from the Server at ' + url, error)
+      });
   };
 
   /** Helps getSuggestions() by returning clickable link to details page for given suggestion, which opens a new tab */
@@ -664,13 +660,14 @@ export default function Search(props) {
   };
 
   const toggleSearchTipsDialog = () => {
-    console.log('toggleSearchTipsDialog');
+    console.log('toggleSearchTipsDialog with',searchState.isSearchTipsDialogIsOpen);
     setSearchState({
       ...searchState,
       isSearchTipsDialogIsOpen: !searchState.isSearchTipsDialogIsOpen,
     });
+    console.log('toggleSearchTipsDialog after',searchState.isSearchTipsDialogIsOpen);
   };
-  const toggleAvailableFiltersDialog = () => {
+  const toggleAvailableFilesDialog = () => {
     console.log('toggleAvailableFiltersDialog');
     setSearchState({
       ...searchState,
@@ -678,13 +675,18 @@ export default function Search(props) {
   });
 }
   const toggleQuickStartDialog = () => {
+    console.log('toggleQuickStartDialog');
     setSearchState({
       ...searchState,
       isQuickStartDialogOpen: !searchState.isQuickStartDialogOpen,
   });
 }
+
 const [searchState, setSearchState] = useState({
   // test: Globals.enum.options,
+  firstYear: null,
+  lastYear: null,
+  eis_count :0,
   isQuickStartDialogOpen: false,
   isSearchTipsDialogIsOpen: false,
   isAvailableFiltersDialogOpen: false,
@@ -735,6 +737,13 @@ const [searchState, setSearchState] = useState({
   typeScoping: false,
   countyOptions: Globals.counties,
 });
+
+const {eis_count} = searchState;
+useEffect(() => {
+  const eis_count = getCounts();
+  setSearchState({...searchState, eis_count: eis_count});
+}, [eis_count]);
+
   const { markup, proximityDisabled, agencyRaw, state, county, proximityOption } = searchState;
   const value = {
     searchState,
@@ -750,24 +759,23 @@ const [searchState, setSearchState] = useState({
     onAgencyChange,
     onLocationChange,
     onCountyChange,
-    onStartDateChange,
-    onEndDateChange,
     onClearFiltersClick,
     onTitleOnlyChecked,
-    proximityDisabled,
-    agencyRaw,
-    state,
-    county,
+    // proximityDisabled,
+    // agencyRaw,
+    // state,
+    // county,
     toggleQuickStartDialog,
-    toggleAvailableFiltersDialog,
+    toggleAvailableFilesDialog,
     toggleSearchTipsDialog,
+    onChangeHandler,
   };
   //console.log('SEARCH SearchState',searchState);
   // #region Return Method
   return (
     <SearchContext.Provider value={value}>
       <ThemeProvider theme={theme}>
-        <Container id="search-container" disableGutters={true} maxWidth="lg" fixed>
+        <Container id="search-container" disableGutters={true} maxWidth="xlg" fixed>
 
 
           <Grid
@@ -783,14 +791,14 @@ const [searchState, setSearchState] = useState({
 
             </Grid>
             {/* #region SideBarFilters */}
-            <Grid xs={3} id="side-bar-filters-container">
+            <Grid xs={12} md={3} id="side-bar-filters-container">
               <Paper id="side-bar-filters-paper" elevation={1}>
-                <SideBarFilters />
+                <SearchSideBarFilters />
               </Paper>
             </Grid>
             {/* #endregion */}
             {/* #region Search Results */}
-            <Grid xs={9}>
+            <Grid md={9} xs={12}>
               <Paper>
                 <Box
                   sx={{

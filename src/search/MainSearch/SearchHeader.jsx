@@ -13,6 +13,7 @@ import {
   FormControl,
   Select,
   ListItem,
+  Hidden,
 } from '@mui/material';
 import ProximitySelect from './ProximitySelect';
 import SearchContext from './SearchContext';
@@ -37,10 +38,13 @@ export default function SearchHeader(props) {
     toggleSearchTipsDialog,
     toggleAvailableFilesDialog,
     toggleQuickStartDialog,
+    onChangeHandler,
+  } = useContext(SearchContext);
+  const {    
     isAvailableFiltersDialogOpen,
     isQuickStartDialogOpen,
-    isSearchTipsDialogIsOpen,
-  } = useContext(SearchContext);
+    isSearchTipsDialogIsOpen,titleRaw} = searchState;
+
   return (
     <div id="search-text-div">
       <Grid
@@ -53,30 +57,32 @@ export default function SearchHeader(props) {
         border={0}
         borderColor={'#CCC'}
       >
-        <Grid
-          id="search-text-grid-item"
-          item={true}
-          xs={2}
-          border={0}
-          backgroundColor="transparent"
-          height={115}
-          borderRadius={0}
-          borderColor={'#CCC'}
-          borderRight={1}
-        >
-          <ListItem onClick={toggleSearchTipsDialog}>
-            <a href="#">Search Tips - {isSearchTipsDialogIsOpen}</a>
-          </ListItem>
-          <ListItem onClick={toggleAvailableFilesDialog}>
-            <a href="#">Available Files - {isAvailableFiltersDialogOpen}</a>
-          </ListItem>
-          <ListItem onCanPlay={toggleQuickStartDialog}>
-            <a href="#">Quick-start guide - {isQuickStartDialogOpen}</a>
-          </ListItem>
-          {isQuickStartDialogOpen} - {isQuickStartDialogOpen} - {isAvailableFiltersDialogOpen}
-        </Grid>
-        <Grid item xs={2}>
+        <Hidden mdDown>
+          
+          <Grid item xs={12} md={2}>
+            <Box
+              id="search-text-grid-item"
+              backgroundColor="transparent"
+              height={115}
+              borderRadius={0}
+              borderRight={1}
+              borderColor={'#CCC'}
+            >
+              <ListItem onClick={toggleSearchTipsDialog}>
+                <a href="#">Search Tips</a>
+              </ListItem>
+              <ListItem onClick={toggleAvailableFilesDialog}>
+                <a href="#">Available Files</a>
+              </ListItem>
+              <ListItem onClick={toggleQuickStartDialog}>
+                <a href="#">Quick-start guide</a>
+              </ListItem>
+            </Box>
+          </Grid>
+        </Hidden>
+        <Grid item  xs={12} md={3}>
           <Box
+           
             id="proximity-search-box"
             //   width={'100%'}
             display={'flex'}
@@ -91,10 +97,10 @@ export default function SearchHeader(props) {
             />
           </Box>
         </Grid>
-        <Grid item xs={8} borderLeft={0} id="search-box-grid-item">
+        <Grid item xs={12} md={7} borderLeft={0} id="search-box-grid-item">
           <Box
             id="search-box-box-item"
-            xs={12}
+
             display={'flex'}
             justifyContent={'center'}
             justifyItems={'center'}
@@ -116,12 +122,14 @@ export default function SearchHeader(props) {
               fullWidth
               backgroundColor={'white'}
               id="main-search-text-field"
+              name='titleRaw'
               variant="outlined"
               focused
               onInput={onInput}
               onKeyUp={onKeyUp}
+              onKeyDown={onKeyDown}
               placeholder="Search for NEPA documents"
-              value={searchState.titleRaw ? searchState.titleRaw : ''}
+              value={titleRaw ? titleRaw : ''}
               autoFocus
               InputProps={{
                 endAdornment: (
@@ -134,12 +142,16 @@ export default function SearchHeader(props) {
           </Box>
         </Grid>
       </Grid>
-      <SearchTipsDialog isOpen={isQuickStartDialogOpen} onClose={toggleSearchTipsDialog} />
+      <SearchTipsDialog 
+        isOpen={isSearchTipsDialogIsOpen} 
+        onDialogClose={toggleSearchTipsDialog} />
       <AvailableFilesDialog
         isOpen={isAvailableFiltersDialogOpen}
-        onClose={toggleAvailableFilesDialog}
+        onDialogClose={toggleAvailableFilesDialog}
       />
-      <QuickStartDialog isOpen={isQuickStartDialogOpen} onClose={toggleQuickStartDialog} />
+      <QuickStartDialog 
+        isOpen={isQuickStartDialogOpen}
+        onDialogClose={toggleQuickStartDialog} />
     </div>
   );
 }
