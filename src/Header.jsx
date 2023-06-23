@@ -113,7 +113,7 @@ const useStyles = makeStyles(() => ({
   toolbar: {
     display: 'flex',
     justifyContent: 'space-between',
-    backgroundColor: '#b6c4c8',
+    backgroundColor: '#B6C4C8',
     height: '105px',
     justifyItems: 'center',
 

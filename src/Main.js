@@ -107,6 +107,7 @@ class Main extends React.Component {
     getRole = () => {
 
         const checkURL = new URL('user/get_role', Globals.currentHost);
+        console.log('Get Role CheckURL', checkURL);
         axios.post(checkURL)
         .then(response => {
             //[TODO][CRITICAL] For localhost testing FIX BEFORE GOING LIVE!!!!
@@ -123,7 +124,7 @@ class Main extends React.Component {
         })
         .catch((err) => { // Token expired or invalid, or server is down
             console.log(`Error retriving your credentials: ${err.message}`,err.code);
-            if(err.code === "ERR_BAD_REQUEST") {
+            if(err.code === "ERR_BAD_REQUEST" || "ERR_CONNECTION_REFUSED") {
                 // do nothing
                 //[TODO][REFACTOR] This is only for testing purposes, remove before going live
                 this.setState({ role: 'admin', loggedIn: true, anonymous: false });
@@ -137,7 +138,8 @@ class Main extends React.Component {
 
 
     check = (evt) => { 
-        console.error("Method call to an empty method, please change the caller or add logic to the method",evt);
+        console.log('Calling check evt',evt);
+        //console.error("Method call to an empty method, please change the caller or add logic to the method",evt);
     }
 
     // refresh() has a global listener so as to change the loggedIn state and then update the navbar

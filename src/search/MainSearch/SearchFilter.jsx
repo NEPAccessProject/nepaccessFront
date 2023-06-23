@@ -57,7 +57,6 @@ const useStyles = (theme) => ({
 const drawerWidth = 200;
 
 export default function SearchFilter(props) {
-  const {searchState,setSearchState} = useContext(SearchContext);
     let { className,label ,placeholder, options,id,tabIndex } = props.filter;
     const {onChange,value} = props;
 

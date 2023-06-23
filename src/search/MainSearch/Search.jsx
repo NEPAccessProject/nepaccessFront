@@ -6,9 +6,6 @@ import ProximitySelect from './ProximitySelect';
 import React, { useState, useReducer, useContext, useEffect } from 'react';
 import ResponsiveSearchResults from './SearchResults';
 import SearchContext from './SearchContext';
-import SearchFilter from './SearchFilter';
-import SearchResultItems from './SearchResultsItems';
-import SearchTipsDialog from './SearchTipDialog';
 import SearchSideBarFilters from './SearchSideBarFilters';
 import theme from '../../styles/theme';
 import {
@@ -44,14 +41,11 @@ import {
   stateOptions,
   countyOptions,
 } from '../options';
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import { DatePicker } from '@mui/x-date-pickers/DatePicker';
-import { InputAdornment, SearchOutlined } from '@mui/icons-material';
-import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { ThemeProvider, styled } from '@mui/material/styles';
 import SearchHeader from './SearchHeader';
-import { set } from 'lodash';
+
 import axios from 'axios';
+const _ = require('lodash');
 
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
