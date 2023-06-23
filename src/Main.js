@@ -136,8 +136,8 @@ class Main extends React.Component {
     }
 
 
-    check = () => { 
-        console.error("Method call to an empty method, please change the caller or add logic to the method");
+    check = (evt) => { 
+        console.error("Method call to an empty method, please change the caller or add logic to the method",evt);
     }
 
     // refresh() has a global listener so as to change the loggedIn state and then update the navbar
