@@ -29,6 +29,7 @@ import CalloutContainer from './CalloutContainer';
 import SearcherLanding from './search/SearcherLanding';
 import MediaQuery from 'react-responsive';
 import Dropdown from 'react-dropdown';
+import { NavLink } from 'react-router-dom/cjs/react-router-dom.min';
 const headersData = [
   {
     label: 'Search',
@@ -112,7 +113,7 @@ const useStyles = makeStyles(() => ({
   toolbar: {
     display: 'flex',
     justifyContent: 'space-between',
-    backgroundColor: '',
+    backgroundColor: 'rgb(151,171,178)',
     height: '105px',
     justifyItems: 'center',
 
@@ -133,7 +134,7 @@ const useStyles = makeStyles(() => ({
     height: '50px',
     display: 'block',
     width: '100%',
-    /* background: #C4C4C4; */
+    /* background: #abbdc4; */
     zIndex: 99999 /* Geojson map introduces some very high z-index items */,
   },
   logoImage: {
@@ -252,6 +253,7 @@ export default function HeaderNav() {
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
+              background: 'rgb(151,171,178)'
             }}
           >
             <img src="logo2022.png" height={61} width={150} alt="NEPAccess Mobile Logo" />
@@ -322,9 +324,9 @@ export default function HeaderNav() {
         <Toolbar
           id="nav-toolbar"
           className={toolbar}
-          color="#a0b6c1"
+          color="rgb(151,171,178)"
           xs={{
-            backgroundColor: '#a0b6c1',
+            background: 'rgb(151,171,178)',
             backgroundImage: 'url("logo2022.png")',
             backgroundRepeat: 'no-repeat',
             backgroundSize: 'contain',
@@ -338,7 +340,7 @@ export default function HeaderNav() {
               height: '102px',
               width: '200px',
               border: '3px solid red',
-              backgroundColor: '#a8b9c0',
+              backgroundColor: 'rgb(151,171,178)',
               // backgroundRepeat: 'no-repeat',
               // backgroundSize: 'contain',
               // height: '102px',
@@ -358,54 +360,18 @@ export default function HeaderNav() {
           </Box>
           <Container
             id="link-container"
+            
             xs={{
               justifyContent: 'flex-start',
               alignItems: 'left',
               marginLeft: '350px',
               backgroundImage: 'url("logo2022.png")',
+              backgroundColor: 'rgb(151,171,178)',
+
             }}
           >
-            <Container id="menu-container" className={menuContainer}>
-              <MenuItem id="search-menu-item" className={navLink}>
-                Search
-              </MenuItem>
-<MenuItem>
-                <Dropdown placeholder={'Search Tips'} options={[{
-                  label: 'Search Tips',
-                  value: 'search-tips',
-                },
-                {
-                  label: 'Available Files',
-                  href: '/available-files',
-                }
-                ]} >Search Tips</Dropdown>
-</MenuItem>
-              <MenuItem id="search-tips-menu-item" className={navLink}>
-                Search Tips
-              </MenuItem>
-              <MenuItem id="available-files-menu-item" className={navLink}>
-                Availble Files
-              </MenuItem>
-              <MenuItem id="about-menu-item" className={navLink}>
-                About NEPA
-              </MenuItem>
-              {/* <MenuItem id="about-menu-nepaccess-item" className={navLink}>About NEPAccess</MenuItem> */}
-             
-                <MenuItem className={navLink}>
-                  <Dropdown
-                    placeholder={'About NEPAccess'}
-                    options={[
-                      { label: 'About NEPAccess', href: '/about' },
-                      { label: 'Media', href: '/media' },
-                      { label: 'People', href: '/people' },
-                    ]}
-                    className={navLink}
-                  />
-                </MenuItem>
-             
-              <MenuItem id="contact-menu-item" className={navLink}>
-                Contact
-              </MenuItem>
+            <NavLinks/>
+
               <span
                 id="admin-span"
                 hidden={!role || role === 'user'}
@@ -438,7 +404,6 @@ export default function HeaderNav() {
                 </div>
               </span>
             </Container>
-          </Container>
         </Toolbar>
         {/* <Container id='mobile-content-container'>
             <Container id="mobile-search-container">
@@ -476,7 +441,8 @@ export default function HeaderNav() {
         elevation={1}
         id="header-root-app-bar"
         sx={{
-          background: '#a0b6c1',
+          backgroundColor: 'rgb(151,171,178)',
+
         }}
       >
         <MediaQuery maxWidth={960}>{displayMobile()}</MediaQuery>
@@ -502,3 +468,68 @@ export function DesktopNavLinks() {
     </>
   );
 }
+
+export function NavLinks(){
+  const [headerLandingCss, setHeaderLandingCss] = useState();
+  const [currentPage, setCurrentPage] = useState();
+  const [loggedInDisplay, setLoggedInDisplay] = useState('display-none');
+  const getHeaderCss = () => {
+    let headerCss = "no-select";
+    if(!currentPage || currentPage === '/') {
+        headerCss += " landing-header";
+    }
+    return headerCss;
+  }
+  
+  return(
+  <div id="home-page">
+              <Helmet>
+                  <meta charSet="utf-8" />
+                  <title>NEPAccess</title>
+                  <meta name="description" content="Bringing NEPA into the 21st Century through the power of data science. Find and engage with data from thousands of environmental review documents." />
+                  <link rel="canonical" href="https://www.nepaccess.org/" />
+              </Helmet>
+  
+              <div id="header" className={getHeaderCss() + headerLandingCss}>
+  
+                  <div id="main-menu">
+                  <NavLink currentpage={(currentPage==="/contact").toString()} className="main-menu-link" to="/search">
+                          Search
+                      </NavLink>
+                      <div id="about-dropdown-2" className="main-menu-link dropdown">
+                          <NavLink currentpage={(currentPage==="/search-tips" || currentPage==="/available-documents").toString()} id="about-button-2" className="main-menu-link drop-button" to="/search-tips">
+                              Search Tips
+                          </NavLink>
+                          <i className="fa fa-caret-down"></i>
+                          <div className="dropdown-content">
+                              <Link to="/search-tips">Search Tips</Link>
+                              <Link to="/available-documents">Available Files</Link>
+                          </div>
+                      </div>
+                      <NavLink currentpage={(currentPage==="/about-nepa").toString()} className="main-menu-link" to="/about-nepa">
+                          About NEPA
+                      </NavLink>
+                      <div id="about-dropdown" className="main-menu-link dropdown">
+                          <NavLink currentpage={(currentPage==="/about-nepaccess" || currentPage==="/people" || currentPage==="/media").toString()} id="about-button" className="main-menu-link drop-button" to="/about-nepaccess">
+                              About NEPAccess
+                          </NavLink>
+                          <i className="fa fa-caret-down"></i>
+                          <div className="dropdown-content">
+                              <Link to="/about-nepaccess">About NEPAccess</Link>
+                              <Link to="/media">
+                                  Media
+                              </Link>
+                              <Link to="/people">People</Link>
+                          </div>
+                      </div>
+                                         
+                      <NavLink currentpage={(currentPage==="/contact").toString()} className="main-menu-link" to="/contact">
+                          Contact
+                      </NavLink>
+  
+                  </div>
+                  
+              </div>
+          </div>
+  )
+  }
