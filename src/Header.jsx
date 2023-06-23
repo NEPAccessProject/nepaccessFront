@@ -113,7 +113,7 @@ const useStyles = makeStyles(() => ({
   toolbar: {
     display: 'flex',
     justifyContent: 'space-between',
-    backgroundColor: 'rgb(151,171,178)',
+    backgroundColor: '#b6c4c8',
     height: '105px',
     justifyItems: 'center',
 
@@ -122,7 +122,7 @@ const useStyles = makeStyles(() => ({
   mobileToolbar: {
     display: 'flex',
     height: '65px',
-    backgroundColor: '#abbdc4',
+    backgroundColor: '#b6c4c8',
     boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)',
   },
   drawerContainer: {
@@ -130,7 +130,7 @@ const useStyles = makeStyles(() => ({
   },
 
   muiAppBar: {
-    backgroundColor: '#abbdc4',
+    backgroundColor: '#b6c4c8',
     height: '50px',
     display: 'block',
     width: '100%',
@@ -324,9 +324,8 @@ export default function HeaderNav() {
         <Toolbar
           id="nav-toolbar"
           className={toolbar}
-          color="rgb(151,171,178)"
           xs={{
-            background: 'rgb(151,171,178)',
+            background: 'transparent',
             backgroundImage: 'url("logo2022.png")',
             backgroundRepeat: 'no-repeat',
             backgroundSize: 'contain',
@@ -340,7 +339,6 @@ export default function HeaderNav() {
               height: '102px',
               width: '200px',
               border: '3px solid red',
-              backgroundColor: 'rgb(151,171,178)',
               // backgroundRepeat: 'no-repeat',
               // backgroundSize: 'contain',
               // height: '102px',
@@ -366,7 +364,7 @@ export default function HeaderNav() {
               alignItems: 'left',
               marginLeft: '350px',
               backgroundImage: 'url("logo2022.png")',
-              backgroundColor: 'rgb(151,171,178)',
+              // backgroundColor: 'rgb(151,171,178)',
 
             }}
           >
@@ -441,7 +439,7 @@ export default function HeaderNav() {
         elevation={1}
         id="header-root-app-bar"
         sx={{
-          backgroundColor: 'rgb(151,171,178)',
+          // backgroundColor: 'rgb(151,171,178)',
 
         }}
       >
