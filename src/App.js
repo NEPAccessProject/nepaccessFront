@@ -1396,6 +1396,7 @@ export default class App extends React.Component {
                     down: true
 				});
 			} else if(err.response && err.response.status===403) {
+                console.log('CHECK ERROR ERR',err);
                 this.setState({
                     verified: false,
                     shouldUpdate: true
@@ -1666,6 +1667,7 @@ export default class App extends React.Component {
             );
         }
         catch(e) {
+            console.error('Error rehydrating - Component did mount', e);
             // do nothing
         }
     }
