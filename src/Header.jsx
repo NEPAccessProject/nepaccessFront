@@ -339,7 +339,6 @@ export default function HeaderNav() {
               height: '102px',
               width: '200px',
               border: '3px solid red',
-              marginBotton: '105px',
               // backgroundRepeat: 'no-repeat',
               // backgroundSize: 'contain',
               // height: '102px',
