@@ -8,10 +8,10 @@ export default function AvailableFilesDialog(props) {
               
               <Dialog open={isOpen}>
               <Grid container={true} spacing={1}>
-                      <Grid item={true} xs={11} flexDirection="row" flexWrap={'nowrap'} alignItems={'center'} alignContent={'center'} justifyContent={'center'} >
+                      <Grid item xs={11} flexDirection="row" flexWrap={'nowrap'} alignItems={'center'} alignContent={'center'} justifyContent={'center'} >
                         <Box paddingLeft={2}><Typography fontSize={'large'} fontWeight={'bold'}>Available Files</Typography></Box>
                       </Grid>
-                      <Grid item={true} xs={1} justifyContent={'center'}>
+                      <Grid item xs={1} justifyContent={'center'}>
                         <IconButton onClick={onDialogClose}><Typography fontSize={'medium'}>X</Typography></IconButton>
                       </Grid>
                     </Grid>
@@ -19,7 +19,7 @@ export default function AvailableFilesDialog(props) {
                 
                   <DialogContentText>
                   <Grid container={true} spacing={1}>
-                      <Grid item={true} xs={12}>
+                      <Grid item xs={12}>
                         {/* [TODO] need a dynamic value for doc count */}
                       Currently the site contains 7279 Draft or Final Environmental Impact Statements from: 1976-2023. More files are being added continuously.
                        <a href='/available-documents'>Available files</a>

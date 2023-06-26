@@ -9,12 +9,12 @@ export default function QuickStartDialog(props) {
               <Dialog open={isOpen} sx={{
                 backgroundColor: '#8FBC3F'}}>
               <Grid container={true} spacing={1}>
-                      <Grid item={true} xs={11} flexDirection="row" flexWrap={'nowrap'} alignItems={'center'} alignContent={'center'} justifyContent={'center'} >
+                      <Grid item xs={11} flexDirection="row" flexWrap={'nowrap'} alignItems={'center'} alignContent={'center'} justifyContent={'center'} >
                         <Box paddingLeft={2}>
                           <Typography fontSize={'large'} fontWeight={'bold'}>Quick Start Guide </Typography>
                         </Box>
                       </Grid>
-                      <Grid item={true} xs={1} justifyContent={'center'}>
+                      <Grid item xs={1} justifyContent={'center'}>
                         <IconButton onClick={onDialogClose}><Typography fontSize={'medium'}>X</Typography></IconButton>
                       </Grid>
                     </Grid>
