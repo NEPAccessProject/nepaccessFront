@@ -8,6 +8,7 @@ import ResponsiveSearchResults from './SearchResults';
 import SearchContext from './SearchContext';
 import SearchSideBarFilters from './SearchSideBarFilters';
 import theme from '../../styles/theme';
+import {Document, Page, pdfjs} from 'react-pdf';
 import {
   Paper,
   Button,
@@ -220,6 +221,8 @@ export default function Search(props) {
       action: [],
       actionRaw: [],
       typeAll: true,
+      numPages: null,
+      pageNumber: 1,
       typeFinal: false,
       typeDraft: false,
       typeEA: false,
@@ -258,6 +261,7 @@ export default function Search(props) {
   };
 
   const onInput = (evt) => {
+    console.log("🚀 ~ file: Search.jsx:261 ~ onInput ~ evt.target.name:", evt.target.name);
     let userInput = evt.target.value;
     let proximityValues = handleProximityValues(userInput);
     console.log("🚀 ~ file: Search.jsx:268 ~ onInput ~ proximityValues:", proximityValues)
@@ -675,7 +679,11 @@ export default function Search(props) {
       isQuickStartDialogOpen: !searchState.isQuickStartDialogOpen,
   });
 }
-
+/*
+    get('stats/earliest_year', 'firstYear');
+    get('stats/latest_year', 'lastYear');
+    get('stats/eis_count', 'EISCount');
+    */
 const [searchState, setSearchState] = useState({
   // test: Globals.enum.options,
   firstYear: null,
@@ -696,6 +704,7 @@ const [searchState, setSearchState] = useState({
   decisionRaw: [],
   endComment: null,
   endPublish: null,
+  eis_count: 0,
   filtersHidden: false,
   fragmentSizeValue: 2,
   hideOrganization: true,
@@ -705,6 +714,7 @@ const [searchState, setSearchState] = useState({
   markup: true,
   needsComments: false,
   needsDocument: false,
+  numPages: 0,
   offset: 0,
   optionsChecked: true,
   proximityDisabled: true,
@@ -732,11 +742,12 @@ const [searchState, setSearchState] = useState({
   countyOptions: Globals.counties,
 });
 
-const {eis_count} = searchState;
-useEffect(() => {
-  const eis_count = getCounts();
-  setSearchState({...searchState, eis_count: eis_count});
-}, [eis_count]);
+// const {eis_count} = searchState;
+// useEffect(() => {
+//   const eis_count = getCounts();
+//   console.log("🚀 ~ file: Search.jsx:738 ~ useEffect ~ eis_count:", eis_count)
+//   setSearchState({...searchState, eis_count: eis_count});
+// }, eis_count);
 
   const { markup, proximityDisabled, agencyRaw, state, county, proximityOption } = searchState;
   const value = {
@@ -769,7 +780,12 @@ useEffect(() => {
   return (
     <SearchContext.Provider value={value}>
       <ThemeProvider theme={theme}>
-        <Container id="search-container" disableGutters={true} maxWidth="xlg" fixed>
+        <Container id="search-container" disableGutters={true} maxWidth="xlg" fixed
+          xs={{
+            marginTop: '105px'
+          }}
+        
+        >
 
 
           <Grid
@@ -779,8 +795,9 @@ useEffect(() => {
             spacing={2}
             // justifyContent={'flex-start'}
             container={true}
+            marginTop= '105px'
           >
-            <Grid item xs={12}>
+            <Grid item xs={12}  sx={{}}>
                 <Item><SearchHeader /></Item>
 
             </Grid>
