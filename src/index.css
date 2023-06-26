@@ -41,7 +41,8 @@ body {
     background-color: #C4C4C4;
 }
 #header {
-  width: 100%;
+    text-align: right;
+  /* width: 100%;
   height: 102px;
 
     align-items: space-around;
@@ -53,7 +54,7 @@ body {
     background-position: 0;
     background-size: contain;
      background-color: #C4C4C4;
-  box-sizing: border-box;
+  box-sizing: border-box; */
   z-index: 99999; /* Geojson map introduces some very high z-index items */
 
   /* background: #8FBC3F; */
@@ -112,7 +113,7 @@ body {
 				justify-content: flex-end;
 				border: 3px solid blue;
                 flex-grow: 1;
-                height: 102px;
+                height: 100px;
                 width: 100%;
                 justify-content: right;
 
