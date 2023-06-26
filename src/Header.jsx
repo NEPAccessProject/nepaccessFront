@@ -330,7 +330,7 @@ export default function HeaderNav() {
             backgroundRepeat: 'no-repeat',
             backgroundSize: 'contain',
             border: '3px solid red',
-            //   height: '105px',
+            height: '105px',
           }}
         >
           <Box
@@ -339,6 +339,7 @@ export default function HeaderNav() {
               height: '102px',
               width: '200px',
               border: '3px solid red',
+              marginBotton: '105px',
               // backgroundRepeat: 'no-repeat',
               // backgroundSize: 'contain',
               // height: '102px',
@@ -480,7 +481,7 @@ export function NavLinks(){
   }
   
   return(
-  <div id="home-page">
+  <div id="">
               <Helmet>
                   <meta charSet="utf-8" />
                   <title>NEPAccess</title>
@@ -490,7 +491,7 @@ export function NavLinks(){
   
               <div id="header" className={getHeaderCss() + headerLandingCss}>
   
-                  <div id="main-menu">
+                  <div id="">
                   <NavLink currentpage={(currentPage==="/contact").toString()} className="main-menu-link" to="/search">
                           Search
                       </NavLink>
