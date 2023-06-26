@@ -21,6 +21,7 @@ const proximityOptions = [
   }));
   
 export default function SearchBar(props){
+  const [inputSearch, setInputSearch] = React.useState('');
         return (
           <Box sx={{ flexGrow: 1 }}>
             <Grid container spacing={3}>
@@ -38,7 +39,8 @@ export default function SearchBar(props){
                 <Item><Input
                   id="main-search-bar"
                   ref={(input) => {
-                    this.inputSearch = input;
+                    setInputSearch(input);
+                    //this.inputSearch = input;
                   }}
                   className="search-bar"
                   name="titleRaw"

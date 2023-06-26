@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect,useContext } from 'react';
 import {
   Paper,
   Button,
@@ -18,12 +18,19 @@ import {
   Chip,
 } from '@mui/material';
 import Grid from '@mui/material/Unstable_Grid2';
+import SearchContext from './SearchContext';
+import {Document, Page, pdfjs} from 'react-pdf';
 const handleDownloadClick = (evt,id) => {
   evt.preventDefault();
   console.log('Download ID Value',id)
 };
 export default function SearchResultItems(props) {
-  const { status, id, title, content, link, resultsText } = props;
+  const { searchState, setSearchState } = useContext(SearchContext);
+  const { status, id, title, content, link, resultsText,page,pageNumber,numPages } = props;
+  function onDocumentLoadSuccess({ numPages }) {
+    setSearchState({...searchState,numPages: numPages});
+    setNumPages(numPages);
+  }
   return (
     <>
       <Box>
@@ -56,6 +63,15 @@ export default function SearchResultItems(props) {
             >
               Download
             </Button>
+            <div>
+      <Document file="./Appendix A_ProjectLocationMap.pdf" onLoadSuccess={onDocumentLoadSuccess}>
+        <Page pageNumber={pageNumber} />
+      </Document>
+      <p>
+        Page {pageNumber} of {numPages}
+      </p>
+    </div>
+
             <Button
               color={'secondary'}
               sx={{
