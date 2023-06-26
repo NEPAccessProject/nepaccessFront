@@ -19,17 +19,25 @@ import {
 } from '@mui/material';
 import Grid from '@mui/material/Unstable_Grid2';
 import SearchContext from './SearchContext';
-import {Document, Page, pdfjs} from 'react-pdf';
+import PDFViewerDialog from './PDFViewerDialog';
 const handleDownloadClick = (evt,id) => {
   evt.preventDefault();
   console.log('Download ID Value',id)
 };
 export default function SearchResultItems(props) {
   const { searchState, setSearchState } = useContext(SearchContext);
+  const [isPDFViewOpen,setIsPDFViewOpen] = useState(false);
   const { status, id, title, content, link, resultsText,page,pageNumber,numPages } = props;
   function onDocumentLoadSuccess({ numPages }) {
     setSearchState({...searchState,numPages: numPages});
     setNumPages(numPages);
+  }
+  function openPDFPreview(evt,id) {
+    setIsPDFViewOpen(true);
+    evt.preventDefault();
+  }
+  function closePDFPreview() {
+    setIsPDFViewOpen(false);
   }
   return (
     <>
@@ -63,16 +71,13 @@ export default function SearchResultItems(props) {
             >
               Download
             </Button>
-            <div>
-      <Document file="./Appendix A_ProjectLocationMap.pdf" onLoadSuccess={onDocumentLoadSuccess}>
-        <Page pageNumber={pageNumber} />
-      </Document>
-      <p>
-        Page {pageNumber} of {numPages}
-      </p>
-    </div>
+            {/* <Document file="url('Appendix A_ProjectLocationMap.pdf')" onLoadSuccess={onDocumentLoadSuccess}>
+              <Page pageNumber={pageNumber} />
+            </Document> */}
 
+            <PDFViewerDialog isOpen={isPDFViewOpen} onDialogClose={closePDFPreview} />
             <Button
+              onClick={(evt) => openPDFPreview(evt,id)}
               color={'secondary'}
               sx={{
                 mt: 1,
