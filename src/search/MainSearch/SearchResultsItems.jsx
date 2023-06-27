@@ -27,6 +27,7 @@ const handleDownloadClick = (evt,id) => {
 export default function SearchResultItems(props) {
   const { searchState, setSearchState } = useContext(SearchContext);
   const [isPDFViewOpen,setIsPDFViewOpen] = useState(false);
+  const [isContentExpanded, setIsContentExpanded] = useState(false);
   const { status, id, title, content, link, resultsText,page,pageNumber,numPages } = props;
   function onDocumentLoadSuccess({ numPages }) {
     setSearchState({...searchState,numPages: numPages});
@@ -39,6 +40,11 @@ export default function SearchResultItems(props) {
   function closePDFPreview() {
     setIsPDFViewOpen(false);
   }
+  function toggleContentExpansion(evt) {
+    evt.preventDefault();
+    setIsContentExpanded(!isContentExpanded);
+  }
+
   return (
     <>
       <Box>
@@ -57,9 +63,16 @@ export default function SearchResultItems(props) {
                 borderColor={'lightgray'}
                 borderRadius={1}
               >
-                {(content.length > 500) ? content.substring(0,550) + ' click to see more...' : content}
+                {(isContentExpanded) ? content : content.substring(0,100) }
               </Box>
+              
             </Container>
+            <Container>
+              <Box width={'100%'} alignContent={'center'} textAlign={'center'} onClick={toggleContentExpansion} bgcolor='#A2A5A6' >
+                    <Typography paddingBottom={1} paddingTop={1} color={'#fff'}>Expand to see more...</Typography>
+                </Box>
+            </Container>
+
           </Grid>
           <Grid item xs={2}>
             <Button

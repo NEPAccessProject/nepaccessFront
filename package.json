@@ -43,6 +43,7 @@
     "react-google-recaptcha": "^2.1.0",
     "react-helmet": "^6.1.0",
     "react-leaflet": "^3.1.0",
+    "react-loader-spinner": "^5.3.4",
     "react-modal": "^3.14.3",
     "react-papaparse": "^3.17.2",
     "react-pdf": "^7.1.2",

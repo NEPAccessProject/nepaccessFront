@@ -11,6 +11,7 @@ import {
   Typography,
   IconButton,
   Container,
+  CircularProgress,
 } from '@mui/material';
 // const [fullWidth, setFullWidth] = React.useState(true);
 // const [maxWidth, setMaxWidth] = React.useState('md');
@@ -25,25 +26,27 @@ import { pdfjs } from 'react-pdf';
 //   import.meta.url,
 // ).toString();
 
-
 export default function PDFViewerDialog(props) {
-//    pdfjs.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.js`;
+  //    pdfjs.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.js`;
 
-//  const { isOpen, onDialogClose,fileName } = props;
-const [numPages, setNumPages] = useState(null);
-const [fullWidth, setFullWidth] = React.useState(true);
-const [maxWidth, setMaxWidth] = React.useState('md');
+  //  const { isOpen, onDialogClose,fileName } = props;
+  const [numPages, setNumPages] = useState(null);
+  const [fullWidth, setFullWidth] = React.useState(true);
+  const [maxWidth, setMaxWidth] = React.useState('md');
+  const [isLoaded, setIsLoaded] = useState(false);
   function onDocumentLoadSuccess({ numPages }) {
+    console.log('onDocumentLoadSuccess',numPages);
+    setIsLoaded(true);
     setNumPages(numPages);
   }
 
-//   const handleClickOpen = () => {
-//     setOpen(true);
-//   };
+  //   const handleClickOpen = () => {
+  //     setOpen(true);
+  //   };
 
-//   const handleClose = () => {
-//     setOpen(false);
-//   };
+  //   const handleClose = () => {
+  //     setOpen(false);
+  //   };
 
   const handleMaxWidthChange = (event) => {
     setMaxWidth(
@@ -53,49 +56,47 @@ const [maxWidth, setMaxWidth] = React.useState('md');
   };
 
   const handleFullWidthChange = (event) => {
+    console.log('handleFullWidth',event.target.checked);
     setFullWidth(event.target.checked);
   };
 
-//const {searchState,setSearchState} = useContext(SearchContext);
-const {isOpen,onDialogClose} = props;
+  //const {searchState,setSearchState} = useContext(SearchContext);
+  const { isOpen, onDialogClose } = props;
   return (
-
-      <Dialog open={isOpen}
-      fullWidth={fullWidth}
-      maxWidth={maxWidth}
-      onClose={onDialogClose}
->
-       <Container>
-                 
-            <DialogContent >
-                <DialogTitle>
-                <Grid item xs={1} justifyContent={'center'}>
-                        <IconButton onClick={onDialogClose}><Typography fontSize={'medium'}>X</Typography></IconButton>
-                      </Grid>
-                    </DialogTitle>  
-              <DialogContentText>
+    <Dialog open={isOpen} fullWidth={fullWidth} maxWidth={maxWidth} onClose={onDialogClose}>
+      <Container>
+        <DialogContent>
+          <DialogTitle>
+            <Grid item xs={1} justifyContent={'center'}>
+              <IconButton onClick={onDialogClose}>
+                <Typography fontSize={'medium'}>X</Typography>
+              </IconButton>
+            </Grid>
+          </DialogTitle>
+          <DialogContentText>
+            <Box>
+              <Typography color={'white'} fontSize={'xl'}>
+                PDF Title Here
+              </Typography>
+            </Box>
+            <Container sx={{
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+            }}>
                 <Box>
-                    <Typography color={'white'} fontSize={'xl'}>PDF Title Here</Typography>
+                {/* {isLoaded ? <CircularProgress /> : ( */}
+                  <Document file={samplePDF} onLoadSuccess={onDocumentLoadSuccess}>
+                    {Array.from(new Array(numPages), (el, index) => (
+                      <Page key={`page_${index + 1}`} pageNumber={index + 1} />
+                    ))}
+                  </Document>
+                {/* )} */}
                 </Box>
-                <Box >
-                <Document
-              file={samplePDF}
-              onLoadSuccess={onDocumentLoadSuccess}
-            >
-              {Array.from(
-                new Array(numPages),
-                (el, index) => (
-                  <Page
-                    key={`page_${index + 1}`}
-                    pageNumber={index + 1}
-                  />
-                ),
-              )}
-            </Document>
-                </Box>
-              </DialogContentText>
-            </DialogContent>
-       </Container>
-      </Dialog>
+            </Container>
+          </DialogContentText>
+        </DialogContent>
+      </Container>
+    </Dialog>
   );
 }
