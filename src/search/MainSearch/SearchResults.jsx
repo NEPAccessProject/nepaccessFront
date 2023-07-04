@@ -22,7 +22,7 @@ import { styled } from '@mui/material/styles';
 import theme from '../../styles/theme';
 //import Grid from '@mui/material/Grid'; // Grid version 1
 import Grid from '@mui/material/Unstable_Grid2';
-import { InputAdornment, SearchOutlined } from '@mui/icons-material';
+import { InputAdornment, Search, SearchOutlined } from '@mui/icons-material';
 import {
   proximityOptions,
   actionOptions,
@@ -32,6 +32,7 @@ import {
   countyOptions,
 } from '../options';
 import SearchFilter from './SearchFilter';
+import SearchResultOptions from './SearchResultOptions';
 import SearchResultItems from './SearchResultsItems';
 import { makeStyles, withStyles } from '@mui/styles';
 
@@ -130,12 +131,14 @@ export default function SearchResults(props) {
   const classes = useStyles(theme);
   return (
     <>
+      <SearchResultOptions />
+
       <Box
         sx={{
           height: '100%',
         }}
       >
-        <Box padding={1} marginTop={0} marginBottom={1}>
+        {/* <Box padding={1} marginTop={0} marginBottom={1}>
           <Typography
             variant="searchResultTitle"
             paddingTop={1}
@@ -145,7 +148,7 @@ export default function SearchResults(props) {
           >
             Search Results
           </Typography>
-        </Box>
+        </Box> */}
         <Divider />
         <Grid container>
           <Box p={1} marginTop={1} marginBottom={1}>
@@ -261,6 +264,7 @@ export default function SearchResults(props) {
                 <SearchResultItems
                   title="Environmental Impact Statement"
                   id={17704}
+                  publishedYear={2018}
                   status="Pending"
                   content="Probability That Monthly Flow below Lake Ralph Hall Dam at Bakers Creek Exceeds
                       Channel Pool Volume of 175 ac-ft: 62.2% 73.0%Probability That Monthly Flow at North
@@ -277,9 +281,12 @@ export default function SearchResults(props) {
                 />
               </Item>
             </Grid>
-            <Grid>
-              <Item xs={12}>
+            <Grid className={'search-result-grid-item'} border={0}>
+              <Item xs={12}
+                 
+                >
                 <SearchResultItems
+                publishedYear={2020}
                   title="Environmental Impact Statement"
                   id={17704}
                   status="Draft"

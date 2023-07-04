@@ -679,6 +679,34 @@ export default function Search(props) {
       isQuickStartDialogOpen: !searchState.isQuickStartDialogOpen,
   });
 }
+const onSortByChangeHandler = (evt) => {
+  console.log('onSortByChangeHandler', evt.target.value);
+  setSearchState({
+    ...searchState,
+    sortBy: evt.target.value,
+})
+};
+
+const onLimitChangeHandler = (evt) =>{
+  console.log('onLimitChangeHandler', evt.target.value);
+  setSearchState({
+    ...searchState,
+    limit: evt.target.value,
+})
+};
+const onSortDirectionChangeHandler = (evt) =>{
+  console.log('onSortDirectionChangeHandler', evt.target.value);
+  setSearchState({
+    ...searchState,
+    sortDirection: evt.target.value,
+  })
+}
+const onDownloadClick = (evt) => {
+  console.log('onDownloadClick',evt);
+};
+const onSaveSearchResultsClick = (evt) => {
+  console.log('onSaveSearchResultsClick');
+};  
 /*
     get('stats/earliest_year', 'firstYear');
     get('stats/latest_year', 'lastYear');
@@ -720,6 +748,8 @@ const [searchState, setSearchState] = useState({
   proximityDisabled: true,
   proximityOption: null,
   searchOption: 'B',
+  sortBy: 'relevance',
+  sortDirection: 'ASC',
   startComment: null,
   startPublish: null,
   state: [],
@@ -774,6 +804,11 @@ const [searchState, setSearchState] = useState({
     toggleAvailableFilesDialog,
     toggleSearchTipsDialog,
     onChangeHandler,
+    onSortByChangeHandler,
+    onLimitChangeHandler,
+    onSortDirectionChangeHandler,
+    onDownloadClick,
+    onSaveSearchResultsClick,
   };
   //console.log('SEARCH SearchState',searchState);
   // #region Return Method

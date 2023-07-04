@@ -21,6 +21,7 @@ import SearchTipsDialog from './SearchTipDialog';
 import AvailableFilesDialog from './AvailableFilesDialog';
 import QuickStartDialog from './QuickStartDialog';
 import { SearchOutlined } from '@mui/icons-material';
+
 import theme from '../../styles/theme';
 const useStyles = (theme) => ({
   formControl: {},
@@ -55,7 +56,7 @@ export default function SearchHeader(props) {
         layout={'row'}
         spacing={1}
         border={0}
-        borderColor={'#CCC'}
+        borderColor={'#DDD'}
       >
         <Hidden mdDown>
           

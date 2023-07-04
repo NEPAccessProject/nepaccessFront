@@ -1,4 +1,4 @@
-import React, { useState, useEffect,useContext } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import {
   Paper,
   Button,
@@ -20,20 +20,20 @@ import {
 import Grid from '@mui/material/Unstable_Grid2';
 import SearchContext from './SearchContext';
 import PDFViewerDialog from './PDFViewerDialog';
-const handleDownloadClick = (evt,id) => {
+const handleDownloadClick = (evt, id) => {
   evt.preventDefault();
-  console.log('Download ID Value',id)
+  console.log('Download ID Value', id);
 };
 export default function SearchResultItems(props) {
   const { searchState, setSearchState } = useContext(SearchContext);
-  const [isPDFViewOpen,setIsPDFViewOpen] = useState(false);
+  const [isPDFViewOpen, setIsPDFViewOpen] = useState(false);
   const [isContentExpanded, setIsContentExpanded] = useState(false);
-  const { status, id, title, content, link, resultsText,page,pageNumber,numPages } = props;
+  const { status, id, title, content, link, resultsText, page, pageNumber, numPages,publishedYear } = props;
   function onDocumentLoadSuccess({ numPages }) {
-    setSearchState({...searchState,numPages: numPages});
+    setSearchState({ ...searchState, numPages: numPages });
     setNumPages(numPages);
   }
-  function openPDFPreview(evt,id) {
+  function openPDFPreview(evt, id) {
     setIsPDFViewOpen(true);
     evt.preventDefault();
   }
@@ -53,31 +53,51 @@ export default function SearchResultItems(props) {
             <a href={'https://www.nepaccess.org/record-details?id=' + id}>{`${status} ${title}`}</a>
           </Typography>
         </Box>
-        <Grid container xs={12}>
-          <Grid item xs={10}>
+        <Grid
+          flex={1}
+          border={1}
+          borderColor={'#ccc'}
+          alignItems={'center'}
+          justifyContent={'center'}
+          container
+        >
+          <Grid item xs={1} textAlign={'center'}>
+            {' '}
+            <Typography fontWeight={'bold'}>
+              {(publishedYear) ? publishedYear : 'N/A'}
+
+            </Typography>
+          </Grid>
+          <Grid item xs={9}>
             <Container>
               <Box
                 bgcolor="#f4f4f4"
                 padding={1}
-                border={1}
+                border={0}
                 borderColor={'lightgray'}
                 borderRadius={1}
               >
-                {(isContentExpanded) ? content : content.substring(0,100) }
+                {isContentExpanded ? content : content.substring(0, 100)}
               </Box>
-              
             </Container>
             <Container>
-              <Box width={'100%'} alignContent={'center'} textAlign={'center'} onClick={toggleContentExpansion} bgcolor='#A2A5A6' >
-                    <Typography paddingBottom={1} paddingTop={1} color={'#fff'}>Expand to see more...</Typography>
-                </Box>
+              <Box
+                width={'100%'}
+                alignContent={'center'}
+                textAlign={'center'}
+                onClick={toggleContentExpansion}
+                bgcolor="#A2A5A6"
+              >
+                <Typography paddingBottom={1} paddingTop={1} color={'#fff'}>
+                  Expand to see more...
+                </Typography>
+              </Box>
             </Container>
-
           </Grid>
           <Grid item xs={2}>
             <Button
               color="primary"
-              onClick={(evt) => handleDownloadClick(evt,id)}
+              onClick={(evt) => handleDownloadClick(evt, id)}
               sx={{
                 width: '90%',
               }}
@@ -90,7 +110,7 @@ export default function SearchResultItems(props) {
 
             <PDFViewerDialog isOpen={isPDFViewOpen} onDialogClose={closePDFPreview} />
             <Button
-              onClick={(evt) => openPDFPreview(evt,id)}
+              onClick={(evt) => openPDFPreview(evt, id)}
               color={'secondary'}
               sx={{
                 mt: 1,
