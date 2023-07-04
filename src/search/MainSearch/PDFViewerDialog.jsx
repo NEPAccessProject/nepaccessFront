@@ -31,6 +31,7 @@ export default function PDFViewerDialog(props) {
 
   //  const { isOpen, onDialogClose,fileName } = props;
   const [numPages, setNumPages] = useState(null);
+  const [pageNumber, setPageNumber] = useState(1);
   const [fullWidth, setFullWidth] = React.useState(true);
   const [maxWidth, setMaxWidth] = React.useState('md');
   const [isLoaded, setIsLoaded] = useState(false);
@@ -87,10 +88,14 @@ export default function PDFViewerDialog(props) {
                 <Box>
                 {/* {isLoaded ? <CircularProgress /> : ( */}
                   <Document file={samplePDF} onLoadSuccess={onDocumentLoadSuccess}>
+                    <Page pageNumber={1} />
                     {Array.from(new Array(numPages), (el, index) => (
                       <Page key={`page_${index + 1}`} pageNumber={index + 1} />
                     ))}
                   </Document>
+                  <p>
+        Page {pageNumber} of {numPages}
+      </p>
                 {/* )} */}
                 </Box>
             </Container>
