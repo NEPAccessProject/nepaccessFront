@@ -67,7 +67,7 @@ import { Link, Switch, Route, withRouter } from 'react-router-dom';
 import PropTypes from "prop-types";
 import Search from './search/MainSearch/Search.jsx'
 import ImporterAlignment from './ImporterAlignment';
-import Header from './Header'
+import HeaderNav from './Components/HeaderNav'
 import Playground from './examples/Playground';
 import ContextExample from './examples/Context';
 import ReactDropdownExample from './examples/ReactDropdownExample';
@@ -230,7 +230,7 @@ class Main extends React.Component {
             </Helmet>
 
             <div id="header" className={this.getHeaderCss() + this.state.headerLandingCss}>
-                <Header/>
+                <HeaderNav/>
             </div>
             <span>{this.renderRoutes()}</span>
         </div>

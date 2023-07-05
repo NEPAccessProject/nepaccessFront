@@ -22,11 +22,11 @@ import MenuIcon from '@material-ui/icons/Menu';
 import { withMediaQuery } from 'react-responsive';
 import React, { useState, useEffect } from 'react';
 import { Link as RouterLink } from 'react-router-dom';
-import './index.css';
+import '../index.css';
 import { Helmet } from 'react-helmet';
-import Landing from './Landing';
-import CalloutContainer from './CalloutContainer';
-import SearcherLanding from './search/SearcherLanding';
+import Landing from '../Landing';
+import CalloutContainer from '../CalloutContainer';
+import SearcherLanding from '../search/SearcherLanding';
 import MediaQuery from 'react-responsive';
 import Dropdown from 'react-dropdown';
 import { NavLink } from 'react-router-dom/cjs/react-router-dom.min';
@@ -68,29 +68,7 @@ const headersData = [
     href: '/contact',
   },
 ];
-const options = [
-  { value: 'Search', label: 'Search' },
-  {
-    type: 'group',
-    name: 'Search Tips',
-    items: [
-      { value: 'three', label: 'Search Files', className: 'myOptionClassName' },
-      { value: 'four', label: 'Available Documents' },
-    ],
-  },
-  { value: 'About NEPA', label: 'About NEPA' },
 
-  {
-    type: 'group',
-    name: 'group2',
-    items: [
-      { value: 'five', label: 'About NEPAccess' },
-      { value: 'six', label: 'Media' },
-      { value: 'six', label: 'People' },
-    ],
-  },
-  { value: 'contact', label: 'Contact' },
-];
 const useStyles = makeStyles(() => ({
   header: {
     backgroundColor: '#abbdc4',
@@ -317,10 +295,6 @@ export default function HeaderNav() {
   const displayDesktop = (props) => {
     const role = 'user';
     const loggedInDisplay = 'none';
-    const loggedOutDisplay = '';
-    const loggedIn = false;
-    const headerLandingCss = ''; //props.headerLandingCss || '';
-    const currentPage = ''; //props.currentPage || '';
     return (
       <>
         <Toolbar
