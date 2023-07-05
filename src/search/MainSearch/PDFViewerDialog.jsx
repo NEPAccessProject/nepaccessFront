@@ -36,18 +36,10 @@ export default function PDFViewerDialog(props) {
   const [maxWidth, setMaxWidth] = React.useState('md');
   const [isLoaded, setIsLoaded] = useState(false);
   function onDocumentLoadSuccess({ numPages }) {
-    console.log('onDocumentLoadSuccess',numPages);
+    console.log('onDocumentLoadSuccess', numPages);
     setIsLoaded(true);
     setNumPages(numPages);
   }
-
-  //   const handleClickOpen = () => {
-  //     setOpen(true);
-  //   };
-
-  //   const handleClose = () => {
-  //     setOpen(false);
-  //   };
 
   const handleMaxWidthChange = (event) => {
     setMaxWidth(
@@ -57,51 +49,58 @@ export default function PDFViewerDialog(props) {
   };
 
   const handleFullWidthChange = (event) => {
-    console.log('handleFullWidth',event.target.checked);
+    console.log('handleFullWidth', event.target.checked);
     setFullWidth(event.target.checked);
   };
 
   //const {searchState,setSearchState} = useContext(SearchContext);
   const { isOpen, onDialogClose } = props;
   return (
-    <Dialog open={isOpen} fullWidth={fullWidth} maxWidth={maxWidth} onClose={onDialogClose}>
-      <Container>
-        <DialogContent>
-          <DialogTitle>
-            <Grid item xs={1} justifyContent={'center'}>
-              <IconButton onClick={onDialogClose}>
-                <Typography fontSize={'medium'}>X</Typography>
-              </IconButton>
+    <Dialog
+      id="pdf-viewer-dialog"
+      open={isOpen}
+      fullWidth={fullWidth}
+      maxWidth={maxWidth}
+      onClose={onDialogClose}
+    >
+      <DialogContent>
+        <DialogTitle>
+            <Grid container>
+              <Grid item xs={10} textAlign={'left'} justifyContent={'flex-start'} justifyItems={'flex-start'}>
+                <Typography color={'black'} fontSize={18} fontWeight={'bold'}>
+                  PDF Title Here
+                </Typography>
+              </Grid>
+
+<Grid item xs={2} textAlign={'right'}>
+                <IconButton onClick={onDialogClose}>
+                  <Typography fontWeight={'bold'} fontSize={'medium'}>X</Typography>
+                </IconButton>
+</Grid>
+            <Grid item xs={12}>
+            <Typography fontSize={14}>
+              Page {pageNumber} of {numPages}
+            </Typography>
+
             </Grid>
-          </DialogTitle>
-          <DialogContentText>
-            <Box>
-              <Typography color={'white'} fontSize={'xl'}>
-                PDF Title Here
-              </Typography>
-            </Box>
-            <Container sx={{
-                display: 'flex',
-                justifyContent: 'center',
-                alignItems: 'center',
-            }}>
-                <Box>
-                {/* {isLoaded ? <CircularProgress /> : ( */}
-                  <Document file={samplePDF} onLoadSuccess={onDocumentLoadSuccess}>
-                    <Page pageNumber={1} />
-                    {Array.from(new Array(numPages), (el, index) => (
-                      <Page key={`page_${index + 1}`} pageNumber={index + 1} />
-                    ))}
-                  </Document>
-                  <p>
-        Page {pageNumber} of {numPages}
-      </p>
-                {/* )} */}
-                </Box>
+            </Grid>
+        </DialogTitle>
+        <DialogContentText id="pdf-viewer-dialog-content">
+            {/* {isLoaded ? <CircularProgress /> : ( */}
+            <Container id="pdf-viewer-document-container">
+              <Document file={samplePDF} onLoadSuccess={onDocumentLoadSuccess}>
+                <Page pageNumber={pageNumber} />
+                {Array.from(new Array(numPages), (el, index) => (
+                  <Page key={`page_${index + 1}`} pageNumber={index + 1} />
+                ))}
+              </Document>
+              <Typography fontSize={14}>
+              Page {pageNumber} of {numPages}
+            </Typography>
+
             </Container>
-          </DialogContentText>
-        </DialogContent>
-      </Container>
+        </DialogContentText>
+      </DialogContent>
     </Dialog>
   );
 }
