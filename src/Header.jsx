@@ -229,20 +229,8 @@ export default function HeaderNav() {
 
     return (
       <>
-        <Toolbar id="mobile-tool-bar" className={mobileToolbar} elevation={2}>
-          <IconButton
-            id="mobile-icon-button"
-            {...{
-              color: 'black',
-              edge: 'start',
-              color: 'inherit',
-              'aria-label': 'menu',
-              'aria-haspopup': 'true',
-              onClick: handleDrawerOpen,
-            }}
-          >
-            <MenuIcon color="#000" className={menuIcon} />
-          </IconButton>
+        <Toolbar id="mobile-tool-bar" className={mobileToolbar} elevation={1}>
+          
           <Grid
             container
             id="mobile-logo-container"
@@ -253,10 +241,11 @@ export default function HeaderNav() {
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              background: 'rgb(151,171,178)'
+              background: 'rgb(151,171,178)',
             }}
           >
             <img src="logo2022.png" height={61} width={150} alt="NEPAccess Mobile Logo" />
+            
           </Grid>
 
           <Drawer
@@ -273,6 +262,19 @@ export default function HeaderNav() {
           </Drawer>
 
           {/* <div>{getMenuButtons()}</div> */}
+          <IconButton
+            id="mobile-icon-button"
+            {...{
+              color: 'black',
+              edge: 'end',
+              color: 'inherit',
+              'aria-label': 'menu',
+              'aria-haspopup': 'true',
+              onClick: handleDrawerOpen,
+            }}
+          >
+            <MenuIcon color="#000" className={menuIcon} />
+          </IconButton>
         </Toolbar>
       </>
     );
@@ -351,57 +353,54 @@ export default function HeaderNav() {
               id="logo-image"
               src="logo2022.png"
               className={logoImage}
-              height={102}
               width={302}
               alt="NEPAccess Logo"
             />
           </Box>
           <Container
             id="link-container"
-            
             xs={{
               justifyContent: 'flex-start',
               alignItems: 'left',
               marginLeft: '350px',
               backgroundImage: 'url("logo2022.png")',
               // backgroundColor: 'rgb(151,171,178)',
-
             }}
           >
-            <NavLinks/>
+            <NavLinks />
 
-              <span
-                id="admin-span"
-                hidden={!role || role === 'user'}
-                className={loggedInDisplay + ' right-nav-item logged-in'}
-              >
-                <div id="admin-dropdown" className="main-menu-link dropdown">
-                  <Link id="admin-button" className="main-menu-link drop-button" to="/importer">
-                    Admin
+            <span
+              id="admin-span"
+              hidden={!role || role === 'user'}
+              className={loggedInDisplay + ' right-nav-item logged-in'}
+            >
+              <div id="admin-dropdown" className="main-menu-link dropdown">
+                <Link id="admin-button" className="main-menu-link drop-button" to="/importer">
+                  Admin
+                </Link>
+                <i className="fa fa-caret-down"></i>
+                <div className="dropdown-content">
+                  <Link to="/admin" hidden={!(role === 'admin')}>
+                    Admin Panel
                   </Link>
-                  <i className="fa fa-caret-down"></i>
-                  <div className="dropdown-content">
-                    <Link to="/admin" hidden={!(role === 'admin')}>
-                      Admin Panel
-                    </Link>
-                    <Link to="/importer" hidden={!(role === 'curator' || role === 'admin')}>
-                      Import New Documents
-                    </Link>
-                    <Link to="/adminFiles" hidden={!(role === 'curator' || role === 'admin')}>
-                      Find Missing Files
-                    </Link>
-                    <Link to="/approve">Approve Users</Link>
-                    <Link to="/pre_register">Pre-Register Users</Link>
-                    <Link to="/interaction_logs">Interaction Logs</Link>
-                    <Link to="/search_logs">Search Logs</Link>
-                    <Link to="/abouthelpcontents">Database Contents</Link>
-                    <Link to="/stats">Content Statistics</Link>
-                    <Link to="/stat_counts">Stat Counts</Link>
-                    <Link to="/surveys">Surveys</Link>
-                  </div>
+                  <Link to="/importer" hidden={!(role === 'curator' || role === 'admin')}>
+                    Import New Documents
+                  </Link>
+                  <Link to="/adminFiles" hidden={!(role === 'curator' || role === 'admin')}>
+                    Find Missing Files
+                  </Link>
+                  <Link to="/approve">Approve Users</Link>
+                  <Link to="/pre_register">Pre-Register Users</Link>
+                  <Link to="/interaction_logs">Interaction Logs</Link>
+                  <Link to="/search_logs">Search Logs</Link>
+                  <Link to="/abouthelpcontents">Database Contents</Link>
+                  <Link to="/stats">Content Statistics</Link>
+                  <Link to="/stat_counts">Stat Counts</Link>
+                  <Link to="/surveys">Surveys</Link>
                 </div>
-              </span>
-            </Container>
+              </div>
+            </span>
+          </Container>
         </Toolbar>
         {/* <Container id='mobile-content-container'>
             <Container id="mobile-search-container">
@@ -434,19 +433,19 @@ export default function HeaderNav() {
   };
   /* RETURN of the main function */
   return (
-    <Paper id="paper-root" elevation={2}>
       <AppBar
         elevation={1}
         id="header-root-app-bar"
-        sx={{
-          // backgroundColor: 'rgb(151,171,178)',
-
-        }}
+        sx={
+          {
+            // backgroundColor: 'rgb(151,171,178)',
+          }
+        }
       >
-        <MediaQuery maxWidth={960}>{displayMobile()}</MediaQuery>
-        <MediaQuery minWidth={960}>{displayDesktop()}</MediaQuery>
+        <MediaQuery maxWidth={768}>{displayMobile()}</MediaQuery>
+        <MediaQuery minWidth={768}>{displayDesktop()}</MediaQuery>
       </AppBar>
-    </Paper>
+
   );
 }
 
@@ -467,67 +466,93 @@ export function DesktopNavLinks() {
   );
 }
 
-export function NavLinks(){
+export function NavLinks() {
   const [headerLandingCss, setHeaderLandingCss] = useState();
   const [currentPage, setCurrentPage] = useState();
   const [loggedInDisplay, setLoggedInDisplay] = useState('display-none');
   const getHeaderCss = () => {
-    let headerCss = "no-select";
-    if(!currentPage || currentPage === '/') {
-        headerCss += " landing-header";
+    let headerCss = 'no-select';
+    if (!currentPage || currentPage === '/') {
+      headerCss += ' landing-header';
     }
     return headerCss;
-  }
-  
-  return(
-  <div id="">
-              <Helmet>
-                  <meta charSet="utf-8" />
-                  <title>NEPAccess</title>
-                  <meta name="description" content="Bringing NEPA into the 21st Century through the power of data science. Find and engage with data from thousands of environmental review documents." />
-                  <link rel="canonical" href="https://www.nepaccess.org/" />
-              </Helmet>
-  
-              <div id="header" className={getHeaderCss() + headerLandingCss}>
-  
-                  <div id="">
-                  <NavLink currentpage={(currentPage==="/contact").toString()} className="main-menu-link" to="/search">
-                          Search
-                      </NavLink>
-                      <div id="about-dropdown-2" className="main-menu-link dropdown">
-                          <NavLink currentpage={(currentPage==="/search-tips" || currentPage==="/available-documents").toString()} id="about-button-2" className="main-menu-link drop-button" to="/search-tips">
-                              Search Tips
-                          </NavLink>
-                          <i className="fa fa-caret-down"></i>
-                          <div className="dropdown-content">
-                              <Link to="/search-tips">Search Tips</Link>
-                              <Link to="/available-documents">Available Files</Link>
-                          </div>
-                      </div>
-                      <NavLink currentpage={(currentPage==="/about-nepa").toString()} className="main-menu-link" to="/about-nepa">
-                          About NEPA
-                      </NavLink>
-                      <div id="about-dropdown" className="main-menu-link dropdown">
-                          <NavLink currentpage={(currentPage==="/about-nepaccess" || currentPage==="/people" || currentPage==="/media").toString()} id="about-button" className="main-menu-link drop-button" to="/about-nepaccess">
-                              About NEPAccess
-                          </NavLink>
-                          <i className="fa fa-caret-down"></i>
-                          <div className="dropdown-content">
-                              <Link to="/about-nepaccess">About NEPAccess</Link>
-                              <Link to="/media">
-                                  Media
-                              </Link>
-                              <Link to="/people">People</Link>
-                          </div>
-                      </div>
-                                         
-                      <NavLink currentpage={(currentPage==="/contact").toString()} className="main-menu-link" to="/contact">
-                          Contact
-                      </NavLink>
-  
-                  </div>
-                  
-              </div>
+  };
+
+  return (
+    <div id="">
+      <Helmet>
+        <meta charSet="utf-8" />
+        <title>NEPAccess</title>
+        <meta
+          name="description"
+          content="Bringing NEPA into the 21st Century through the power of data science. Find and engage with data from thousands of environmental review documents."
+        />
+        <link rel="canonical" href="https://www.nepaccess.org/" />
+      </Helmet>
+
+      <div id="header" className={getHeaderCss() + headerLandingCss}>
+        <div id="">
+          <NavLink
+            currentpage={(currentPage === '/contact').toString()}
+            className="main-menu-link"
+            to="/search"
+          >
+            Search
+          </NavLink>
+          <div id="about-dropdown-2" className="main-menu-link dropdown">
+            <NavLink
+              currentpage={(
+                currentPage === '/search-tips' || currentPage === '/available-documents'
+              ).toString()}
+              id="about-button-2"
+              className="main-menu-link drop-button"
+              to="/search-tips"
+            >
+              Search Tips
+            </NavLink>
+            <i className="fa fa-caret-down"></i>
+            <div className="dropdown-content">
+              <Link to="/search-tips">Search Tips</Link>
+              <Link to="/available-documents">Available Files</Link>
+            </div>
           </div>
-  )
-  }
+          <NavLink
+            currentpage={(currentPage === '/about-nepa').toString()}
+            className="main-menu-link"
+            to="/about-nepa"
+          >
+            About NEPA
+          </NavLink>
+          <div id="about-dropdown" className="main-menu-link dropdown">
+            <NavLink
+              currentpage={(
+                currentPage === '/about-nepaccess' ||
+                currentPage === '/people' ||
+                currentPage === '/media'
+              ).toString()}
+              id="about-button"
+              className="main-menu-link drop-button"
+              to="/about-nepaccess"
+            >
+              About NEPAccess
+            </NavLink>
+            <i className="fa fa-caret-down"></i>
+            <div className="dropdown-content">
+              <Link to="/about-nepaccess">About NEPAccess</Link>
+              <Link to="/media">Media</Link>
+              <Link to="/people">People</Link>
+            </div>
+          </div>
+
+          <NavLink
+            currentpage={(currentPage === '/contact').toString()}
+            className="main-menu-link"
+            to="/contact"
+          >
+            Contact
+          </NavLink>
+        </div>
+      </div>
+    </div>
+  );
+}

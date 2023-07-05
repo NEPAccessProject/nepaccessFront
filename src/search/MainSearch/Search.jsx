@@ -115,10 +115,8 @@ const summary = {
 
 export default function Search(props) {
   const classes = useStyles(theme);
-  // #region State Declaration
+  const isMobile = useMediaQuery('(max-width:768px)');
 
-
-  // #endregion
   const filterBy = props.filterResultsBy;
   const myRef = React.createRef();
   const doSearch = (terms) => {
@@ -812,27 +810,22 @@ const [searchState, setSearchState] = useState({
   };
   //console.log('SEARCH SearchState',searchState);
   // #region Return Method
+
+
+  console.log('IS MOBILE??',isMobile,(isMobile) ? '55px' : '105px');
   return (
     <SearchContext.Provider value={value}>
       <ThemeProvider theme={theme}>
-        <Container id="search-container" disableGutters={true} maxWidth="xlg" fixed
-          xs={{
-            marginTop: '105px'
-          }}
         
-        >
-
-
           <Grid
-            mt={2}
             // textAlign={'left'}
             // alignContent={'flex-start'}
             spacing={2}
             // justifyContent={'flex-start'}
-            container={true}
-            marginTop= '105px'
+            container
+            marginTop={isMobile ? '55px' : '105px'}
           >
-            <Grid item xs={12}  sx={{}}>
+            <Grid item xs={12}>
                 <Item><SearchHeader /></Item>
 
             </Grid>
@@ -870,7 +863,7 @@ const [searchState, setSearchState] = useState({
             </Grid>
             {/* #endregion */}
           </Grid>
-        </Container>
+        
         ``
         {/* <SearchTipsDialog isOpen={searchState.isSearchTipsDialogIsOpen} /> */}
       </ThemeProvider>
