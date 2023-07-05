@@ -360,8 +360,10 @@ export default function HeaderNav() {
             id="link-container"
             
             xs={{
-              justifyContent: 'flex-start',
-              alignItems: 'left',
+              justifyContent: 'flex-end',
+              border: 2,
+              borderStyle: 'dashed',
+              alignItems: 'right',
               marginLeft: '350px',
               backgroundImage: 'url("logo2022.png")',
               // backgroundColor: 'rgb(151,171,178)',
@@ -480,7 +482,7 @@ export function NavLinks(){
   }
   
   return(
-  <div id="">
+  <Box id="main-header-nav-container">
               <Helmet>
                   <meta charSet="utf-8" />
                   <title>NEPAccess</title>
@@ -488,46 +490,60 @@ export function NavLinks(){
                   <link rel="canonical" href="https://www.nepaccess.org/" />
               </Helmet>
   
-              <div id="header" className={getHeaderCss() + headerLandingCss}>
-  
-                  <div id="">
-                  <NavLink currentpage={(currentPage==="/contact").toString()} className="main-menu-link" to="/search">
-                          Search
-                      </NavLink>
-                      <div id="about-dropdown-2" className="main-menu-link dropdown">
-                          <NavLink currentpage={(currentPage==="/search-tips" || currentPage==="/available-documents").toString()} id="about-button-2" className="main-menu-link drop-button" to="/search-tips">
-                              Search Tips
-                          </NavLink>
-                          <i className="fa fa-caret-down"></i>
-                          <div className="dropdown-content">
-                              <Link to="/search-tips">Search Tips</Link>
-                              <Link to="/available-documents">Available Files</Link>
-                          </div>
-                      </div>
-                      <NavLink currentpage={(currentPage==="/about-nepa").toString()} className="main-menu-link" to="/about-nepa">
-                          About NEPA
-                      </NavLink>
-                      <div id="about-dropdown" className="main-menu-link dropdown">
-                          <NavLink currentpage={(currentPage==="/about-nepaccess" || currentPage==="/people" || currentPage==="/media").toString()} id="about-button" className="main-menu-link drop-button" to="/about-nepaccess">
-                              About NEPAccess
-                          </NavLink>
-                          <i className="fa fa-caret-down"></i>
-                          <div className="dropdown-content">
-                              <Link to="/about-nepaccess">About NEPAccess</Link>
-                              <Link to="/media">
-                                  Media
-                              </Link>
-                              <Link to="/people">People</Link>
-                          </div>
-                      </div>
-                                         
-                      <NavLink currentpage={(currentPage==="/contact").toString()} className="main-menu-link" to="/contact">
-                          Contact
-                      </NavLink>
-  
-                  </div>
-                  
-              </div>
-          </div>
+<Box flexWrap={1} display={'flex'} justifyContent={'flex-end'} border={2}>
+                <Box id="header-box" flex={1} flexGrow={1} flexShrink={1} border={2} className={getHeaderCss() + (headerLandingCss) ? headerLandingCss : ''}
+                  xs={{
+                    border: 1,
+                    justifyContent: 'flex-end',
+                    alignItems: 'center',
+                  }}
+                >
+    
+                    <Box id="header-nav" xs={{
+                      border: 1,
+                      justifyContent: 'flex-end',
+                      justifyItems: 'flex-end',
+                      alignItems: 'flex-end',
+                      backgroundColor: '#ccc',
+                    }}>
+                    <NavLink currentpage={(currentPage==="/contact").toString()} className="main-menu-link" to="/search">
+                            Search
+                        </NavLink>
+                        <div id="about-dropdown-2" className="main-menu-link dropdown">
+                            <NavLink currentpage={(currentPage==="/search-tips" || currentPage==="/available-documents").toString()} id="about-button-2" className="main-menu-link drop-button" to="/search-tips">
+                                Search Tips
+                            </NavLink>
+                            <i className="fa fa-caret-down"></i>
+                            <div className="dropdown-content">
+                                <Link to="/search-tips">Search Tips</Link>
+                                <Link to="/available-documents">Available Files</Link>
+                            </div>
+                        </div>
+                        <NavLink currentpage={(currentPage==="/about-nepa").toString()} className="main-menu-link" to="/about-nepa">
+                            About NEPA
+                        </NavLink>
+                        <div id="about-dropdown" className="main-menu-link dropdown">
+                            <NavLink currentpage={(currentPage==="/about-nepaccess" || currentPage==="/people" || currentPage==="/media").toString()} id="about-button" className="main-menu-link drop-button" to="/about-nepaccess">
+                                About NEPAccess
+                            </NavLink>
+                            <i className="fa fa-caret-down"></i>
+                            <div className="dropdown-content">
+                                <Link to="/about-nepaccess">About NEPAccess</Link>
+                                <Link to="/media">
+                                    Media
+                                </Link>
+                                <Link to="/people">People</Link>
+                            </div>
+                        </div>
+                                           
+                        <NavLink currentpage={(currentPage==="/contact").toString()} className="main-menu-link" to="/contact">
+                            Contact
+                        </NavLink>
+    
+                    </Box>
+                    
+                </Box>
+</Box>
+          </Box>
   )
   }
