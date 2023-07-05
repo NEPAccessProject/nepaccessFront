@@ -47,22 +47,17 @@ export default function SearchResultItems(props) {
 
   return (
     <>
-      <Box>
-        <Box border={0} margin={0} padding={1} paddingLeft={3}>
-          <Typography variant="searchResultSubTitle">
-            <a href={'https://www.nepaccess.org/record-details?id=' + id}>{`${status} ${title}`}</a>
-          </Typography>
-        </Box>
+
+        <Typography variant='searchResultSubTitle'>{status} {title}</Typography>
         <Grid
           flex={1}
-          border={1}
+          border={0}
           borderColor={'#ccc'}
-          alignItems={'center'}
-          justifyContent={'center'}
           container
+          marginTop={2}
+          marginBottom={2}
         >
           <Grid item xs={1} textAlign={'center'}>
-            {' '}
             <Typography fontWeight={'bold'}>
               {(publishedYear) ? publishedYear : 'N/A'}
 
@@ -88,7 +83,7 @@ export default function SearchResultItems(props) {
                 onClick={toggleContentExpansion}
                 bgcolor="#A2A5A6"
               >
-                <Typography paddingBottom={1} paddingTop={1} color={'#fff'}>
+                <Typography fontSize={14} fontWeight={'bold'} paddingBottom={1} paddingTop={1} color={'#fff'}>
                   Expand to see more...
                 </Typography>
               </Box>
@@ -122,7 +117,6 @@ export default function SearchResultItems(props) {
             </Button>
           </Grid>
         </Grid>
-      </Box>
     </>
   );
 }

@@ -812,59 +812,56 @@ const [searchState, setSearchState] = useState({
   // #region Return Method
 
 
-  console.log('IS MOBILE??',isMobile,(isMobile) ? '55px' : '105px');
   return (
     <SearchContext.Provider value={value}>
       <ThemeProvider theme={theme}>
-        
-          <Grid
-            // textAlign={'left'}
-            // alignContent={'flex-start'}
-            spacing={2}
-            // justifyContent={'flex-start'}
-            container
-            marginTop={isMobile ? '55px' : '105px'}
-          >
-            <Grid item xs={12}>
-                <Item><SearchHeader /></Item>
-
-            </Grid>
-            {/* #region SideBarFilters */}
-            <Grid xs={12} md={3} id="side-bar-filters-container">
-              <Paper id="side-bar-filters-paper" elevation={1}>
-                <SearchSideBarFilters />
-              </Paper>
-            </Grid>
-            {/* #endregion */}
-            {/* #region Search Results */}
-            <Grid md={9} xs={12}>
-              <Paper>
-                <Box
-                  sx={{
-                    height: '100%',
-                  }}
-                >
-                  <Divider />
-                 
-                  <Grid container>
-                    <Grid container xs={12}>
-                      <Grid xs={12} container>
-                        <ResponsiveSearchResults
-                          title="Environmental Impact Statement"
-                          id={17704}
-                          status="Final"
-                          content="Probability That Monthly Flow below Lake Ralph Hall Dam at Bakers Creek Exceeds"
-                        />
-                      </Grid>
+        <Container disableGutters={true} id="search-app-container">
+          
+            <Grid
+              // textAlign={'left'}
+              // alignContent={'flex-start'}
+              spacing={2}
+              // justifyContent={'flex-start'}
+              container
+              marginTop={isMobile ? '55px' : '105px'}
+            >
+              <Grid item xs={12}>
+                  <Item><SearchHeader /></Item>
+  
+              </Grid>
+              {/* #region SideBarFilters */}
+              <Grid xs={12} md={3} id="side-bar-filters-container">
+                <Paper id="side-bar-filters-paper" elevation={1}>
+                  <SearchSideBarFilters />
+                </Paper>
+              </Grid>
+              {/* #endregion */}
+              {/* #region Search Results */}
+              <Grid md={9} xs={12}>
+                <Paper>
+                  <Box
+                    sx={{
+                      height: '100%',
+                    }}
+                  >
+                    <Divider />
+                   
+                    <Grid container>
+                     
+                          <ResponsiveSearchResults
+                            title="Environmental Impact Statement"
+                            id={17704}
+                            status="Final"
+                            content="Probability That Monthly Flow below Lake Ralph Hall Dam at Bakers Creek Exceeds"
+                          />
                     </Grid>
-                  </Grid>
-                </Box>
-              </Paper>
+                  </Box>
+                </Paper>
+              </Grid>
+              {/* #endregion */}
             </Grid>
-            {/* #endregion */}
-          </Grid>
-        
-        ``
+  
+        </Container>
         {/* <SearchTipsDialog isOpen={searchState.isSearchTipsDialogIsOpen} /> */}
       </ThemeProvider>
     </SearchContext.Provider>
