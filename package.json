@@ -58,28 +58,14 @@
     "typescript": "^5.1.0"
   },
   "devDependencies": {
-    "@babel/plugin-proposal-private-property-in-object": "^7.16.7",
-    "@storybook/addon-essentials": "^7.0.26",
-    "@storybook/addon-interactions": "7.0.26",
-    "@storybook/addon-links": "7.0.26",
-    "@storybook/blocks": "7.0.26",
-    "@storybook/preset-create-react-app": "7.0.26",
-    "@storybook/react": "7.0.26",
-    "@storybook/react-webpack5": "7.0.26",
-    "@storybook/testing-library": "0.0.14-next.2",
-    "babel-plugin-named-exports-order": "0.0.2",
-    "eslint-plugin-storybook": "^0.6.12",
-    "prop-types": "15.8.1",
-    "webpack": "5.88.1"
+    "@babel/plugin-proposal-private-property-in-object": "^7.16.7"
   },
   "scripts": {
     "start": "react-scripts --openssl-legacy-provider start",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "mockAPI": "json-server --watch ./src/search/mockData/db.json --port 8443",
-    "storybook": "storybook dev -p 6006",
-    "build-storybook": "storybook build"
+    "mockAPI": "json-server --watch ./src/search/mockData/db.json --port 8443"
   },
   "eslintConfig": {
     "extends": "react-app"
