@@ -17,7 +17,7 @@ import {
 // const [maxWidth, setMaxWidth] = React.useState('md');
 // import SearchContext from './SearchContext';
 import { Document, Page } from 'react-pdf';
-
+//https://codesandbox.io/s/pdf-view-l3i46?file=/src/Components/DrawArea.js
 import samplePDF from './example.pdf';
 import { pdfjs } from 'react-pdf';
 

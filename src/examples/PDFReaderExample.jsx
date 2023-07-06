@@ -13,12 +13,17 @@ import { Box,Container } from '@mui/material';
 
 pdfjs.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.js`;
 export default function PDFReaderExample(props) {
-  const {fileName} = props;
-  
+
+  const {fileName} = props;  
   const [numPages, setNumPages] = useState(null);
+
+  useEffect(()=>{
+    props.pageChange(pageNumber);    
+  })
 
   function onDocumentLoadSuccess({ numPages }) {
     setNumPages(numPages);
+    setPageNumber=1;
   }
 
   return (
@@ -26,7 +31,11 @@ export default function PDFReaderExample(props) {
       <Box marginTop={25}>
         <Document
           file={samplePDF}
+          options= {{workerSrc: '/pdf.worker.js'}}
           onLoadSuccess={onDocumentLoadSuccess}
+          onSourceError={(err) => console.log(err)}
+          onSourceSuccess={() => console.log("SUCCESS")}
+          onLoadError={()=>console.log("ERR")}
         >
           {Array.from(
             new Array(numPages),
