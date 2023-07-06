@@ -39,6 +39,7 @@ export default function SearchHeader(props) {
     toggleSearchTipsDialog,
     toggleAvailableFilesDialog,
     toggleQuickStartDialog,
+    onIconClick,
     onChangeHandler,
   } = useContext(SearchContext);
   const {    
@@ -134,7 +135,7 @@ export default function SearchHeader(props) {
               autoFocus
               InputProps={{
                 endAdornment: (
-                  <IconButton onClick={(evt) => onChangeHandler(evt)}>
+                  <IconButton onClick={onIconClick}>
                     <SearchOutlined />
                   </IconButton>
                 ),
