@@ -47,12 +47,10 @@ export default function SearchResultItems(props) {
 
   return (
     <>
-
+        <Divider />
         <Typography variant='searchResultSubTitle'>{status} {title}</Typography>
         <Grid
           flex={1}
-          border={0}
-          borderColor={'#ccc'}
           container
           marginTop={2}
           marginBottom={2}
