@@ -155,12 +155,10 @@ export default function SearchResults(props) {
         <Grid container xs={12}>
           <Grid
             padding={2}
-            flexWrap={'wrap'}
             container
             xs={12}
             flexDirection={'row'}
             flex={1}
-            border={0}
           >
             <Item
               className={classes.itemHeader}
