@@ -76,7 +76,7 @@ const FilterItem = styled(Paper)(({ theme }) => ({
   // textAlign: 'center',
   color: theme.palette.text.secondary,
   elevation: 1,
-  borderRadius: 0,
+  borderRadius: 1,
   mt: 1,
   mb: 1,
   pl: 0,
@@ -135,6 +135,22 @@ export default function Search(props) {
     debouncedSearch(searchState);
   };
 
+function parseTerms(str) {
+    console.log("🚀 ~ file: Search.jsx:138 ~ parseTerms ~ str:", str)
+    if (!str) return str;
+  
+    str = str.replace(/"(.+)"[\s]*~[\s]*([0-9]+)/g, "\"$1\"~$2"); // "this" ~ 100 -> "this"~100
+  
+    // so this regex works correctly, but after replacing, it matches internal single quotes again.
+    // Therefore we shouldn't even run this if there are already double quotes.
+    // If the user is using double quotes already, we don't need to try to help them out anyway.
+    if (!str.includes('"')) {
+      str = str.replace(/([\s]|^)'(.+)'([\s]|$)/g, "$1\"$2\"$3"); // 'this's a mistake' -> "this's a mistake"
+    }
+    console.log("🚀 ~ file: Search.jsx:150 ~ UPDATED parseTerms ~ str:", str)
+    return str;
+  }
+
   const doSearchFromParams = () => {
     var queryString = Globals.getParameterByName('q');
     if (!props.count && (queryString === null || queryString === '')) {
@@ -183,7 +199,8 @@ export default function Search(props) {
   };
 
   const onIconClick = (evt) => {
-    doSearch(titleRaw);
+    console.log('onIconClick clicked', evt.target);
+    doSearch(searchState.titleRaw);
   };
   /** clears and disables proximity search option as well as clearing text */
   const onClearClick = (evt) => {
@@ -259,11 +276,9 @@ export default function Search(props) {
   };
 
   const onInput = (evt) => {
-    console.log("🚀 ~ file: Search.jsx:261 ~ onInput ~ evt.target.name:", evt.target.name);
+    console.log('onIpunt evt.target',evt.target)
     let userInput = evt.target.value;
     let proximityValues = handleProximityValues(userInput);
-    console.log("🚀 ~ file: Search.jsx:268 ~ onInput ~ proximityValues:", proximityValues)
-    console.log('onInput', userInput);
 
     //get the evt.target.name (defined by name= in input)
     //and use it to target the key on our `state` object with the same name, using bracket syntax
@@ -777,6 +792,9 @@ const [searchState, setSearchState] = useState({
 //   setSearchState({...searchState, eis_count: eis_count});
 // }, eis_count);
 
+const debouncedSearch = _.debounce(searchState.titleRaw, 500);
+//     this.debouncedSearch = _.debounce(this.props.search, 300);
+
   const { markup, proximityDisabled, agencyRaw, state, county, proximityOption } = searchState;
   const value = {
     searchState,
@@ -793,6 +811,7 @@ const [searchState, setSearchState] = useState({
     onLocationChange,
     onCountyChange,
     onClearFiltersClick,
+    onIconClick,
     onTitleOnlyChecked,
     // proximityDisabled,
     // agencyRaw,
