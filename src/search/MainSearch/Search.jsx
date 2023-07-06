@@ -792,7 +792,10 @@ const [searchState, setSearchState] = useState({
 //   setSearchState({...searchState, eis_count: eis_count});
 // }, eis_count);
 
-const debouncedSearch = _.debounce(searchState.titleRaw, 500);
+//const debouncedSearch = _.debounce(searchState.titleRaw, 500);
+const debouncedSearch =(func,interval) => {
+  console.log('Debounced search mock,',func,interval)
+}
 //     this.debouncedSearch = _.debounce(this.props.search, 300);
 
   const { markup, proximityDisabled, agencyRaw, state, county, proximityOption } = searchState;

@@ -71,7 +71,8 @@ import HeaderNav from './Components/HeaderNav'
 import Playground from './examples/Playground';
 import ContextExample from './examples/Context';
 import ReactDropdownExample from './examples/ReactDropdownExample';
-import PDFReaderExample from './examples/PDFReaderExample';
+import PDFReaderExample from './examples/PDFViewer/Index';
+import PDFViewerExample from './examples/PDFViewer/Index';
 
 const _ = require('lodash');
 
@@ -289,7 +290,7 @@ class Main extends React.Component {
             <Route path="/grid" component={Search} />
             <Route path="/context" component={ContextExample} />
             <Route path="/dropdown" component={ReactDropdownExample} />
-            <Route path="/pdf" component={PDFReaderExample} />
+            <Route path="/pdf" component={PDFViewerExample} />
             <Route path="/" component={Landing}/>
         </Switch>
         )

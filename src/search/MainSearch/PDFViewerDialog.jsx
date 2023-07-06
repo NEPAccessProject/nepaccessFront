@@ -1,5 +1,6 @@
 import React, { useContext, useState } from 'react';
 import {
+  Button,
   Dialog,
   DialogContext,
   DialogContent,
@@ -18,8 +19,10 @@ import {
 // import SearchContext from './SearchContext';
 import { Document, Page } from 'react-pdf';
 //https://codesandbox.io/s/pdf-view-l3i46?file=/src/Components/DrawArea.js
+//https://react-pdf-viewer.dev/examples/
 import samplePDF from './example.pdf';
 import { pdfjs } from 'react-pdf';
+import PDFViewer from './PDFViewer';
 
 // pdfjs.GlobalWorkerOptions.workerSrc = new URL(
 //   'pdfjs-dist/build/pdf.worker.min.js',
@@ -54,7 +57,7 @@ export default function PDFViewerDialog(props) {
   };
 
   //const {searchState,setSearchState} = useContext(SearchContext);
-  const { isOpen, onDialogClose } = props;
+  const { isOpen, onDialogClose, docId, docTitle } = props;
   return (
     <Dialog
       id="pdf-viewer-dialog"
@@ -65,40 +68,43 @@ export default function PDFViewerDialog(props) {
     >
       <DialogContent>
         <DialogTitle>
-            <Grid container>
-              <Grid item xs={10} textAlign={'left'} justifyContent={'flex-start'} justifyItems={'flex-start'}>
-                <Typography color={'black'} fontSize={18} fontWeight={'bold'}>
-                  PDF Title Here
-                </Typography>
-              </Grid>
-
-<Grid item xs={2} textAlign={'right'}>
-                <IconButton onClick={onDialogClose}>
-                  <Typography fontWeight={'bold'} fontSize={'medium'}>X</Typography>
-                </IconButton>
-</Grid>
-            <Grid item xs={12}>
-            <Typography fontSize={14}>
-              Page {pageNumber} of {numPages}
-            </Typography>
-
+          <Grid container>
+            <Grid item xs={10} textAlign={'left'} justifyContent={'flex-start'} justifyItems={'flex-start'}>
+              <Typography color={'black'} fontSize={18} fontWeight={'bold'}>
+                {(docTitle) ? docTitle : 'Title Placeholder'}
+              </Typography>
             </Grid>
+
+            <Grid item xs={2} textAlign={'right'}>
+              <IconButton onClick={onDialogClose}>
+                <Typography fontWeight={'bold'} fontSize={'medium'}>X</Typography>
+              </IconButton>
             </Grid>
+          </Grid>
         </DialogTitle>
         <DialogContentText id="pdf-viewer-dialog-content">
-            {/* {isLoaded ? <CircularProgress /> : ( */}
-            <Container id="pdf-viewer-document-container">
-              <Document file={samplePDF} onLoadSuccess={onDocumentLoadSuccess}>
-                <Page pageNumber={pageNumber} />
-                {Array.from(new Array(numPages), (el, index) => (
-                  <Page key={`page_${index + 1}`} pageNumber={index + 1} />
-                ))}
-              </Document>
-              <Typography fontSize={14}>
-              Page {pageNumber} of {numPages}
-            </Typography>
+          {/* {isLoaded ? <CircularProgress /> : ( */}
+          <Container id="pdf-viewer-document-container">
+            <PDFViewer/>
+            {/* <Grid flex={1} container>
+              <Grid item justifyContent={'flex-start'} xs={4}><Button variant='outlined' onClick={() => setPageNumber(pageNumber - 1)}>{'<'} Previous Page</Button></Grid>
+              <Grid item xs={4} justifyContent={'center'}>
+                Page {pageNumber} of {numPages}
+              </Grid>
+              <Grid item justifyContent={'flex-end'} xs={4}><Button variant='outlined' onClick={() => setPageNumber(pageNumber + 1)}>Next Page {'>'}</Button></Grid>
 
-            </Container>
+            </Grid>
+            <Document file={samplePDF} onLoadSuccess={onDocumentLoadSuccess}>
+              <Page pageNumber={pageNumber} />
+              {Array.from(new Array(numPages), (el, index) => (
+                <Page key={`page_${index + 1}`} pageNumber={index + 1} />
+              ))}
+            </Document>
+            <Typography fontSize={14}>
+              Page {pageNumber} of {numPages}
+            </Typography> */}
+
+          </Container>
         </DialogContentText>
       </DialogContent>
     </Dialog>
