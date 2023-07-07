@@ -7,6 +7,7 @@ import {
   FormControl,
   MenuItem,
   Select,
+  Divider,
   InputLabel,
   Typography,
 } from '@mui/material';
@@ -60,9 +61,7 @@ export default function SearchResultOptions() {
             <InputLabel id="limit-select-lalbel">Display:</InputLabel>
             <Select
               value={limit}
-              labelId="demo-simple-select-label"
               id="demo-simple-select"
-              label="Display"
               onChange={onLimitChangeHandler}
             >
               <MenuItem value={10}>10</MenuItem>
@@ -105,6 +104,7 @@ export default function SearchResultOptions() {
           <Favorite onClick={onSaveSearchResultsClick} />
         </Grid>
       </Grid>
+      <Divider/>
     </>
   );
 }

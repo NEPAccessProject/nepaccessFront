@@ -5,6 +5,8 @@ import { toolbarPlugin, ToolbarSlot } from '@react-pdf-viewer/toolbar';
 import { thumbnailPlugin } from '@react-pdf-viewer/thumbnail';
 import { defaultLayoutPlugin } from '@react-pdf-viewer/default-layout';
 
+//[TODO][Feature Request] - Feiz would like to see if we can highlight the section in the PDF where the most relevant / first snippet that is displayed is focused and highlighted
+import { highlightPlugin, Trigger } from '@react-pdf-viewer/highlight';
 // Import styles
 import '@react-pdf-viewer/default-layout/lib/styles/index.css';
 import '@react-pdf-viewer/thumbnail/lib/styles/index.css';
@@ -29,10 +31,13 @@ const PDFViewer = (props) => {
 
     return (
         
-
-                <Worker workerUrl={workerUrl}>
-                    <Viewer fileUrl={fileUrl} plugins={[defaultLayoutPluginInstance]} />
-                </Worker>
+                <>
+                {/* [TODO][Feature Request] - The Toolbar should be fixed and should be visible as you scroll */}
+                    <Toolbar />  
+                    <Worker workerUrl={workerUrl}>
+                        <Viewer fileUrl={fileUrl} plugins={[defaultLayoutPluginInstance]} />
+                    </Worker>
+                </>
     );
 };
 
