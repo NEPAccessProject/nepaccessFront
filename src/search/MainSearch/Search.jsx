@@ -720,6 +720,11 @@ const onDownloadClick = (evt) => {
 const onSaveSearchResultsClick = (evt) => {
   console.log('onSaveSearchResultsClick');
 };  
+
+useEffect(()=>{
+  console.log('Use Effect for get counts');
+  getCounts();
+},[]);
 /*
     get('stats/earliest_year', 'firstYear');
     get('stats/latest_year', 'lastYear');
@@ -786,11 +791,11 @@ const [searchState, setSearchState] = useState({
 });
 
 // const {eis_count} = searchState;
-// useEffect(() => {
-//   const eis_count = getCounts();
-//   console.log("🚀 ~ file: Search.jsx:738 ~ useEffect ~ eis_count:", eis_count)
-//   setSearchState({...searchState, eis_count: eis_count});
-// }, eis_count);
+useEffect(() => {
+  const eis_count = getCounts();
+  console.log("🚀 ~ file: Search.jsx:738 ~ useEffect ~ eis_count:", eis_count)
+  setSearchState({...searchState, eis_count: eis_count});
+}, searchState.eis_count);
 
 //const debouncedSearch = _.debounce(searchState.titleRaw, 500);
 const debouncedSearch =(func,interval) => {

@@ -23,7 +23,7 @@ import { Document, Page } from 'react-pdf';
 import samplePDF from './example.pdf';
 import { pdfjs } from 'react-pdf';
 import PDFViewer from './PDFViewer';
-
+import FloatingToolbar from './FloatingToolbar';
 // pdfjs.GlobalWorkerOptions.workerSrc = new URL(
 //   'pdfjs-dist/build/pdf.worker.min.js',
 //   import.meta.url,
@@ -85,7 +85,8 @@ export default function PDFViewerDialog(props) {
         <DialogContentText id="pdf-viewer-dialog-content">
           {/* {isLoaded ? <CircularProgress /> : ( */}
           <Container id="pdf-viewer-document-container">
-            <PDFViewer/>
+            <FloatingToolbar/>
+            {/* <PDFViewer/> */}
             {/* <Grid flex={1} container>
               <Grid item justifyContent={'flex-start'} xs={4}><Button variant='outlined' onClick={() => setPageNumber(pageNumber - 1)}>{'<'} Previous Page</Button></Grid>
               <Grid item xs={4} justifyContent={'center'}>
