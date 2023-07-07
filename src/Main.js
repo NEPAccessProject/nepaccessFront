@@ -71,9 +71,8 @@ import HeaderNav from './Components/HeaderNav'
 import Playground from './examples/Playground';
 import ContextExample from './examples/Context';
 import ReactDropdownExample from './examples/ReactDropdownExample';
-import PDFReaderExample from './examples/PDFViewer/Index';
 import PDFViewerExample from './examples/PDFViewer/Index';
-
+import FloatingToolbar from './search/MainSearch/FloatingToolbar';
 const _ = require('lodash');
 
 class Main extends React.Component {
@@ -120,14 +119,18 @@ class Main extends React.Component {
                     this.refreshNav();
                 });
             } else {
-                localStorage.clear();
-                this.setState({ role: undefined, loggedIn: false, anonymous: true });
+                // localStorage.clear();
+                // this.setState({ role: undefined, loggedIn: false, anonymous: true });
+                this.setState({ role: response.data.toLowerCase(), loggedIn: true, anonymous: false }, () => {
+                    this.refreshNav();
+                });
             }
         })
         .catch((err) => { // Token expired or invalid, or server is down
             console.log(`Error retriving your credentials: ${err.message}`,err.code);
             if(err.code === "ERR_BAD_REQUEST" || "ERR_CONNECTION_REFUSED") {
                 // do nothing
+                console.log(`Error invoking URL ${checkURL}`)
                 //[TODO][REFACTOR] This is only for testing purposes, remove before going live
                 this.setState({ role: 'admin', loggedIn: true, anonymous: false });
             } else { // token problem
@@ -290,7 +293,7 @@ class Main extends React.Component {
             <Route path="/grid" component={Search} />
             <Route path="/context" component={ContextExample} />
             <Route path="/dropdown" component={ReactDropdownExample} />
-            <Route path="/pdf" component={PDFViewerExample} />
+            <Route path="/pdf" component={FloatingToolbar} />
             <Route path="/" component={Landing}/>
         </Switch>
         )

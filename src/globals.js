@@ -77,17 +77,19 @@ const Globals = {
                 window.location.protocol +
                 'localhost:8080/',
             );
-        } else {
+        } 
+
+        else if(window.location.hostname) {
+            this.currentHost = new URL('https://' + window.location.hostname + ':8080/');
+        }
+        else {
             this.currentHost = new URL(
                 window.location.protocol +
                 window.location.hostname +
                 ':8080/nepaBackend/',
             );
         }
-
-        // else if(window.location.hostname) {
-        //     this.currentHost = new URL('https://' + window.location.hostname + ':8080/');
-        // }
+        console.log('Current Host:',this.currenHost);
 
         axios.defaults.headers.common['Content-Type'] = 'application/json;charset=utf-8';
         axios.defaults.headers.common['X-Content-Type-Options'] = 'no-sniff';
