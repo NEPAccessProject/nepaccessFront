@@ -61,7 +61,22 @@ const theme = createTheme({
       fontFamily: 'open sans',
       fontSize: '1.25rem',
       border: 1,
+      color: 'rgb(64,7,162)',
       p: 2,
+      "&:hover": {
+        textDecoration: 'underline',
+        cursor: 'pointer',
+      },
+    },
+    expanderButton:{
+      fontSize: '1.0rem',
+      fontFamily: 'open sans',
+      p:4,
+      color: '#fff',
+      "&:hover": {
+        textDecoration: 'underline',
+        cursor: 'pointer',
+      },
     },
     filterLabel: {
       fontSize: '0.9rem',

@@ -127,10 +127,12 @@ export default function SearchResults(props) {
   const classes = useStyles(theme);
   return (
     <div id="search-results-root">
-      {/* <SearchResultOptions /> */}
-      <Box p={1} marginTop={1} marginBottom={1}>
+      <Grid container flex={1} border={0}>
+        <Grid item xs={12} alignContent={'center'} justifyItems={'center'}><SearchResultOptions /></Grid>
+      </Grid>
+      <Box p={2} border={0} justifyContent={'center'} justifyItems={'center'} alignContent={'center'} marginTop={1} marginBottom={1}>
         <Typography variant="searchResultSubTitle">
-          Lake Ralph Hall Regional Water Supply Reservoir Project
+          <a href="">Lake Ralph Hall Regional Water Supply Reservoir Project</a>
         </Typography>
       </Box>
       <Box

@@ -20,6 +20,7 @@ import {
 import Grid from '@mui/material/Unstable_Grid2';
 import SearchContext from './SearchContext';
 import PDFViewerDialog from './PDFViewerDialog';
+import SearchResultOptions from './SearchResultOptions';
 const handleDownloadClick = (evt, id) => {
   evt.preventDefault();
   console.log('Download ID Value', id);
@@ -70,7 +71,7 @@ export default function SearchResultItems(props) {
                 borderColor={'lightgray'}
                 borderRadius={1}
               >
-                {isContentExpanded ? content : content.substring(0, 100)}
+                {isContentExpanded ? content : content.substring(0, 100) + ((content.length > 100) ? '...' : '')}
               </Box>
             </Container>
             <Container>
@@ -80,9 +81,12 @@ export default function SearchResultItems(props) {
                 textAlign={'center'}
                 onClick={toggleContentExpansion}
                 bgcolor="#A2A5A6"
+                paddingTop={1}
+                paddingBottom={1}
               >
-                <Typography fontSize={14} fontWeight={'bold'} paddingBottom={1} paddingTop={1} color={'#fff'}>
-                  Expand to see more...
+
+                <Typography variant="expanderButton">
+                  Click to see more...
                 </Typography>
               </Box>
             </Container>
