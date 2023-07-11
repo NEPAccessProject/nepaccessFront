@@ -114,6 +114,7 @@ const summary = {
 };
 
 export default function Search(props) {
+  console.log("SEARCH PROPS", props)
   const classes = useStyles(theme);
   const isMobile = useMediaQuery('(max-width:768px)');
 
@@ -517,6 +518,7 @@ function parseTerms(str) {
     });
   };
   const onTypeChecked = (evt) => {
+    console.log("🚀 ~ file: Search.jsx:520 ~ onTypeChecked ~ evt:", evt)
     if (evt.target.name === 'optionsChecked') {
       setSearchState({ ...searchState, [evt.target.name]: evt.target.checked });
     } else if (evt.target.name === 'typeAll' && evt.target.checked) {
@@ -558,9 +560,15 @@ function parseTerms(str) {
     });
   };
 
-  const getCounts = () => {
+  const getFirstYearCount = () => {
     get('stats/earliest_year', 'firstYear');
+  };
+
+  const getLastYearCount = () => {
     get('stats/latest_year', 'lastYear');
+  };
+
+  const getEISDocCounts = () => {
     get('stats/eis_count', 'EISCount');
   };
   const get = (url, stateName) => {
@@ -721,15 +729,6 @@ const onSaveSearchResultsClick = (evt) => {
   console.log('onSaveSearchResultsClick');
 };  
 
-useEffect(()=>{
-  console.log('Use Effect for get counts');
-  getCounts();
-},[]);
-/*
-    get('stats/earliest_year', 'firstYear');
-    get('stats/latest_year', 'lastYear');
-    get('stats/eis_count', 'EISCount');
-    */
 const [searchState, setSearchState] = useState({
   // test: Globals.enum.options,
   firstYear: null,
@@ -748,14 +747,16 @@ const [searchState, setSearchState] = useState({
   countyRaw: [],
   decision: [],
   decisionRaw: [],
+  EISCount: 0,
   endComment: null,
   endPublish: null,
-  eis_count: 0,
   filtersHidden: false,
+  firstYear: null,
   fragmentSizeValue: 2,
   hideOrganization: true,
   iconClassName: 'icon icon--effect',
   isDirty: false,
+  lastYear: null,
   limit: 100,
   markup: true,
   needsComments: false,
@@ -790,12 +791,45 @@ const [searchState, setSearchState] = useState({
   countyOptions: Globals.counties,
 });
 
-// const {eis_count} = searchState;
+//[TODO] a lot of duplication BUT it fixed the reRender Loop. Need to revisit to combine into a singleFunction
 useEffect(() => {
-  const eis_count = getCounts();
-  console.log("🚀 ~ file: Search.jsx:738 ~ useEffect ~ eis_count:", eis_count)
-  setSearchState({...searchState, eis_count: eis_count});
-}, searchState.eis_count);
+//  console.log('USE Effect for searchState:',searchState);
+  //getCounts();
+  getFirstYearCount();
+ // console.log('searchState.lastYear',searchState.lastYear);
+  // console.log('searchState.EISCount',searchState.EISCount);
+  return ()=>{
+//    console.log('USE EFFECT DISMOUNT searchState',searchState);
+  }
+},[searchState.firstYear]);
+
+useEffect(() => {
+  //  console.log('USE Effect for searchState:',searchState);
+    //getCounts();
+    getLastYearCount();
+   // console.log('searchState.lastYear',searchState.lastYear);
+    // console.log('searchState.EISCount',searchState.EISCount);
+    return ()=>{
+  //    console.log('USE EFFECT DISMOUNT searchState',searchState);
+    }
+  },[searchState.lastYear]);
+
+  useEffect(() => {
+    getEISDocCounts();
+    return()=>{
+      //console.log('useEffect getEISCount Dismount state',searchState);
+    }
+
+  },[searchState.EISCount])
+
+  useEffect(()=> {
+    console.log('UseEffect props search',props.search);
+    const debouncedSearch = _.debounce(props.search, 300);
+    const filterBy = props.filterResultsBy;
+    // this.filterBy = _.debounce(this.props.filterResultsBy, 200);
+    const debouncedSuggest = _.debounce(props.suggest, 300);
+  },[props.search])
+
 
 //const debouncedSearch = _.debounce(searchState.titleRaw, 500);
 const debouncedSearch =(func,interval) => {
@@ -834,6 +868,7 @@ const debouncedSearch =(func,interval) => {
     onSortDirectionChangeHandler,
     onDownloadClick,
     onSaveSearchResultsClick,
+    onTypeChecked,
   };
   //console.log('SEARCH SearchState',searchState);
   // #region Return Method
