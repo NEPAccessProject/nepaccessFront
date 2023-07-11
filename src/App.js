@@ -5,8 +5,8 @@ import {Helmet} from 'react-helmet';
 import axios from 'axios';
 
 import SearchProcessResults from './search/SearchProcessResults.js';
-import Search from './search/Search.js';
-
+//import Search from './search/Search.js';
+import Search from './search/MainSearch/Search';
 import Footer from './Footer.js';
 
 import './User/login.css';
@@ -118,8 +118,9 @@ export default class App extends React.Component {
         let rods = 0;
         let nois = 0;
         let scopings = 0;
-
+        console.log('Count Types Fired');
         this.state.searchResults.forEach(process => {
+            console.log("🚀 ~ file: App.js:123 ~ App ~ process:", process)
             process.records.forEach(item => {
                 if(Globals.isFinalType(item.documentType)) {
                     finals++;
@@ -330,7 +331,7 @@ export default class App extends React.Component {
      * using Object.keys(), Object.values(), or Object.entries() 
      */
     buildData = (data) => {
-        // console.log("Building",data);
+        console.log("Building Data",data);
         let processResults = {};
         let newUniqueKey = -1;
         let i = 0;
@@ -416,6 +417,7 @@ export default class App extends React.Component {
 
     // Start a brand new search.
     startNewSearch = (searcherState) => {
+        console.log("🚀 ~ file: App.js:420 ~ App ~ searcherState:", searcherState)
         // console.log("New search");
 
         // Reset page, page size

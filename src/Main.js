@@ -251,7 +251,9 @@ class Main extends React.Component {
             <Route path="/reset" component={Reset}/>
             <Route path="/logout" component={Logout}/>
 
-            <Route path="/search" component={Search}/>
+            {/* <Route path="/search" component={Search}/> */}
+            <Route path="/search" component={App}/>
+
             <Route path="/about-nepa" component={AboutNepa}/>
             <Route path="/about-nepaccess" component={AboutNepaccess}/>
             <Route path="/people" component={People}/>
