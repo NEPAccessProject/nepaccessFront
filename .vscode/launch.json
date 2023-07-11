@@ -7,45 +7,68 @@
         {
             "name": "Attach to Edge",
             "port": 3000,
+            "url": "http://localhost:3000",
             "request": "attach",
             "type": "msedge",
-            "webRoot": "${workspaceFolder}\\src\\"
+            "webRoot": "${workspaceFolder}//nepaccessFront",
+            "preLaunchTask": "npm: start"
         },
         {
-            "name": "Launch Program",
-            "program": "${workspaceFolder}/app.js",
-            "request": "launch",
-            "skipFiles": [
-                "<node_internals>/**"
-            ],
-            "type": "node"
+            "name": "Master - Attach to Edge",
+            "port": 3001,
+            "url": "http://localhost:3001",
+            "request": "attach",
+            "type": "msedge",
+            "webRoot": "${workspaceFolder}//nepaccessFront-master//",
+            "preLaunchTask": "npm: start"
         },
-        
+        {
+            "type": "browse-lite",
+            "request": "launch",
+            "name": "Browse Lite: Launch",
+            "url": "http://localhost:3000/",
+            "webRoot": "${workspaceFolder}//nepaccessFront//"
+        },
+        {
+            "name": "Launch Chrome",
+            "request": "launch",
+            "type": "chrome",
+            "url": "http://localhost:3000",
+            "webRoot": "${workspaceFolder}//nepaccessFront//"
+        },
         {
             "name": "Launch Edge",
             "request": "launch",
             "type": "msedge",
             "url": "http://localhost:3000",
-            "port": 3000,
-            "webRoot": "${workspaceFolder}/src"
+            "webRoot": "${workspaceFolder}//nepaccessFront//",
+            "preLaunchTask": "npm: start",
+            "cwd": "${workspaceFolder}//nepaccessFront//"
         },
         {
-            "type": "node",
+            "name": "Master - Launch Edge",
             "request": "launch",
-            "name": "Launch NODE Debug",
-            "skipFiles": [
-                "<node_internals>/**"
-            ],
-            "program": "${workspaceFolder}\\src\\index.js"
-        },
-        {
-            "name": "msedge",
             "type": "msedge",
+            "url": "http://localhost:3001",
+            "webRoot": "${workspaceFolder}//nepaccessFront-master//",
+            "preLaunchTask": "npm: start",
+            "cwd": "${workspaceFolder}//nepaccessFront-master//"
+        },
+
+        {
+            "name": "Launch Edge Master",
             "request": "launch",
-            "url": "http://localhost:3000",      // create-react-app's default port 3000
-            "webRoot": "${workspaceRoot}/src",
-            "preLaunchTask": "npm run start"        // Add prelaunch Task npm: start (defined in tasks.json)
-        }
-          
+            "type": "msedge",
+            "url": "http://localhost:3001",
+            "webRoot": "${workspaceFolder}//nepaccessFront-master//",
+            "preLaunchTask": "npm: start",
+            "cwd": "${workspaceFolder}//nepaccessFront-master//"
+        },
+        {
+            "command": "npm start",
+            "name": "Run npm start",
+            "request": "launch",
+            "type": "node-terminal"
+        },     
     ]
 }
