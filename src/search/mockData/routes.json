@@ -1,0 +1,8 @@
+{
+  "/geojson/get_all_state_county/*": "/get_all_state_county",
+  "/stats/get_all_state_county/*": "/get_all_state_county",
+  "/user/get_role/*": "/get_role",
+  "/stats/earliest_year/*": "/earliest_year",
+  "/stats/latest_year/*": "/latest_year",
+  "/stats/eis_count/*": "/eis_count"
+}
