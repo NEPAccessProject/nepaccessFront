@@ -247,7 +247,7 @@ export default function SearchSideBarFilters(props) {
             // value={searchState.agencyRaw}
             variant="standard"
             // menuIsOpen={true}
-            onChange={agencyOptions}
+            onChange={onCooperatingAgencyChange}
             getOptionLabel={(agencyOptions) => agencyOptions.label}
             renderInput={(params) => (
               <TextField
