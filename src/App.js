@@ -106,7 +106,7 @@ export default class App extends React.Component {
     setPageInfo = (page, pageSize) => {
         this._page = page;
         this._pageSize = pageSize;
-        // console.log("page, pageSize",this._page,this._pageSize);
+        console.log("page, pageSize",this._page,this._pageSize);
         this._searchId = this._searchId + 1;
         this.gatherPageHighlightsDebounced(this._searchId, this._searcherState, this.state.outputResults);
     }
@@ -159,7 +159,7 @@ export default class App extends React.Component {
             axios.get(url).then(response => {
                 if(response.data && response.data[0]) {
                     for(let i = 0; i < response.data.length; i++) {
-                        // console.log(response.data[i].count); // TODO: use count
+                        console.log(response.data[i].count); // TODO: use count
                         let json = JSON.parse(response.data[i]['geojson']);
                         json.style = {};
                         json.sortPriority = 0;
@@ -185,7 +185,7 @@ export default class App extends React.Component {
 
                     let sortedData = response.data.sort((a, b) => parseInt(a.sortPriority) - parseInt(b.sortPriority));
                     
-                    // console.log("Called for geodata", sortedData);
+                    console.log("Called for geodata", sortedData);
                     this.setState({
                         geoResults: sortedData,
                         geoLoading: false
@@ -204,7 +204,7 @@ export default class App extends React.Component {
     * Sorts by existing sort/asc values before updating state for a more responsive UX. 
     * Gets highlights for current page whenever it's called. */
     filterResultsBy = (searcherState) => {
-        // console.log("Filtering");
+        console.log("Filtering");
         this._searcherState = searcherState; // for live filtering
         // Only filter if there are any results to filter
         if(this.state.searchResults && this.state.searchResults.length > 0) {
@@ -239,7 +239,7 @@ export default class App extends React.Component {
 
     /** Sort, then highlight */
     sortDataByFieldThenHighlight = (field, ascending) => {
-        // console.log("Sorting");
+        console.log("Sorting");
         this.setState({
             // searchResults: this.state.searchResults.sort((a, b) => (a[field] > b[field]) ? 1 : -1)
             searching: true,
@@ -289,9 +289,9 @@ export default class App extends React.Component {
 
     /** Assign any existing highlights from the first-page highlight pass, which is now done before full record population */
     mergeHighlights = (data) => {
-        // console.log("Merge highlights",data, this.state.searchResults);
+        console.log("Merge highlights",data, this.state.searchResults);
         if(!this.state.searchResults || !this.state.searchResults[0]) {
-            // console.log("Nothing here yet");
+            console.log("Nothing here yet");
             return data;
         }
 
@@ -304,13 +304,13 @@ export default class App extends React.Component {
                         && this.state.searchResults[i].records[j].plaintext[0]
                     ) {
                         let same = data[i].records[j].id === this.state.searchResults[i].records[j].id;
-                        // console.log("Same?", same, data[i].records[j].id, this.state.searchResults[i].records[j].id);
+                        console.log("Same?", same, data[i].records[j].id, this.state.searchResults[i].records[j].id);
                         if(same) {
                             data[i].records[j].plaintext = this.state.searchResults[i].records[j].plaintext;
-                            // console.log("Assigned plaintext", this.state.searchResults[i].records[j].plaintext);
+                            console.log("Assigned plaintext", this.state.searchResults[i].records[j].plaintext);
                         }
                     } else {
-                        // console.log("Doesn't exist");
+                        console.log("Doesn't exist");
                     }
                 }
             }
@@ -418,7 +418,7 @@ export default class App extends React.Component {
     // Start a brand new search.
     startNewSearch = (searcherState) => {
         console.log("🚀 ~ file: App.js:420 ~ App ~ searcherState:", searcherState)
-        // console.log("New search");
+        console.log("New search");
 
         // Reset page, page size
         this._page = 1;
@@ -480,7 +480,7 @@ export default class App extends React.Component {
             return;
         }
 
-        // console.log("Start search");
+        console.log("Start search");
 
 		this.setState({
             // Fresh search, fresh results
@@ -509,8 +509,10 @@ export default class App extends React.Component {
             } else if(searcherState.searchOption && searcherState.searchOption === "B") {
                 searchUrl = new URL('text/search_top', Globals.currentHost);
             }
+            console.log("🚀 ~ file: App.js:511 ~ App ~ searchUrl:", searchUrl)
 
             this._searchTerms = searcherState.titleRaw;
+            console.log("🚀 ~ file: App.js:515 ~ App ~ searcherState:", searcherState)
 
             // Update query params
             // We could also probably clear them on reload (component will unmount) if anyone wants
@@ -521,6 +523,7 @@ export default class App extends React.Component {
 			let dataToPass = { 
 				title: this._searchTerms
             };
+            console.log('Data to Pass Title',dataToPass);
 
             // OPTION: If we restore a way to use search options for faster searches, we'll assign here
             if(this.state.useSearchOptions) {
@@ -542,6 +545,7 @@ export default class App extends React.Component {
             }
 
             dataToPass.title = postProcessTerms(dataToPass.title);
+            console.log('dataToPass Search ', dataToPass);
 
             // Proximity search from UI - surround with quotes, append ~#
             if(!this.state.searcherInputs.proximityDisabled && this.state.searcherInputs.proximityOption)
@@ -551,7 +555,7 @@ export default class App extends React.Component {
                         dataToPass.title = 
                             ("\"" + dataToPass.title + "\"~" + this.state.searcherInputs.proximityOption.value);
                     } catch(e) {
-                        
+                        e.printStackTrace();
                     }
                 }
             }
@@ -559,15 +563,16 @@ export default class App extends React.Component {
             //Send the AJAX call to the server
             let shouldContinue = true;
 
-            // console.log("Search init");
+            console.log("Search init for url " + searchUrl);
             axios({
                 method: 'POST', // or 'PUT'
                 url: searchUrl,
                 data: dataToPass
             }).then(response => {
+                console.log("Search got response with a status of " + response.status + " response: ",response);
                 let responseOK = response && response.status === 200;
                 if (responseOK) {
-                    // console.log("Initial search results returned");
+                    console.log("Initial search results returned");
                     return response.data;
                 } else if (response.status === 204) {  // Probably invalid query due to misuse of *, "
                     this.setState({
@@ -576,6 +581,7 @@ export default class App extends React.Component {
                     return null;
                 } else if(response.status === 403) {
                     // Not authorized
+                    console.warn('Search Request was not authorized')
                     Globals.emitEvent('refresh', {
                         loggedIn: false
                     });
@@ -589,7 +595,7 @@ export default class App extends React.Component {
             }).then(currentResults => {
                 let _data = [];
                 if(currentResults && currentResults[0] && currentResults[0].doc) {
-                    // console.log("Raw results",currentResults);
+                    console.log("Raw results",currentResults);
                     
                     _data = currentResults
                     // .filter((result) => { // Soft rollout logic
@@ -633,7 +639,7 @@ export default class App extends React.Component {
                     let processResults = {};
                     processResults = this.buildData(_data);
                     _data = processResults;
-                    // console.log("Process oriented results flattened",_data);
+                    console.log("Process oriented results flattened",_data);
 
                     // At this point we don't need the hashmap design anymore, it's just very fast for its purpose.
                     // Now we have to iterate through all of it anyway, and it makes sense to put it in an array.
@@ -642,7 +648,7 @@ export default class App extends React.Component {
                         searchResults: _data,
                         outputResults: _data,
                     }, () => {
-                        // console.log("All results", _data);
+                        console.log("All results", _data);
                     
                         // title-only (or blank search===no text search at all): return
                         if(Globals.isEmptyOrSpaces(dataToPass.title) || 
@@ -668,7 +674,7 @@ export default class App extends React.Component {
                         }
                     });
                 } else {
-                    // console.log("No results");
+                    console.log("No results for " + this._searchTerms);
                     this.setState({
                         searching: false,
                         searchResults: [],
@@ -677,6 +683,7 @@ export default class App extends React.Component {
                     });
                 }
             }).catch(error => { // Server down or 408 (timeout)
+                console.error('Error searching for ' + this._searchTerms + ' error ' + error.response);
                 if(error.response && error.response.status === 408) {
                     this.setState({
                         networkError: 'Request has timed out.'
@@ -712,11 +719,12 @@ export default class App extends React.Component {
 
     /** Populates full results without text highlights and then starts the highlighting process */
     initialSearch = () => {
+        console.log('Is mounted? ' + this._mounted);
         if(!this._mounted){ // User navigated away or reloaded
             return;
         }
 
-        // console.log("initialSearch");
+        console.log("initialSearch");
 
         let searchUrl = new URL('text/search_no_context', Globals.currentHost);
 
@@ -760,7 +768,7 @@ export default class App extends React.Component {
 
         //Send the AJAX call to the server
 
-        // console.log("Search init");
+        console.log("Search init");
         
         axios({
             method: 'POST', // or 'PUT'
@@ -835,12 +843,12 @@ export default class App extends React.Component {
                     resultsText: _data.length + " Results",
                 }, () => {
                     this.filterResultsBy(this._searcherState);
-                    // console.log("Mapped data",_data);
+                    console.log("Mapped data",_data);
 
                     this.countTypes();
                 });
             } else {
-                // console.log("No results");
+                console.log("No results");
                 this.setState({
                     searching: false,
                     searchResults: [],
@@ -889,7 +897,7 @@ export default class App extends React.Component {
                     terms: _terms
                 }
             }).then(response => {
-                // console.log("Suggester response", response);
+                console.log("Suggester response", response);
     
                 this.setState({
                     // lookupResult: response.data
@@ -960,7 +968,7 @@ export default class App extends React.Component {
                 return;
             }
             
-            // console.log("terms, last", this._searchTerms, this.state.lastSearchedTerm);
+            console.log("terms, last", this._searchTerms, this.state.lastSearchedTerm);
 
             if(!this._searchTerms) {
                 this._searchTerms = this.state.lastSearchedTerm;
@@ -988,7 +996,7 @@ export default class App extends React.Component {
                 }
             }).then(parsedJson => {
                 if(parsedJson){
-                    // console.log("Adding highlights", parsedJson);
+                    console.log("Adding highlights", parsedJson);
                     let allResults = this.state.searchResults;
 
                     // Iterate through records until we find the correct one (sort/filter could change index within card)
@@ -1015,7 +1023,7 @@ export default class App extends React.Component {
                         // Run our filter + sort which will intelligently populate outputResults from updated searchResults
                         // and update the table
                         this.filterResultsBy(this._searcherState);
-                        // console.log("All done with page highlights: all results, displayed results", 
+                        console.log("All done with page highlights: all results, displayed results");
                         //     allResults, currentResults);
                     });
                 }
@@ -1051,7 +1059,7 @@ export default class App extends React.Component {
                 _inputs = {titleRaw: Globals.getParameterByName("q")};
             }
         }
-        // console.log("Gathering page highlights", searchId, this._page, this._pageSize);
+        console.log("Gathering page highlights", searchId, this._page, this._pageSize);
         if(!this._mounted){ // User navigated away or reloaded
             return; // cancel search
         }
@@ -1084,7 +1092,7 @@ export default class App extends React.Component {
                     // Push first lucene ID and filename
                     if(!Globals.isEmptyOrSpaces(currentResults[i].records[j].name)) {
 
-                        // console.log("Pushing",i,j,currentResults[i].records[j].id);
+                        console.log("Pushing",i,j,currentResults[i].records[j].id);
 
                         // Need to skip this entry on both sides if it already has plaintext.
                         // If it has any, then skip here - we can get more on demand elsewhere, in separate logic.
@@ -1094,7 +1102,7 @@ export default class App extends React.Component {
                             let firstFilename = currentResults[i].records[j].name.split(">")[0];
                             let firstLuceneId = [currentResults[i].records[j].luceneIds[0]];
 
-                            // console.log("First filename, record ID and lucene ID", 
+                            console.log("First filename, record ID and lucene ID"), 
                             //     firstFilename, currentResults[i].records[j].id, firstLuceneId);
 
                             _unhighlighted.push(
@@ -1104,7 +1112,7 @@ export default class App extends React.Component {
                                 }
                             );
                         } else {
-                            // console.log("Adding skip ID " + [currentResults[i].records[j].id]);
+                            console.log("Adding skip ID " + [currentResults[i].records[j].id]);
                             mustSkip[currentResults[i].records[j].id] = true;
                         }
                     }
@@ -1127,7 +1135,7 @@ export default class App extends React.Component {
                 fragmentSizeValue: _inputs.fragmentSizeValue
             };
 
-            // console.log("For backend",dataToPass);
+            console.log("For backend",dataToPass);
             
             //Send the AJAX call to the server
             axios({
@@ -1144,7 +1152,7 @@ export default class App extends React.Component {
             }).then(parsedJson => {
                 if(parsedJson){
 
-                    // console.log("Adding highlights", parsedJson);
+                    console.log("Adding highlights", parsedJson);
 
                     let allResults = this.state.searchResults;
 
@@ -1153,11 +1161,11 @@ export default class App extends React.Component {
                         for(let j = 0; j < currentResults[i].records.length; j++) {
                             // If search is interrupted, updatedResults[i] may be undefined (TypeError)
                             if(!Globals.isEmptyOrSpaces(currentResults[i].records[j].name)){
-                                // console.log("Assigning",i,j,currentResults[i].records[j].name);
+                                console.log("Assigning",i,j,currentResults[i].records[j].name);
 
                                 if(mustSkip[currentResults[i].records[j].id]) {
                                     // do nothing; skip
-                                    // console.log("Skipping ID " + [currentResults[i].records[j].id]);
+                                    console.log("Skipping ID " + [currentResults[i].records[j].id]);
                                 } else {
                                     // Instead of currentResults[i].records[j].id, use the stored index 
                                     //     currentResults[i].originalIndex for record j);
@@ -1212,7 +1220,7 @@ export default class App extends React.Component {
                 _inputs = {titleRaw: Globals.getParameterByName("q")};
             }
         }
-        // console.log("Gathering page highlights", searchId, this._page, this._pageSize);
+        console.log("Gathering page highlights", searchId, this._page, this._pageSize);
         if(!this._mounted){ // User navigated away or reloaded
             return; // cancel search
         }
@@ -1243,7 +1251,7 @@ export default class App extends React.Component {
                 // Push first lucene ID and filename
                 if(!Globals.isEmptyOrSpaces(currentResults[i].records[j].name)) {
 
-                    // console.log("Pushing",i,j,currentResults[i].records[j].id);
+                    console.log("Pushing",i,j,currentResults[i].records[j].id);
 
                     // Need to skip this entry on both sides if it already has plaintext.
                     // If it has any, then skip here - we can get more on demand elsewhere, in separate logic.
@@ -1253,8 +1261,7 @@ export default class App extends React.Component {
                         let firstFilename = currentResults[i].records[j].name.split(">")[0];
                         let firstLuceneId = [currentResults[i].records[j].luceneIds[0]];
 
-                        // console.log("First filename, record ID and lucene ID", 
-                        //     firstFilename, currentResults[i].records[j].id, firstLuceneId);
+                        console.log("First filename, record ID and lucene ID",firstFilename, currentResults[i].records[j].id, firstLuceneId);
 
                         _unhighlighted.push(
                             {
@@ -1263,7 +1270,7 @@ export default class App extends React.Component {
                             }
                         );
                     } else {
-                        // console.log("Adding skip ID " + [currentResults[i].records[j].id]);
+                        console.log("Adding skip ID " + [currentResults[i].records[j].id]);
                         mustSkip[currentResults[i].records[j].id] = true;
                     }
                 }
@@ -1292,7 +1299,7 @@ export default class App extends React.Component {
                 fragmentSizeValue: _inputs.fragmentSizeValue
             };
 
-            // console.log("For backend",dataToPass);
+            console.log("For backend",dataToPass);
 
             //Send the AJAX call to the server
             axios({
@@ -1308,7 +1315,7 @@ export default class App extends React.Component {
                 }
             }).then(parsedJson => {
                 if(parsedJson){
-                    // console.log("Adding highlights", parsedJson);
+                    console.log("Adding highlights", parsedJson);
 
                     // TODO: If we want to avoid checking every ID until we run out of highlights,
                     // data structures and a lot more must be changed
@@ -1320,10 +1327,10 @@ export default class App extends React.Component {
                         for(let j = 0; j < currentResults[i].records.length; j++) {
                             // If search is interrupted, updatedResults[i] may be undefined (TypeError)
                             if(!Globals.isEmptyOrSpaces(currentResults[i].records[j].name)){
-                                // console.log("Assigning",i,j,currentResults[i].records[j].name);
+                                console.log("Assigning",i,j,currentResults[i].records[j].name);
 
                                 if(mustSkip[currentResults[i].records[j].id]) {
-                                    // console.log("Skipping ID " + [currentResults[i].records[j].id]);
+                                    console.log("Skipping ID " + [currentResults[i].records[j].id]);
                                 } else {
                                     currentResults[i].records[j].plaintext = parsedJson[x];
                                     allResults[currentResults[i].originalIndex].records[j].plaintext = parsedJson[x];
@@ -1336,7 +1343,7 @@ export default class App extends React.Component {
                     // Verify one last time we want this before we actually commit to these results,
                     // otherwise it could be jarring UX to setState here
                     if(searchId < this._searchId) {
-                        // console.log("There's another search call happening");
+                        console.log("There's another search call happening");
                         return;
                     } else {
                         // Fin
@@ -1349,8 +1356,7 @@ export default class App extends React.Component {
                             // resultsText: resultsText, 
                             shouldUpdate: true
                         }, () => {
-                            // console.log("All done with page highlights: all results, displayed results", 
-                            //     allResults, currentResults);
+                            console.log("All done with page highlights: all results, displayed results", allResults, currentResults);
                         });
                     }
                 }
@@ -1407,9 +1413,9 @@ export default class App extends React.Component {
 		})
 		.finally(() => {
             this.setState({loaded:true});
-			// console.log("Returning... " + result);
+			console.log("Returning... " + result);
 		});
-		// console.log("App check");
+		console.log("App check");
     }
     
     /** Scroll to bottom on page change and populate full table with latest results */
@@ -1439,9 +1445,9 @@ export default class App extends React.Component {
 
 
     displayedRowsUnpopulated = () => {
-        // console.log("Checking displayed rows...");
+        console.log("Checking displayed rows...");
         for(let i = 0; i < this.state.displayRows.length; i++) {
-            // console.log(this.state.displayRows[i].data);
+            console.log(this.state.displayRows[i].data);
             if(this.state.displayRows[i].data.plaintext.length === 0){
                 console.log("No text.  Should populate.");
                 return true;
@@ -1663,7 +1669,7 @@ export default class App extends React.Component {
         // Option: Rehydrate old search results and everything?
         try {
             const rehydrate = JSON.parse(persist.getItem('results'));
-            // console.log("Old results", rehydrate);
+            console.log("Old results", rehydrate);
             this.setState(
                 rehydrate
             );
@@ -1675,7 +1681,7 @@ export default class App extends React.Component {
     }
     
     async componentWillUnmount() {
-        // console.log("Unmount app");
+        console.log("Unmount app");
         this._mounted = false;
 
         // Option: Rehydrate only if not interrupting a search?

@@ -10,6 +10,7 @@ import {
   Divider,
   InputLabel,
   Typography,
+  FormLabel,
 } from '@mui/material';
 import {
   SortOutlined,
@@ -58,10 +59,10 @@ export default function SearchResultOptions() {
         </Grid>
         <Grid item md={2} justifyContent={'flex-end'}>
           <FormControl>
-            <InputLabel id="limit-select-lalbel">Display:</InputLabel>
+            <InputLabel id="number-of-results-select-label" itemID='number-of-results-select' >Display:</InputLabel>
             <Select
               value={limit}
-              id="demo-simple-select"
+              id="number-of-results-select"
               onChange={onLimitChangeHandler}
             >
               <MenuItem value={10}>10</MenuItem>

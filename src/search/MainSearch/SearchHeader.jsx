@@ -64,7 +64,7 @@ export default function SearchHeader(props) {
           <Grid item xs={12} md={2}>
             <Box
               id="search-text-grid-item"
-              backgroundColor="transparent"
+              // backgroundColor="transparent"
               height={115}
               borderRadius={0}
               borderRight={1}

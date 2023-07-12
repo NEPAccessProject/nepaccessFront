@@ -117,9 +117,10 @@ export default function Search(props) {
   console.log("SEARCH PROPS", props)
   const classes = useStyles(theme);
   const isMobile = useMediaQuery('(max-width:768px)');
-
+ const {search,suggest,count,finalCount,noiCount} = props;
   const filterBy = props.filterResultsBy;
   const myRef = React.createRef();
+  
   const doSearch = (terms) => {
     console.log('doSearch terms', terms);
     setSearchState({
@@ -133,6 +134,7 @@ export default function Search(props) {
       surveyDone: false,
       isDirty: true,
     });
+    search(searchState);
     debouncedSearch(searchState);
   };
 
@@ -260,7 +262,7 @@ function parseTerms(str) {
   const onKeyUp = (evt) => {
     if (evt.keyCode === 13) {
       //evt.preventDefault();
-      doSearch(titleRaw);
+      doSearch(searchState.titleRaw);
     }
   };
   /** For some reason, without this, calendars stay open after tabbing past them.
@@ -573,7 +575,7 @@ function parseTerms(str) {
   };
   const get = (url, stateName) => {
     const _url = new URL(url, Globals.currentHost);
-    console.log('Calling URL',_url);
+    //console.log('Calling URL',_url);
     axios({
       url: _url,
       method: 'GET',
