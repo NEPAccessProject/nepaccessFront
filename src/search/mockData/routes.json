@@ -1,8 +1,12 @@
 {
-  "/geojson/get_all_state_county/*": "/get_all_state_county",
-  "/stats/get_all_state_county/*": "/get_all_state_county",
-  "/user/get_role/*": "/get_role",
-  "/stats/earliest_year/*": "/earliest_year",
-  "/stats/latest_year/*": "/latest_year",
-  "/stats/eis_count/*": "/eis_count"
+    "/geojson/get_all_state_county/": "/get_all_state_county",
+    "/stats/get_all_state_county/": "/get_all_state_county",
+    "/user/get_role/": "/get_role",
+    "/stats/earliest_year/": "/earliest_year",
+    "/stats/latest_year/": "/latest_year",
+    "/stats/eis_count/": "/eis_count",
+    "/test/check/" : "/check",
+    "/text/search_no_content/": "/search_no_content",
+    "/text/get_highlightsFVH/": "/get_highlightsFVH",
+    "/text/search_top": "/search_stop"   
 }
