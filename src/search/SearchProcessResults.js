@@ -7,8 +7,7 @@ import SearchResultsMap from './SearchResultsMap.js';
 
 import Globals from '../globals.js';
 
-import { ReactTabulator } from 'react-tabulator';
-import { reactFormatter } from "react-tabulator";
+import { ReactTabulator,reactFormatter } from 'react-tabulator';
 import 'react-tabulator/lib/styles.css'; // required styles
 import 'react-tabulator/lib/css/tabulator_site.min.css'; // theme
 
@@ -37,6 +36,8 @@ export default class SearchProcessResults extends React.Component {
     offsetY = null;
 
     constructor(props) {
+        console.log('SearchProcess Results Props',props);
+        console.log('Received Results', props.results);
         super(props);
         this.state = {
             showContext: true,
@@ -55,6 +56,7 @@ export default class SearchProcessResults extends React.Component {
                 )
             }
         ];
+        console.log('results this._columns',this._columns)
         
         this.options = {
             selectable:false,
@@ -225,7 +227,7 @@ export default class SearchProcessResults extends React.Component {
                 return (
                     <div className="sidebar-results">
                         <div id="process-results">
-                            <div className="tabulator-holder">
+                            <div className="-holder">
                                 <h2 id="results-label">
                                     {this.props.resultsText}
                                 </h2>
@@ -247,7 +249,7 @@ export default class SearchProcessResults extends React.Component {
 
                     <div id="process-results">
 
-                        <div className="tabulator-holder">
+                        <div className="-holder">
 
                             <div className="results-count-holder">
                                 <h2 id="results-label" className="inline">
@@ -296,7 +298,7 @@ export default class SearchProcessResults extends React.Component {
                             
                             {/* {this.props.searching ? <>Please wait...</> : <></>} */}
 
-                            <ReactTabulator
+                            <React
                                 ref={ref => (this.ref = ref)}
                                 data={this.props.results}
                                 columns={this._columns}
@@ -312,7 +314,7 @@ export default class SearchProcessResults extends React.Component {
         }
         catch (e) {
             if(e instanceof TypeError){
-                // Tabulator trying to render new results before it switches to new column definitions
+                //  trying to render new results before it switches to new column definitions
                 console.error("TypeError",e);
             } else {
                 console.error(e);

@@ -28,7 +28,7 @@ export default class App extends React.Component {
 			state: [],
 			needsComments: false,
 			needsDocument: false,
-            limit: 1000000
+            limit: 100
 		},
         searchResults: [],
         outputResults: [],
@@ -54,10 +54,12 @@ export default class App extends React.Component {
     
     constructor(props){
         super(props);
+        console.log('APP.js Props',props)
         this.endRef = React.createRef();
         // this.getGeoDebounced = _.debounce(this.getGeoData,1000);
         this.getGeoDebounced = _.debounce(this.getAllGeoData,1000);
         this.gatherPageHighlightsDebounced = _.debounce(this.gatherPageHighlights, 1000);
+        
     }
 
     // Necessary for on-demand highlighting per page
@@ -153,13 +155,14 @@ export default class App extends React.Component {
 
     /** Get all state/county geodata. Doesn't hit backend if we have the data in state. */
     getAllGeoData = () => {
+        console.log('getting Geo Date')
         if(!this.state.geoResults || !this.state.geoResults[0]) {
             let url = Globals.currentHost + "geojson/get_all_state_county";
 
             axios.get(url).then(response => {
                 if(response.data && response.data[0]) {
+                    console.log(`Received ${response.data.length} geoJSON responses  `);
                     for(let i = 0; i < response.data.length; i++) {
-                        console.log(response.data[i].count); // TODO: use count
                         let json = JSON.parse(response.data[i]['geojson']);
                         json.style = {};
                         json.sortPriority = 0;
@@ -185,7 +188,7 @@ export default class App extends React.Component {
 
                     let sortedData = response.data.sort((a, b) => parseInt(a.sortPriority) - parseInt(b.sortPriority));
                     
-                    console.log("Called for geodata", sortedData);
+                    console.log(` Got ${sortedData.length} sorted geo results`);
                     this.setState({
                         geoResults: sortedData,
                         geoLoading: false
@@ -195,7 +198,13 @@ export default class App extends React.Component {
                         geoLoading: false
                     });
                 }
-            });
+            }).catch((err)=>{
+                console.error('Error retriving GeoJSON ',err)
+                this.setState({
+                    geoLoading: false,
+                    geoResults: []
+                })
+            })
         }
     }
 
@@ -417,8 +426,7 @@ export default class App extends React.Component {
 
     // Start a brand new search.
     startNewSearch = (searcherState) => {
-        console.log("🚀 ~ file: App.js:420 ~ App ~ searcherState:", searcherState)
-        console.log("New search");
+        console.log("Starting New Search with searcherState:", searcherState)
 
         // Reset page, page size
         this._page = 1;
@@ -475,12 +483,12 @@ export default class App extends React.Component {
 
     /** Just get the top results quickly before launching the "full" search with initialSearch() */
     startSearch = (searcherState) => {
+        console.log('start search starting with searcherState',searcherState);
         Globals.emitEvent('new_search');
         if(!this._mounted){ // User navigated away or reloaded
             return;
         }
 
-        console.log("Start search");
 
 		this.setState({
             // Fresh search, fresh results
@@ -1391,12 +1399,14 @@ export default class App extends React.Component {
 		let result = false;
 		axios.post(checkURL)
 		.then(response => {
+            console.log('Recived response from check call',response)
 			result = response && response.status === 200;
 			this.setState({
 				verified: result,
 			})
 		})
 		.catch((err) => { // This will catch a 403 from the server from a malformed/expired JWT, will also fire if server down
+            console.error(`Error calling the check endpoint`,err);
 			if(!err.response){ // server isn't responding
 				this.setState({
 					networkError: Globals.errorMessage.default,
@@ -1415,7 +1425,6 @@ export default class App extends React.Component {
             this.setState({loaded:true});
 			console.log("Returning... " + result);
 		});
-		console.log("App check");
     }
     
     /** Scroll to bottom on page change and populate full table with latest results */
@@ -1570,7 +1579,7 @@ export default class App extends React.Component {
 
 	render() {
 		if(this.state.verified){
-
+            console.log('returing outputResults', this.state.outputResults)
 			return (
                 <>
 				<div id="app-content" className="footer-content">
@@ -1598,8 +1607,11 @@ export default class App extends React.Component {
                         noiCount={this._noiCount}
                         rodCount={this._rodCount}
                         scopingCount={this._scopingCount}
-                    />
-                    <SearchProcessResults 
+                        results={this.state.outputResults} 
+                        geoResults={this.state.geoResults}
+
+/>
+                    {/* <SearchProcessResults 
                         sort={this.sort}
                         informAppPage={this.setPageInfo}
                         gatherSpecificHighlights={this.gatherSpecificHighlights}
@@ -1618,7 +1630,7 @@ export default class App extends React.Component {
                         exportToSpreadsheet={this.exportToCSV}
                         isMapHidden={this.state.isMapHidden}
                         toggleMapHide={this.toggleMapHide}
-                    />
+                    />  */}
 				</div>
                 <div ref={this.endRef} />
                 <Footer id="footer"></Footer>
@@ -1675,7 +1687,7 @@ export default class App extends React.Component {
             );
         }
         catch(e) {
-            console.error('Error rehydrating - Component did mount', e);
+            //console.error('Error rehydrating - Component did mount', e);
             // do nothing
         }
     }
@@ -1685,9 +1697,9 @@ export default class App extends React.Component {
         this._mounted = false;
 
         // Option: Rehydrate only if not interrupting a search?
-        // if(!this.state.searching){
+        if(!this.state.searching){
             persist.setItem('results', JSON.stringify(this.state));
-        // }
+        }
     }
 	
 }

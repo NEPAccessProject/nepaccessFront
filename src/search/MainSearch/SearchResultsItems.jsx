@@ -29,7 +29,7 @@ export default function SearchResultItems(props) {
   const { searchState, setSearchState } = useContext(SearchContext);
   const [isPDFViewOpen, setIsPDFViewOpen] = useState(false);
   const [isContentExpanded, setIsContentExpanded] = useState(false);
-  const { status, id, title, content, link, resultsText, page, pageNumber, numPages,publishedYear } = props;
+  const {result } = props;
   function onDocumentLoadSuccess({ numPages }) {
     setSearchState({ ...searchState, numPages: numPages });
     setNumPages(numPages);
@@ -48,9 +48,31 @@ export default function SearchResultItems(props) {
 
   return (
     <>
+    
         <Divider />
-        <Typography variant='searchResultSubTitle'>{status} {title}</Typography>
-        <Grid
+        {/* <Typography variant='searchResultSubTitle'>{status} {title}</Typography> */}
+        <h2>results</h2>
+        {JSON.stringify(result)}
+          {result.map((record,idx)=> {
+            return(
+              <>
+              <h2>Record {idx}</h2>
+              {Object.keys(record).map((key,id)=> {
+                return(
+                  <>
+                    <div><b>{key}</b> {record[key]}</div>
+                  </>
+                )
+
+              })
+              
+              }
+              
+              </>
+            )
+          }
+          )}
+        {/* <Grid
           flex={1}
           container
           marginTop={2}
@@ -101,10 +123,6 @@ export default function SearchResultItems(props) {
             >
               Download
             </Button>
-            {/* <Document file="url('Appendix A_ProjectLocationMap.pdf')" onLoadSuccess={onDocumentLoadSuccess}>
-              <Page pageNumber={pageNumber} />
-            </Document> */}
-
             <PDFViewerDialog isOpen={isPDFViewOpen} onDialogClose={closePDFPreview} />
             <Button
               onClick={(evt) => openPDFPreview(evt, id)}
@@ -118,7 +136,7 @@ export default function SearchResultItems(props) {
               Preview{' '}
             </Button>
           </Grid>
-        </Grid>
+        </Grid> */}
     </>
   );
 }

@@ -117,7 +117,8 @@ export default function Search(props) {
   console.log("SEARCH PROPS", props)
   const classes = useStyles(theme);
   const isMobile = useMediaQuery('(max-width:768px)');
- const {search,suggest,count,finalCount,noiCount} = props;
+ const {search,suggest,count,finalCount,noiCount,results} = props;
+  console.log("🚀 ~ file: Search.jsx:121 ~ Search ~ results:", results)
   const filterBy = props.filterResultsBy;
   const myRef = React.createRef();
   
@@ -913,10 +914,7 @@ const debouncedSearch =(func,interval) => {
                     <Grid container>
                      
                           <ResponsiveSearchResults
-                            title="Environmental Impact Statement"
-                            id={17704}
-                            status="Final"
-                            content="Probability That Monthly Flow below Lake Ralph Hall Dam at Bakers Creek Exceeds"
+                            results={results}
                           />
                     </Grid>
                   </Box>
