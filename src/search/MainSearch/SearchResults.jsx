@@ -123,109 +123,26 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+const sortByRelevance = (a,b) => {
+  return a.relevance > b.relevance;
+}
+
 export default function SearchResults(props) {
   const classes = useStyles(theme);
   const {results} = props;
-//  console.log("🚀 ~ file: SearchResults.jsx:129 ~ SearchResults ~ results:", results)
+  const sortedResults = (results && results.length) ?  results.sort(sortByRelevance) : [];
+
+  //  console.log("🚀 ~ file: SearchResults.jsx:129 ~ SearchResults ~ results:", results)
   return (
     <div id="search-results-root">
-      <Grid container flex={1} border={0}>
+      {/* <Grid container flex={1} border={0}>
         <Grid item xs={12} alignContent={'center'} justifyItems={'center'}><SearchResultOptions /></Grid>
-      </Grid>
-        {/* <Box padding={1} marginTop={0} marginBottom={1}>
-          <Typography
-            variant="searchResultTitle"
-            paddingTop={1}
-            paddingBottom={1}
-            marginTop={2}
-            marginBottom={2}
-          >
-            Search Results
-          </Typography>
-        </Box> */}
-        <Divider />
-        { results.map((result,idx)=>{
+      </Grid> */}
+       
+        { sortedResults.map((result,idx)=>{
         return ( 
         <Grid key={idx} container xs={12}>
-          <Grid
-            padding={2}
-            container
-            xs={12}
-            flexDirection={'row'}
-            flex={1}
-          >
-            <Item
-              className={classes.itemHeader}
-              sx={{
-                margin: 0.5,
-                padding: 1,
-                elevation: 1,
-              }}
-            >
-              Status: <b>{result.decision}</b>
-            </Item>
-            <Item
-              className={classes.itemHeader}
-              sx={{
-                margin: 0.5,
-                padding: 1,
-                elevation: 1,
-              }}
-            >
-              Date: <b>{result.commentDate}</b>
-            </Item>
-            <Item
-              className={classes.itemHeader}
-              sx={{
-                margin: 0.5,
-                padding: 1,
-                elevation: 1,
-              }}
-            >
-              State: <b>{result.state}</b>
-            </Item>
-            <Item
-              className={classes.itemHeader}
-              sx={{
-                margin: 0.5,
-                padding: 1,
-                elevation: 1,
-              }}
-            >
-              County: <b>{result.county}</b>
-            </Item>
-            <Item
-              className={classes.itemHeader}
-              sx={{
-                margin: 0.5,
-                padding: 1,
-                elevation: 1,
-              }}
-            >
-              Action: <b>{result.action}</b>
-            </Item>
-            <Item
-              className={classes.itemHeader}
-              sx={{
-                margin: 0.5,
-                padding: 1,
-                elevation: 1,
-              }}
-            >
-              Decision <b>{result.decision}</b>
-            </Item>
-            <Item
-              className={classes.itemHeader}
-              sx={{
-                margin: 0.5,
-                padding: 1,
-                elevation: 1,
-              }}
-            >
-              Action: <b>{result.action}</b>
-            </Item>
-
-          </Grid>
+          <SearchResult result={result}/>
           <Grid id="search-result-item-grid-container" container xs={12}>
             <Item>
              {
@@ -239,11 +156,88 @@ export default function SearchResults(props) {
                 )
                 })
               }
-            </Item>       
+              <Divider/>
+            </Item>
           </Grid>
         </Grid>
         )})}
         
     </div>
   );
+}
+
+export function SearchResult(props){
+  const classes = useStyles(theme);
+  const {result} = props; 
+  return(
+    <Grid
+    padding={2}
+    container
+    xs={12}
+    flexDirection={'row'}
+    flex={1}
+  >
+    <Item
+      className={classes.itemHeader}
+      sx={{
+        margin: 0.5,
+        padding: 1,
+        elevation: 1,
+      }}
+    >
+      Status: <b>{(result.decision) ? result.decision : "N/A"}</b>
+    </Item>
+    <Item
+      className={classes.itemHeader}
+      sx={{
+        margin: 0.5,
+        padding: 1,
+        elevation: 1,
+      }}
+    >
+      Date: <b>{(result.commentDate) ? result.commentDate : "N/A" }</b>
+    </Item>
+    <Item
+      className={classes.itemHeader}
+      sx={{
+        margin: 0.5,
+        padding: 1,
+        elevation: 1,
+      }}
+    >
+      State: <b>{(result.state) ? result.state : "N/A"}</b>
+    </Item>
+    <Item
+      className={classes.itemHeader}
+      sx={{
+        margin: 0.5,
+        padding: 1,
+        elevation: 1,
+      }}
+    >
+      County: <b>{(result.county) ? result.county : "N/A"}</b>
+    </Item>
+    <Item
+      className={classes.itemHeader}
+      sx={{
+        margin: 0.5,
+        padding: 1,
+        elevation: 1,
+      }}
+    >
+      Action: <b>{(result.action) ? result.action : "N/A"}</b>
+    </Item>
+    <Item
+      className={classes.itemHeader}
+      sx={{
+        margin: 0.5,
+        padding: 1,
+        elevation: 1,
+      }}
+    >
+      Decision <b>{(result.decision) ? result.decision : "N/A"}</b>
+    </Item>
+
+  </Grid>
+  )
 }

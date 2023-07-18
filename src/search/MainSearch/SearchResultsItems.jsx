@@ -25,49 +25,49 @@ const handleDownloadClick = (evt, id) => {
   evt.preventDefault();
   console.log('Download ID Value', id);
 };
-const sortByYear = (a,b)=>{
-//  console.log('sorting record dates a: ',a,'B:',b);
+const sortByDate = (a,b)=>{
   return a.commentDate > b.commentDate;
 }
 export default function SearchResultItems(props){
   //  console.log("🚀 ~ file: SearchResultsItems.jsx:29 ~ SearchResultItems ~ props:", props)
   const { searchState, setSearchState } = useContext(SearchContext);
-  const { records } = props;
-  //  console.log("🚀 ~ file: SearchResultsItems.jsx:33 ~ SearchResultItems ~ records:", records)
-  const sortedRecords = records.sort(sortByYear);
-  console.log("🚀 ~ file: SearchResultsItems.jsx:38 ~ SearchResultItems ~ sortedRecords:", sortedRecords)
+  let { records } = props;
+  const sortedRecords = records.sort(sortByDate);
 
   return (
     <>
-
-      {sortedRecords.map((record, idx) => {
-        return (
-
-          <div key={idx}>
-            {
-              <div key={idx}>
-                <SearchResultItem record={record} />
-              </div>
-            }
-          </div>
-        )
-      })
-      }
-
+     <Box minHeight={'100vh'}>
+        {sortedRecords.map((record, idx) => {
+          return (
+  
+            <div key={idx}>
+              {
+                <div key={idx}>
+                  <SearchResultItem record={record} />
+                  <Divider/>
+                </div>
+              }
+            </div>
+          )
+        })
+        }
+  
+     </Box>
     </>
   )
 }
 
 export function SearchResultItem(props) {
-  const { searchState, setSearchState } = useContext(SearchContext);
   const [isPDFViewOpen, setIsPDFViewOpen] = useState(false);
   const [isContentExpanded, setIsContentExpanded] = useState(false);
-  const { record } = props;
-  function onDocumentLoadSuccess({ numPages }) {
+  const context = useContext(SearchContext);
+  const {searchState,setSearchState} = context;
+  const { record } = props;  function onDocumentLoadSuccess({ numPages }) {
     setSearchState({ ...searchState, numPages: numPages });
     setNumPages(numPages);
   }
   function openPDFPreview(evt, id) {
+    console.log(`Open PDF for ID: ${id}`);
     setIsPDFViewOpen(true);
     evt.preventDefault();
   }
@@ -76,6 +76,7 @@ export function SearchResultItem(props) {
   }
   function toggleContentExpansion(evt) {
     evt.preventDefault();
+    console.log(`Open toggleContentExpansion for ID: ${id}`);
     setIsContentExpanded(!isContentExpanded);
   }
 
@@ -85,7 +86,7 @@ export function SearchResultItem(props) {
   const content = "orem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Donec et odio pellentesque diam volutpat. Adipiscing commodo elit at imperdiet dui accumsan sit amet. Morbi tincidunt ornare massa eget egestas purus. Tempus quam pellentesque nec nam aliquam sem et tortor consequat. Tortor posuere ac ut consequat semper viverra. Sollicitudin aliquam ultrices sagittis orci a scelerisque purus semper. Porta nibh venenatis cras sed felis eget velit aliquet. Elementum eu facilisis sed odio morbi quis commodo odio aenean. Metus dictum at tempor commodo. Massa vitae tortor condimentum lacinia quis vel eros donec. Mauris a diam maecenas sed. Diam in arcu cursus euismod. Vulputate sapien nec sagittis aliquam. Ipsum dolor sit amet consectetur. Nibh praesent tristique magna sit amet purus gravida quis. Commodo viverra maecenas accumsan lacus vel facilisis volutpat est velit. Porta non pulvinar neque laoreet suspendisse interdum consectetur."
   return (
     <>
-      <Typography variant='searchResultSubTitle'>{documentType} - {title}</Typography>
+      <Typography variant='searchResultSubTitle' padding={2}>{documentType} - {title}</Typography>
       <Grid
         flex={1}
         container

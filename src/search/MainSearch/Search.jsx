@@ -8,7 +8,7 @@ import ResponsiveSearchResults from './SearchResults';
 import SearchContext from './SearchContext';
 import SearchSideBarFilters from './SearchSideBarFilters';
 import theme from '../../styles/theme';
-import {Document, Page, pdfjs} from 'react-pdf';
+import { Document, Page, pdfjs } from 'react-pdf';
 import {
   Paper,
   Button,
@@ -44,6 +44,7 @@ import {
 } from '../options';
 import { ThemeProvider, styled } from '@mui/material/styles';
 import SearchHeader from './SearchHeader';
+import { useLocation, useParams } from 'react-router-dom'
 
 import axios from 'axios';
 const _ = require('lodash');
@@ -114,14 +115,14 @@ const summary = {
 };
 
 export default function Search(props) {
-//  console.log("SEARCH PROPS", props)
+  //  console.log("SEARCH PROPS", props)
   const classes = useStyles(theme);
   const isMobile = useMediaQuery('(max-width:768px)');
- const {search,suggest,count,finalCount,noiCount,results} = props;
-//  console.log("🚀 ~ file: Search.jsx:121 ~ Search ~ results:", results)
+  const { search, suggest, count, finalCount, noiCount, results } = props;
+  //  console.log("🚀 ~ file: Search.jsx:121 ~ Search ~ results:", results)
   const filterBy = props.filterResultsBy;
   const myRef = React.createRef();
-  
+
   const doSearch = (terms) => {
     console.log('doSearch terms', terms);
     setSearchState({
@@ -139,12 +140,12 @@ export default function Search(props) {
     debouncedSearch(searchState);
   };
 
-function parseTerms(str) {
+  function parseTerms(str) {
     console.log("🚀 ~ file: Search.jsx:138 ~ parseTerms ~ str:", str)
     if (!str) return str;
-  
+
     str = str.replace(/"(.+)"[\s]*~[\s]*([0-9]+)/g, "\"$1\"~$2"); // "this" ~ 100 -> "this"~100
-  
+
     // so this regex works correctly, but after replacing, it matches internal single quotes again.
     // Therefore we shouldn't even run this if there are already double quotes.
     // If the user is using double quotes already, we don't need to try to help them out anyway.
@@ -301,13 +302,13 @@ function parseTerms(str) {
   const toggleSearchTipDialogClose = (isOpen) => {
     isOpen == true
       ? setSearchState({
-          ...searchState, // keep all other key-value pairs
-          isSearchTipsDialogIsOpen: false, // update the value of specific key
-        })
+        ...searchState, // keep all other key-value pairs
+        isSearchTipsDialogIsOpen: false, // update the value of specific key
+      })
       : setSearchState({
-          ...prevState, // keep all other key-value pairs
-          isSearchTipsDialogIsOpen: true, // update the value of specific key
-        });
+        ...prevState, // keep all other key-value pairs
+        isSearchTipsDialogIsOpen: true, // update the value of specific key
+      });
   };
   const onDialogOpen = () => {
     console.log('onDialogOpen');
@@ -483,7 +484,7 @@ function parseTerms(str) {
       agencyRaw: evt,
     });
   };
-  
+
   const onCooperatingAgencyChange = (evt) => {
     console.log('onCooperatingAgencyChange', evt.target.value);
     var agencyLabels = [];
@@ -681,170 +682,190 @@ function parseTerms(str) {
   };
 
   const toggleSearchTipsDialog = () => {
-    console.log('toggleSearchTipsDialog with',searchState.isSearchTipsDialogIsOpen);
+    console.log('toggleSearchTipsDialog with', searchState.isSearchTipsDialogIsOpen);
     setSearchState({
       ...searchState,
       isSearchTipsDialogIsOpen: !searchState.isSearchTipsDialogIsOpen,
     });
-    console.log('toggleSearchTipsDialog after',searchState.isSearchTipsDialogIsOpen);
+    console.log('toggleSearchTipsDialog after', searchState.isSearchTipsDialogIsOpen);
   };
   const toggleAvailableFilesDialog = () => {
     console.log('toggleAvailableFiltersDialog');
     setSearchState({
       ...searchState,
       isAvailableFiltersDialogOpen: !searchState.isAvailableFiltersDialogOpen,
-  });
-}
+    });
+  }
   const toggleQuickStartDialog = () => {
     console.log('toggleQuickStartDialog');
     setSearchState({
       ...searchState,
       isQuickStartDialogOpen: !searchState.isQuickStartDialogOpen,
-  });
-}
-const onSortByChangeHandler = (evt) => {
-  console.log('onSortByChangeHandler', evt.target.value);
-  setSearchState({
-    ...searchState,
-    sortBy: evt.target.value,
-})
-};
-
-const onLimitChangeHandler = (evt) =>{
-  console.log('onLimitChangeHandler', evt.target.value);
-  setSearchState({
-    ...searchState,
-    limit: evt.target.value,
-})
-};
-const onSortDirectionChangeHandler = (evt) =>{
-  console.log('onSortDirectionChangeHandler', evt.target.value);
-  setSearchState({
-    ...searchState,
-    sortDirection: evt.target.value,
-  })
-}
-const onDownloadClick = (evt) => {
-  console.log('onDownloadClick',evt);
-};
-const onSaveSearchResultsClick = (evt) => {
-  console.log('onSaveSearchResultsClick');
-};  
-
-const [searchState, setSearchState] = useState({
-  // test: Globals.enum.options,
-  firstYear: null,
-  lastYear: null,
-  eis_count :0,
-  isQuickStartDialogOpen: false,
-  isSearchTipsDialogIsOpen: false,
-  isAvailableFiltersDialogOpen: false,
-  action: [],
-  actionRaw: [],
-  agency: [],
-  agencyRaw: [],
-  cooperatingAgency: [],
-  cooperatingAgencyRaw: [],
-  county: [],
-  countyRaw: [],
-  decision: [],
-  decisionRaw: [],
-  EISCount: 0,
-  endComment: null,
-  endPublish: null,
-  filtersHidden: false,
-  firstYear: null,
-  fragmentSizeValue: 2,
-  hideOrganization: true,
-  iconClassName: 'icon icon--effect',
-  isDirty: false,
-  lastYear: null,
-  limit: 100,
-  markup: true,
-  needsComments: false,
-  needsDocument: false,
-  numPages: 0,
-  offset: 0,
-  optionsChecked: true,
-  proximityDisabled: true,
-  proximityOption: null,
-  searchOption: 'B',
-  sortBy: 'relevance',
-  sortDirection: 'ASC',
-  startComment: null,
-  startPublish: null,
-  state: [],
-  stateRaw: [],
-  stateOptions: Globals.locations,
-  surveyChecked: true,
-  surveyDone: true,
-  surveyResult: "Haven't searched yet",
-  test: Globals.anEnum.options,
-  titleRaw: '',
-  tooltipOpen: undefined,
-  typeAll: true,
-  typeDraft: false,
-  typeEA: false,
-  typeFinal: false,
-  typeNOI: false,
-  typeOther: false,
-  typeROD: false,
-  typeScoping: false,
-  countyOptions: Globals.counties,
-});
-
-//[TODO] a lot of duplication BUT it fixed the reRender Loop. Need to revisit to combine into a singleFunction
-useEffect(() => {
-//  console.log('USE Effect for searchState:',searchState);
-  //getCounts();
-  getFirstYearCount();
- // console.log('searchState.lastYear',searchState.lastYear);
-  // console.log('searchState.EISCount',searchState.EISCount);
-  return ()=>{
-//    console.log('USE EFFECT DISMOUNT searchState',searchState);
+    });
   }
-},[searchState.firstYear]);
+  const onSortByChangeHandler = (evt) => {
+    console.log('onSortByChangeHandler', evt.target.value);
+    setSearchState({
+      ...searchState,
+      sortBy: evt.target.value,
+    })
+  };
 
-useEffect(() => {
-  //  console.log('USE Effect for searchState:',searchState);
+  const onLimitChangeHandler = (evt) => {
+    console.log('onLimitChangeHandler', evt.target.value);
+    setSearchState({
+      ...searchState,
+      limit: evt.target.value,
+    })
+  };
+  const onSortDirectionChangeHandler = (evt) => {
+    console.log('onSortDirectionChangeHandler', evt.target.value);
+    setSearchState({
+      ...searchState,
+      sortDirection: evt.target.value,
+    })
+  }
+  const onDownloadClick = (evt) => {
+    console.log('onDownloadClick', evt);
+  };
+  const onSaveSearchResultsClick = (evt) => {
+    console.log('onSaveSearchResultsClick');
+  };
+
+  // const queryParamsLocation = useLocation().search;
+  // const queryParamTitleRaw = new URLSearchParams(queryParamsLocation).get('q');
+  // console.log("🚀 ~ file: Search.jsx:841 ~ useEffect ~ query:", queryParamTitleRaw)
+
+
+  const [searchState, setSearchState] = useState({
+    // test: Globals.enum.options,
+    firstYear: null,
+    lastYear: null,
+    eis_count: 0,
+    isQuickStartDialogOpen: false,
+    isSearchTipsDialogIsOpen: false,
+    isAvailableFiltersDialogOpen: false,
+    action: [],
+    actionRaw: [],
+    agency: [],
+    agencyRaw: [],
+    cooperatingAgency: [],
+    cooperatingAgencyRaw: [],
+    county: [],
+    countyRaw: [],
+    decision: [],
+    decisionRaw: [],
+    EISCount: 0,
+    endComment: null,
+    endPublish: null,
+    filtersHidden: false,
+    firstYear: null,
+    fragmentSizeValue: 2,
+    hideOrganization: true,
+    iconClassName: 'icon icon--effect',
+    isDirty: false,
+    lastYear: null,
+    limit: 100,
+    markup: true,
+    needsComments: false,
+    needsDocument: false,
+    numPages: 0,
+    offset: 0,
+    optionsChecked: true,
+    proximityDisabled: true,
+    proximityOption: null,
+    searchOption: 'B',
+    sortBy: 'relevance',
+    sortDirection: 'ASC',
+    startComment: null,
+    startPublish: null,
+    state: [],
+    stateRaw: [],
+    stateOptions: Globals.locations,
+    surveyChecked: true,
+    surveyDone: true,
+    surveyResult: "Haven't searched yet",
+    test: Globals.anEnum.options,
+    titleRaw: "",
+    tooltipOpen: undefined,
+    typeAll: true,
+    typeDraft: false,
+    typeEA: false,
+    typeFinal: false,
+    typeNOI: false,
+    typeOther: false,
+    typeROD: false,
+    typeScoping: false,
+    countyOptions: Globals.counties,
+  });
+
+
+  // useEffect(() => {
+  //   const queryParamsLocation = useLocation().search;
+  //   const titleRaw = new URLSearchParams(queryParamsLocation).get('q');
+  //   console.log("🚀 ~ file: Search.jsx:841 ~ useEffect ~ query:", titleRaw)
+  //   if (titleRaw && titleRaw.length) {
+  //     setSearchState({
+  //       ...searchState,
+  //       titleRaw: titleRaw
+  //     });
+  //   }
+  //   return()=> {
+  //     console.log('query params useEffect returning with state',searchState);
+  //   }
+
+  // },[searchState.titleRaw]);
+
+  //[TODO] a lot of duplication BUT it fixed the reRender Loop. Need to revisit to combine into a singleFunction
+  useEffect(() => {
+    //  console.log('USE Effect for searchState:',searchState);
+    //getCounts();
+    getFirstYearCount();
+    // console.log('searchState.lastYear',searchState.lastYear);
+    // console.log('searchState.EISCount',searchState.EISCount);
+    return () => {
+      //    console.log('USE EFFECT DISMOUNT searchState',searchState);
+    }
+  }, [searchState.firstYear]);
+
+  useEffect(() => {
+    //  console.log('USE Effect for searchState:',searchState);
     //getCounts();
     getLastYearCount();
-   // console.log('searchState.lastYear',searchState.lastYear);
+    // console.log('searchState.lastYear',searchState.lastYear);
     // console.log('searchState.EISCount',searchState.EISCount);
-    return ()=>{
-  //    console.log('USE EFFECT DISMOUNT searchState',searchState);
+    return () => {
+      //    console.log('USE EFFECT DISMOUNT searchState',searchState);
     }
-  },[searchState.lastYear]);
+  }, [searchState.lastYear]);
 
   useEffect(() => {
     getEISDocCounts();
-    return()=>{
+    return () => {
       //console.log('useEffect getEISCount Dismount state',searchState);
     }
 
-  },[searchState.EISCount])
+  }, [searchState.EISCount])
 
-  useEffect(()=> {
-    console.log('UseEffect props search',props.search);
-    const debouncedSearch = _.debounce(props.search, 300);
-    const filterBy = props.filterResultsBy;
-    // this.filterBy = _.debounce(this.props.filterResultsBy, 200);
-    const debouncedSuggest = _.debounce(props.suggest, 300);
-  },[props.search])
+  // useEffect(()=> {
+  //   console.log('UseEffect props search',props.search);
+  //   const debouncedSearch = _.debounce(props.search, 300);
+  //   const filterBy = props.filterResultsBy;
+  //   // this.filterBy = _.debounce(this.props.filterResultsBy, 200);
+  //   const debouncedSuggest = _.debounce(props.suggest, 300);
+  // },[props.search])
 
 
-//const debouncedSearch = _.debounce(searchState.titleRaw, 500);
-const debouncedSearch =(func,interval) => {
-  console.log('Debounced search mock,',func,interval)
-}
-//     this.debouncedSearch = _.debounce(this.props.search, 300);
+  const debouncedSearch = _.debounce(search, 100);
+
+
 
   const { markup, proximityDisabled, agencyRaw, state, county, proximityOption } = searchState;
   const value = {
     searchState,
     onKeyDown,
     onKeyUp,
-		onInput,
+    onInput,
     setSearchState,
     onProximityChange,
     onTitleOnlyChecked,
@@ -880,50 +901,76 @@ const debouncedSearch =(func,interval) => {
     <SearchContext.Provider value={value}>
       <ThemeProvider theme={theme}>
         <Container disableGutters={true} id="search-app-container">
-          
-            <Grid
-              // textAlign={'left'}
-              // alignContent={'flex-start'}
-              spacing={2}
-              // justifyContent={'flex-start'}
-              container
-              marginTop={isMobile ? '55px' : '105px'}
-            >
-              <Grid item xs={12}>
-                  <Item><SearchHeader /></Item>
-  
-              </Grid>
-              {/* #region SideBarFilters */}
-              <Grid xs={12} md={3} id="side-bar-filters-container">
-                <Paper id="side-bar-filters-paper" elevation={1}>
-                  <SearchSideBarFilters />
-                </Paper>
-              </Grid>
-              {/* #endregion */}
-              {/* #region Search Results */}
-              <Grid md={9} xs={12}>
-                <Paper>
-                  <Box
-                    sx={{
-                      height: '100%',
-                    }}
-                  >
-                    <Divider />
-                   
-                    <Grid container>
-                      {(results.length) ? 
-                          <ResponsiveSearchResults
-                            results={results}
-                          />
-                        : <div>No Results</div>
+
+          <Grid
+            // textAlign={'left'}
+            // alignContent={'flex-start'}
+            spacing={2}
+            // justifyContent={'flex-start'}
+            container
+            marginTop={isMobile ? '55px' : '105px'}
+          >
+            <Grid item xs={12}>
+              <Item><SearchHeader /></Item>
+
+            </Grid>
+            {/* #region SideBarFilters */}
+            <Grid xs={12} md={3} id="side-bar-filters-container">
+              <Paper id="side-bar-filters-paper" elevation={1}>
+                <SearchSideBarFilters />
+              </Paper>
+            </Grid>
+            {/* #endregion */}
+            {/* #region Search Results */}
+            <Grid md={9} xs={12}>
+              <Paper>
+                <Box
+                  sx={{
+                    height: '100%',
+                  }}
+                >
+                  <Divider />
+
+                  <Grid container flex={1} flexGrow={1}>
+                    <Grid item xs={12} width={'100%'}>
+
+                      <Typography variant={'searchResultsTitle'} sx={{
+                        padding: 2,
+                        display: 'block'
+
+                      }}>Search Results {(results && results.length) ? results.length : ''}</Typography>
+                      {(results.length)
+                        ?
+                        <ResponsiveSearchResults
+                          results={results}
+                        />
+                        :
+                        <>
+                          <Typography sx={{
+                            paddingLeft: 3,
+                            display: 'block',
+                          }}>No Results Found
+                          </Typography>
+                          <Typography sx={{
+                            paddingLeft: 3,
+                            marginTop:2,
+                            display: 'block',
+                          }}>
+                            Please enter or revise your search.
+
+                          </Typography>
+
+                        </>
+
                       }
                     </Grid>
-                  </Box>
-                </Paper>
-              </Grid>
-              {/* #endregion */}
+                  </Grid>
+                </Box>
+              </Paper>
             </Grid>
-  
+            {/* #endregion */}
+          </Grid>
+
         </Container>
         {/* <SearchTipsDialog isOpen={searchState.isSearchTipsDialogIsOpen} /> */}
       </ThemeProvider>

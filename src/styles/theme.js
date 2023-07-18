@@ -50,10 +50,10 @@ const theme = createTheme({
       fontSize: 48,
       fontFamily: 'open sans',
     },
-    searchResultTitle: {
+    searchResultsTitle: {
       fontSize: '1.6rem',
       lineHeight: '2rem',
-      paddingLeft: 2,
+      padding: 2,
       fontFamily: 'open sans',
     },
     searchResultSubTitle: {
