@@ -126,22 +126,12 @@ const useStyles = makeStyles((theme) => ({
 export default function SearchResults(props) {
   const classes = useStyles(theme);
   const {results} = props;
-  console.log("🚀 ~ file: SearchResults.jsx:130 ~ SearchResults ~ results:", results)
+//  console.log("🚀 ~ file: SearchResults.jsx:129 ~ SearchResults ~ results:", results)
   return (
     <div id="search-results-root">
       <Grid container flex={1} border={0}>
         <Grid item xs={12} alignContent={'center'} justifyItems={'center'}><SearchResultOptions /></Grid>
       </Grid>
-      <Box p={2} border={0} justifyContent={'center'} justifyItems={'center'} alignContent={'center'} marginTop={1} marginBottom={1}>
-        <Typography variant="searchResultSubTitle">
-          <a href="">Lake Ralph Hall Regional Water Supply Reservoir Project</a>
-        </Typography>
-      </Box>
-      <Box
-        sx={{
-          height: '100%',
-        }}
-      >
         {/* <Box padding={1} marginTop={0} marginBottom={1}>
           <Typography
             variant="searchResultTitle"
@@ -154,9 +144,9 @@ export default function SearchResults(props) {
           </Typography>
         </Box> */}
         <Divider />
-
-        <Divider />
-        <Grid container xs={12}>
+        { results.map((result,idx)=>{
+        return ( 
+        <Grid key={idx} container xs={12}>
           <Grid
             padding={2}
             container
@@ -172,7 +162,7 @@ export default function SearchResults(props) {
                 elevation: 1,
               }}
             >
-              Status: <b>Final</b>
+              Status: <b>{result.decision}</b>
             </Item>
             <Item
               className={classes.itemHeader}
@@ -182,7 +172,7 @@ export default function SearchResults(props) {
                 elevation: 1,
               }}
             >
-              Date: <b>2020-01-01</b>
+              Date: <b>{result.commentDate}</b>
             </Item>
             <Item
               className={classes.itemHeader}
@@ -192,7 +182,7 @@ export default function SearchResults(props) {
                 elevation: 1,
               }}
             >
-              State: <b>TX</b>
+              State: <b>{result.state}</b>
             </Item>
             <Item
               className={classes.itemHeader}
@@ -202,7 +192,7 @@ export default function SearchResults(props) {
                 elevation: 1,
               }}
             >
-              County: <b>TX: Fannin</b>
+              County: <b>{result.county}</b>
             </Item>
             <Item
               className={classes.itemHeader}
@@ -212,7 +202,7 @@ export default function SearchResults(props) {
                 elevation: 1,
               }}
             >
-              Action: <b>Water Work</b>
+              Action: <b>{result.action}</b>
             </Item>
             <Item
               className={classes.itemHeader}
@@ -222,7 +212,7 @@ export default function SearchResults(props) {
                 elevation: 1,
               }}
             >
-              Decision <b>Project</b>
+              Decision <b>{result.decision}</b>
             </Item>
             <Item
               className={classes.itemHeader}
@@ -232,63 +222,28 @@ export default function SearchResults(props) {
                 elevation: 1,
               }}
             >
-              Action: <b>Transportation</b>
+              Action: <b>{result.action}</b>
             </Item>
-            <Item
-              className={classes.itemHeader}
-              sx={{
-                margin: 0.5,
-                padding: 1,
-                elevation: 1,
-              }}
-            >
-              Decision <b>Project</b>
-            </Item>
-            <Item
-              className={classes.itemHeader}
-              sx={{
-                margin: 0.5,
-                padding: 1,
-                elevation: 1,
-              }}
-            >
-              County: <b>AZ: Pima; AZ: Santa Cruz; AZ: Yavapai</b>
-            </Item>
+
           </Grid>
           <Grid id="search-result-item-grid-container" container xs={12}>
             <Item>
              {
-              (results) ?
-              results.map((result,idx)=>{
-                return(
-                <div key={idx}>
-                  <h2>Search Result Item {idx}</h2>
-                  <SearchResultItems
-                    result={result.records}                    
-                  />
+
+               results.map((result,idx)=>{
+                 return (
+                   <div key={idx}>
+                 <SearchResultItems records={result.records}/>
+                 <Divider/>
                 </div>
-                )})
-                : null
+                )
+                })
               }
-            </Item>
-            
-        
+            </Item>       
           </Grid>
-          {/* <Grid className={'search-result-grid-item'} border={0}>
-              <Item xs={12}
-                 
-                >
-                <SearchResultItems
-                publishedYear={2020}
-                  title="Environmental Impact Statement"
-                  id={17704}
-                  status="Draft"
-                  content="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Mi proin sed libero enim. Morbi tincidunt ornare massa eget. Venenatis lectus magna fringilla urna porttitor. Habitasse platea dictumst vestibulum rhoncus. Neque sodales ut etiam sit amet nisl. Tincidunt dui ut ornare lectus sit amet est. Suspendisse in est ante in. Et malesuada fames ac turpis egestas maecenas. Gravida in fermentum et sollicitudin ac orci phasellus. Risus viverra adipiscing at in tellus integer. Sem et tortor consequat id porta nibh venenatis. Porttitor leo a diam sollicitudin tempor id eu nisl."
-                />
-              </Item>
-            </Grid> */}
         </Grid>
-      </Box>
+        )})}
+        
     </div>
   );
 }

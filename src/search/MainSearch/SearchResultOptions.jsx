@@ -36,13 +36,6 @@ export default function SearchResultOptions() {
     onSaveSearchResultsClick,
   } = useContext(SearchContext);
   const { sortBy, sortDirection, limit } = searchState;
-  console.log(
-    '🚀 ~ file: SearchResultOptions.jsx:26 ~ SearchResultOptions ~ sortBy, sortDirection, limit:',
-    sortBy,
-    sortDirection,
-    limit,
-  );
-
   return (
     <>
       <Grid flexGrow={1}  container spacing={2} alignItems="flex-end" justifyContent="flex-end ">

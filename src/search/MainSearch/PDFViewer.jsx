@@ -16,6 +16,7 @@ import '@react-pdf-viewer/toolbar/lib/styles/index.css';
 const workerUrl = "https://unpkg.com/pdfjs-dist@3.4.120/build/pdf.worker.min.js";
 
 const PDFViewer = (props) => {
+    const {file,id} = props;
     //    const {fileUrl} = props;
     const fileUrl = 'example.pdf'
     const thumbnailPluginInstance = thumbnailPlugin({

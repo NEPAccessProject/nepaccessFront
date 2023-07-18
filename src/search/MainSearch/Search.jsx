@@ -114,11 +114,11 @@ const summary = {
 };
 
 export default function Search(props) {
-  console.log("SEARCH PROPS", props)
+//  console.log("SEARCH PROPS", props)
   const classes = useStyles(theme);
   const isMobile = useMediaQuery('(max-width:768px)');
  const {search,suggest,count,finalCount,noiCount,results} = props;
-  console.log("🚀 ~ file: Search.jsx:121 ~ Search ~ results:", results)
+//  console.log("🚀 ~ file: Search.jsx:121 ~ Search ~ results:", results)
   const filterBy = props.filterResultsBy;
   const myRef = React.createRef();
   
@@ -280,7 +280,6 @@ function parseTerms(str) {
   };
 
   const onInput = (evt) => {
-    console.log('onIpunt evt.target',evt.target)
     let userInput = evt.target.value;
     let proximityValues = handleProximityValues(userInput);
 
@@ -912,10 +911,12 @@ const debouncedSearch =(func,interval) => {
                     <Divider />
                    
                     <Grid container>
-                     
+                      {(results.length) ? 
                           <ResponsiveSearchResults
                             results={results}
                           />
+                        : <div>No Results</div>
+                      }
                     </Grid>
                   </Box>
                 </Paper>

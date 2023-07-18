@@ -122,7 +122,6 @@ export default class App extends React.Component {
         let scopings = 0;
         console.log('Count Types Fired');
         this.state.searchResults.forEach(process => {
-            console.log("🚀 ~ file: App.js:123 ~ App ~ process:", process)
             process.records.forEach(item => {
                 if(Globals.isFinalType(item.documentType)) {
                     finals++;
@@ -155,13 +154,11 @@ export default class App extends React.Component {
 
     /** Get all state/county geodata. Doesn't hit backend if we have the data in state. */
     getAllGeoData = () => {
-        console.log('getting Geo Date')
         if(!this.state.geoResults || !this.state.geoResults[0]) {
             let url = Globals.currentHost + "geojson/get_all_state_county";
 
             axios.get(url).then(response => {
                 if(response.data && response.data[0]) {
-                    console.log(`Received ${response.data.length} geoJSON responses  `);
                     for(let i = 0; i < response.data.length; i++) {
                         let json = JSON.parse(response.data[i]['geojson']);
                         json.style = {};
@@ -188,7 +185,7 @@ export default class App extends React.Component {
 
                     let sortedData = response.data.sort((a, b) => parseInt(a.sortPriority) - parseInt(b.sortPriority));
                     
-                    console.log(` Got ${sortedData.length} sorted geo results`);
+                    
                     this.setState({
                         geoResults: sortedData,
                         geoLoading: false
@@ -213,7 +210,6 @@ export default class App extends React.Component {
     * Sorts by existing sort/asc values before updating state for a more responsive UX. 
     * Gets highlights for current page whenever it's called. */
     filterResultsBy = (searcherState) => {
-        console.log("Filtering");
         this._searcherState = searcherState; // for live filtering
         // Only filter if there are any results to filter
         if(this.state.searchResults && this.state.searchResults.length > 0) {
@@ -248,7 +244,6 @@ export default class App extends React.Component {
 
     /** Sort, then highlight */
     sortDataByFieldThenHighlight = (field, ascending) => {
-        console.log("Sorting");
         this.setState({
             // searchResults: this.state.searchResults.sort((a, b) => (a[field] > b[field]) ? 1 : -1)
             searching: true,
@@ -298,7 +293,7 @@ export default class App extends React.Component {
 
     /** Assign any existing highlights from the first-page highlight pass, which is now done before full record population */
     mergeHighlights = (data) => {
-        console.log("Merge highlights",data, this.state.searchResults);
+        console.log('trying to merge highlights data: ', data);
         if(!this.state.searchResults || !this.state.searchResults[0]) {
             console.log("Nothing here yet");
             return data;
@@ -313,13 +308,12 @@ export default class App extends React.Component {
                         && this.state.searchResults[i].records[j].plaintext[0]
                     ) {
                         let same = data[i].records[j].id === this.state.searchResults[i].records[j].id;
-                        console.log("Same?", same, data[i].records[j].id, this.state.searchResults[i].records[j].id);
                         if(same) {
                             data[i].records[j].plaintext = this.state.searchResults[i].records[j].plaintext;
-                            console.log("Assigned plaintext", this.state.searchResults[i].records[j].plaintext);
                         }
                     } else {
-                        console.log("Doesn't exist");
+                        //do nothing for now
+                        // console.log("Doesn't exist");
                     }
                 }
             }
@@ -340,7 +334,6 @@ export default class App extends React.Component {
      * using Object.keys(), Object.values(), or Object.entries() 
      */
     buildData = (data) => {
-        console.log("Building Data",data);
         let processResults = {};
         let newUniqueKey = -1;
         let i = 0;
@@ -426,7 +419,7 @@ export default class App extends React.Component {
 
     // Start a brand new search.
     startNewSearch = (searcherState) => {
-        console.log("Starting New Search with searcherState:", searcherState)
+        //console.log("Starting New Search with searcherState:", searcherState)
 
         // Reset page, page size
         this._page = 1;
@@ -517,10 +510,8 @@ export default class App extends React.Component {
             } else if(searcherState.searchOption && searcherState.searchOption === "B") {
                 searchUrl = new URL('text/search_top', Globals.currentHost);
             }
-            console.log("🚀 ~ file: App.js:511 ~ App ~ searchUrl:", searchUrl)
 
             this._searchTerms = searcherState.titleRaw;
-            console.log("🚀 ~ file: App.js:515 ~ App ~ searcherState:", searcherState)
 
             // Update query params
             // We could also probably clear them on reload (component will unmount) if anyone wants
@@ -531,7 +522,6 @@ export default class App extends React.Component {
 			let dataToPass = { 
 				title: this._searchTerms
             };
-            console.log('Data to Pass Title',dataToPass);
 
             // OPTION: If we restore a way to use search options for faster searches, we'll assign here
             if(this.state.useSearchOptions) {
@@ -553,8 +543,6 @@ export default class App extends React.Component {
             }
 
             dataToPass.title = postProcessTerms(dataToPass.title);
-            console.log('dataToPass Search ', dataToPass);
-
             // Proximity search from UI - surround with quotes, append ~#
             if(!this.state.searcherInputs.proximityDisabled && this.state.searcherInputs.proximityOption)
             {
@@ -647,7 +635,6 @@ export default class App extends React.Component {
                     let processResults = {};
                     processResults = this.buildData(_data);
                     _data = processResults;
-                    console.log("Process oriented results flattened",_data);
 
                     // At this point we don't need the hashmap design anymore, it's just very fast for its purpose.
                     // Now we have to iterate through all of it anyway, and it makes sense to put it in an array.
@@ -1609,6 +1596,20 @@ export default class App extends React.Component {
                         scopingCount={this._scopingCount}
                         results={this.state.outputResults} 
                         geoResults={this.state.geoResults}
+                        gatherSpecificHighlights={this.gatherSpecificHighlights}
+                        filtersHidden={this.state.filtersHidden}
+                        // searcherState={this._searcherState}
+                        geoLoading={this.state.geoLoading}
+                        resultsText={this.state.resultsText} 
+                        snippetsDisabled={this.state.snippetsDisabled} 
+                        scrollToBottom={this.scrollToBottom}
+                        scrollToTop={this.scrollToTop}
+                        shouldUpdate={this.state.shouldUpdate}
+                        download={this.downloadCurrentAsTSV}
+                        exportToSpreadsheet={this.exportToCSV}
+                        isMapHidden={this.state.isMapHidden}
+                        toggleMapHide={this.toggleMapHide}
+
 
 />
                     {/* <SearchProcessResults 

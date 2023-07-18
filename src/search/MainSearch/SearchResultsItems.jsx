@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect, useContext,useRef } from 'react';
 import {
   Paper,
   Button,
@@ -25,11 +25,44 @@ const handleDownloadClick = (evt, id) => {
   evt.preventDefault();
   console.log('Download ID Value', id);
 };
-export default function SearchResultItems(props) {
+const sortByYear = (a,b)=>{
+//  console.log('sorting record dates a: ',a,'B:',b);
+  return a.commentDate > b.commentDate;
+}
+export default function SearchResultItems(props){
+  //  console.log("🚀 ~ file: SearchResultsItems.jsx:29 ~ SearchResultItems ~ props:", props)
+  const { searchState, setSearchState } = useContext(SearchContext);
+  const { records } = props;
+  //  console.log("🚀 ~ file: SearchResultsItems.jsx:33 ~ SearchResultItems ~ records:", records)
+  const sortedRecords = records.sort(sortByYear);
+  console.log("🚀 ~ file: SearchResultsItems.jsx:38 ~ SearchResultItems ~ sortedRecords:", sortedRecords)
+
+  return (
+    <>
+
+      {sortedRecords.map((record, idx) => {
+        return (
+
+          <div key={idx}>
+            {
+              <div key={idx}>
+                <SearchResultItem record={record} />
+              </div>
+            }
+          </div>
+        )
+      })
+      }
+
+    </>
+  )
+}
+
+export function SearchResultItem(props) {
   const { searchState, setSearchState } = useContext(SearchContext);
   const [isPDFViewOpen, setIsPDFViewOpen] = useState(false);
   const [isContentExpanded, setIsContentExpanded] = useState(false);
-  const {result } = props;
+  const { record } = props;
   function onDocumentLoadSuccess({ numPages }) {
     setSearchState({ ...searchState, numPages: numPages });
     setNumPages(numPages);
@@ -46,46 +79,27 @@ export default function SearchResultItems(props) {
     setIsContentExpanded(!isContentExpanded);
   }
 
+  //  console.log("🚀 ~ file: SearchResultsItems.jsx:69 ~ SearchResultItem ~ props:", props)
+  const { title,  agency, cooperatingAgency, commentsFilename, plaintext, notes, id, name, subtype, county, commentDate, status, documentType } = record;
+  const year = new Date(commentDate).getFullYear();
+  const content = "orem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Donec et odio pellentesque diam volutpat. Adipiscing commodo elit at imperdiet dui accumsan sit amet. Morbi tincidunt ornare massa eget egestas purus. Tempus quam pellentesque nec nam aliquam sem et tortor consequat. Tortor posuere ac ut consequat semper viverra. Sollicitudin aliquam ultrices sagittis orci a scelerisque purus semper. Porta nibh venenatis cras sed felis eget velit aliquet. Elementum eu facilisis sed odio morbi quis commodo odio aenean. Metus dictum at tempor commodo. Massa vitae tortor condimentum lacinia quis vel eros donec. Mauris a diam maecenas sed. Diam in arcu cursus euismod. Vulputate sapien nec sagittis aliquam. Ipsum dolor sit amet consectetur. Nibh praesent tristique magna sit amet purus gravida quis. Commodo viverra maecenas accumsan lacus vel facilisis volutpat est velit. Porta non pulvinar neque laoreet suspendisse interdum consectetur."
   return (
     <>
-    
-        <Divider />
-        {/* <Typography variant='searchResultSubTitle'>{status} {title}</Typography> */}
-        <h2>results</h2>
-        {JSON.stringify(result)}
-          {result.map((record,idx)=> {
-            return(
-              <>
-              <h2>Record {idx}</h2>
-              {Object.keys(record).map((key,id)=> {
-                return(
-                  <>
-                    <div><b>{key}</b> {record[key]}</div>
-                  </>
-                )
+      <Typography variant='searchResultSubTitle'>{documentType} - {title}</Typography>
+      <Grid
+        flex={1}
+        container
+        marginTop={2}
+        marginBottom={2}
+      >
+        <Grid item xs={1} textAlign={'center'}>
+          <Typography fontWeight={'bold'}>
+            {(year) ? year : 'N/A'}
 
-              })
-              
-              }
-              
-              </>
-            )
-          }
-          )}
-        {/* <Grid
-          flex={1}
-          container
-          marginTop={2}
-          marginBottom={2}
-        >
-          <Grid item xs={1} textAlign={'center'}>
-            <Typography fontWeight={'bold'}>
-              {(publishedYear) ? publishedYear : 'N/A'}
-
-            </Typography>
-          </Grid>
-          <Grid item xs={9}>
-            <Container>
+          </Typography>
+        </Grid>
+        <Grid item xs={9}>
+          <Container>
               <Box
                 bgcolor="#f4f4f4"
                 padding={1}
@@ -96,47 +110,48 @@ export default function SearchResultItems(props) {
                 {isContentExpanded ? content : content.substring(0, 100) + ((content.length > 100) ? '...' : '')}
               </Box>
             </Container>
-            <Container>
-              <Box
-                width={'100%'}
-                alignContent={'center'}
-                textAlign={'center'}
-                onClick={toggleContentExpansion}
-                bgcolor="#A2A5A6"
-                paddingTop={1}
-                paddingBottom={1}
-              >
+          <Container>
+            <Box
+              width={'100%'}
+              alignContent={'center'}
+              textAlign={'center'}
+              onClick={toggleContentExpansion}
+              bgcolor="#A2A5A6"
+              paddingTop={1}
+              paddingBottom={1}
+            >
 
-                <Typography variant="expanderButton">
-                  Click to see more...
-                </Typography>
-              </Box>
-            </Container>
-          </Grid>
-          <Grid item xs={2}>
-            <Button
-              color="primary"
-              onClick={(evt) => handleDownloadClick(evt, id)}
-              sx={{
-                width: '90%',
-              }}
-            >
-              Download
-            </Button>
-            <PDFViewerDialog isOpen={isPDFViewOpen} onDialogClose={closePDFPreview} />
-            <Button
-              onClick={(evt) => openPDFPreview(evt, id)}
-              color={'secondary'}
-              sx={{
-                mt: 1,
-                width: '90%',
-              }}
-            >
-              {' '}
-              Preview{' '}
-            </Button>
-          </Grid>
-        </Grid> */}
+              <Typography variant="expanderButton">
+                Click to see more...
+              </Typography>
+            </Box>
+          </Container>
+        </Grid>
+        <Grid item xs={2}>
+          <Button
+            color="primary"
+            onClick={(evt) => handleDownloadClick(evt, id)}
+            sx={{
+              width: '90%',
+            }}
+          >
+            Download
+          </Button>
+
+          <PDFViewerDialog isOpen={isPDFViewOpen} onDialogClose={closePDFPreview} />
+          <Button
+            onClick={(evt) => openPDFPreview(evt, id)}
+            color={'secondary'}
+            sx={{
+              mt: 1,
+              width: '90%',
+            }}
+          >
+            Preview
+          </Button>
+        </Grid>
+      </Grid>
     </>
-  );
+
+  )
 }
