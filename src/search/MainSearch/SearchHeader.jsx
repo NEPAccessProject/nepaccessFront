@@ -135,7 +135,7 @@ export default function SearchHeader(props) {
               autoFocus
               InputProps={{
                 endAdornment: (
-                  <IconButton onClick={onIconClick}>
+                  <IconButton onClick={(evt)=>onIconClick(evt)}>
                     <SearchOutlined />
                   </IconButton>
                 ),

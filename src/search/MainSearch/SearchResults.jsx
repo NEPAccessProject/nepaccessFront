@@ -95,7 +95,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const sortByRelevance = (a,b) => {
-  return a.relevance > b.relevance;
+  return a.score > b.score;
 }
 
 export default function SearchResults(props) {
@@ -103,6 +103,7 @@ export default function SearchResults(props) {
   const {results} = props;
   console.log("🚀 ~ file: SearchResults.jsx:104 ~ SearchResults ~ results:", results)
   const sortedResults = (results && results.length) ?  results.sort(sortByRelevance) : [];
+  console.log("🚀 ~ file: SearchResults.jsx:106 ~ SearchResults ~ sortedResults:", sortedResults)
 
   //  console.log("🚀 ~ file: SearchResults.jsx:129 ~ SearchResults ~ results:", results)
   return (
@@ -110,20 +111,28 @@ export default function SearchResults(props) {
       {/* <Grid container flex={1} border={0}>
         <Grid item xs={12} alignContent={'center'} justifyItems={'center'}><SearchResultOptions /></Grid>
       </Grid> */}
-       
+        {JSON.stringify(sortedResults)}
         { sortedResults.map((result,idx)=>{
         return ( 
         <Grid key={idx} container xs={12}>
+          <div>
+            {idx} - {JSON.stringify(result.doc)}
+
+          </div>
           <SearchResult result={result}/>
           <Grid id="search-result-item-grid-container" container xs={12}>
             <Item>
-             {
-
-               results.map((result,idx)=>{
+              <h2>Result?</h2>
+              {JSON.stringify(result.doc)}
+               {results.map((result,idx)=>{
                  return (
                    <div key={idx}>
-                    {JSON.stringify(result)}
-                 {/* <SearchResultItems records={result.records}/> */}
+                    <b>index:</b> {idx}
+                    {JSON.stringify(result.doc)}
+                 {
+                  <SearchResultItems result={result.doc}/>
+                 
+                 } 
                  <Divider/>
                 </div>
                 )
@@ -140,6 +149,7 @@ export default function SearchResults(props) {
 }
 
 export function SearchResult(props){
+  console.log("🚀 ~ file: SearchResult.jsx:152 ~ SearchResult ~ props:", props)
   const classes = useStyles(theme);
   const {result} = props; 
   return(

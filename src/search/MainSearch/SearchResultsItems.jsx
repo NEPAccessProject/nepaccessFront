@@ -32,26 +32,31 @@ const sortByDate = (a,b)=>{
 }
 export default function SearchResultItems(props){
   console.log("🚀 ~ file: SearchResultsItems.jsx:34 ~ SearchResultItems ~ props:", props)
-  let  records  = props.records || [];
-  const sortedRecords = (records.records.length) ? records.sort(sortByDate) : [];
+  let  result  = props.result || [];
+  console.log("🚀 ~ file: SearchResultsItems.jsx:36 ~ SearchResultItems ~ record:", result)
+  //const sortedRecords = (record.length) ? records.sort(sortByDate) : [];
+  //console.log("🚀 ~ file: SearchResultsItems.jsx:37 ~ SearchResultItems ~ sortedRecords:", sortedRecords)
 
   return (
     <>
      <Box minHeight={'100vh'}>
-        {sortedRecords.map((record, idx) => {
-          return (
+        <b>Record?</b> {JSON.stringify(result)}
+        {/* {sortedRecords.map((record, idx) => {
+          // return (
   
-            <div key={idx}>
-              {
-                <div key={idx}>
-                  <SearchResultItem record={record} />
-                  <Divider/>
-                </div>
-              }
-            </div>
-          )
+          //   <div key={idx}>
+          //     {
+          //       <div key={idx}>
+          //         {JSON.stringify(record.doc)}
+          //         <SearchResultItem record={records.doc} />
+          //         <Divider/>
+          //       </div>
+          //     }
+          //   </div>
+          // )
+          {JSON.stringify(record)}
         })
-        }
+        } */}
   
      </Box>
     </>
