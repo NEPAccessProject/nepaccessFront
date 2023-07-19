@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useReducer, useContext, useEffect } from 'react';
+
 import {
   Paper,
   Button,
@@ -35,36 +36,6 @@ import SearchFilter from './SearchFilter';
 import SearchResultOptions from './SearchResultOptions';
 import SearchResultItems from './SearchResultsItems';
 import { makeStyles, withStyles } from '@mui/styles';
-
-const countyChange = (evt) => {
-  console.log('countyChange', evt.target.value);
-  evt.preventDefault();
-};
-const onLocationChange = (evt) => {
-  console.log('onLocationChange', evt.target.value);
-  evt.preventDefault();
-};
-const onAgencyChange = (evt) => {
-  console.log('onAgencyChange', evt.target.value);
-};
-const onInput = (evt) => {
-  s;
-  console.log('onInput', evt.target.value);
-  evt.preventDefault();
-};
-const onKeyUp = (evt) => {
-  console.log('onKeyUp', evt.target.value);
-  evt.preventDefault();
-};
-
-const onChangeHandler = (evt) => {
-  console.log('onChangeHandler', evt.target.value);
-  evt.preventDefault();
-};
-const onProximityChange = (evt) => {
-  console.log('onProximityChange', evt.target.value);
-  evt.preventDefault();
-};
 
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
@@ -130,6 +101,7 @@ const sortByRelevance = (a,b) => {
 export default function SearchResults(props) {
   const classes = useStyles(theme);
   const {results} = props;
+  console.log("🚀 ~ file: SearchResults.jsx:104 ~ SearchResults ~ results:", results)
   const sortedResults = (results && results.length) ?  results.sort(sortByRelevance) : [];
 
   //  console.log("🚀 ~ file: SearchResults.jsx:129 ~ SearchResults ~ results:", results)
@@ -150,7 +122,8 @@ export default function SearchResults(props) {
                results.map((result,idx)=>{
                  return (
                    <div key={idx}>
-                 <SearchResultItems records={result.records}/>
+                    {JSON.stringify(result)}
+                 {/* <SearchResultItems records={result.records}/> */}
                  <Divider/>
                 </div>
                 )

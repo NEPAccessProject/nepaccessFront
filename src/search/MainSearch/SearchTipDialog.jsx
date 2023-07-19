@@ -2,7 +2,6 @@ import React,{useContext} from 'react';
 import {Dialog,DialogContext,DialogContent,DialogTitle,DialogContentText,DialogActions,Grid,Box,Typography,IconButton} from '@mui/material';
 import SearchContext from './SearchContext';
 export default function SearchTipsDialog(props) {
-            const {searchState,setSearchState} = useContext(SearchContext);
             const {isOpen,onDialogClose} = props;
             return (
               <Dialog open={isOpen}>

@@ -16,7 +16,8 @@ import Tippy from '@tippyjs/react';
 import '../loader.css';
 
 import '../cardProcess.css';
-
+import SearchHeader from './MainSearch/SearchHeader.jsx';
+import SearchContext from './MainSearch/SearchContext.js';
 const _ = require('lodash');
 
 const FULLSTYLE = {
@@ -26,7 +27,7 @@ const FULLSTYLE = {
 }
 
 export default class SearchProcessResults extends React.Component {
-
+    static contextType = SearchContext;
     _size = 0;
     _columns = [];
     hidden = new Set();
@@ -218,113 +219,118 @@ export default class SearchProcessResults extends React.Component {
     }
 
 	render() {
-        if(!this.props.results || !(this.props.results.length > 0)) {
-            /** Show nothing until loading results. props.resultsText will just be "Results" before any search.
-             * During a search, it will be "Loading results..." and if 100+ async results we may
-             * simultaneously have 100 props.results.  After a search we won't hit this logic because we'll have props.results
-             */
-            if(this.props.resultsText && this.props.resultsText!=="Results") {
-                return (
-                    <div className="sidebar-results">
-                        <div id="process-results">
-                            <div className="-holder">
-                                <h2 id="results-label">
-                                    {this.props.resultsText}
-                                </h2>
-                            </div>
-                        </div>
-                    </div>
-                );
-            } else {
-                return (
-                    <></>
-                );
-            }
-        }
+        return (
+            <>
+                <SearchHeader state={this.state}/>
+            </>
+        )
+        // if(!this.props.results || !(this.props.results.length > 0)) {
+        //     /** Show nothing until loading results. props.resultsText will just be "Results" before any search.
+        //      * During a search, it will be "Loading results..." and if 100+ async results we may
+        //      * simultaneously have 100 props.results.  After a search we won't hit this logic because we'll have props.results
+        //      */
+        //     if(this.props.resultsText && this.props.resultsText!=="Results") {
+        //         return (
+        //             <div className="sidebar-results">
+        //                 <div id="process-results">
+        //                     <div className="-holder">
+        //                         <h2 id="results-label">
+        //                             {this.props.resultsText}
+        //                         </h2>
+        //                     </div>
+        //                 </div>
+        //             </div>
+        //         );
+        //     } else {
+        //         return (
+        //             <></>
+        //         );
+        //     }
+        // }
         
-        try {
+        // try {
 
-            return (
-                <div className="sidebar-results" style={this.getCorrectResultsStyle()}>
+        //     return (
+        //         <div className="sidebar-results" style={this.getCorrectResultsStyle()}>
 
-                    <div id="process-results">
+        //             <div id="process-results">
 
-                        <div className="-holder">
+        //                 <div className="-holder">
 
-                            <div className="results-count-holder">
-                                <h2 id="results-label" className="inline">
-                                    {this.props.resultsText}&nbsp;
-                                        <Tippy className="tippy-tooltip--small searchTips" trigger='manual click' 
-                                            hideOnClick={true}
-                                            interactive={true}
-                                            placement="right"
-                                            content={
-                                                <div>
-                                                    The map view is a <span className="bold">visual representation</span> of all states and counties found in the current results
-                                                    table. 
-                                                    <div>
-                                                        • If you hover over a polygon, a tooltip will also show how many of the current results are linked to it.
-                                                    </div>
-                                                    <div>
-                                                        • You can toggle the state and/or county layer by clicking on the checkboxes in the upper left corner.
-                                                    </div>
-                                                </div>}
-                                        >
-                                            {<span className={"side-link inline"}>
-                                                <svg xmlns="http://www.w3.org/2000/svg" width="16px" height="16px" viewBox="0 0 100 100">
-                                                    <path className="info-svg" d="M50.433,0.892c-27.119,0-49.102,21.983-49.102,49.102s21.983,49.103,49.102,49.103s49.101-21.984,49.101-49.103S77.552,0.892,50.433,0.892z M59,79.031C59,83.433,55.194,87,50.5,87S42,83.433,42,79.031V42.469c0-4.401,3.806-7.969,8.5-7.969s8.5,3.568,8.5,7.969V79.031z M50.433,31.214c-5.048,0-9.141-4.092-9.141-9.142c0-5.049,4.092-9.141,9.141-9.141c5.05,0,9.142,4.092,9.142,9.141C59.574,27.122,55.482,31.214,50.433,31.214z"/>
-                                                </svg>
-                                            </span>}
-                                        </Tippy>
-                                </h2>
-                            </div>
-                            <SearchResultsMap 
-                                toggleMapHide={this.props.toggleMapHide}
-                                isHidden={this.props.isMapHidden}
-                                docList={this.props.geoResults}
-                                results={this.props.results}
-                                // searcherState={this.props.searcherState}
-                            />
+        //                     <div className="results-count-holder">
+        //                         <h2 id="results-label" className="inline">
+        //                             {this.props.resultsText}&nbsp;
+        //                                 <Tippy className="tippy-tooltip--small searchTips" trigger='manual click' 
+        //                                     hideOnClick={true}
+        //                                     interactive={true}
+        //                                     placement="right"
+        //                                     content={
+        //                                         <div>
+        //                                             The map view is a <span className="bold">visual representation</span> of all states and counties found in the current results
+        //                                             table. 
+        //                                             <div>
+        //                                                 • If you hover over a polygon, a tooltip will also show how many of the current results are linked to it.
+        //                                             </div>
+        //                                             <div>
+        //                                                 • You can toggle the state and/or county layer by clicking on the checkboxes in the upper left corner.
+        //                                             </div>
+        //                                         </div>}
+        //                                 >
+        //                                     {<span className={"side-link inline"}>
+        //                                         <svg xmlns="http://www.w3.org/2000/svg" width="16px" height="16px" viewBox="0 0 100 100">
+        //                                             <path className="info-svg" d="M50.433,0.892c-27.119,0-49.102,21.983-49.102,49.102s21.983,49.103,49.102,49.103s49.101-21.984,49.101-49.103S77.552,0.892,50.433,0.892z M59,79.031C59,83.433,55.194,87,50.5,87S42,83.433,42,79.031V42.469c0-4.401,3.806-7.969,8.5-7.969s8.5,3.568,8.5,7.969V79.031z M50.433,31.214c-5.048,0-9.141-4.092-9.141-9.142c0-5.049,4.092-9.141,9.141-9.141c5.05,0,9.142,4.092,9.142,9.141C59.574,27.122,55.482,31.214,50.433,31.214z"/>
+        //                                         </svg>
+        //                                     </span>}
+        //                                 </Tippy>
+        //                         </h2>
+        //                     </div>
+        //                     <SearchResultsMap 
+        //                         toggleMapHide={this.props.toggleMapHide}
+        //                         isHidden={this.props.isMapHidden}
+        //                         docList={this.props.geoResults}
+        //                         results={this.props.results}
+        //                         // searcherState={this.props.searcherState}
+        //                     />
 
-                            <ResultsHeader 
-                                sort={this.props.sort}
-                                searching={this.props.searching}
-                                snippetsDisabled={this.props.snippetsDisabled} 
-                                showContext={this.state.showContext}
-                                onCheckboxChange={this.onCheckboxChange}
-                                download={this.props.download}
-                                exportToSpreadsheet={this.props.exportToSpreadsheet}
-                            />
+        //                     <ResultsHeader 
+        //                         sort={this.props.sort}
+        //                         searching={this.props.searching}
+        //                         snippetsDisabled={this.props.snippetsDisabled} 
+        //                         showContext={this.state.showContext}
+        //                         onCheckboxChange={this.onCheckboxChange}
+        //                         download={this.props.download}
+        //                         exportToSpreadsheet={this.props.exportToSpreadsheet}
+        //                     />
                             
-                            {/* {this.props.searching ? <>Please wait...</> : <></>} */}
+        //                     {/* {this.props.searching ? <>Please wait...</> : <></>} */}
 
-                            <React
-                                ref={ref => (this.ref = ref)}
-                                data={this.props.results}
-                                columns={this._columns}
-                                options={this.options}
-                                pageLoaded={this.onPageLoaded}
-                                renderComplete={this.doneRenderDebounced}
-                                paginationError={this.handlePaginationError}
-                            />
-                        </div>
-                    </div>
-                </div>
-            );
-        }
-        catch (e) {
-            if(e instanceof TypeError){
-                //  trying to render new results before it switches to new column definitions
-                console.error("TypeError",e);
-            } else {
-                console.error(e);
-            }
-            return (
-                <div className="sidebar-results">
-                    <h2 id="results-label">{this.props.resultsText}</h2>
-                </div>
-            )
-        }
+        //                     <React
+        //                         ref={ref => (this.ref = ref)}
+        //                         data={this.props.results}
+        //                         columns={this._columns}
+        //                         options={this.options}
+        //                         pageLoaded={this.onPageLoaded}
+        //                         renderComplete={this.doneRenderDebounced}
+        //                         paginationError={this.handlePaginationError}
+        //                     />
+        //                 </div>
+        //             </div>
+        //         </div>
+        //     );
+        // }
+        // catch (e) {
+        //     if(e instanceof TypeError){
+        //         //  trying to render new results before it switches to new column definitions
+        //         console.error("TypeError",e);
+        //     } else {
+        //         console.error(e);
+        //     }
+        //     return (
+        //         <div className="sidebar-results">
+        //             <h2 id="results-label">{this.props.resultsText}</h2>
+        //         </div>
+        //     )
+        // }
     }
 
     componentDidMount() {

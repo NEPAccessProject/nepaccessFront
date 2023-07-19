@@ -16,6 +16,8 @@ import {
   Container,
   FormLabel,
   Chip,
+  withMediaQuery,
+  useMediaQuery
 } from '@mui/material';
 import Grid from '@mui/material/Unstable_Grid2';
 import SearchContext from './SearchContext';
@@ -29,10 +31,9 @@ const sortByDate = (a,b)=>{
   return a.commentDate > b.commentDate;
 }
 export default function SearchResultItems(props){
-  //  console.log("🚀 ~ file: SearchResultsItems.jsx:29 ~ SearchResultItems ~ props:", props)
-  const { searchState, setSearchState } = useContext(SearchContext);
-  let { records } = props;
-  const sortedRecords = records.sort(sortByDate);
+  console.log("🚀 ~ file: SearchResultsItems.jsx:34 ~ SearchResultItems ~ props:", props)
+  let  records  = props.records || [];
+  const sortedRecords = (records.records.length) ? records.sort(sortByDate) : [];
 
   return (
     <>
