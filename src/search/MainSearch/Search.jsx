@@ -704,9 +704,6 @@ export default function Search(props) {
           results: response.data,
           shouldContinue: true,
           results: response.data,
-        }, () => {
-          console.log('Returing new state with data, state', searchState);
-          return response.data;
         });
         return response.data;
       } else {
@@ -862,8 +859,9 @@ export default function Search(props) {
     let searchUrl = new URL('text/search_no_context', Globals.currentHost);
 
     let dataToPass = {
-      title: searchState.searcherInputs.titleRaw
+      title: searchState.titleRaw
     };
+    console.log("🚀 ~ file: Search.jsx:864 ~ initialSearch ~ dataToPass:", dataToPass)
 
     // OPTION: If we restore a way to use search options for faster searches, we'll assign here
     if (searchState.useSearchOptions) {
@@ -909,14 +907,30 @@ export default function Search(props) {
     }).then(response => {
       let responseOK = response && response.status === 200;
       if (responseOK) {
+        setSearchState({
+          ...searchState,
+          results: response.data
+        })
+        console.log('Returning 914 response.data',response.data);
         return response.data;
       } else if (response.status === 204) {  // Probably invalid query due to misuse of *, "
         setSearchState({
           ...searchState,
+          results: response.data,
           resultsText: "No results: Please check use of term modifiers"
         });
         return null;
-      } else if (response.status === 403) {
+      } 
+      else if (response.status === 202) {  // Probably invalid query due to misuse of *, "
+        setSearchState({
+          ...searchState,
+          results: response.data,
+          resultsText: "No results: Please check use of term modifiers"
+        });
+        console.log("🚀 ~ file: Search.jsx:923 ~ initialSearch ~ response.data:", response.data)
+        return response.data;
+      }
+      else if (response.status === 403) {
         // Not logged in
         Globals.emitEvent('refresh', {
           loggedIn: false
@@ -976,18 +990,16 @@ export default function Search(props) {
           results: _data,
           results: _data,
           resultsText: _data.length + " Results",
-        }, () => {
-          filterResultsBy(searchState);
-          console.log("Mapped data", _data);
+        })
+        filterResultsBy(searchState);
+        console.log("Mapped data", _data);
 
           countTypes();
-        });
       } else {
         console.log("No results");
         setSearchState({
           ...searchState,
           searching: false,
-          results: [],
           results: [],
           resultsText: "No results found for " + _searchTerms + " (try adding OR between words for less strict results?)"
         });
@@ -1330,12 +1342,12 @@ export default function Search(props) {
             ...searchState,
             results: allResults,
             results: currentResults,
-            shouldUpdate: true
-          }, () => {
+            shouldUpdate: true,
+          });
+          // , () => {
             console.log("Got highlights, finish search");
             initialSearch(_inputs);
-          });
-
+          // });
         }
       }).catch(error => {
         if (error.name === 'TypeError') {
@@ -2551,8 +2563,9 @@ export default function Search(props) {
                         display: 'block'
 
                       }}>Search Results</Typography>
-                      {JSON.stringify(searchState.results)}
-
+                      {searchState.results.map((res,idx)=>{
+                          <SearchResults results={res} />
+                      })}
                     </Grid>
                   </Grid>
                 </Box>
