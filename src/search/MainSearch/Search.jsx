@@ -3,7 +3,7 @@ import Globals from '../../globals';
 //import Grid from '@mui/material/Grid'; // Grid version 1
 import Grid from '@mui/material/Unstable_Grid2';
 import ProximitySelect from './ProximitySelect';
-import React, { useState, useReducer, useContext, useEffect } from 'react';
+import React, { useState, useReducer, useContext, useEffect,useRef,useStateCa } from 'react';
 import SearchResults from './SearchResults';
 import SearchContext from './SearchContext';
 import SearchSideBarFilters from './SearchSideBarFilters';
@@ -121,6 +121,7 @@ export default function Search(props) {
   //  console.log("🚀 ~ file: Search.jsx:121 ~ Search ~ results:", results)
   const filterBy = props.filterResultsBy;
   const myRef = React.createRef();
+  const _mounted = useRef(true);
   // Necessary for on-demand highlighting per page
 
 
@@ -137,10 +138,11 @@ export default function Search(props) {
       surveyDone: false,
       isDirty: true,
     });
+    console.log('Starting Search after startSearch', searchState);  
+    startNewSearch(searchState);
+
     //startNewSearch(searchState);
     //debouncedSearch(searchState);
-    startSearch(searchState);
-    console.log('Start Search after startSearch', searchState);
     //    startNewSearch(searchState);
     //    initialSearch(searchState);
   };
@@ -247,7 +249,9 @@ export default function Search(props) {
     _rodCount = "(" + rods + ")";
     _noiCount = "(" + nois + ")";
     _scopingCount = "(" + scopings + ")";
-    // setSearchState({finalCount: "("+count+")"});
+    setSearchState({
+      ...searchState,
+      finalCount: "("+count+")"});
   }
 
   /** Get all state/county geodata. Doesn't hit backend if we have the data in state. */
@@ -316,24 +320,38 @@ export default function Search(props) {
     if (searchState.results && searchState.results.length > 0) {
 
       const filtered = Globals.doFilter(searchState, searchState.results, searchState.results.length, false);
-
+      const results = filtered.filteredResults.sort((alphabetically(_sortVal, _ascVal)));
+      console.log('Filter Results By filtered Results', results);
       // Even if there are no filters active we still need to update to reflect this,
       // because if there are no filters the results must be updated to the full unfiltered set
-      setSearchState({
-        ...searchState,
-        results: filtered.filteredResults.sort((alphabetically(_sortVal, _ascVal))),
-        resultsText: filtered.textToUse,
-        searching: true,
-        shouldUpdate: true
-      },
+        if(results && results.length){
+          console.log('Filtered Results?', results);
+          setSearchState({
+            ...searchState,
+            results: results,
+            resultsText: filtered.textToUse,
+            searching: true,
+            shouldUpdate: true
+          })
+        }
+        else {
+          console.log('Filtered Results is empty!', results)
+          //don't want to overwrite existing results with an empty array [TODO] figure out why sort is buggy
+          setSearchState({
+            ...searchState,
+            resultsText: filtered.textToUse,
+            searching: true,
+            shouldUpdate: true
+          })
+        }
         //[TODO} can't do callback in setState would need to do useEffect to do so 
         //() => {
-        //     // getGeoDebounced(filtered.filteredResults);
-        //     getGeoDebounced();
+            // getGeoDebounced(filtered.filteredResults);
+            getGeoDebounced();
 
-        //     _searchId = _searchId + 1;
-        //     gatherPageHighlightsDebounced(_searchId, searchState, filtered.filteredResults);
-      );
+            _searchId = _searchId + 1;
+            console.log("🚀 ~ file: Search.jsx:349 ~ filterResultsBy ~ _searchId:", _searchId)
+            gatherPageHighlightsDebounced(_searchId, searchState, filtered.filteredResults);
     }
   }
 
@@ -587,6 +605,7 @@ export default function Search(props) {
     console.log('start search starting with searchState', searchState);
     Globals.emitEvent('new_search');
     // if (!_mounted) { // User navigated away or reloaded
+    //   console.log('not mounted returned false', _mounted)
     //     return;
     // }
 
@@ -767,7 +786,6 @@ export default function Search(props) {
           results: _data,
         })
           //[TODO] no callback with setState would have to useEffect
-          ,
 
           console.log("All results", _data);
 
@@ -790,7 +808,7 @@ export default function Search(props) {
           countTypes();
         } else {
           // Highlight first page using function which then gets the rest of the metadata
-          console.log("Gather first page highlights");
+          console.log(`Gather first page highlights - searchId: ${_searchId} with data`,_data);
           gatherFirstPageHighlightsThenFinishSearch(_searchId, searchState.searcherInputs, _data);
         }
       } else {
@@ -803,6 +821,7 @@ export default function Search(props) {
         });
       }
     }).catch(error => { // Server down or 408 (timeout)
+      console.error('Exception',error);
       console.error('Error searching for ' + _searchTerms + ' error ' + error.response);
       if (error.response && error.response.status === 408) {
         setSearchState({
@@ -911,7 +930,6 @@ export default function Search(props) {
           ...searchState,
           results: response.data
         })
-        console.log('Returning 914 response.data',response.data);
         return response.data;
       } else if (response.status === 204) {  // Probably invalid query due to misuse of *, "
         setSearchState({
@@ -984,23 +1002,22 @@ export default function Search(props) {
         let processResults = {};
         processResults = buildData(_data);
         _data = processResults;
-
+        console.log('Process Results _data is: ',_data)
         setSearchState({
           ...searchState,
           results: _data,
-          results: _data,
           resultsText: _data.length + " Results",
-        })
+        },()=>{
         filterResultsBy(searchState);
         console.log("Mapped data", _data);
-
           countTypes();
+        }
+    )
       } else {
         console.log("No results");
         setSearchState({
           ...searchState,
           searching: false,
-          results: [],
           resultsText: "No results found for " + _searchTerms + " (try adding OR between words for less strict results?)"
         });
       }
@@ -1008,11 +1025,10 @@ export default function Search(props) {
       if (error.response && error.response.status === 408) {
         setSearchState({
           ...searchState,
-          networkError: 'Request has timed out.'
-        });
-        setSearchState({
-          ...searchState,
           resultsText: "Error: Request timed out"
+        },
+        ()=>{
+          console.log('set State call back from error',searchState)
         });
       } else if (error.response && error.response.status === 403) { // token expired?
         setSearchState({
@@ -1177,13 +1193,13 @@ export default function Search(props) {
             // results: currentResults,
             searching: false,
             shouldUpdate: true
-          }, () => {
+          })
+          const _state= searchState;
             // Run our filter + sort which will intelligently populate results from updated results
             // and update the table
-            filterResultsBy(searchState);
+            filterResultsBy(_state);
             console.log("All done with page highlights: all results, displayed results");
             //     allResults, currentResults);
-          });
         }
       }).catch(error => {
         if (error.name === 'TypeError') {
@@ -2404,7 +2420,7 @@ export default function Search(props) {
   let _pageSize = 10;
 
   // For canceling a search when component unloads
-  let _mounted = false;
+//  let _mounted = useRef(false);
 
   // For canceling any running search if user starts a new search before results are done
   let _searchId = 1;
@@ -2521,6 +2537,7 @@ export default function Search(props) {
   //console.log('SEARCH SearchState',searchState);
   // #region Return Method
 
+  console.log("Is Array", Array.isArray(searchState.results) );
   return (
     <SearchContext.Provider value={value}>
       <ThemeProvider theme={theme}>
@@ -2563,9 +2580,16 @@ export default function Search(props) {
                         display: 'block'
 
                       }}>Search Results</Typography>
+                      <>
+                      <b>Records Number</b> {searchState.results.length}
+                      
+                      {JSON.stringify(searchState.results)} 
                       {searchState.results.map((res,idx)=>{
+                        <h2>Res - {idx}</h2> 
+                        {JSON.stringify(res)}
                           <SearchResults results={res} />
                       })}
+                      </>
                     </Grid>
                   </Grid>
                 </Box>

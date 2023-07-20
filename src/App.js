@@ -14,7 +14,7 @@ import './User/login.css';
 import Globals from './globals.js';
 import persist from './persist.js';
 import { ThemeProvider } from '@mui/styles';
-
+import SearchContext from './search/MainSearch/SearchContext.js';
 const _ = require('lodash');
 
 /** For testing redesigned, consolidated search which is in progress */
@@ -1563,79 +1563,85 @@ export default class App extends React.Component {
         this.setState({ filtersHidden: boolVal });
     }
 	
-
 	render() {
+        const {state,props,onIconClick} = this;
+    
 		if(this.state.verified){
             console.log('returing outputResults', this.state.outputResults)
+            console.log('his.props.history',this.props.history)
+            console.log("🚀 ~ file: App.js:1572 ~ App ~ render ~ this.props:", this.props)
 			return (
                 <>
-				<div id="app-content" className="footer-content">
-                    <Helmet>
-                        <meta charSet="utf-8" />
-                        <title>Search - NEPAccess</title>
-                        <meta name="description" content="Search, download, and analyze environmental impact statements and other NEPA documents created under the US National Environmental Policy Act of 1969." data-react-helmet="true" />
-                        <link rel="canonical" href="https://www.nepaccess.org/search" />
-                    </Helmet>
-                    <Search 
-                        search={this.startNewSearch} 
-                        suggest={this.suggestFromTerms}
-                        lookupResult={this.state.lookupResult}
-                        filterResultsBy={this.filterResultsBy} 
-                        searching={this.state.searching} 
-                        useOptions={this.state.useSearchOptions}
-                        optionsChanged={this.optionsChanged}
-                        count={this.state.searchResults.length}
-                        filterToggle={this.filterToggle}
-                        networkError={this.state.networkError}
-                        parseError={this.state.parseError}
-                        finalCount={this._finalCount}
-                        draftCount={this._draftCount}
-                        eaCount={this._eaCount}
-                        noiCount={this._noiCount}
-                        rodCount={this._rodCount}
-                        scopingCount={this._scopingCount}
-                        results={this.state.outputResults} 
-                        geoResults={this.state.geoResults}
-                        gatherSpecificHighlights={this.gatherSpecificHighlights}
-                        filtersHidden={this.state.filtersHidden}
-                        // searcherState={this._searcherState}
-                        geoLoading={this.state.geoLoading}
-                        resultsText={this.state.resultsText} 
-                        snippetsDisabled={this.state.snippetsDisabled} 
-                        scrollToBottom={this.scrollToBottom}
-                        scrollToTop={this.scrollToTop}
-                        shouldUpdate={this.state.shouldUpdate}
-                        download={this.downloadCurrentAsTSV}
-                        exportToSpreadsheet={this.exportToCSV}
-                        isMapHidden={this.state.isMapHidden}
-                        toggleMapHide={this.toggleMapHide}
-
-
-/>
-                    {/* <SearchProcessResults 
-                        sort={this.sort}
-                        informAppPage={this.setPageInfo}
-                        gatherSpecificHighlights={this.gatherSpecificHighlights}
-                        results={this.state.outputResults} 
-                        geoResults={this.state.geoResults}
-                        filtersHidden={this.state.filtersHidden}
-                        // searcherState={this._searcherState}
-                        geoLoading={this.state.geoLoading}
-                        resultsText={this.state.resultsText} 
-                        searching={this.state.searching}
-                        snippetsDisabled={this.state.snippetsDisabled} 
-                        scrollToBottom={this.scrollToBottom}
-                        scrollToTop={this.scrollToTop}
-                        shouldUpdate={this.state.shouldUpdate}
-                        download={this.downloadCurrentAsTSV}
-                        exportToSpreadsheet={this.exportToCSV}
-                        isMapHidden={this.state.isMapHidden}
-                        toggleMapHide={this.toggleMapHide}
-                    />  */}
-				</div>
-                <div ref={this.endRef} />
-                <Footer id="footer"></Footer>
-                </>
+				<SearchContext.Provider value={this.context}>
+				    <div id="app-content" className="footer-content">
+                        <Helmet>
+                            <meta charSet="utf-8" />
+                            <title>Search - NEPAccess</title>
+                            <meta name="description" content="Search, download, and analyze environmental impact statements and other NEPA documents created under the US National Environmental Policy Act of 1969." data-react-helmet="true" />
+                            <link rel="canonical" href="https://www.nepaccess.org/search" />
+                        </Helmet>
+                        <Search 
+                            // searcherState={this._searcherState}
+                            count={this.state.searchResults.length}
+                            download={this.downloadCurrentAsTSV}
+                            draftCount={this._draftCount}
+                            eaCount={this._eaCount}
+                            exportToSpreadsheet={this.exportToCSV}
+                            filterResultsBy={this.filterResultsBy} 
+                            filtersHidden={this.state.filtersHidden}
+                            filterToggle={this.filterToggle}
+                            finalCount={this._finalCount}
+                            gatherSpecificHighlights={this.gatherSpecificHighlights}
+                            geoLoading={this.state.geoLoading}
+                            geoResults={this.state.geoResults}
+                            history={this.props.history}
+                            isMapHidden={this.state.isMapHidden}
+                            lookupResult={this.state.lookupResult}
+                            networkError={this.state.networkError}
+                            noiCount={this._noiCount}
+                            optionsChanged={this.optionsChanged}
+                            parseError={this.state.parseError}
+                            results={this.state.outputResults} 
+                            resultsText={this.state.resultsText} 
+                            rodCount={this._rodCount}
+                            scopingCount={this._scopingCount}
+                            scrollToBottom={this.scrollToBottom}
+                            scrollToTop={this.scrollToTop}
+                            search={this.startNewSearch} 
+                            searching={this.state.searching} 
+                            shouldUpdate={this.state.shouldUpdate}
+                            snippetsDisabled={this.state.snippetsDisabled} 
+                            suggest={this.suggestFromTerms}
+                            toggleMapHide={this.toggleMapHide}
+                            useOptions={this.state.useSearchOptions}
+    
+    
+    />
+                        {/* <SearchProcessResults 
+                            sort={this.sort}
+                            informAppPage={this.setPageInfo}
+                            gatherSpecificHighlights={this.gatherSpecificHighlights}
+                            results={this.state.outputResults} 
+                            geoResults={this.state.geoResults}
+                            filtersHidden={this.state.filtersHidden}
+                            // searcherState={this._searcherState}
+                            geoLoading={this.state.geoLoading}
+                            resultsText={this.state.resultsText} 
+                            searching={this.state.searching}
+                            snippetsDisabled={this.state.snippetsDisabled} 
+                            scrollToBottom={this.scrollToBottom}
+                            scrollToTop={this.scrollToTop}
+                            shouldUpdate={this.state.shouldUpdate}
+                            download={this.downloadCurrentAsTSV}
+                            exportToSpreadsheet={this.exportToCSV}
+                            isMapHidden={this.state.isMapHidden}
+                            toggleMapHide={this.toggleMapHide}
+                        />  */}
+    				</div>
+                    <div ref={this.endRef} />
+                    <Footer id="footer"></Footer>
+				</SearchContext.Provider>
+                     </>
 			)
 
 		}
