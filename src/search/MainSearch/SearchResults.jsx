@@ -111,38 +111,22 @@ export default function SearchResults(props) {
       {/* <Grid container flex={1} border={0}>
         <Grid item xs={12} alignContent={'center'} justifyItems={'center'}><SearchResultOptions /></Grid>
       </Grid> */}
-        {JSON.stringify(sortedResults)}
-        { sortedResults.map((result,idx)=>{
-        return ( 
-        <Grid key={idx} container xs={12}>
-          <div>
-            {idx} - {JSON.stringify(result.doc)}
-
-          </div>
-          <SearchResult result={result}/>
+        <Grid container xs={12}>    
           <Grid id="search-result-item-grid-container" container xs={12}>
-            <Item>
-              <h2>Result?</h2>
-              {JSON.stringify(result.doc)}
                {results.map((result,idx)=>{
                  return (
                    <div key={idx}>
-                    <b>index:</b> {idx}
-                    {JSON.stringify(result.doc)}
-                 {
-                  <SearchResultItems result={result.doc}/>
-                 
-                 } 
-                 <Divider/>
-                </div>
-                )
-                })
-              }
+                    <Typography varian="searchResultSubTitle">{result.title}</Typography>
+                    <Item>
+                      <SearchResultItems result={result}/>
+                      </Item>
+                   </div>
+                   )
+                  })
+                }
               <Divider/>
-            </Item>
           </Grid>
         </Grid>
-        )})}
         
     </div>
   );

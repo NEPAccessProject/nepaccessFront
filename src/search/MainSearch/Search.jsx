@@ -3,7 +3,7 @@ import Globals from '../../globals';
 //import Grid from '@mui/material/Grid'; // Grid version 1
 import Grid from '@mui/material/Unstable_Grid2';
 import ProximitySelect from './ProximitySelect';
-import React, { useState, useReducer, useContext, useEffect,useRef,useStateCa } from 'react';
+import React, { useState, useReducer, useContext, useEffect,useRef,useCallback  } from 'react';
 import SearchResults from './SearchResults';
 import SearchContext from './SearchContext';
 import SearchSideBarFilters from './SearchSideBarFilters';
@@ -121,7 +121,7 @@ export default function Search(props) {
   //  console.log("🚀 ~ file: Search.jsx:121 ~ Search ~ results:", results)
   const filterBy = props.filterResultsBy;
   const myRef = React.createRef();
-  const _mounted = useRef(true);
+  let _mounted = false;
   // Necessary for on-demand highlighting per page
 
 
@@ -138,7 +138,6 @@ export default function Search(props) {
       surveyDone: false,
       isDirty: true,
     });
-    console.log('Starting Search after startSearch', searchState);  
     startNewSearch(searchState);
 
     //startNewSearch(searchState);
@@ -148,7 +147,6 @@ export default function Search(props) {
   };
 
   function parseTerms(str) {
-    console.log("🚀 ~ file: Search.jsx:138 ~ parseTerms ~ str:", str)
     if (!str) return str;
 
     str = str.replace(/"(.+)"[\s]*~[\s]*([0-9]+)/g, "\"$1\"~$2"); // "this" ~ 100 -> "this"~100
@@ -159,35 +157,39 @@ export default function Search(props) {
     if (!str.includes('"')) {
       str = str.replace(/([\s]|^)'(.+)'([\s]|$)/g, "$1\"$2\"$3"); // 'this's a mistake' -> "this's a mistake"
     }
-    console.log("🚀 ~ file: Search.jsx:150 ~ UPDATED parseTerms ~ str:", str)
     return str;
   }
 
-  const doSearchFromParams = () => {
-    var queryString = Globals.getParameterByName('q');
-    if (!props.count && (queryString === null || queryString === '')) {
-      // No query param/blank terms: Launch no-term search - Only if we have no results saved here already
-      doSearch('');
-    } else if (queryString) {
-      // Query terms: Handle proximity dropdown logic, launch search
-      setProximityValues(handleProximityValues(queryString));
+  const doSearchFromParams = useCallback() => {
+    // console.log("Stored terms", this._lastSearchTerms);
+    // console.log("State.", this.state);
 
-      setSearchState({
-        ...searchState,
-        _lastSearchTerms: queryString,
-        titleRaw: parseTerms(queryString),
-        proximityDisabled: proximityValues.disableValue,
-        surveyChecked: false,
-        surveyDone: false,
-        isDirty: true,
-      });
-      setInputMessage(proximityValues._inputMessage);
+    var queryString = Globals.getParameterByName("q");
+    console.log('queryString params',queryString);
+    if(queryString === null || queryString === ''){
+        // No query param/blank terms: Launch no-term search - Only if we have no results saved here already
+        // console.log("No query parameters, doing blank search.", this.props.count);
+        doSearch("");
+    } else if(queryString){
+        // Query terms: Handle proximity dropdown logic, launch search
+        let proximityValues = handleProximityValues(queryString);
 
-      if (searchState.titleRaw) {
-        setDebouncedSearch(state);
-      }
-    }
-  };
+        const _lastSearchTerms = queryString;
+        setSearchState({
+            titleRaw: parseTerms(queryString),
+            proximityDisabled: proximityValues.disableValue,
+            surveyChecked: false,
+            surveyDone: false,
+            isDirty: true,
+            inputMessage: proximityValues._inputMessage
+        }, () => {
+            if(titleRaw){
+                console.log("Firing search with query param", titleRaw);
+                this.debouncedSearch(this.state);
+            }
+        });
+    } 
+}
   const resetTypeCounts = () => {
     _finalCount = "";
     _draftCount = "";
@@ -368,8 +370,6 @@ export default function Search(props) {
   const sortDataByFieldThenHighlight = (field, ascending) => {
     setSearchState({
       ...searchState,
-
-      // results: searchState.results.sort((a, b) => (a[field] > b[field]) ? 1 : -1)
       searching: true,
       results: searchState.results.sort((alphabetically(field, ascending)))
     })//, () => {
@@ -538,14 +538,16 @@ export default function Search(props) {
     });
 
     // Have to "flatten" and also sort that by relevance, then merge any existing highlights
-    return mergeHighlights(
+    
+    const highlights = mergeHighlights(
       Object.values(processResults).sort(function (a, b) { return a.relevance - b.relevance; })
     );
+    return highlights
   }
 
   // Start a brand new search.
   const startNewSearch = (searchState) => {
-    console.log("Starting New Search with searchState:", searchState)
+//    console.log("Starting New Search with searchState:", searchState)
 
     // Reset page, page size
     _page = 1;
@@ -597,7 +599,6 @@ export default function Search(props) {
     // }).catch(error => {
     //     console.error(error);
     // })
-
   }
 
   /** Just get the top results quickly before launching the "full" search with initialSearch() */
@@ -808,7 +809,7 @@ export default function Search(props) {
           countTypes();
         } else {
           // Highlight first page using function which then gets the rest of the metadata
-          console.log(`Gather first page highlights - searchId: ${_searchId} with data`,_data);
+          console.log(`Gather first page highlights 808 - searchId : ${_searchId} with data`,_data);
           gatherFirstPageHighlightsThenFinishSearch(_searchId, searchState.searcherInputs, _data);
         }
       } else {
@@ -1002,7 +1003,6 @@ export default function Search(props) {
         let processResults = {};
         processResults = buildData(_data);
         _data = processResults;
-        console.log('Process Results _data is: ',_data)
         setSearchState({
           ...searchState,
           results: _data,
@@ -2402,7 +2402,7 @@ export default function Search(props) {
     surveyDone: true,
     surveyResult: "Haven't searched yet",
     test: Globals.anEnum.options,
-    titleRaw: "Nuclear Test",
+    titleRaw: "",
     tooltipOpen: undefined,
     typeAll: true,
     typeDraft: false,
@@ -2441,21 +2441,68 @@ export default function Search(props) {
   let _noiCount = "";
   let _rodCount = "";
   let _scopingCount = "";
+
+
+//     useEffect(()=> {
+//       console.log('Checking searchState results',searchState.results)
+//   if(searchState.results && searchState.results.length){
+//     searchState.results.map((result,idx)=>{
+//         console.log(`result ${idx}`, result)
+//     })
+//   }
+//   else{
+//     console.log("No Result yet")
+//   }
+// },[searchState.results])
+
+
+  const getQueryParams = useCallback(()=> {
+      const queryParamsLocation = useLocation().search;
+      console.log('Query Param Location',queryParamsLocation)
+      const titleRaw = new URLSearchParams(queryParamsLocation).get('q');
+      console.log('Title Raw from Params?',titleRaw)
+      const rtn = titleRaw || null
+      return rtn;
+  })
+       
   // useEffect(() => {
   //   const queryParamsLocation = useLocation().search;
   //   const titleRaw = new URLSearchParams(queryParamsLocation).get('q');
-  //   console.log("🚀 ~ file: Search.jsx:841 ~ useEffect ~ query:", titleRaw)
+  //   console.log("🚀 ~ file: Search.jsx:2446 ~ useEffect ~ query:", titleRaw)
   //   if (titleRaw && titleRaw.length) {
   //     setSearchState({
   //       ...searchState,
   //       titleRaw: titleRaw
   //     });
-  //   }
-  //   return()=> {
-  //     console.log('query params useEffect returning with state',searchState);
-  //   }
 
+  //   }
   // },[searchState.titleRaw]);
+  useEffect(()=> {
+    _mounted = true
+    console.log(`Mounted `,_mounted)
+  },[_mounted])
+
+  useEffect(() => {
+  console.log(`useEffect doSearchFromParams`);
+  if(_mounted){
+    console.log('Component not Mounted',_mounted);
+    return;
+  }
+    const params = new URLSearchParams(window.location.search); // id=123
+    if(params.has("q")){
+      const q = params.get('q')
+      doSearchFromParams(q)
+      // setSearchState({
+      //   ...searchState,
+      //   titleRaw : q,
+      // })
+      //doSearchFromParams()
+    }
+    else {
+      console.log('No Query Param Found')
+    }
+    // console.log('GOT Query Param',q);
+},[doSearchFromParams])
 
   //[TODO] a lot of duplication BUT it fixed the reRender Loop. Need to revisit to combine into a singleFunction
   useEffect(() => {
@@ -2537,7 +2584,6 @@ export default function Search(props) {
   //console.log('SEARCH SearchState',searchState);
   // #region Return Method
 
-  console.log("Is Array", Array.isArray(searchState.results) );
   return (
     <SearchContext.Provider value={value}>
       <ThemeProvider theme={theme}>
@@ -2575,20 +2621,11 @@ export default function Search(props) {
                   <Grid container flex={1} flexGrow={1}>
                     <Grid item xs={12} width={'100%'}>
 
-                      <Typography variant={'resultsTitle'} sx={{
-                        padding: 2,
-                        display: 'block'
-
-                      }}>Search Results</Typography>
                       <>
-                      <b>Records Number</b> {searchState.results.length}
-                      
-                      {JSON.stringify(searchState.results)} 
-                      {searchState.results.map((res,idx)=>{
-                        <h2>Res - {idx}</h2> 
-                        {JSON.stringify(res)}
-                          <SearchResults results={res} />
-                      })}
+                          {(searchState.results && searchState.results.length)
+                            ? <SearchResults results={searchState.results} />
+                            : <div>"N/A"</div>
+                          }
                       </>
                     </Grid>
                   </Grid>

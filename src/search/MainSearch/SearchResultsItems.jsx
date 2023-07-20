@@ -23,6 +23,7 @@ import Grid from '@mui/material/Unstable_Grid2';
 import SearchContext from './SearchContext';
 import PDFViewerDialog from './PDFViewerDialog';
 import SearchResultOptions from './SearchResultOptions';
+import { isDate } from 'lodash';
 const handleDownloadClick = (evt, id) => {
   evt.preventDefault();
   console.log('Download ID Value', id);
@@ -31,32 +32,25 @@ const sortByDate = (a,b)=>{
   return a.commentDate > b.commentDate;
 }
 export default function SearchResultItems(props){
-  console.log("🚀 ~ file: SearchResultsItems.jsx:34 ~ SearchResultItems ~ props:", props)
-  let  results  = props.results || [];
-  console.log("🚀 ~ file: SearchResultsItems.jsx:36 ~ SearchResultItems ~ record:", result)
+  let  result  = props.result || [];
   //const sortedRecords = (record.length) ? records.sort(sortByDate) : [];
   //console.log("🚀 ~ file: SearchResultsItems.jsx:37 ~ SearchResultItems ~ sortedRecords:", sortedRecords)
 
   return (
     <>
      <Box minHeight={'100vh'}>
-        <b>Record?</b> {JSON.stringify(results)}
-        {/* {sortedRecords.map((record, idx) => {
-          // return (
-  
-          //   <div key={idx}>
-          //     {
-          //       <div key={idx}>
-          //         {JSON.stringify(record.doc)}
-          //         <SearchResultItem record={records.doc} />
-          //         <Divider/>
-          //       </div>
-          //     }
-          //   </div>
-          // )
-          {JSON.stringify(record)}
+        {(result && result.records)
+        ? (result.records).map((record, idx)=>{
+            return(
+              <div key={idx}>
+                  <SearchResultItem record={record}/>
+                </div>
+            )
+          
         })
-        } */}
+        : <div>No results Found</div> 
+      }
+        
   
      </Box>
     </>
@@ -88,8 +82,9 @@ export function SearchResultItem(props) {
 
   //  console.log("🚀 ~ file: SearchResultsItems.jsx:69 ~ SearchResultItem ~ props:", props)
   const { title,  agency, cooperatingAgency, commentsFilename, plaintext, notes, id, name, subtype, county, commentDate, status, documentType } = record;
-  const year = new Date(commentDate).getFullYear();
-  const content = "orem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Donec et odio pellentesque diam volutpat. Adipiscing commodo elit at imperdiet dui accumsan sit amet. Morbi tincidunt ornare massa eget egestas purus. Tempus quam pellentesque nec nam aliquam sem et tortor consequat. Tortor posuere ac ut consequat semper viverra. Sollicitudin aliquam ultrices sagittis orci a scelerisque purus semper. Porta nibh venenatis cras sed felis eget velit aliquet. Elementum eu facilisis sed odio morbi quis commodo odio aenean. Metus dictum at tempor commodo. Massa vitae tortor condimentum lacinia quis vel eros donec. Mauris a diam maecenas sed. Diam in arcu cursus euismod. Vulputate sapien nec sagittis aliquam. Ipsum dolor sit amet consectetur. Nibh praesent tristique magna sit amet purus gravida quis. Commodo viverra maecenas accumsan lacus vel facilisis volutpat est velit. Porta non pulvinar neque laoreet suspendisse interdum consectetur."
+  const year = (commentDate) ? new Date(commentDate).getFullYear() : "N/A"
+
+  const content = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Donec et odio pellentesque diam volutpat. Adipiscing commodo elit at imperdiet dui accumsan sit amet. Morbi tincidunt ornare massa eget egestas purus. Tempus quam pellentesque nec nam aliquam sem et tortor consequat. Tortor posuere ac ut consequat semper viverra. Sollicitudin aliquam ultrices sagittis orci a scelerisque purus semper. Porta nibh venenatis cras sed felis eget velit aliquet. Elementum eu facilisis sed odio morbi quis commodo odio aenean. Metus dictum at tempor commodo. Massa vitae tortor condimentum lacinia quis vel eros donec. Mauris a diam maecenas sed. Diam in arcu cursus euismod. Vulputate sapien nec sagittis aliquam. Ipsum dolor sit amet consectetur. Nibh praesent tristique magna sit amet purus gravida quis. Commodo viverra maecenas accumsan lacus vel facilisis volutpat est velit. Porta non pulvinar neque laoreet suspendisse interdum consectetur."
   return (
     <>
       <Typography variant='searchResultSubTitle' padding={2}>{documentType} - {title}</Typography>
