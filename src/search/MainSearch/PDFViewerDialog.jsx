@@ -1,29 +1,20 @@
-import React, { useContext, useState } from 'react';
 import {
-  Button,
-  Dialog,
-  DialogContext,
-  DialogContent,
-  DialogTitle,
-  DialogContentText,
-  DialogActions,
-  Grid,
-  Box,
-  Typography,
-  IconButton,
   Container,
-  CircularProgress,
+  Dialog,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
+  Grid,
+  IconButton,
+  Typography
 } from '@mui/material';
+import React, { useState } from 'react';
 // const [fullWidth, setFullWidth] = React.useState(true);
 // const [maxWidth, setMaxWidth] = React.useState('md');
 // import SearchContext from './SearchContext';
-import { Document, Page } from 'react-pdf';
 //https://codesandbox.io/s/pdf-view-l3i46?file=/src/Components/DrawArea.js
 //https://react-pdf-viewer.dev/examples/
-import samplePDF from './example.pdf';
-import { pdfjs } from 'react-pdf';
 import PDFViewer from './PDFViewer';
-import FloatingToolbar from './FloatingToolbar';
 // pdfjs.GlobalWorkerOptions.workerSrc = new URL(
 //   'pdfjs-dist/build/pdf.worker.min.js',
 //   import.meta.url,
@@ -33,11 +24,15 @@ export default function PDFViewerDialog(props) {
   //    pdfjs.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.js`;
 
   //  const { isOpen, onDialogClose,fileName } = props;
+  const {id} = props;
   const [numPages, setNumPages] = useState(null);
   const [pageNumber, setPageNumber] = useState(1);
   const [fullWidth, setFullWidth] = React.useState(true);
   const [maxWidth, setMaxWidth] = React.useState('md');
+  console.log('ID', id);
+  
   const [isLoaded, setIsLoaded] = useState(false);
+  const samplePDF = 'https://arxiv.org/pdf/quant-ph/0410100.pdf';
   function onDocumentLoadSuccess({ numPages }) {
     console.log('onDocumentLoadSuccess', numPages);
     setIsLoaded(true);
@@ -71,7 +66,7 @@ export default function PDFViewerDialog(props) {
           <Grid container>
             <Grid item xs={10} textAlign={'left'} justifyContent={'flex-start'} justifyItems={'flex-start'}>
               <Typography color={'black'} fontSize={18} fontWeight={'bold'}>
-                {(docTitle) ? docTitle : 'Title Placeholder'}
+                {(docTitle) ? docTitle : ''}
               </Typography>
             </Grid>
 
@@ -85,8 +80,8 @@ export default function PDFViewerDialog(props) {
         <DialogContentText id="pdf-viewer-dialog-content">
           {/* {isLoaded ? <CircularProgress /> : ( */}
           <Container id="pdf-viewer-document-container">
-            <FloatingToolbar/>
-            {/* <PDFViewer/> */}
+            {/* <FloatingToolbar/> */}
+            <PDFViewer id={id} />
             {/* <Grid flex={1} container>
               <Grid item justifyContent={'flex-start'} xs={4}><Button variant='outlined' onClick={() => setPageNumber(pageNumber - 1)}>{'<'} Previous Page</Button></Grid>
               <Grid item xs={4} justifyContent={'center'}>

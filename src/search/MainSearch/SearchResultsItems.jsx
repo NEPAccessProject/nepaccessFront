@@ -1,32 +1,17 @@
-import React, { useState, useEffect, useContext,useRef } from 'react';
 import {
-  Paper,
-  Button,
-  Input,
   Box,
-  Divider,
-  FormControl,
-  Select,
-  Autocomplete,
-  InputLabel,
-  ListItem,
-  IconButton,
-  TextField,
-  Typography,
+  Button,
   Container,
-  FormLabel,
-  Chip,
-  withMediaQuery,
-  useMediaQuery
+  Typography
 } from '@mui/material';
 import Grid from '@mui/material/Unstable_Grid2';
-import SearchContext from './SearchContext';
+import React, { useContext, useState } from 'react';
 import PDFViewerDialog from './PDFViewerDialog';
-import SearchResultOptions from './SearchResultOptions';
-import { isDate } from 'lodash';
+import SearchContext from './SearchContext';
 const handleDownloadClick = (evt, id) => {
   evt.preventDefault();
   console.log('Download ID Value', id);
+  
 };
 const sortByDate = (a,b)=>{
   return a.commentDate > b.commentDate;

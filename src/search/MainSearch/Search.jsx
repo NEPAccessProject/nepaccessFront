@@ -1,50 +1,21 @@
-import CloseIcon from '@mui/icons-material/Close';
 import Globals from '../../globals';
 //import Grid from '@mui/material/Grid'; // Grid version 1
-import Grid from '@mui/material/Unstable_Grid2';
-import ProximitySelect from './ProximitySelect';
-import React, { useState, useReducer, useContext, useEffect,useRef,useCallback  } from 'react';
-import SearchResults from './SearchResults';
-import SearchContext from './SearchContext';
-import SearchSideBarFilters from './SearchSideBarFilters';
-import theme from '../../styles/theme';
-import { Document, Page, pdfjs } from 'react-pdf';
 import {
-  Paper,
-  Button,
-  Input,
   Box,
-  Divider,
-  FormControl,
-  Select,
-  Autocomplete,
-  InputLabel,
-  ListItem,
-  IconButton,
-  TextField,
-  Typography,
   Container,
-  FormLabel,
-  Dialog,
-  DialogContent,
-  DialogTitle,
-  DialogContentText,
-  DialogActions,
-  FormControlLabel,
-  Checkbox,
-  useMediaQuery,
+  Divider,
+  Paper,
+  useMediaQuery
 } from '@mui/material';
-import {
-  proximityOptions,
-  actionOptions,
-  decisionOptions,
-  agencyOptions,
-  stateOptions,
-  countyOptions,
-} from '../options';
+import Grid from '@mui/material/Unstable_Grid2';
 import { ThemeProvider, styled } from '@mui/material/styles';
+import React, { useCallback, useEffect, useState } from 'react';
+import { useLocation } from 'react-router-dom';
+import theme from '../../styles/theme';
+import SearchContext from './SearchContext';
 import SearchHeader from './SearchHeader';
-import { useLocation, useParams } from 'react-router-dom'
+import SearchResults from './SearchResults';
+import SearchSideBarFilters from './SearchSideBarFilters';
 
 import axios from 'axios';
 const _ = require('lodash');
@@ -160,7 +131,7 @@ export default function Search(props) {
     return str;
   }
 
-  const doSearchFromParams = useCallback() => {
+  const doSearchFromParams = () => {
     // console.log("Stored terms", this._lastSearchTerms);
     // console.log("State.", this.state);
 
@@ -2482,27 +2453,27 @@ export default function Search(props) {
     console.log(`Mounted `,_mounted)
   },[_mounted])
 
-  useEffect(() => {
-  console.log(`useEffect doSearchFromParams`);
-  if(_mounted){
-    console.log('Component not Mounted',_mounted);
-    return;
-  }
-    const params = new URLSearchParams(window.location.search); // id=123
-    if(params.has("q")){
-      const q = params.get('q')
-      doSearchFromParams(q)
-      // setSearchState({
-      //   ...searchState,
-      //   titleRaw : q,
-      // })
-      //doSearchFromParams()
-    }
-    else {
-      console.log('No Query Param Found')
-    }
-    // console.log('GOT Query Param',q);
-},[doSearchFromParams])
+//   useEffect(() => {
+//   console.log(`useEffect doSearchFromParams`);
+//   if(_mounted){
+//     console.log('Component not Mounted',_mounted);
+//     return;
+//   }
+//     const params = new URLSearchParams(window.location.search); // id=123
+//     if(params.has("q")){
+//       const q = params.get('q')
+//       doSearchFromParams(q)
+//       // setSearchState({
+//       //   ...searchState,
+//       //   titleRaw : q,
+//       // })
+//       //doSearchFromParams()
+//     }
+//     else {
+//       console.log('No Query Param Found')
+//     }
+//     // console.log('GOT Query Param',q);
+// },[doSearchFromParams])
 
   //[TODO] a lot of duplication BUT it fixed the reRender Loop. Need to revisit to combine into a singleFunction
   useEffect(() => {
