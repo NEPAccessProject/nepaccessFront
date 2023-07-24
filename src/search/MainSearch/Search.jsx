@@ -92,6 +92,7 @@ export default function Search(props) {
   const filterBy = props.filterResultsBy;
   const myRef = React.createRef();
   let _mounted = React.createRef(false);
+  let _queryParams = []
   // Necessary for on-demand highlighting per page
 
 
@@ -1044,7 +1045,7 @@ export default function Search(props) {
    * which we can use to skip having to loop through everything.
    */
   const gatherSpecificHighlights = (_index, record) => {
-    console.log("gatherSpecificHighlights")
+    console.log(`gatherSpecificHighlights index ${_index} with record`,record)
     if (!_mounted) { // User navigated away or reloaded
         console.log("gatherSpecificHighlights, Not Mounted")
         return; // cancel search
@@ -2339,7 +2340,7 @@ export default function Search(props) {
     searchOption: 'B',
     results: [],
     shouldUpdate: false,
-    showContext: true, //default should be false
+    showContext: false, //default should be false
     snippetsDisabled: false,
     sortBy: 'relevance',
     sortDirection: 'ASC',
@@ -2409,7 +2410,7 @@ export default function Search(props) {
     } else if(queryString && queryString.length && queryString !== "undefined"){
         // Query terms: Handle proximity dropdown logic, launch search
         let proximityValues = handleProximityValues(queryString);
-        console.log("🚀 ~ file: Search.jsx:2374 ~ doSearchFromParams ~ proximityValues:", proximityValues)
+
         let terms = parseTerms(queryString);
 
         const _lastSearchTerms = queryString;
@@ -2442,7 +2443,7 @@ export default function Search(props) {
   const debouncedSearch = _.debounce(doSearch, 100);
 //#endregion
   useEffect(()=> {
-    if(_mounted.value === true){
+    if(_mounted.value === false){
       return; //do nothing till cleanup
     }
     _mounted.current = true
@@ -2453,6 +2454,22 @@ export default function Search(props) {
     })
   },[_mounted.current])
 
+  useEffect(() => {
+    if(_mounted.value === false){
+        return
+    }
+      const searchTerm = Globals.getParameterByName("q")
+      console.log('Search Terms from Params',searchTerm)
+      if(searchTerm && searchTerm.length){
+        setSearchState({
+          ...searchState,
+          titleRaw :  parseTerms(searchTerm)
+        })
+      }
+      console.log(`useEffect Search Term`,searchTerm)
+  },[searchState.titleRaw])
+
+
   useEffect(()=> {
     if(_mounted.current === false){
       return false;
@@ -2460,8 +2477,8 @@ export default function Search(props) {
     console.log(`UseEffect for results `,searchState.results)
     searchState.results.map((result,idx)=>{
       console.log(`result ${idx}`,result)
-      gatherSpecificHighlights(idx,result)
-    })
+      gatherSpecificHighlights(idx,result.doc)
+    },[searchState.results])
 
     console.log('Results use Effect fired',searchState.results);
   },[searchState.results]);

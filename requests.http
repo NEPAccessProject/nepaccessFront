@@ -1,7 +1,7 @@
 
 ###
-POST http://localhost:8080/text/localhost:8080/text/get_highlightsFVH HTTP/1.1
-content-type: application/json
+POST http://localhost:8080/text/get_highlightsFVH HTTP/1.1
+content-type: application/jsonp
 
 {
     "unhighlighted": [
