@@ -85,10 +85,8 @@ const summary = {
 };
 
 export default function Search(props) {
-  //  console.log("SEARCH PROPS", props)
+//  console.log("SEARCH PROPS", props)
   const classes = useStyles(theme);
-  const {q} = useParams();
-  console.log('Q?',q);
   const isMobile = useMediaQuery('(max-width:768px)');
   //  console.log("🚀 ~ file: Search.jsx:121 ~ Search ~ results:", results)
   const filterBy = props.filterResultsBy;
@@ -370,6 +368,7 @@ export default function Search(props) {
 
     for (let i = 0; i < searchState.results.length; i++) {
       if (data[i]) {
+        console.log('searchState plaintext ? ',data[i]);
         for (let j = 0; j < searchState.results[i].records.length; j++) {
           if (data[i].records[j]
             && searchState.results[i].records[j]
@@ -382,7 +381,7 @@ export default function Search(props) {
             }
           } else {
             //do nothing for now
-            // console.log("Doesn't exist");
+              console.log("Doesn't exist for data[i]",data[i]);
           }
         }
       }
@@ -497,7 +496,11 @@ export default function Search(props) {
     _pageSize = 10;
 
     // throw out anything we really don't want to support/include
-    searchState.titleRaw = preProcessTerms(searchState.titleRaw);
+    const terms = preProcessTerms(searchState.titleRaw);
+    setSearchState({
+      ...searchState,
+      titleRaw: terms
+    });
 
     // Parse terms, set to what Lucene will actually use for full transparency.  Disabled on request
     // const oldTerms = searchState.titleRaw;
@@ -617,11 +620,11 @@ export default function Search(props) {
 
     dataToPass.title = postProcessTerms(dataToPass.title);
     // Proximity search from UI - surround with quotes, append ~#
-    if (!searchState.searcherInputs.proximityDisabled && searchState.searcherInputs.proximityOption) {
-      if (searchState.searcherInputs.proximityOption.value >= 0) {
+    if (!searchState.proximityDisabled && searchState.proximityOption) {
+      if (searchState.proximityOption.value >= 0) {
         try {
           dataToPass.title =
-            ("\"" + dataToPass.title + "\"~" + searchState.searcherInputs.proximityOption.value);
+            ("\"" + dataToPass.title + "\"~" + searchState.proximityOption.value);
         } catch (e) {
           e.printStackTrace();
         }
@@ -1305,14 +1308,13 @@ export default function Search(props) {
 
           setSearchState({
             ...searchState,
-            results: allResults,
+                  searchResults: allResults,
             results: currentResults,
             shouldUpdate: true,
           });
-          // , () => {
-            console.log("Got highlights, finish search");
+          console.log("Got highlights, finish search");
             initialSearch(_inputs);
-          // });
+        
         }
       }).catch(error => {
         if (error.name === 'TypeError') {
@@ -1734,7 +1736,10 @@ export default function Search(props) {
   };
 
   const onIconClick = (evt) => {
-    console.log('onIconClick clicked', evt.target);
+    console.log('onIconClick clicked', evt.target.name);
+    setSearchState({
+      titleRaw: evt.target.name
+    })
     doSearch(searchState.titleRaw);
   };
   /** clears and disables proximity search option as well as clearing text */
@@ -1812,6 +1817,10 @@ export default function Search(props) {
 
   const onInput = (evt) => {
     let userInput = evt.target.value;
+    console.log('onInput userInput',userInput);
+    if(!userInput || userInput.length <= 3){
+        console.log(`${userInput} is not long enught`)
+    }
     let proximityValues = handleProximityValues(userInput);
 
     //get the evt.target.name (defined by name= in input)
@@ -2416,27 +2425,6 @@ export default function Search(props) {
     }
   });
 
-
-
-
-  // const getFirstYearCount = useCallback(() => {
-  //   const count =  get('stats/earliest_year', 'firstYear');
-  //   console.log("🚀 ~ file: Search.jsx ~ line 2440 ~ getFirstYearCount ~ count", JSON.stringify(count))
-  //   setSearchState({
-  //     ...searchState,
-  //     firstYear: count
-  //   });
-  // },[searchState.firstYear]);
-
-  // const getLastYearCount = useCallback(() => {
-  //   const count =  get('stats/latest_year', 'lastYear');
-  //   console.log("🚀 ~ file: Search.jsx ~ line 2433 ~ getLastYearCount ~ count", JSON.stringify(count))
-  //   setSearchState({
-  //     ...searchState,
-  //     lastYear:count,
-  //   })
-  // },[searchState.firstYear]);
-
   const getEISDocCounts = useCallback(() => {
     const count =  get('stats/eis_count', 'EISCount');
     console.log("🚀 ~ file: Search.jsx ~ line 2456 ~ getEISDocCounts ~ count", JSON.stringify(count))
@@ -2447,38 +2435,48 @@ export default function Search(props) {
     ()=> {
       console.log('Cleanup getEISDocCounts',searchState)
     }
-  },[searchState.eis_count,searchState]);
+  },[searchState.eis_count]);
 
-  // useEffect(() => {
-  //   getLastYearCount();
-  // }, [searchState.lastYear]);
-
-  // useEffect(() => {
-  //   getEISDocCounts();
-  // }, [searchState.EISCount])
   const debouncedSearch = _.debounce(doSearch, 100);
 //#endregion
   useEffect(()=> {
+    if(_mounted.value === true){
+      return; //do nothing till cleanup
+    }
     _mounted.current = true
-    console.log(`Mounted `,_mounted)
-  },[_mounted])
+    console.log(`Mounted `,_mounted);
+    (()=> {
+      console.log('cleaning up mounted check after useEffect');
+      _mounted.current=false;
+    })
+  },[_mounted.current])
 
   // useEffect(()=> {
-  //   console.log('UseEffect getCounts fun')
-  //    getFirstYearCount();
-  // }, [getFirstYearCount]);
+  //   if(_mounted.current === false){
+  //     return false;
+  //   }
 
-  // useEffect(()=> {
-  //   console.log('UseEffect getCounts fun')
-  //    getLastYearCount();
-  // }, [getLastYearCount]);
+  //   console.log('Results use Effect fired',searchState.results);
+  // },[searchState.results]);
 
-  // useEffect(() => {
-  //   console.log('UseEffect getCounts fun')
-  //   getEISDocCounts();
-  // }, [getEISDocCounts]);
+  useEffect(()=>{
+    if(_mounted.current === false){
+      return false;
+    }
 
-  const { markup, proximityDisabled, agencyRaw, state, county, proximityOption } = searchState;
+    console.log('Use Effect for Title Raw',searchState.titleRaw);
+  },[searchState.titleRaw])
+
+  // useEffect(()=>{
+  //   if(_mounted.current === false){
+  //     return false;
+  //   }
+  //   console.log(`searchState useEffect:`,searchState)
+  // },[searchState]);
+
+
+
+//  const { markup, proximityDisabled, agencyRaw, state, county, proximityOption } = searchState;
   const value = {
     searchState,
     onKeyDown,
@@ -2497,10 +2495,6 @@ export default function Search(props) {
     onIconClick,
     onSnippetsToggle,
     onTitleOnlyChecked,
-    // proximityDisabled,
-    // agencyRaw,
-    // state,
-    // county,
     toggleQuickStartDialog,
     toggleAvailableFilesDialog,
     toggleSearchTipsDialog,

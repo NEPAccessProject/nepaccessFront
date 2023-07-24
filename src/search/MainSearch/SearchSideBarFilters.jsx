@@ -91,8 +91,11 @@ export default function SearchSideBarFilters(props) {
 
   const onCheckboxChange = (evt) => {
     console.log('Checkbox changed, setting showContext to ',evt.target.checked)
-    this.setSearchState({ 
-        showContext: evt.target.checked
+    setSearchState({ 
+        ...searchState,
+        showContext: evt.target.checked,
+        show: evt.target.checked,
+        hide: ~evt.target.checked
     });
 }
 
