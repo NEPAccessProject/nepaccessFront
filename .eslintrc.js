@@ -3,7 +3,10 @@ module.exports = {
         "browser": true,
         "es2021": true
     },
-    "extends": "plugin:react/recommended",
+    "extends": [
+        'plugin:react/recommended',
+        'plugin:react-hooks/recommended'
+    ],
     "parser": "@typescript-eslint/parser",
     "parserOptions": {
         "ecmaFeatures": {
@@ -16,7 +19,13 @@ module.exports = {
         "react",
         ],
     "rules": {
+        "react/jsx-no-bind": 0,
+        "no-unused-vars" : 0,
         "react/prop-types": "off",
         "react/no-unescaped-entities": "off",
+        "react/jsx-uses-react" : 2,
+        "react/react-in-jsx-scope": 2,
+        "react/no-children-prop": 2,
+
     }
 };

@@ -1,44 +1,29 @@
-import React, { useState, useEffect, useContext } from 'react';
 import {
-  Paper,
-  Button,
-  Input,
+  Autocomplete,
   Box,
   Divider,
   FormControl,
-  Select,
-  Autocomplete,
-  InputLabel,
-  ListItem,
-  IconButton,
   TextField,
-  Typography,
-  Container,
-  FormLabel,
+  Typography
 } from '@mui/material';
-import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import React, { useContext } from 'react';
 
 import { styled } from '@mui/material/styles';
 import theme from '../../styles/theme';
 //import Grid from '@mui/material/Grid'; // Grid version 1
-import Grid from '@mui/material/Unstable_Grid2';
-import { InputAdornment, SearchOutlined, Clear } from '@mui/icons-material';
-import SearchFilter from './SearchFilter';
 import { makeStyles } from '@mui/styles';
-import Globals from '../../globals';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import Globals from '../../globals';
 import {
-  proximityOptions,
-  actionOptions,
-  decisionOptions,
   agencyOptions,
+  proximityOptions
 } from '../options';
-const _ = require('lodash');
 import SearchContext from './SearchContext';
-import { SearchControl } from 'leaflet-geosearch';
+const _ = require('lodash');
 
 
 const stateOptions = Globals.stateOptions;
@@ -82,8 +67,10 @@ export default function SearchSideBarFilters(props) {
     onProximityChange,
     onCooperatingAgencyChange,
     onTypeChecked,
+    onSnippetsToggle
   } = useContext(SearchContext);
   const { agencyRaw, state, county, stateOptions, countyOptions,
+    snippetsDisabled,showContext,
     proximityDisabled, markup, cooperatingAgencyRaw, firstYear, lastYear, EISCount,
     typeEA, typeDraft, typeFinal, typeNOI, draftCount, finalCount, noiCount, rodCount, scopingCount, eaCount
 
@@ -101,6 +88,14 @@ export default function SearchSideBarFilters(props) {
     console.log('onStartDateChange date', date);
     setSearchState({ ...searchState, startPublish: date.toLocaleString });
   };
+
+  const onCheckboxChange = (evt) => {
+    console.log('Checkbox changed, setting showContext to ',evt.target.checked)
+    this.setSearchState({ 
+        showContext: evt.target.checked
+    });
+}
+
 
   // #endregion  
   // region Render Return
@@ -124,6 +119,23 @@ export default function SearchSideBarFilters(props) {
             control={<Checkbox checked={markup} onChange={onMarkupChange} />}
             label="Search Only Within Titles"
           />
+        </Item>
+        <Item alignItems="center">
+          <Box marginBottom={0}>
+          <FormControlLabel
+              control={
+                <Checkbox
+                  // checked={searchOptions}
+                  checked={showContext}
+                  onChange={onCheckboxChange}
+                  disabled = {snippetsDisabled}
+                />
+              }
+              label="Show Text Snippets"
+            />
+          
+          {/* {this.showDownloadButton()} */}
+          </Box>
         </Item>
         {/* #region Proximity Filter */}
         <Item>

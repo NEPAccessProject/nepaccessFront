@@ -14,18 +14,25 @@ const handleDownloadClick = (evt, id) => {
   
 };
 const sortByDate = (a,b)=>{
-  return a.commentDate > b.commentDate;
+console.log("🚀 ~ file: SearchResultsItems.jsx ~ line 17 ~ sortByDate ~ a,b", JSON.stringify(a),JSON.stringify(b));
+  return a.doc.commentDate > b.doc.commentDate;
 }
 export default function SearchResultItems(props){
   let  result  = props.result || [];
-  //const sortedRecords = (record.length) ? records.sort(sortByDate) : [];
+  const {doc,records} = result;
+  console.log('search result records?',records);
+  console.log('Search result docs?', doc);
+  const sortedRecords = (records && records.length) ? records.sort(sortByDate) : [];
+// const initialSearch = (records.length) ? records.sort(sortByDate): [];
   //console.log("🚀 ~ file: SearchResultsItems.jsx:37 ~ SearchResultItems ~ sortedRecords:", sortedRecords)
 
+  /* Merge doc and records */
   return (
     <>
      <Box minHeight={'100vh'}>
-        {(result && result.records)
-        ? (result.records).map((record, idx)=>{
+      {JSON.stringify(records)}
+        {(sortedRecords)
+        ? (sortedRecords).map((record, idx)=>{
             return(
               <div key={idx}>
                   <SearchResultItem record={record}/>
@@ -34,27 +41,31 @@ export default function SearchResultItems(props){
           
         })
         : <div>No results Found</div> 
-      }
+      } 
         
-  
      </Box>
     </>
   )
 }
 
 export function SearchResultItem(props) {
+  console.log("🚀 ~ file: SearchResultsItems.jsx:46 ~ SearchResultItem ~ props:", props)
   const [isPDFViewOpen, setIsPDFViewOpen] = useState(false);
   const [isContentExpanded, setIsContentExpanded] = useState(false);
   const context = useContext(SearchContext);
   const {searchState,setSearchState} = context;
   const { record } = props;  function onDocumentLoadSuccess({ numPages }) {
+    const { title,  agency, cooperatingAgency, commentsFilename, plaintext, notes, id, name, subtype, county, commentDate, status, documentType } = record;
+  //  console.log("🚀 ~ file: SearchResultsItems.jsx:53 ~ onDocumentLoadSuccess ~ commentDate:", commentDate)
+  //  console.log("🚀 ~ file: SearchResultsItems.jsx:53 ~ onDocumentLoadSuccess ~ id:", id)
+
     setSearchState({ ...searchState, numPages: numPages });
     setNumPages(numPages);
   }
-  function openPDFPreview(evt, id) {
+  function openPDFPreview(id) {
     console.log(`Open PDF for ID: ${id}`);
     setIsPDFViewOpen(true);
-    evt.preventDefault();
+//    evt.preventDefault();
   }
   function closePDFPreview() {
     setIsPDFViewOpen(false);
@@ -66,7 +77,7 @@ export function SearchResultItem(props) {
   }
 
   //  console.log("🚀 ~ file: SearchResultsItems.jsx:69 ~ SearchResultItem ~ props:", props)
-  const { title,  agency, cooperatingAgency, commentsFilename, plaintext, notes, id, name, subtype, county, commentDate, status, documentType } = record;
+
   const year = (commentDate) ? new Date(commentDate).getFullYear() : "N/A"
 
   const content = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Donec et odio pellentesque diam volutpat. Adipiscing commodo elit at imperdiet dui accumsan sit amet. Morbi tincidunt ornare massa eget egestas purus. Tempus quam pellentesque nec nam aliquam sem et tortor consequat. Tortor posuere ac ut consequat semper viverra. Sollicitudin aliquam ultrices sagittis orci a scelerisque purus semper. Porta nibh venenatis cras sed felis eget velit aliquet. Elementum eu facilisis sed odio morbi quis commodo odio aenean. Metus dictum at tempor commodo. Massa vitae tortor condimentum lacinia quis vel eros donec. Mauris a diam maecenas sed. Diam in arcu cursus euismod. Vulputate sapien nec sagittis aliquam. Ipsum dolor sit amet consectetur. Nibh praesent tristique magna sit amet purus gravida quis. Commodo viverra maecenas accumsan lacus vel facilisis volutpat est velit. Porta non pulvinar neque laoreet suspendisse interdum consectetur."
@@ -127,7 +138,7 @@ export function SearchResultItem(props) {
 
           <PDFViewerDialog isOpen={isPDFViewOpen} onDialogClose={closePDFPreview} />
           <Button
-            onClick={(evt) => openPDFPreview(evt, id)}
+            onClick={openPDFPreview(id)}
             color={'secondary'}
             sx={{
               mt: 1,

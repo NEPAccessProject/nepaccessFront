@@ -22,13 +22,12 @@ import PDFViewer from './PDFViewer';
 
 export default function PDFViewerDialog(props) {
   //    pdfjs.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.js`;
-
-  //  const { isOpen, onDialogClose,fileName } = props;
-  const {id} = props;
   const [numPages, setNumPages] = useState(null);
   const [pageNumber, setPageNumber] = useState(1);
   const [fullWidth, setFullWidth] = React.useState(true);
   const [maxWidth, setMaxWidth] = React.useState('md');
+  //  const { isOpen, onDialogClose,fileName } = props;
+  const id = props.id || null;
   console.log('ID', id);
   
   const [isLoaded, setIsLoaded] = useState(false);

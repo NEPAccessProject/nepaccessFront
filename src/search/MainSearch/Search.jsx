@@ -1,3 +1,4 @@
+import React, { useCallback, useEffect, useState } from 'react';
 import Globals from '../../globals';
 //import Grid from '@mui/material/Grid'; // Grid version 1
 import {
@@ -9,15 +10,13 @@ import {
 } from '@mui/material';
 import Grid from '@mui/material/Unstable_Grid2';
 import { ThemeProvider, styled } from '@mui/material/styles';
-import React, { useCallback, useEffect, useState } from 'react';
-import { useLocation } from 'react-router-dom';
+import axios from 'axios';
+import { useParams } from 'react-router-dom';
 import theme from '../../styles/theme';
 import SearchContext from './SearchContext';
 import SearchHeader from './SearchHeader';
 import SearchResults from './SearchResults';
 import SearchSideBarFilters from './SearchSideBarFilters';
-
-import axios from 'axios';
 const _ = require('lodash');
 
 const Item = styled(Paper)(({ theme }) => ({
@@ -88,22 +87,25 @@ const summary = {
 export default function Search(props) {
   //  console.log("SEARCH PROPS", props)
   const classes = useStyles(theme);
+  const {q} = useParams();
+  console.log('Q?',q);
   const isMobile = useMediaQuery('(max-width:768px)');
   //  console.log("🚀 ~ file: Search.jsx:121 ~ Search ~ results:", results)
   const filterBy = props.filterResultsBy;
   const myRef = React.createRef();
-  let _mounted = false;
+  let _mounted = React.createRef(false);
   // Necessary for on-demand highlighting per page
 
 
   const doSearch = (terms) => {
     console.log('doSearch terms', terms);
+    const searchTerm = parseTerms(terms);
     setSearchState({
       ...searchState,
       search: terms,
       searchOptionsChecked: false,
       _lastSearchTerms: terms,
-      titleRaw: parseTerms(terms),
+      titleRaw: (searchTerm) ? searchTerm : searchState.titleRaw,
       _lastSearchedTerm: parseTerms(terms),
       surveyChecked: false,
       surveyDone: false,
@@ -131,36 +133,6 @@ export default function Search(props) {
     return str;
   }
 
-  const doSearchFromParams = () => {
-    // console.log("Stored terms", this._lastSearchTerms);
-    // console.log("State.", this.state);
-
-    var queryString = Globals.getParameterByName("q");
-    console.log('queryString params',queryString);
-    if(queryString === null || queryString === ''){
-        // No query param/blank terms: Launch no-term search - Only if we have no results saved here already
-        // console.log("No query parameters, doing blank search.", this.props.count);
-        doSearch("");
-    } else if(queryString){
-        // Query terms: Handle proximity dropdown logic, launch search
-        let proximityValues = handleProximityValues(queryString);
-
-        const _lastSearchTerms = queryString;
-        setSearchState({
-            titleRaw: parseTerms(queryString),
-            proximityDisabled: proximityValues.disableValue,
-            surveyChecked: false,
-            surveyDone: false,
-            isDirty: true,
-            inputMessage: proximityValues._inputMessage
-        }, () => {
-            if(titleRaw){
-                console.log("Firing search with query param", titleRaw);
-                this.debouncedSearch(this.state);
-            }
-        });
-    } 
-}
   const resetTypeCounts = () => {
     _finalCount = "";
     _draftCount = "";
@@ -224,7 +196,7 @@ export default function Search(props) {
     _scopingCount = "(" + scopings + ")";
     setSearchState({
       ...searchState,
-      finalCount: "("+count+")"});
+      finalCount: "("+_finalCount+")"});
   }
 
   /** Get all state/county geodata. Doesn't hit backend if we have the data in state. */
@@ -852,7 +824,7 @@ export default function Search(props) {
     let dataToPass = {
       title: searchState.titleRaw
     };
-    console.log("🚀 ~ file: Search.jsx:864 ~ initialSearch ~ dataToPass:", dataToPass)
+    console.log(`passing data to url ${searchUrl}`, dataToPass)
 
     // OPTION: If we restore a way to use search options for faster searches, we'll assign here
     if (searchState.useSearchOptions) {
@@ -882,14 +854,13 @@ export default function Search(props) {
           dataToPass.title =
             ("\"" + dataToPass.title + "\"~" + searchState.searcherInputs.proximityOption.value);
         } catch (e) {
-
+          console.error('Error doing a proximity search error:',e);
         }
       }
     }
 
     //Send the AJAX call to the server
 
-    console.log(` Calling ${searchUrl} with dataToPass `, dataToPass);
 
     axios({
       method: 'POST', // or 'PUT'
@@ -898,6 +869,7 @@ export default function Search(props) {
     }).then(response => {
       let responseOK = response && response.status === 200;
       if (responseOK) {
+        console.log(`Recived response from ${searchUrl} got data:`,response.data);
         setSearchState({
           ...searchState,
           results: response.data
@@ -1054,6 +1026,12 @@ export default function Search(props) {
     }
   }
 
+  const onSnippetsToggle = () =>{
+    setSearchState({
+      ...searchState,
+      snippetsDisabled: !searchState.snippetsDisabled
+    })
+  }
   /** Gathers all highlights for a single record, if we don't have them already. Invoked by "show more text snippets" 
    * button click, inside SearchProcessResult (this button appears for every record with multiple files, 
    * after a full text search).  
@@ -2115,17 +2093,7 @@ export default function Search(props) {
     });
   };
 
-  const getFirstYearCount = () => {
-    get('stats/earliest_year', 'firstYear');
-  };
 
-  const getLastYearCount = () => {
-    get('stats/latest_year', 'lastYear');
-  };
-
-  const getEISDocCounts = () => {
-    get('stats/eis_count', 'EISCount');
-  };
   const get = (url, stateName) => {
     const _url = new URL(url, Globals.currentHost);
     //console.log('Calling URL',_url);
@@ -2136,7 +2104,8 @@ export default function Search(props) {
     })
       .then((_response) => {
         const rsp = _response.data;
-        setSearchState({ ...searchState, [stateName]: rsp });
+        return (rsp);
+//        setSearchState({ ...searchState, [stateName]: rsp });
       })
       .catch((error) => {
         console.log('Error getting Results from the Server at ' + url, error)
@@ -2284,11 +2253,6 @@ export default function Search(props) {
     console.log('onSaveresultsClick');
   };
 
-  // const queryParamsLocation = useLocation().search;
-  // const queryParamTitleRaw = new URLSearchParams(queryParamsLocation).get('q');
-  // console.log("🚀 ~ file: Search.jsx:841 ~ useEffect ~ query:", queryParamTitleRaw)
-
-
   const [searchState, setSearchState] = useState({
     agency: [],
     endPublish: '',
@@ -2322,6 +2286,8 @@ export default function Search(props) {
     geoLoading: true,
     geoResults: null,
     hideOrganization: true,
+    hideText: false, //for testing should be true
+    hidden: false, //same as above
     iconClassName: 'icon icon--effect',
     isAvailableFiltersDialogOpen: false,
     isAvailableFiltersDialogOpen: false,
@@ -2357,10 +2323,12 @@ export default function Search(props) {
       startPublish: '',
       state: [],
     },
+    
     searching: false,
     searchOption: 'B',
     results: [],
     shouldUpdate: false,
+    showContext: true, //default should be false
     snippetsDisabled: false,
     sortBy: 'relevance',
     sortDirection: 'ASC',
@@ -2386,6 +2354,8 @@ export default function Search(props) {
     useSearchOptions: false,
     verified: false,
   });
+
+ 
 
   let _page = 1;
   let _pageSize = 10;
@@ -2414,110 +2384,99 @@ export default function Search(props) {
   let _scopingCount = "";
 
 
-//     useEffect(()=> {
-//       console.log('Checking searchState results',searchState.results)
-//   if(searchState.results && searchState.results.length){
-//     searchState.results.map((result,idx)=>{
-//         console.log(`result ${idx}`, result)
-//     })
-//   }
-//   else{
-//     console.log("No Result yet")
-//   }
-// },[searchState.results])
+  const doSearchFromParams = useCallback(() => {
+    // console.log("Stored terms", this._lastSearchTerms);
+    // console.log("State.", this.state);
+
+    var queryString = Globals.getParameterByName("q");
+    console.log('queryString params',queryString);
+    if(queryString === null || queryString === ''){
+        // No query param/blank terms: Launch no-term search - Only if we have no results saved here already
+        // console.log("No query parameters, doing blank search.", this.props.count);
+        //[TODO] I don't think we should return all records on the first load
+        //doSearch("");
+    } else if(queryString && queryString.length && queryString !== "undefined"){
+        // Query terms: Handle proximity dropdown logic, launch search
+        let proximityValues = handleProximityValues(queryString);
+        console.log("🚀 ~ file: Search.jsx:2374 ~ doSearchFromParams ~ proximityValues:", proximityValues)
+        let terms = parseTerms(queryString);
+
+        const _lastSearchTerms = queryString;
+        console.log("🚀 ~ file: Search.jsx:2377 ~ doSearchFromParams ~ _lastSearchTerms:", _lastSearchTerms)
+        setSearchState({
+          ...searchState,
+            titleRaw: terms,
+            proximityDisabled: proximityValues.disableValue,
+            surveyChecked: false,
+            surveyDone: false,
+            isDirty: true,
+            inputMessage: proximityValues._inputMessage
+          });
+          doSearch(terms);
+    }
+  });
 
 
-  const getQueryParams = useCallback(()=> {
-      const queryParamsLocation = useLocation().search;
-      console.log('Query Param Location',queryParamsLocation)
-      const titleRaw = new URLSearchParams(queryParamsLocation).get('q');
-      console.log('Title Raw from Params?',titleRaw)
-      const rtn = titleRaw || null
-      return rtn;
-  })
-       
+
+
+  // const getFirstYearCount = useCallback(() => {
+  //   const count =  get('stats/earliest_year', 'firstYear');
+  //   console.log("🚀 ~ file: Search.jsx ~ line 2440 ~ getFirstYearCount ~ count", JSON.stringify(count))
+  //   setSearchState({
+  //     ...searchState,
+  //     firstYear: count
+  //   });
+  // },[searchState.firstYear]);
+
+  // const getLastYearCount = useCallback(() => {
+  //   const count =  get('stats/latest_year', 'lastYear');
+  //   console.log("🚀 ~ file: Search.jsx ~ line 2433 ~ getLastYearCount ~ count", JSON.stringify(count))
+  //   setSearchState({
+  //     ...searchState,
+  //     lastYear:count,
+  //   })
+  // },[searchState.firstYear]);
+
+  const getEISDocCounts = useCallback(() => {
+    const count =  get('stats/eis_count', 'EISCount');
+    console.log("🚀 ~ file: Search.jsx ~ line 2456 ~ getEISDocCounts ~ count", JSON.stringify(count))
+    setSearchState({
+      ...searchState,
+      eis_count: count
+    }),
+    ()=> {
+      console.log('Cleanup getEISDocCounts',searchState)
+    }
+  },[searchState.eis_count,searchState]);
+
   // useEffect(() => {
-  //   const queryParamsLocation = useLocation().search;
-  //   const titleRaw = new URLSearchParams(queryParamsLocation).get('q');
-  //   console.log("🚀 ~ file: Search.jsx:2446 ~ useEffect ~ query:", titleRaw)
-  //   if (titleRaw && titleRaw.length) {
-  //     setSearchState({
-  //       ...searchState,
-  //       titleRaw: titleRaw
-  //     });
+  //   getLastYearCount();
+  // }, [searchState.lastYear]);
 
-  //   }
-  // },[searchState.titleRaw]);
+  // useEffect(() => {
+  //   getEISDocCounts();
+  // }, [searchState.EISCount])
+  const debouncedSearch = _.debounce(doSearch, 100);
+//#endregion
   useEffect(()=> {
-    _mounted = true
+    _mounted.current = true
     console.log(`Mounted `,_mounted)
   },[_mounted])
 
-//   useEffect(() => {
-//   console.log(`useEffect doSearchFromParams`);
-//   if(_mounted){
-//     console.log('Component not Mounted',_mounted);
-//     return;
-//   }
-//     const params = new URLSearchParams(window.location.search); // id=123
-//     if(params.has("q")){
-//       const q = params.get('q')
-//       doSearchFromParams(q)
-//       // setSearchState({
-//       //   ...searchState,
-//       //   titleRaw : q,
-//       // })
-//       //doSearchFromParams()
-//     }
-//     else {
-//       console.log('No Query Param Found')
-//     }
-//     // console.log('GOT Query Param',q);
-// },[doSearchFromParams])
-
-  //[TODO] a lot of duplication BUT it fixed the reRender Loop. Need to revisit to combine into a singleFunction
-  useEffect(() => {
-    //  console.log('USE Effect for searchState:',searchState);
-    //getCounts();
-    getFirstYearCount();
-    // console.log('searchState.lastYear',searchState.lastYear);
-    // console.log('searchState.EISCount',searchState.EISCount);
-    return () => {
-      //    console.log('USE EFFECT DISMOUNT searchState',searchState);
-    }
-  }, [searchState.firstYear]);
-
-  useEffect(() => {
-    //  console.log('USE Effect for searchState:',searchState);
-    //getCounts();
-    getLastYearCount();
-    // console.log('searchState.lastYear',searchState.lastYear);
-    // console.log('searchState.EISCount',searchState.EISCount);
-    return () => {
-      //    console.log('USE EFFECT DISMOUNT searchState',searchState);
-    }
-  }, [searchState.lastYear]);
-
-  useEffect(() => {
-    getEISDocCounts();
-    return () => {
-      //console.log('useEffect getEISCount Dismount state',searchState);
-    }
-
-  }, [searchState.EISCount])
+  // useEffect(()=> {
+  //   console.log('UseEffect getCounts fun')
+  //    getFirstYearCount();
+  // }, [getFirstYearCount]);
 
   // useEffect(()=> {
-  //   console.log('UseEffect props search',props.search);
-  //   const debouncedSearch = _.debounce(props.search, 300);
-  //   const filterBy = props.filterResultsBy;
-  //   // filterBy = _.debounce(props.filterResultsBy, 200);
-  //   const debouncedSuggest = _.debounce(props.suggest, 300);
-  // },[props.search])
+  //   console.log('UseEffect getCounts fun')
+  //    getLastYearCount();
+  // }, [getLastYearCount]);
 
-
-  const debouncedSearch = _.debounce(doSearch, 100);
-
-
+  // useEffect(() => {
+  //   console.log('UseEffect getCounts fun')
+  //   getEISDocCounts();
+  // }, [getEISDocCounts]);
 
   const { markup, proximityDisabled, agencyRaw, state, county, proximityOption } = searchState;
   const value = {
@@ -2536,6 +2495,7 @@ export default function Search(props) {
     onCountyChange,
     onClearFiltersClick,
     onIconClick,
+    onSnippetsToggle,
     onTitleOnlyChecked,
     // proximityDisabled,
     // agencyRaw,
