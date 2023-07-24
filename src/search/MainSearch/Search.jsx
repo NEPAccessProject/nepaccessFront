@@ -369,6 +369,7 @@ export default function Search(props) {
     for (let i = 0; i < searchState.results.length; i++) {
       if (data[i]) {
         console.log('searchState plaintext ? ',data[i]);
+        
         for (let j = 0; j < searchState.results[i].records.length; j++) {
           if (data[i].records[j]
             && searchState.results[i].records[j]
@@ -1044,10 +1045,10 @@ export default function Search(props) {
    */
   const gatherSpecificHighlights = (_index, record) => {
     console.log("gatherSpecificHighlights")
-    // if (!_mounted) { // User navigated away or reloaded
-    //     console.log("Cancel specific highlighting")
-    //     return; // cancel search
-    // }
+    if (!_mounted) { // User navigated away or reloaded
+        console.log("gatherSpecificHighlights, Not Mounted")
+        return; // cancel search
+    }
 
     if (!searchState.results) {
       console.log("Nothing here right now to highlight specifically");
@@ -1738,6 +1739,7 @@ export default function Search(props) {
   const onIconClick = (evt) => {
     console.log('onIconClick clicked', evt.target.name);
     setSearchState({
+      ...searchState,
       titleRaw: evt.target.name
     })
     doSearch(searchState.titleRaw);
@@ -2451,13 +2453,18 @@ export default function Search(props) {
     })
   },[_mounted.current])
 
-  // useEffect(()=> {
-  //   if(_mounted.current === false){
-  //     return false;
-  //   }
+  useEffect(()=> {
+    if(_mounted.current === false){
+      return false;
+    }
+    console.log(`UseEffect for results `,searchState.results)
+    searchState.results.map((result,idx)=>{
+      console.log(`result ${idx}`,result)
+      gatherSpecificHighlights(idx,result)
+    })
 
-  //   console.log('Results use Effect fired',searchState.results);
-  // },[searchState.results]);
+    console.log('Results use Effect fired',searchState.results);
+  },[searchState.results]);
 
   useEffect(()=>{
     if(_mounted.current === false){

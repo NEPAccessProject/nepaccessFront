@@ -1,0 +1,50 @@
+
+###
+POST http://localhost:8080/text/localhost:8080/text/get_highlightsFVH HTTP/1.1
+content-type: application/json
+
+{
+    "unhighlighted": [
+        {
+            "luceneIds": [
+                269
+            ],
+            "filename": "App A_Vol_1of3_Public Scoping_Compressed.pdf"
+        },
+        {
+            "luceneIds": [
+                243
+            ],
+            "filename": "App A_Public Involvement.pdf"
+        },
+        {
+            "luceneIds": [
+                42804
+            ],
+            "filename": "110144/110144_0001.pdf"
+        },
+        {
+            "luceneIds": [
+                32279
+            ],
+            "filename": "080122/080122_0001.pdf"
+        },
+        {
+            "luceneIds": [
+                54036
+            ],
+            "filename": "Appendix M_ProtectedLands.pdf"
+        },
+        {
+            "luceneIds": [
+                37200
+            ],
+            "filename": "080006/080006_0001.pdf"
+        }
+    ],
+    "terms": "F-35",
+    "markup": true,
+    "fragmentSizeValue": 2
+}
+
+
