@@ -1,10 +1,9 @@
-import { Box, Button, Container, Typography, Paper } from '@mui/material';
+import { Box, Button, Container, Paper, Typography } from '@mui/material';
 import Grid from '@mui/material/Unstable_Grid2';
+import { styled } from '@mui/material/styles';
 import React, { useContext, useState } from 'react';
 import PDFViewerDialog from './PDFViewerDialog';
 import SearchContext from './SearchContext';
-import theme from '../../styles/theme';
-import { styled } from '@mui/material/styles';
 
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
@@ -55,7 +54,7 @@ export default function SearchResultItems(props) {
   }
 
   // const initialSearch = (records.length) ? records.sort(sortByDate): [];
-  //console.log("🚀 ~ file: SearchResultsItems.jsx:37 ~ SearchResultItems ~ sortedRecords:", sortedRecords)
+  console.log("🚀 ~ file: SearchResultsItems.jsx:58 ~ SearchResultItems ~ sortedRecords:", sortedRecords)
 
   /* Merge doc and records */
   return (

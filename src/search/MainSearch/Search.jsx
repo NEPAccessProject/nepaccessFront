@@ -11,7 +11,6 @@ import {
 import Grid from '@mui/material/Unstable_Grid2';
 import { ThemeProvider, styled } from '@mui/material/styles';
 import axios from 'axios';
-import { useParams } from 'react-router-dom';
 import theme from '../../styles/theme';
 import SearchContext from './SearchContext';
 import SearchHeader from './SearchHeader';
@@ -798,13 +797,12 @@ export default function Search(props) {
       }
       else if (error.response.status === 202) {
         console.log('Error with 202 status, data? ', response.data);
-        return;
-      } else { // No response? Server is down?
         setSearchState({
           ...searchState,
           networkError: Globals.errorMessage.default,
           resultsText: "Error: Couldn't get results from server"
         });
+        console.log('searchState',searchState);
       }
       setSearchState({
         ...searchState,
@@ -1116,6 +1114,7 @@ export default function Search(props) {
         data: (dataToPass)
       }).then(response => {
         let responseOK = response && response.status === 200;
+        console.log(` Call to ${searchUrl} returned response : `, response);
         if (responseOK) {
           return response.data;
         } else {
@@ -1156,6 +1155,7 @@ export default function Search(props) {
             //     allResults, currentResults);
         }
       }).catch(error => {
+        console.error("🚀 Error gatherSpecificHighlights ~ error", JSON.stringify(error))
         if (error.name === 'TypeError') {
           console.error(error);
         } else { // Server down or 408 (timeout)
@@ -1193,6 +1193,7 @@ export default function Search(props) {
     //     return; // cancel search
     // }
     if (searchId < _searchId) { // Search interrupted
+      console.log(`Search Interupted searchId ${searchId} _searchId: ${_searchId}`)
       return; // cancel search
     }
     if (typeof currentResults === 'undefined') {
@@ -1820,10 +1821,11 @@ export default function Search(props) {
 
   const onInput = (evt) => {
     let userInput = evt.target.value;
+    console.log('on input evt.target.name' + evt.target.name)
     console.log('onInput userInput',userInput);
-    if(!userInput || userInput.length <= 3){
-        console.log(`${userInput} is not long enught`)
-    }
+    // if(!userInput || userInput.length <= 3){
+    //     console.log(`${userInput} is not long enught`)
+    // }
     let proximityValues = handleProximityValues(userInput);
 
     //get the evt.target.name (defined by name= in input)
@@ -2458,13 +2460,19 @@ export default function Search(props) {
     if(_mounted.value === false){
         return
     }
-      const searchTerm = Globals.getParameterByName("q")
+      const searchTerm = Globals.getParameterByName("q");
+      const terms = parseTerms(searchTerm);
       console.log('Search Terms from Params',searchTerm)
       if(searchTerm && searchTerm.length){
         setSearchState({
           ...searchState,
-          titleRaw :  parseTerms(searchTerm)
+          titleRaw :  terms
         })
+      }
+      if(searchState.results.length){
+        //if there is no search results but queryparams are present than start 
+        console.log('Found results',searchState.results);
+        doSearch(terms);
       }
       console.log(`useEffect Search Term`,searchTerm)
   },[searchState.titleRaw])
