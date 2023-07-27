@@ -1,11 +1,4 @@
-import {
-  Autocomplete,
-  Box,
-  Divider,
-  FormControl,
-  TextField,
-  Typography
-} from '@mui/material';
+import { Autocomplete, Box, Divider, FormControl, TextField, Typography } from '@mui/material';
 import Checkbox from '@mui/material/Checkbox';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import React, { useContext } from 'react';
@@ -18,13 +11,9 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import Globals from '../../globals';
-import {
-  agencyOptions,
-  proximityOptions
-} from '../options';
+import { agencyOptions, proximityOptions } from '../options';
 import SearchContext from './SearchContext';
 const _ = require('lodash');
-
 
 const stateOptions = Globals.stateOptions;
 const Item = styled(Box)(({ theme }) => ({
@@ -67,13 +56,32 @@ export default function SearchSideBarFilters(props) {
     onProximityChange,
     onCooperatingAgencyChange,
     onTypeChecked,
-    onSnippetsToggle
+    onSnippetsToggle,
   } = useContext(SearchContext);
-  const { agencyRaw, state, county, stateOptions, countyOptions,
-    snippetsDisabled,showContext,
-    proximityDisabled, markup, cooperatingAgencyRaw, firstYear, lastYear, EISCount,
-    typeEA, typeDraft, typeFinal, typeNOI, draftCount, finalCount, noiCount, rodCount, scopingCount, eaCount
-
+  const {
+    agencyRaw,
+    state,
+    county,
+    stateOptions,
+    countyOptions,
+    snippetsDisabled,
+    showContext,
+    proximityDisabled,
+    markup,
+    cooperatingAgencyRaw,
+    firstYear,
+    lastYear,
+    EISCount,
+    typeEA,
+    typeDraft,
+    typeFinal,
+    typeNOI,
+    draftCount,
+    finalCount,
+    noiCount,
+    rodCount,
+    scopingCount,
+    eaCount,
   } = searchState;
   // Tried quite a bit but I can't force the calendar to Dec 31 of a year as it's typed in without editing the library code itself.
   // I can change the value but the popper state won't update to reflect it (even when I force it to update).
@@ -90,17 +98,14 @@ export default function SearchSideBarFilters(props) {
   };
 
   const onCheckboxChange = (evt) => {
-    console.log('Checkbox changed, setting showContext to ',evt.target.checked)
-    setSearchState({ 
-        ...searchState,
-        showContext: evt.target.checked,
-        show: evt.target.checked,
-        hide: ~evt.target.checked
+    console.log('Checkbox changed, setting showContext to ', evt.target.checked);
+    setSearchState({
+      ...searchState,
+      showContext: evt.target.checked
     });
-}
+  };
 
-
-  // #endregion  
+  // #endregion
   // region Render Return
   const classes = useStyles(theme);
   return (
@@ -125,19 +130,19 @@ export default function SearchSideBarFilters(props) {
         </Item>
         <Item alignItems="center">
           <Box marginBottom={0}>
-          <FormControlLabel
+            <FormControlLabel
               control={
                 <Checkbox
                   // checked={searchOptions}
                   checked={showContext}
                   onChange={onCheckboxChange}
-                  disabled = {snippetsDisabled}
+                  disabled={snippetsDisabled}
                 />
               }
               label="Show Text Snippets"
             />
-          
-          {/* {this.showDownloadButton()} */}
+
+            {/* {this.showDownloadButton()} */}
           </Box>
         </Item>
         {/* #region Proximity Filter */}
@@ -184,7 +189,7 @@ export default function SearchSideBarFilters(props) {
               )}
             />
           </FormControl>
-
+          <Divider />
         </Item>
         {/* #endregion */}
       </Box>
@@ -301,7 +306,6 @@ export default function SearchSideBarFilters(props) {
           renderInput={(params) => (
             <TextField
               {...params}
-
               variant="outlined"
               sx={{
                 width: '100%',
@@ -330,11 +334,10 @@ export default function SearchSideBarFilters(props) {
           // menuIsOpen={true}
           onChange={onCountyChange}
           getOptionLabel={(countyOptions) => `${countyOptions.label}`}
-
           renderInput={(params) => (
             <TextField
               {...params}
-              // value= {countyOptions.filter = (countyObj) => counties.includes(countyObj.value)}          
+              // value= {countyOptions.filter = (countyObj) => counties.includes(countyObj.value)}
               variant="outlined"
               sx={{
                 width: '100%',
@@ -383,11 +386,8 @@ export default function SearchSideBarFilters(props) {
                 onChange={(newValue, evt) => onEndDateChange(newValue, evt)}
                 id="date-picker-to"
                 label="To:"
-
                 sx={{
                   width: '100%',
-
-
                 }}
               />
             </Box>
@@ -458,9 +458,7 @@ export default function SearchSideBarFilters(props) {
             </label>
           </div>
         </div>
-
       </Item>
-
     </>
     //endregion
   );

@@ -1,26 +1,18 @@
-import React, { useContext } from 'react';
+import { SearchOutlined } from '@mui/icons-material';
 import {
-  Container,
-  Grid,
-  Typography,
   Box,
-  Divider,
-  Button,
-  Input,
-  InputAdornment,
-  IconButton,
-  TextField,
-  FormControl,
-  Select,
-  ListItem,
+  Grid,
   Hidden,
+  IconButton,
+  ListItem,
+  TextField
 } from '@mui/material';
+import React, { useContext } from 'react';
+import AvailableFilesDialog from './AvailableFilesDialog';
 import ProximitySelect from './ProximitySelect';
+import QuickStartDialog from './QuickStartDialog';
 import SearchContext from './SearchContext';
 import SearchTipsDialog from './SearchTipDialog';
-import AvailableFilesDialog from './AvailableFilesDialog';
-import QuickStartDialog from './QuickStartDialog';
-import { SearchOutlined } from '@mui/icons-material';
 
 import theme from '../../styles/theme';
 const useStyles = (theme) => ({
@@ -41,6 +33,7 @@ export default function SearchHeader(props) {
     toggleQuickStartDialog,
     onIconClick,
     onChangeHandler,
+    hideText,
   } = useContext(SearchContext);
   const {    
     isAvailableFiltersDialogOpen,

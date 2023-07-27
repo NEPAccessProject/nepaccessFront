@@ -6,13 +6,14 @@ import Globals from '../globals.js';
 import DownloadFile from '../DownloadFile.js';
 import DownloadFiles from '../DownloadFiles';
 
-import Tippy from '@tippyjs/react'
+import Tippy from '@tippyjs/react';
 
 // TODO: Filtering results etc. rerenders and loses track of downloads
 
 export default class SearchProcessResult extends React.Component {
 
 	constructor(props) {
+		console.log("🚀 ~ file: SearchProcessResult.js:16 ~ SearchProcessResult ~ constructor ~ props:", props)
 		super(props);
 		this.state = { 
             fileProgressValue: null,

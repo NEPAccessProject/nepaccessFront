@@ -58,8 +58,10 @@ export default function SearchResultItems(props) {
 
   /* Merge doc and records */
   return (
+    
     <>
-      <Box minHeight={'100vh'}>
+    {JSON.stringify(sortedRecords)}
+      {/* <Box minHeight={'100vh'}>
         {sortedRecords && sortedRecords.length ? (
           sortedRecords.map((record, idx) => {
             return (
@@ -71,7 +73,7 @@ export default function SearchResultItems(props) {
         ) : (
           <div>No results Found</div>
         )}
-      </Box>
+      </Box> */}
     </>
   );
 }
