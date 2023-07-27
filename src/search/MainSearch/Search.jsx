@@ -654,6 +654,7 @@ export default function Search(props) {
         if (responseOK) {
           console.log('Initial search results returned with 202 with data? ', response.data);
           setSearchState({
+            ...searchState,
             results: response.data,
           });
           return response.data;
@@ -746,6 +747,7 @@ export default function Search(props) {
             ...searchState,
             searchResults: _data,
             outputResults: _data,
+            results: _data,
           });
           //[TODO] no callback with setSearchState would have to useEffect
 
@@ -1190,7 +1192,7 @@ export default function Search(props) {
                   ...searchState,
                   searchResults: allResults,
                   outputResults: currentResults,
-                  output: allResults,
+                  //output: allResults,
                   searching: false,
                   shouldUpdate: true,
                 });
@@ -1227,7 +1229,7 @@ export default function Search(props) {
   };
 
   const gatherFirstPageHighlightsThenFinishSearch = (searchId, _inputs, currentResults) => {
-    console.log('gatherFirstPageHighlightsThenFinishSearch');
+    console.log("🚀 ~ file: Search.jsx:1230 ~ gatherFirstPageHighlightsThenFinishSearch ~ searchId, _inputs, currentResults:", searchId, _inputs, currentResults)
     if (!_inputs) {
       if (searchState.searcherInputs) {
         _inputs = searchState.searcherInputs;
@@ -1248,12 +1250,12 @@ export default function Search(props) {
       currentResults = [];
     }
 
-    setSearchState({
-      ...searchState,
-      snippetsDisabled: false,
-      searching: true,
-      networkError: '', // Clear network error
-    });
+    // setSearchState({
+    //   ...searchState,
+    //   snippetsDisabled: false,
+    //   searching: true,
+    //   networkError: '', // Clear network error
+    // });
 
     let searchUrl = new URL('text/get_highlightsFVH', Globals.currentHost);
 
@@ -1324,19 +1326,21 @@ export default function Search(props) {
       data: dataToPass,
     })
       .then((response) => {
+        console.log("🚀 ~ file: Search.jsx:1327 ~ .then ~ response:", response)
         let responseOK = response && response.status === 200;
         if (responseOK) {
+          console.log("🚀 ~ file: Search.jsx:1331 ~ .then ~ response.data:", response.data)
           return response.data;
         } else {
           return null;
         }
       })
       .then((parsedJson) => {
-        console.log('get_highlightsFVH response', response);
         if (parsedJson) {
           console.log('Adding highlights', parsedJson);
 
           let allResults = searchState.results;
+          console.log("🚀 ~ file: Search.jsx:1340 ~ .then ~ allResults:", allResults)
 
           let x = 0;
           for (let i = startPoint; i < Math.min(currentResults.length, endPoint); i++) {
@@ -1391,12 +1395,9 @@ export default function Search(props) {
               networkError: _networkError,
               resultsText: _resultsText,
               shouldUpdate: true,
-            },
-            () => {
+            });
               console.log('Error, finish search, doing initalSearch with _inputs', _inputs);
               initialSearch(_inputs);
-            },
-          );
         }
       });
   };
@@ -1558,7 +1559,7 @@ export default function Search(props) {
               ...searchState,
               searchResults: allResults,
               outputResults: currentResults,
-              output: allResults,
+              //output: allResults,
               // count: updatedResults.length,
               searching: false,
               resultsText: resultsText,
@@ -2699,12 +2700,20 @@ export default function Search(props) {
                   <Grid container flex={1} flexGrow={1}>
                     <Grid item xs={12} width={'100%'}>
                       <>
-                      <h1>Output Results</h1>
-                      {JSON.stringify(searchState.outputResults)}
-                      <h1>Search Results</h1>
-                      {JSON.stringify(searchState.searchResults)}
-                      <h1>Results</h1>
-                      {JSON.stringify(searchState.results)}
+                        <h1>Output Results</h1>
+                        {JSON.stringify(searchState.outputResults)}
+                        {/* {searchState.outputResults.map((result, idx) => {
+                          return (
+                            <div key={idx}>
+                              {result.doc.title} : {result.doc}
+                            <Divider />
+                            </div>
+                          );
+                        })} */}
+                        <h1>Search Results</h1>
+                        {JSON.stringify(searchState.searchResults)}
+                        <h1>Results</h1>
+                        {JSON.stringify(searchState.results)}
                         {/* {Object.keys(searchState).map((key, idx) => {
                           return (
                             <div key={idx}>
