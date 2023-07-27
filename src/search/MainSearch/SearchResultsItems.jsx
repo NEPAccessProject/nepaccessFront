@@ -1,5 +1,4 @@
-import { Box, Button, Container, Paper, Typography } from '@mui/material';
-import Grid from '@mui/material/Unstable_Grid2';
+import { Box, Button, Container, Grid, Paper, Typography } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import React, { useContext, useState } from 'react';
 import PDFViewerDialog from './PDFViewerDialog';
@@ -26,9 +25,7 @@ const Item = styled(Paper)(({ theme }) => ({
   },
 }));
 
-
 const sortByDate = (a, b) => {
-  console.log('🚀 ~ file: SearchResultsItems.jsx ~ line 17 ~ sortByDate ~ a,b', a, b);
   if (a.record && a.record.commentDate && b.record && b.record.commentDate) {
     return a.commentDate > b.commentDate;
   } else if (a.commentDate && a.commentDate) {
@@ -40,7 +37,6 @@ export default function SearchResultItems(props) {
   let result = props.result || [];
   const { doc, records } = result;
   console.log('search result records?', records);
-  console.log('Search result docs?', doc);
   let sortedRecords = [];
   function sortByDate(a, b) {
     console.log('A > B', a, b);
@@ -54,38 +50,43 @@ export default function SearchResultItems(props) {
   }
 
   // const initialSearch = (records.length) ? records.sort(sortByDate): [];
-  console.log("🚀 ~ file: SearchResultsItems.jsx:58 ~ SearchResultItems ~ sortedRecords:", sortedRecords)
+  console.log(
+    '🚀 ~ file: SearchResultsItems.jsx:58 ~ SearchResultItems ~ sortedRecords:',
+    sortedRecords,
+  );
 
   /* Merge doc and records */
   return (
-    
     <>
-    {JSON.stringify(sortedRecords)}
-      {/* <Box minHeight={'100vh'}>
-        {sortedRecords && sortedRecords.length ? (
-          sortedRecords.map((record, idx) => {
+    {/* <h2>Search Result Items Result?</h2>
+    {JSON.stringify(result)} */}
+      <Box marginTop={1} marginBottom={1} id="search-results-container-box">
+        {(result && result.records && result.records.length) ? (
+          result.records.map((record, idx) => {
             return (
-              <div key={idx}>
+              <Item key={idx} className='search-result-item-container'>
+                {/* <h2>Passing Record?</h2>
+                {JSON.stringify(record)} */}
                 <SearchResultItem record={record} />
-              </div>
+              </Item>
             );
           })
         ) : (
           <div>No results Found</div>
         )}
-      </Box> */}
+      </Box>
     </>
   );
 }
 
 export function SearchResultItem(props) {
-  console.log('🚀 ~ file: SearchResultsItems.jsx:46 ~ SearchResultItem ~ props:', props);
+  //  console.log('🚀 ~ file: SearchResultsItems.jsx:46 ~ SearchResultItem ~ props:', props);
   const [isPDFViewOpen, setIsPDFViewOpen] = useState(false);
   const [isContentExpanded, setIsContentExpanded] = useState(false);
 
-  const context = useContext(SearchContext);
-  const { searchState, setSearchState, showContext } = context;
+  const {seachState,setSearchState,showContext} = useContext(SearchContext);
   const { record } = props;
+  console.log('🚀 ~ file: SearchResultsItems.jsx:91 ~ SearchResultItem ~ record:', record);
   const {
     agency,
     commentDate,
@@ -103,7 +104,6 @@ export function SearchResultItem(props) {
     title,
   } = record;
 
-
   function onDocumentLoadSuccess({ numPages }) {
     setSearchState({ ...searchState, numPages: numPages });
     setNumPages(numPages);
@@ -117,94 +117,102 @@ export function SearchResultItem(props) {
     setIsPDFViewOpen(false);
   }
   function toggleContentExpansion(evt) {
+    console.log("🚀 ~ file: SearchResultsItems.jsx:121 ~ toggleContentExpansion ~ evt:", evt.name, evt.name.value)
     evt.preventDefault();
     console.log(`Open toggleContentExpansion for ID: ${id}`);
     setIsContentExpanded(!isContentExpanded);
   }
-  
-const handleDownloadClick = (evt, id) => {
-  evt.preventDefault();
-  console.log('Download ID Value and filename', id,filename);
-};
+
+  const handleDownloadClick = (evt, id) => {
+    evt.preventDefault();
+    console.log('Download ID Value and filename', id, filename);
+  };
+
+ function convertToHTML(content) {
+   return { __html: content };
+ }
 
   const year = commentDate && commentDate.length > 0 ? new Date(commentDate).getFullYear() : 'N/A';
   console.log('SEARCH STATE SearchResultComponent');
-  const contents = plaintext || [
-    'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Donec et odio pellentesque diam volutpat. Adipiscing commodo elit at imperdiet dui accumsan sit amet. Morbi tincidunt ornare massa eget egestas purus. Tempus quam pellentesque nec nam aliquam sem et tortor consequat. Tortor posuere ac ut consequat semper viverra. Sollicitudin aliquam ultrices sagittis orci a scelerisque purus semper. Porta nibh venenatis cras sed felis eget velit aliquet. Elementum eu facilisis sed odio morbi quis commodo odio aenean. Metus dictum at tempor commodo. Massa vitae tortor condimentum lacinia quis vel eros donec. Mauris a diam maecenas sed. Diam in arcu cursus euismod. Vulputate sapien nec sagittis aliquam. Ipsum dolor sit amet consectetur. Nibh praesent tristique magna sit amet purus gravida quis. Commodo viverra maecenas accumsan lacus vel facilisis volutpat est velit. Porta non pulvinar neque laoreet suspendisse interdum consectetur.',
-  ];
+  const text = record.plaintext || "";
+  console.log("🚀 ~ file: SearchResultsItems.jsx:134 ~ SearchResultItem ~ text:", text)
   return (
-    <>
+    <Item
+      id="search-result-item-root"
+      xs={{
+        marginTop: 2,
+        marginBottom: 2,
+        elevation: 0,
+      }}
+    >
+      {/* {JSON.stringify(record.plaintext)} */}
       <Typography variant="searchResultSubTitle" padding={2}>
         {documentType} - {title}
       </Typography>
-      <Grid flex={1} container marginTop={2} marginBottom={2}>
+      <Grid className={'search-result-item-grid-container'} flex={1} container>
         <Grid item xs={1} textAlign={'center'}>
           <Typography fontWeight={'bold'}>{year ? year : 'N/A'}</Typography>
         </Grid>
-        <Grid item xs={9}>
-          <Container>
-            {
-              Object.keys(record).map((key,idx)=> {
-                return(
-                  <Grid   flex={1} container key={idx}>
-                    <Item xs={2} key={idx}  sx={{
-                    }}>
-                      <b>{key}:</b> {record[key]}
-                    </Item>
-                  </Grid>
-                )
-              })
-            }
-             
-          </Container>
-          {showContext &&
-            contents.map((content, idx) => {
-              return (
-                <>
-                  {' '}
-                  <Container key={idx}>
-                    <Box
-                      bgcolor="#f4f4f4"
-                      padding={1}
-                      border={0}
-                      borderColor={'lightgray'}
-                      borderRadius={1}
-                    >
-                      {isContentExpanded
-                        ? content
-                        : content.substring(0, 100) + (content.length > 100 ? '...' : '')}
-                    </Box>
-                  </Container>
-                  <Container key={idx}>
-                    <Box
-                      bgcolor="#f4f4f4"
-                      padding={1}
-                      border={0}
-                      borderColor={'lightgray'}
-                      borderRadius={1}
-                    >
-                      {isContentExpanded
-                        ? content
-                        : content.substring(0, 100) + (content.length > 100 ? '...' : '')}
-                    </Box>
-                  </Container>
-                  <Container>
-                    <Box
-                      width={'100%'}
-                      alignContent={'center'}
-                      textAlign={'center'}
-                      onClick={toggleContentExpansion}
-                      bgcolor="#A2A5A6"
-                      paddingTop={1}
-                      paddingBottom={1}
-                    >
-                      <Typography variant="expanderButton">Click to see more...</Typography>
-                    </Box>
-                  </Container>
-                </>
-              );
-            })}
-        </Grid>
+        {record.plaintext[0] && record.plaintext[0].length> 0 ? (
+          <Grid item xs={9}>
+            <Container className={'search-result-item-container'}>
+              <Box
+                bgcolor="#f4f4f4"
+                padding={1}
+                border={0}
+                borderColor={'lightgray'}
+                borderRadius={1}
+                paddingTop={1}
+                paddingBottom={1}
+              >
+                {isContentExpanded ? (
+                  <div dangerouslySetInnerHTML={convertToHTML(record.plaintext[0])} />
+                ) : (
+                  <>
+                    <div dangerouslySetInnerHTML={convertToHTML(record.plaintext[0])} />
+                    {record.plaintext[0].substring(0, 100) +
+                      (record.plaintext[0].length > 100
+                        ? `${record.plaintext[0].substring(0, 100)}...`
+                        : '')}
+                  </>
+                )}
+              </Box>
+            </Container>
+            {record.plaintext[0] ? (
+              <Box
+                width={'100%'}
+                alignContent={'center'}
+                textAlign={'center'}
+                onClick={toggleContentExpansion}
+                bgcolor="#A2A5A6"
+                paddingTop={1}
+                paddingBottom={1}
+              >
+                <Typography variant="expanderButton">Click to see more...</Typography>
+              </Box>
+            ) : (
+              <div>Nothing {record.plaintext[0].length}</div>
+            )}
+          </Grid>
+        ) : (
+          <Grid item xs={9}>
+            <Box
+              bgcolor="#f4f4f4"
+              padding={1}
+              border={0}
+              color={'black'}
+              borderColor={'lightgray'}
+              borderRadius={1}
+              Content
+              Not
+              Available
+            >
+              <Typography color={'black'} variant="expanderButton">
+                Content Not Available
+              </Typography>
+            </Box>
+          </Grid>
+        )}
         <Grid item xs={2}>
           <Button
             color="primary"
@@ -229,6 +237,6 @@ const handleDownloadClick = (evt, id) => {
           </Button>
         </Grid>
       </Grid>
-    </>
+    </Item>
   );
 }

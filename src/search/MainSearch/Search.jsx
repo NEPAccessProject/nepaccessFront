@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import Globals from '../../globals';
 //import Grid from '@mui/material/Grid'; // Grid version 1
-import { Box, Container, Divider, Paper, useMediaQuery } from '@mui/material';
+import { Box, Container, Divider, Paper, Typography, useMediaQuery } from '@mui/material';
 import Grid from '@mui/material/Unstable_Grid2';
 import { ThemeProvider, styled } from '@mui/material/styles';
 import axios from 'axios';
@@ -10,6 +10,7 @@ import SearchContext from './SearchContext';
 import SearchHeader from './SearchHeader';
 import SearchResults from './SearchResults';
 import SearchSideBarFilters from './SearchSideBarFilters';
+
 const _ = require('lodash');
 
 const Item = styled(Paper)(({ theme }) => ({
@@ -359,13 +360,13 @@ export default function Search(props) {
   const mergeHighlights = (data) => {
     console.log('trying to merge highlights data: ', data);
     if (!searchState.results || !searchState.results[0]) {
-      console.log('Nothing here yet');
+      console.log('No Results here yet');
       return data;
     }
 
     for (let i = 0; i < searchState.results.length; i++) {
       if (data[i]) {
-        console.log('searchState plaintext ? ', data[i]);
+        console.log('searchState.results[i] ? ', searchState.results[i]);
 
         for (let j = 0; j < searchState.results[i].records.length; j++) {
           if (
@@ -376,6 +377,12 @@ export default function Search(props) {
           ) {
             let same = data[i].records[j].id === searchState.results[i].records[j].id;
             if (same) {
+              console.log(
+                '🚀 ~ file: Search.jsx:379 ~ mergeHighlights ~ same:',
+                same,
+                ' searchState.results[i].records[j].plaintext',
+                searchState.results[i].records[j].plaintext,
+              );
               data[i].records[j].plaintext = searchState.results[i].records[j].plaintext;
             }
           } else {
@@ -386,6 +393,7 @@ export default function Search(props) {
       }
     }
 
+    console.log('🚀 ~ file: Search.jsx:396 ~ Done Merging Highlights:', data);
     return data;
   };
 
@@ -489,6 +497,7 @@ export default function Search(props) {
         return a.relevance - b.relevance;
       }),
     );
+    console.log('🚀 ~ Done merging Highlights:', highlights);
     return highlights;
   };
 
@@ -700,7 +709,7 @@ export default function Search(props) {
             // })
             .map((result, idx) => {
               let doc = result.doc;
-              console.log("🚀 ~ file: Search.jsx:702 ~ .map ~ doc:", doc)
+              console.log('🚀 ~ file: Search.jsx:702 ~ .map ~ doc:', doc);
               let newObject = {
                 title: doc.title,
                 agency: doc.agency,
@@ -737,7 +746,7 @@ export default function Search(props) {
           // Important: This is where we're shifting to process-based results.
           let processResults = {};
           processResults = buildData(_data);
-          console.log("🚀 ~ file: Search.jsx:739 ~ .then ~ processResults:", processResults)
+          console.log('🚀 ~ file: Search.jsx:739 ~ .then ~ processResults:', processResults);
           _data = processResults;
 
           // At this point we don't need the hashmap design anymore, it's just very fast for its purpose.
@@ -943,7 +952,7 @@ export default function Search(props) {
         }
       })
       .then((currentResults) => {
-        console.log("🚀 ~ file: Search.jsx:941 ~ .then ~ currentResults:", currentResults)
+        console.log('🚀 ~ file: Search.jsx:941 ~ .then ~ currentResults:', currentResults);
         let _data = [];
         if (currentResults && currentResults[0] && currentResults[0].doc) {
           _data = currentResults.map((result, idx) => {
@@ -1106,130 +1115,132 @@ export default function Search(props) {
 
     // No need for offset or limit. We just need to find the unhighlighted files for one record.
 
-    setSearchState(
-      {
-        ...searchState,
-        snippetsDisabled: false,
-        searching: true,
-        networkError: '', // Clear network error
+    setSearchState({
+      ...searchState,
+      snippetsDisabled: false,
+      searching: true,
+      networkError: '', // Clear network error
+    });
+
+    let searchUrl = new URL('text/get_highlightsFVH', Globals.currentHost);
+    // Need to skip this entry on both sides if it already has full plaintext (has been toggled at least once
+    // before and therefore has at least 2 highlights)
+
+    if (!record.plaintext || record.plaintext[0] || record.plaintext[1]) {
+      // No need to redo the work on the first file here
+      let endLuceneIds = record.luceneIds.slice(1);
+      let endFilenamesArray = record.name.split('>').slice(1);
+      let endFilenames = endFilenamesArray.join('>');
+
+      // Filenames delimited by > (impossible filename character)
+      _unhighlighted.push({
+        luceneIds: endLuceneIds,
+        filename: endFilenames,
       });
-      
-        let searchUrl = new URL('text/get_highlightsFVH', Globals.currentHost);
-        // Need to skip this entry on both sides if it already has full plaintext (has been toggled at least once
-        // before and therefore has at least 2 highlights)
+    }
 
-        if (!record.plaintext || record.plaintext[0] || record.plaintext[1]) {
-          // No need to redo the work on the first file here
-          let endLuceneIds = record.luceneIds.slice(1);
-          let endFilenamesArray = record.name.split('>').slice(1);
-          let endFilenames = endFilenamesArray.join('>');
+    if (_unhighlighted.length === 0) {
+      // nothing to do
+      console.log('Specific record already highlighted fully.');
+      endEarly();
+      return;
+    }
 
-          // Filenames delimited by > (impossible filename character)
-          _unhighlighted.push({
-            luceneIds: endLuceneIds,
-            filename: endFilenames,
+    // console.log("terms, last", _searchTerms, state.lastSearchedTerm);
+
+    if (!_searchTerms) {
+      _searchTerms = searchState.lastSearchedTerm;
+    }
+
+    let dataToPass = {
+      unhighlighted: _unhighlighted,
+      //terms: _searchTerms,
+      terms: 'Nuclear Weapon Complex',
+      markup: true, // default
+      fragmentSizeValue: 2, // default
+    };
+
+    //Send the AJAX call to the server
+    axios({
+      method: 'POST', // or 'PUT'
+      url: searchUrl,
+      data: dataToPass,
+    })
+      .then((response) => {
+        let responseOK = response && response.status === 200;
+        if (responseOK) {
+          return response.data;
+        } else {
+          return null;
+        }
+      })
+      .then((parsedJson) => {
+        if (parsedJson) {
+          // console.log("Adding highlights", parsedJson);
+          let allResults = setSearchState.searchResults;
+
+          // Iterate through records until we find the correct one (sort/filter could change index within card)
+          for (let j = 0; j < allResults[_index].records.length; j++) {
+            // Only bother checking ID if it has files
+            if (!Globals.isEmptyOrSpaces(allResults[_index].records[j].name)) {
+              if (record.id === allResults[_index].records[j].id) {
+                allResults[_index].records[j].plaintext = allResults[_index].records[
+                  j
+                ].plaintext.concat(parsedJson[0]);
+
+                // done
+                j = allResults[_index].records.length;
+              }
+            }
+          }
+
+          // Fin
+          setSearchState({
+            ...searchState,
+            searchResults: allResults,
+            outputResults: currentResults,
+            //output: allResults,
+            searching: false,
+            shouldUpdate: true,
+          });
+          // Run our filter + sort which will intelligently populate outputResults from updated searchResults
+          // and update the table
+          filterResultsBy(_searcherState);
+          // console.log("All done with page highlights: all results, displayed results",
+          //     allResults, currentResults);
+        }
+      })
+      .catch((error) => {
+        if (error.name === 'TypeError') {
+          console.error(error);
+        } else {
+          // Server down or 408 (timeout)
+          let _networkError = 'Server may be down or you may need to login again.';
+          let _resultsText = Globals.errorMessage.default;
+
+          if (error.response && error.response.status === 408) {
+            _networkError = 'Request has timed out.';
+            _resultsText = 'Timed out';
+          }
+
+          setSearchState({
+            ...searchState,
+            networkError: _networkError,
+            resultsText: _resultsText,
+            searching: false,
+            shouldUpdate: true,
           });
         }
-
-        if (_unhighlighted.length === 0) {
-          // nothing to do
-          console.log('Specific record already highlighted fully.');
-          endEarly();
-          return;
-        }
-
-        // console.log("terms, last", _searchTerms, state.lastSearchedTerm);
-
-        if (!_searchTerms) {
-          _searchTerms = searchState.lastSearchedTerm;
-        }
-
-        let dataToPass = {
-          unhighlighted: _unhighlighted,
-          //terms: _searchTerms,
-          terms: "Nuclear Weapon Complex",
-          markup: true, // default
-          fragmentSizeValue: 2, // default
-        };
-
-        //Send the AJAX call to the server
-        axios({
-          method: 'POST', // or 'PUT'
-          url: searchUrl,
-          data: dataToPass,
-        })
-          .then((response) => {
-            let responseOK = response && response.status === 200;
-            if (responseOK) {
-              return response.data;
-            } else {
-              return null;
-            }
-          })
-          .then((parsedJson) => {
-            if (parsedJson) {
-              // console.log("Adding highlights", parsedJson);
-              let allResults = setSearchState.searchResults;
-
-              // Iterate through records until we find the correct one (sort/filter could change index within card)
-              for (let j = 0; j < allResults[_index].records.length; j++) {
-                // Only bother checking ID if it has files
-                if (!Globals.isEmptyOrSpaces(allResults[_index].records[j].name)) {
-                  if (record.id === allResults[_index].records[j].id) {
-                    allResults[_index].records[j].plaintext = allResults[_index].records[
-                      j
-                    ].plaintext.concat(parsedJson[0]);
-
-                    // done
-                    j = allResults[_index].records.length;
-                  }
-                }
-              }
-
-              // Fin
-              setSearchState(
-                {
-                  ...searchState,
-                  searchResults: allResults,
-                  outputResults: currentResults,
-                  //output: allResults,
-                  searching: false,
-                  shouldUpdate: true,
-                });
-                  // Run our filter + sort which will intelligently populate outputResults from updated searchResults
-                  // and update the table
-                  filterResultsBy(_searcherState);
-                  // console.log("All done with page highlights: all results, displayed results",
-                  //     allResults, currentResults);
-            }
-          })
-          .catch((error) => {
-            if (error.name === 'TypeError') {
-              console.error(error);
-            } else {
-              // Server down or 408 (timeout)
-              let _networkError = 'Server may be down or you may need to login again.';
-              let _resultsText = Globals.errorMessage.default;
-
-              if (error.response && error.response.status === 408) {
-                _networkError = 'Request has timed out.';
-                _resultsText = 'Timed out';
-              }
-
-              setSearchState({
-                ...searchState,
-                networkError: _networkError,
-                resultsText: _resultsText,
-                searching: false,
-                shouldUpdate: true,
-              });
-            }
-          });
-
+      });
   };
 
   const gatherFirstPageHighlightsThenFinishSearch = (searchId, _inputs, currentResults) => {
-    console.log("🚀 ~ file: Search.jsx:1230 ~ gatherFirstPageHighlightsThenFinishSearch ~ searchId, _inputs, currentResults:", searchId, _inputs, currentResults)
+    console.log(
+      '🚀 ~ file: Search.jsx:1230 ~ gatherFirstPageHighlightsThenFinishSearch ~ searchId, _inputs, currentResults:',
+      searchId,
+      _inputs,
+      currentResults,
+    );
     if (!_inputs) {
       if (searchState.searcherInputs) {
         _inputs = searchState.searcherInputs;
@@ -1309,10 +1320,13 @@ export default function Search(props) {
     }
 
     const terms = postProcessTerms(_inputs.titleRaw);
-    console.log("🚀 ~ file: Search.jsx:1308 ~ gatherFirstPageHighlightsThenFinishSearch ~ terms:", terms)
+    console.log(
+      '🚀 ~ file: Search.jsx:1308 ~ gatherFirstPageHighlightsThenFinishSearch ~ terms:',
+      terms,
+    );
     let dataToPass = {
       unhighlighted: _unhighlighted,
-      terms: "Nuclear Weapon Complex",
+      terms: 'Nuclear Weapon Complex',
       markup: _inputs.markup,
       fragmentSizeValue: _inputs.fragmentSizeValue,
     };
@@ -1326,10 +1340,10 @@ export default function Search(props) {
       data: dataToPass,
     })
       .then((response) => {
-        console.log("🚀 ~ file: Search.jsx:1327 ~ .then ~ response:", response)
+        console.log('🚀 ~ file: Search.jsx:1327 ~ .then ~ response:', response);
         let responseOK = response && response.status === 200;
         if (responseOK) {
-          console.log("🚀 ~ file: Search.jsx:1331 ~ .then ~ response.data:", response.data)
+          console.log('🚀 ~ file: Search.jsx:1331 ~ .then ~ response.data:', response.data);
           return response.data;
         } else {
           return null;
@@ -1340,7 +1354,7 @@ export default function Search(props) {
           console.log('Adding highlights', parsedJson);
 
           let allResults = searchState.results;
-          console.log("🚀 ~ file: Search.jsx:1340 ~ .then ~ allResults:", allResults)
+          console.log('🚀 ~ file: Search.jsx:1340 ~ .then ~ allResults:', allResults);
 
           let x = 0;
           for (let i = startPoint; i < Math.min(currentResults.length, endPoint); i++) {
@@ -1376,7 +1390,10 @@ export default function Search(props) {
         }
       })
       .catch((error) => {
-        console.log("🚀 ~ file: Search.jsx:1372 ~ gatherFirstPageHighlightsThenFinishSearch ~ error:", error)
+        console.log(
+          '🚀 ~ file: Search.jsx:1372 ~ gatherFirstPageHighlightsThenFinishSearch ~ error:',
+          error,
+        );
         if (error.name === 'TypeError') {
           console.error(error);
         } else {
@@ -1389,21 +1406,20 @@ export default function Search(props) {
             _resultsText = 'Timed out';
           }
 
-          setSearchState(
-            {
-              ...searchState,
-              networkError: _networkError,
-              resultsText: _resultsText,
-              shouldUpdate: true,
-            });
-              console.log('Error, finish search, doing initalSearch with _inputs', _inputs);
-              initialSearch(_inputs);
+          setSearchState({
+            ...searchState,
+            networkError: _networkError,
+            resultsText: _resultsText,
+            shouldUpdate: true,
+          });
+          console.log('Error, finish search, doing initalSearch with _inputs', _inputs);
+          initialSearch(_inputs);
         }
       });
   };
 
   const gatherPageHighlights = (searchId, _inputs, currentResults) => {
-        console.log('Gathering page highlights', searchId, _page, _pageSize);
+    console.log('Gathering page highlights', searchId, _page, _pageSize);
     if (!_inputs) {
       if (searchState.searcherInputs) {
         _inputs = searchState.searcherInputs;
@@ -1907,8 +1923,6 @@ export default function Search(props) {
 
   const onInput = (evt) => {
     let userInput = evt.target.value;
-    console.log('on input evt.target.name' + evt.target.name);
-    console.log('onInput userInput', userInput);
     // if(!userInput || userInput.length <= 3){
     //     console.log(`${userInput} is not long enught`)
     // }
@@ -2473,7 +2487,7 @@ export default function Search(props) {
   let _noiCount = '';
   let _rodCount = '';
   let _scopingCount = '';
-      
+
   const doSearchFromParams = useCallback(() => {
     // console.log("Stored terms", _lastSearchTerms);
     // console.log("State.", state);
@@ -2524,7 +2538,7 @@ export default function Search(props) {
       };
   }, [searchState.eis_count]);
 
-//#endregion
+  //#endregion
   useEffect(() => {
     if (_mounted.value === false) {
       return; //do nothing till cleanup
@@ -2537,12 +2551,12 @@ export default function Search(props) {
     };
   }, [_mounted.current]);
 
-  useEffect(() => {
-    console.log(
-      'searchState.searchResults useEffect fired searchResults',
-      searchState.searchResults,
-    );
-  },[searchState.searchResults])
+  // useEffect(() => {
+  //   console.log(
+  //     'searchState.searchResults useEffect fired searchResults',
+  //     searchState.searchResults,
+  //   );
+  // },[searchState.searchResults])
 
   // useEffect(()=>{
   //   console.log('getPageHighlights setting pageInfo')
@@ -2557,12 +2571,12 @@ export default function Search(props) {
       setSearchState({ ...searchState, hidden: hidden });
     } else {
       hidden.add(record.id);
-      setSearchState({...searchState, hidden: hidden }, () => {
+      setSearchState({ ...searchState, hidden: hidden }, () => {
         gatherSpecificHighlights(_index, record);
       });
     }
   };
-    
+
   // useEffect(() => {
   //   console.log('getPageHighlights setting gatherSpecificHighlights');
   //   gatherPageHighlights();
@@ -2573,30 +2587,28 @@ export default function Search(props) {
         return;
     }
     let terms = parseTerms(searchState.titleRaw);
-      const currentTerm = searchState.titleRaw;
-      console.log('useEffect for currentTerm',currentTerm);
+      const currentTerm = terms;
       const q = Globals.getParameterByName("q");
-      console.log("🚀 ~ file: Search.jsx:2576 ~ useEffect ~ q :", q )
-      if(q && currentTerm &&  currentTerm.length === 0){
+      if(q && q.length && currentTerm &&  currentTerm.length === 0){
       console.log('Search Terms from Params',q);
       setSearchState({
         ...searchState,
         titleRaw: q
       });
-      //if there is a search term in the query params and the current term is empty set the search term to query params
-      // if(currentTerm == "" && searchTerm && searchTerm.length){
-      //   const terms = searchTerm;
-      //   setSearchState({
-      //     ...searchState,
-      //     titleRaw: searchTerm,
-      //   });
-      // }
-      // if(searchState.results && searchState.results.length === 0){
-      //   //if there is no search results but queryparams are present than start
-      //   console.log('No results from queryParams - startNewSearch',searchState.results);
-      //   debouncedSearch(searchTerm);
-      // }
-    }});
+ // if there is a search term in the query params and the current term is empty set the search term to query params
+  if(currentTerm == "" && searchTerm && searchTerm.length){
+    const terms = searchTerm;
+    setSearchState({
+      ...searchState,
+      titleRaw: searchTerm,
+    });
+  }
+  if(searchState.results && searchState.results.length === 0){
+    //if there is no search results but queryparams are present than start
+    console.log('No results from queryParams - startNewSearch',searchState.results);
+    debouncedSearch(searchTerm);
+  }
+  }},[searchState.titleRaw]);
 
   // useEffect(() => {
   //   if (_mounted.current === false) {
@@ -2700,37 +2712,24 @@ export default function Search(props) {
                   <Grid container flex={1} flexGrow={1}>
                     <Grid item xs={12} width={'100%'}>
                       <>
-                        <h1>Output Results</h1>
-                        {JSON.stringify(searchState.outputResults)}
-                        {/* {searchState.outputResults.map((result, idx) => {
-                          return (
-                            <div key={idx}>
-                              {result.doc.title} : {result.doc}
-                            <Divider />
-                            </div>
-                          );
-                        })} */}
-                        <h1>Search Results</h1>
-                        {JSON.stringify(searchState.searchResults)}
-                        <h1>Results</h1>
-                        {JSON.stringify(searchState.results)}
-                        {/* {Object.keys(searchState).map((key, idx) => {
-                          return (
-                            <div key={idx}>
-                              {key} : {searchState[key]}
-                            </div>
-                          );
-                        })} */}
-                        {/* <h1>searchResults</h1>
-                        {searchState.searchResults}
-                        <h1>All Results</h1>
-                        {searchState.results} */}
-                        <Divider />
-                        {searchState.outputResults && searchState.outputResults.length ? (
-                          <SearchResults results={searchState.outputResults} />
+                        {searchState.titleRaw && searchState.titleRaw.length > 0 ? (
+                          searchState.results && searchState.results.length > 0 ? (
+                            <>
+                              <SearchResults results={searchState.results} />
+                              <Divider />
+                            </>
+                          ) : (
+                            <>
+                              {' '}
+                              <Typography>No Results found for {searchState.titleRaw}</Typography>
+                            </>
+                          )
                         ) : (
-                          <div>No results found for {searchState.titleRaw}</div>
-                        )}
+                          <>
+                            <Typography>Please enter a search term</Typography>
+                          </>
+                        )
+}
                       </>
                     </Grid>
                   </Grid>

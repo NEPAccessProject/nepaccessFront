@@ -1,41 +1,12 @@
-import React, { useState, useReducer, useContext, useEffect } from 'react';
+import React from 'react';
 
-import {
-  Paper,
-  Button,
-  Input,
-  Box,
-  Divider,
-  FormControl,
-  Select,
-  Autocomplete,
-  InputLabel,
-  ListItem,
-  IconButton,
-  TextField,
-  Typography,
-  Container,
-  FormLabel,
-  Chip,
-  Checkbox,
-} from '@mui/material';
+import { Paper } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import theme from '../../styles/theme';
 //import Grid from '@mui/material/Grid'; // Grid version 1
 import Grid from '@mui/material/Unstable_Grid2';
-import { InputAdornment, Search, SearchOutlined } from '@mui/icons-material';
-import {
-  proximityOptions,
-  actionOptions,
-  decisionOptions,
-  agencyOptions,
-  stateOptions,
-  countyOptions,
-} from '../options';
-import SearchFilter from './SearchFilter';
-import SearchResultOptions from './SearchResultOptions';
+import { makeStyles } from '@mui/styles';
 import SearchResultItems from './SearchResultsItems';
-import { makeStyles, withStyles } from '@mui/styles';
 
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
@@ -94,16 +65,20 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const sortByRelevance = (a,b) => {
+const sortByRelevance = (a, b) => {
+  console.log("🚀 ~ file: SearchResults.jsx:69 ~ sortByRelevance ~ a, b:", a, b)
   return a.score > b.score;
-}
+};
 
 export default function SearchResults(props) {
+  console.log("🚀 ~ file: SearchResults.jsx:74 ~ SearchResults ~ props:", props)
   const classes = useStyles(theme);
-  const {results} = props;
-  console.log("🚀 ~ file: SearchResults.jsx:104 ~ SearchResults ~ results:", results)
-  const sortedResults = (results && results.length) ?  results.sort(sortByRelevance) : [];
-  console.log("🚀 ~ file: SearchResults.jsx:106 ~ SearchResults ~ sortedResults:", sortedResults)
+  const { results } = props;
+  console.log('🚀 ~ file: SearchResults.jsx:104 ~ SearchResults ~ results:', results);
+  const {records} = results;
+  console.log("🚀 ~ file: SearchResults.jsx:78 ~ SearchResults ~ records:", records)
+ // const sortedResults = results && results.length ? results.sort(sortByRelevance) : [];
+//  console.log('🚀 ~ file: SearchResults.jsx:106 ~ SearchResults ~ sortedResults:', sortedResults);
 
   //  console.log("🚀 ~ file: SearchResults.jsx:129 ~ SearchResults ~ results:", results)
   return (
@@ -111,100 +86,134 @@ export default function SearchResults(props) {
       {/* <Grid container flex={1} border={0}>
         <Grid item xs={12} alignContent={'center'} justifyItems={'center'}><SearchResultOptions /></Grid>
       </Grid> */}
-        <Grid container xs={12}>    
-          <Grid id="search-result-item-grid-container" container xs={12}>
-               {results.map((result,idx)=>{
-                 return (
-                   <div key={idx}>
-                    <Typography varian="searchResultSubTitle">{result.title}</Typography>
-                    <Item>
-                      <SearchResultItems result={result}/>
-                      </Item>
-                   </div>
-                   )
-                  })
-                }
-              <Divider/>
-          </Grid>
-        </Grid>
-        
+      {
+      (results && results.length && results.length > 0) ? (
+        results.map((result, index) => {
+           return( 
+            <>
+            <SearchResultItems result={result} />
+            </>
+           )
+
+        }))
+        : <div>
+<Grid>
+                  <Grid container spacing={1}>
+                      <Grid item xs={2}>
+                        <b>AND</b>
+                      </Grid>
+                      <Grid item xs={10}>
+                        This is the default. <b>all</b> words you enter must be found together to return a
+                        result.
+                      </Grid>
+                    </Grid>
+                    <Grid container spacing={1}>
+                      <Grid item xs={2}>
+                        <b>AND</b>
+                      </Grid>
+                      <Grid item xs={10}>
+                        This is the default. <b>all</b> words you enter must be found together to return a
+                        result.
+                      </Grid>
+                    </Grid>
+                    <Grid container spacing={1}>
+                      <Grid item xs={2}>
+                        <b>OR</b>
+                      </Grid>
+                      <Grid item xs={10}>
+                        (all caps) to search for <b>any</b> of those words.
+                      </Grid>
+                    </Grid>
+                    <Grid container spacing={1}>
+                      <Grid item xs={2}>
+                        <b>NOT</b>
+                      </Grid>
+                      <Grid item xs={10}>
+                        (all caps) to search to <b>exclude</b>words or a phrase.
+                      </Grid>
+                    </Grid>
+                    <Grid container spacing={1}>
+                      <Grid item xs={2}>
+                        <b>{'" "'}</b>
+                      </Grid>
+                      <Grid item xs={10}>
+                        Surround words with quotes (" ") to search for an exact phrase.
+                      </Grid>
+                    </Grid>
+                  </Grid>
+
+        </div>
+      }
     </div>
   );
 }
 
-export function SearchResult(props){
-  console.log("🚀 ~ file: SearchResult.jsx:152 ~ SearchResult ~ props:", props)
+export function SearchResult(props) {
+  console.log('🚀 ~ file: SearchResult.jsx:152 ~ SearchResult ~ props:', props);
   const classes = useStyles(theme);
-  const {result} = props; 
-  return(
-    <Grid
-    padding={2}
-    container
-    xs={12}
-    flexDirection={'row'}
-    flex={1}
-  >
-    <Item
-      className={classes.itemHeader}
-      sx={{
-        margin: 0.5,
-        padding: 1,
-        elevation: 1,
-      }}
-    >
-      Status: <b>{(result.decision) ? result.decision : "N/A"}</b>
-    </Item>
-    <Item
-      className={classes.itemHeader}
-      sx={{
-        margin: 0.5,
-        padding: 1,
-        elevation: 1,
-      }}
-    >
-      Date: <b>{(result.commentDate) ? result.commentDate : "N/A" }</b>
-    </Item>
-    <Item
-      className={classes.itemHeader}
-      sx={{
-        margin: 0.5,
-        padding: 1,
-        elevation: 1,
-      }}
-    >
-      State: <b>{(result.state) ? result.state : "N/A"}</b>
-    </Item>
-    <Item
-      className={classes.itemHeader}
-      sx={{
-        margin: 0.5,
-        padding: 1,
-        elevation: 1,
-      }}
-    >
-      County: <b>{(result.county) ? result.county : "N/A"}</b>
-    </Item>
-    <Item
-      className={classes.itemHeader}
-      sx={{
-        margin: 0.5,
-        padding: 1,
-        elevation: 1,
-      }}
-    >
-      Action: <b>{(result.action) ? result.action : "N/A"}</b>
-    </Item>
-    <Item
-      className={classes.itemHeader}
-      sx={{
-        margin: 0.5,
-        padding: 1,
-        elevation: 1,
-      }}
-    >
-      Decision <b>{(result.decision) ? result.decision : "N/A"}</b>
-    </Item>
-
-  </Grid>
-  )
+  const { result } = props;
+  return (
+    <Grid padding={2} container xs={12} flexDirection={'row'} flex={1}>
+      <Item
+        className={classes.itemHeader}
+        sx={{
+          margin: 0.5,
+          padding: 1,
+          elevation: 1,
+        }}
+      >
+        Status: <b>{result.decision ? result.decision : 'N/A'}</b>
+      </Item>
+      <Item
+        className={classes.itemHeader}
+        sx={{
+          margin: 0.5,
+          padding: 1,
+          elevation: 1,
+        }}
+      >
+        Date: <b>{result.commentDate ? result.commentDate : 'N/A'}</b>
+      </Item>
+      <Item
+        className={classes.itemHeader}
+        sx={{
+          margin: 0.5,
+          padding: 1,
+          elevation: 1,
+        }}
+      >
+        State: <b>{result.state ? result.state : 'N/A'}</b>
+      </Item>
+      <Item
+        className={classes.itemHeader}
+        sx={{
+          margin: 0.5,
+          padding: 1,
+          elevation: 1,
+        }}
+      >
+        County: <b>{result.county ? result.county : 'N/A'}</b>
+      </Item>
+      <Item
+        className={classes.itemHeader}
+        sx={{
+          margin: 0.5,
+          padding: 1,
+          elevation: 1,
+        }}
+      >
+        Action: <b>{result.action ? result.action : 'N/A'}</b>
+      </Item>
+      <Item
+        className={classes.itemHeader}
+        sx={{
+          margin: 0.5,
+          padding: 1,
+          elevation: 1,
+        }}
+      >
+        Decision <b>{result.decision ? result.decision : 'N/A'}</b>
+      </Item>
+    </Grid>
+  );
 }
