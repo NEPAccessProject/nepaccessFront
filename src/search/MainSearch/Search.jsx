@@ -10,7 +10,7 @@ import SearchContext from './SearchContext';
 import SearchHeader from './SearchHeader';
 import SearchResults from './SearchResults';
 import SearchSideBarFilters from './SearchSideBarFilters';
-
+import SearchTips from './SearchTips';
 const _ = require('lodash');
 
 const Item = styled(Paper)(({ theme }) => ({
@@ -795,15 +795,13 @@ export default function Search(props) {
             gatherFirstPageHighlightsThenFinishSearch(_searchId, searchState.searcherInputs, _data);
           }
         } else {
-          console.log('No results for ' + _searchTerms);
+          console.log(`No results where fount for the search term ${_searchTerms}`);
           setSearchState({
             ...searchState,
             searching: false,
             //results: [],
             resultsText:
-              'No results found for ' +
-              _searchTerms +
-              ' (try adding OR between words for less strict results?)',
+              `No results found for the search term ${_searchTerms}. Please revise your search terms and try again`
           });
         }
       })
@@ -1395,7 +1393,7 @@ export default function Search(props) {
           error,
         );
         if (error.name === 'TypeError') {
-          console.error(error);
+          console.error(`gatherFirstPageHighlightsThenFinishSearch error ${error.name} is a TypeError`);
         } else {
           // Server down or 408 (timeout)
           let _networkError = 'Server is down or you may need to login again.';
@@ -1845,6 +1843,7 @@ export default function Search(props) {
     setSearchState({
       ...searchState,
       titleRaw: evt.target.name,
+      searchWord: evt.target.name
     });
     doSearch(searchState.titleRaw);
   };
@@ -2603,13 +2602,13 @@ export default function Search(props) {
           titleRaw: searchTerm,
         });
       }
-      if (searchState.results && searchState.results.length === 0) {
-        //if there is no search results but queryparams are present than start
-        console.log('No results from queryParams - startNewSearch', searchState.results);
-        debouncedSearch(searchTerm);
-      }
+      // if (searchState.results && searchState.results.length === 0) {
+      //   //if there is no search results but queryparams are present than start
+      //   console.log('No results from queryParams - startNewSearch', searchState.results);
+      //   debouncedSearch(searchTerm);
+      // }
     }
-  }, [searchState.titleRaw]);
+  }, [_mounted,searchState,searchState.titleRaw]);
 
   // useEffect(() => {
   //   if (_mounted.current === false) {
@@ -2710,7 +2709,7 @@ export default function Search(props) {
                 >
                   <Divider />
 
-                  <Grid padding={2} container flex={1} flexGrow={1}>
+                  <Grid padding={2} container flex={1} flexGrow={1} minHeight={'100vh'}>
                     <Grid item xs={12} width={'100%'}>
                       <>
                         {searchState.titleRaw && searchState.titleRaw.length > 0 ? (
@@ -2727,55 +2726,7 @@ export default function Search(props) {
                           )
                         ) : (
                           <>
-                            <Typography variant='h3'>Search Tips</Typography>
-                            <Grid marginTop={2} container flex={1}>
-                               Please enter a keyword(s) to search for. You can use the following operators to refine your search:
-                            </Grid>
-                            
-                            <Grid marginTop={2} container flex={1}>
-                              <Grid container spacing={1}>
-                                <Grid item xs={2}>
-                                  <b>AND</b>
-                                </Grid>
-                                <Grid item xs={10}>
-                                  This is the default. <b>all</b> words you enter must be found
-                                  together to return a result.
-                                </Grid>
-                              </Grid>
-                              <Grid container spacing={1}>
-                                <Grid item xs={2}>
-                                  <b>AND</b>
-                                </Grid>
-                                <Grid item xs={10}>
-                                  This is the default. <b>all</b> words you enter must be found
-                                  together to return a result.
-                                </Grid>
-                              </Grid>
-                              <Grid container spacing={1}>
-                                <Grid item xs={2}>
-                                  <b>OR</b>
-                                </Grid>
-                                <Grid item xs={10}>
-                                  (all caps) to search for <b>any</b> of those words.
-                                </Grid>
-                              </Grid>
-                              <Grid container spacing={1}>
-                                <Grid item xs={2}>
-                                  <b>NOT</b>
-                                </Grid>
-                                <Grid item xs={10}>
-                                  (all caps) to search to <b>exclude</b>words or a phrase.
-                                </Grid>
-                              </Grid>
-                              <Grid container spacing={1}>
-                                <Grid item xs={2}>
-                                  <b>{'" "'}</b>
-                                </Grid>
-                                <Grid item xs={10}>
-                                  Surround words with quotes (" ") to search for an exact phrase.
-                                </Grid>
-                              </Grid>
-                            </Grid>
+                            <SearchTips/>
                           </>
                         )}
                       </>

@@ -8,6 +8,7 @@ import Grid from '@mui/material/Unstable_Grid2';
 import { makeStyles } from '@mui/styles';
 import SearchResultOptions from './SearchResultOptions';
 import SearchResultItems from './SearchResultsItems';
+import SearchTips from './SearchTips';
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
   ...theme.typography.body2,
@@ -83,8 +84,8 @@ export default function SearchResults(props) {
   //  console.log("🚀 ~ file: SearchResults.jsx:129 ~ SearchResults ~ results:", results)
   return (
     <div id="search-results-root">
-      <Grid container flex={1} border={0}>
-        <Grid item xs={12} alignContent={'center'} justifyItems={'center'}>
+      <Grid container display={'flex'} flex={1} border={0} width={'100%'}>
+        <Grid xs={12} border={1} justifyContent={'flex-start'} alignContent={'center'} justifyItems={'flex-start'}>
           <SearchResultOptions />
         </Grid>
       </Grid>
@@ -92,58 +93,14 @@ export default function SearchResults(props) {
         results.map((result, index) => {
           return (
             <>
-              <SearchResult result={result} />
               <SearchResultItems result={result} />
             </>
           );
         })
       ) : (
-        <div>
-          <Grid>
-            <Grid container spacing={1}>
-              <Grid item xs={2}>
-                <b>AND</b>
-              </Grid>
-              <Grid item xs={10}>
-                This is the default. <b>all</b> words you enter must be found together to return a
-                result.
-              </Grid>
-            </Grid>
-            <Grid container spacing={1}>
-              <Grid item xs={2}>
-                <b>AND</b>
-              </Grid>
-              <Grid item xs={10}>
-                This is the default. <b>all</b> words you enter must be found together to return a
-                result.
-              </Grid>
-            </Grid>
-            <Grid container spacing={1}>
-              <Grid item xs={2}>
-                <b>OR</b>
-              </Grid>
-              <Grid item xs={10}>
-                (all caps) to search for <b>any</b> of those words.
-              </Grid>
-            </Grid>
-            <Grid container spacing={1}>
-              <Grid item xs={2}>
-                <b>NOT</b>
-              </Grid>
-              <Grid item xs={10}>
-                (all caps) to search to <b>exclude</b>words or a phrase.
-              </Grid>
-            </Grid>
-            <Grid container spacing={1}>
-              <Grid item xs={2}>
-                <b>{'" "'}</b>
-              </Grid>
-              <Grid item xs={10}>
-                Surround words with quotes (" ") to search for an exact phrase.
-              </Grid>
-            </Grid>
-          </Grid>
-        </div>
+        <>
+        <SearchTips/>
+        </>
       )}
     </div>
   );
@@ -163,22 +120,7 @@ export function SearchResult(props) {
           elevation: 1,
         }}
       >
-        {result.records && Object.keys(result.records).length > 0 ? (
-          Object.keys(result.records).map((key, index) => (
-            <>
-              <Grid container>
-                <Grid item xs={2}>
-                  <b>{key}</b>
-                </Grid>
-                <Grid item xs={10}>
-                  {result[key]}
-                </Grid>
-              </Grid>
-            </>
-          ))
-        ) : (
-          <>Nothing</>
-        )}
+        
         Status: <b>{result.decision ? result.decision : 'N/A'}</b>
       </Item>
       <Item

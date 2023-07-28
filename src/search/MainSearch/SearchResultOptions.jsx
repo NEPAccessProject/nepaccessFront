@@ -4,14 +4,14 @@ import {
   SortOutlined
 } from '@mui/icons-material';
 import {
+  Checkbox,
   Divider,
   FormControl,
   Grid,
   InputLabel,
   MenuItem,
   Paper,
-  Select,
-  Typography
+  Select
 } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import React, { useContext } from 'react';
@@ -51,17 +51,20 @@ export default function SearchResultOptions() {
   console.log("🚀 ~ file: SearchResultOptions.jsx:54 ~ SearchResultOptions ~ searchState:", searchState)
   return (
     <>
-      <Grid flexGrow={1} container spacing={2} alignItems="flex-end" justifyContent="flex-end ">
+      <Grid minWidth={'100%'} width={'100%'} flexGrow={1} container spacing={2} alignItems="flex-end" justifyContent="flex-end ">
         <Grid item md={3} justifyContent={'center'}>
-          <Typography
-            variant="searchResultTitle"
-            paddingTop={1}
-            paddingBottom={1}
-            marginTop={2}
-            marginBottom={2}
-          >
-            Search Results
-          </Typography>
+          <FormControl>
+            <InputLabel itemID='display-text-snippets-checkbox' id="display-text-snippets-label">Display Text Snippets</InputLabel> 
+            <Checkbox
+                id='display-text-snippets-checkbox'
+                type="checkbox"
+                name="typeFinal"
+                className="sidebar-checkbox"
+                tabIndex="12"
+                checked={typeFinal}
+                onChange={onTypeChecked}
+              />
+          </FormControl>
         </Grid>
         <Grid item md={2} justifyContent={'flex-end'}>
           <FormControl>
