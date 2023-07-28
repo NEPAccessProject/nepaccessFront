@@ -24,7 +24,7 @@ const Item = styled(Paper)(({ theme }) => ({
     // },
   },
 }));
-
+  
 const sortByDate = (a, b) => {
   if (a.record && a.record.commentDate && b.record && b.record.commentDate) {
     return a.commentDate > b.commentDate;
@@ -33,6 +33,10 @@ const sortByDate = (a, b) => {
   }
 };
 export default function SearchResultItems(props) {
+  const {showContext} = useContext(SearchContext);
+  console.log("🚀 ~ file: SearchResultsItems.jsx:37 ~ SearchResultItems ~ SearchContext:", SearchContext)
+
+  
   console.log('SearchResultItems vprops', props);
   let result = props.result || [];
   const { doc, records } = result;
@@ -80,11 +84,20 @@ export default function SearchResultItems(props) {
 }
 
 export function SearchResultItem(props) {
+  
   //  console.log('🚀 ~ file: SearchResultsItems.jsx:46 ~ SearchResultItem ~ props:', props);
   const [isPDFViewOpen, setIsPDFViewOpen] = useState(false);
   const [isContentExpanded, setIsContentExpanded] = useState(false);
+  const { seachState, setSearchState, showContext } = useContext(SearchContext);
 
-  const {seachState,setSearchState,showContext} = useContext(SearchContext);
+  const onCheckboxChange = (evt) => {
+    console.log('Checkbox changed, setting showContext to ', evt.target.checked);
+    setSearchState({
+      ...searchState,
+      showContext: evt.target.checked
+    });
+  };
+
   const { record } = props;
   console.log('🚀 ~ file: SearchResultsItems.jsx:91 ~ SearchResultItem ~ record:', record);
   const {
@@ -122,7 +135,6 @@ export function SearchResultItem(props) {
     console.log(`Open toggleContentExpansion for ID: ${id}`);
     setIsContentExpanded(!isContentExpanded);
   }
-
   const handleDownloadClick = (evt, id) => {
     evt.preventDefault();
     console.log('Download ID Value and filename', id, filename);
@@ -153,7 +165,7 @@ export function SearchResultItem(props) {
         <Grid item xs={1} textAlign={'center'}>
           <Typography fontWeight={'bold'}>{year ? year : 'N/A'}</Typography>
         </Grid>
-        {record.plaintext[0] && record.plaintext[0].length> 0 ? (
+        {showContext && record.plaintext[0] && record.plaintext[0].length> 0 ? (
           <Grid item xs={9}>
             <Container className={'search-result-item-container'}>
               <Box

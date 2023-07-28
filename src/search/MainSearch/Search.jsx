@@ -1155,7 +1155,7 @@ export default function Search(props) {
     let dataToPass = {
       unhighlighted: _unhighlighted,
       //terms: _searchTerms,
-      terms: 'Nuclear Weapon Complex',
+      terms: searchState.titleRaw,
       markup: true, // default
       fragmentSizeValue: 2, // default
     };
@@ -2583,32 +2583,33 @@ export default function Search(props) {
   // }, [searchState.results]);
 
   useEffect(() => {
-    if(_mounted.value === false){
-        return;
+    if (_mounted.value === false) {
+      return;
     }
     let terms = parseTerms(searchState.titleRaw);
-      const currentTerm = terms;
-      const q = Globals.getParameterByName("q");
-      if(q && q.length && currentTerm &&  currentTerm.length === 0){
-      console.log('Search Terms from Params',q);
+    const currentTerm = terms;
+    const q = Globals.getParameterByName('q');
+    if (q && q.length && currentTerm && currentTerm.length === 0) {
+      console.log('Search Terms from Params', q);
       setSearchState({
         ...searchState,
-        titleRaw: q
+        titleRaw: q,
       });
- // if there is a search term in the query params and the current term is empty set the search term to query params
-  if(currentTerm == "" && searchTerm && searchTerm.length){
-    const terms = searchTerm;
-    setSearchState({
-      ...searchState,
-      titleRaw: searchTerm,
-    });
-  }
-  if(searchState.results && searchState.results.length === 0){
-    //if there is no search results but queryparams are present than start
-    console.log('No results from queryParams - startNewSearch',searchState.results);
-    debouncedSearch(searchTerm);
-  }
-  }},[searchState.titleRaw]);
+      // if there is a search term in the query params and the current term is empty set the search term to query params
+      if (currentTerm == '' && searchTerm && searchTerm.length) {
+        const terms = searchTerm;
+        setSearchState({
+          ...searchState,
+          titleRaw: searchTerm,
+        });
+      }
+      if (searchState.results && searchState.results.length === 0) {
+        //if there is no search results but queryparams are present than start
+        console.log('No results from queryParams - startNewSearch', searchState.results);
+        debouncedSearch(searchTerm);
+      }
+    }
+  }, [searchState.titleRaw]);
 
   // useEffect(() => {
   //   if (_mounted.current === false) {
@@ -2709,7 +2710,7 @@ export default function Search(props) {
                 >
                   <Divider />
 
-                  <Grid container flex={1} flexGrow={1}>
+                  <Grid padding={2} container flex={1} flexGrow={1}>
                     <Grid item xs={12} width={'100%'}>
                       <>
                         {searchState.titleRaw && searchState.titleRaw.length > 0 ? (
@@ -2726,10 +2727,57 @@ export default function Search(props) {
                           )
                         ) : (
                           <>
-                            <Typography>Please enter a search term</Typography>
+                            <Typography variant='h3'>Search Tips</Typography>
+                            <Grid marginTop={2} container flex={1}>
+                               Please enter a keyword(s) to search for. You can use the following operators to refine your search:
+                            </Grid>
+                            
+                            <Grid marginTop={2} container flex={1}>
+                              <Grid container spacing={1}>
+                                <Grid item xs={2}>
+                                  <b>AND</b>
+                                </Grid>
+                                <Grid item xs={10}>
+                                  This is the default. <b>all</b> words you enter must be found
+                                  together to return a result.
+                                </Grid>
+                              </Grid>
+                              <Grid container spacing={1}>
+                                <Grid item xs={2}>
+                                  <b>AND</b>
+                                </Grid>
+                                <Grid item xs={10}>
+                                  This is the default. <b>all</b> words you enter must be found
+                                  together to return a result.
+                                </Grid>
+                              </Grid>
+                              <Grid container spacing={1}>
+                                <Grid item xs={2}>
+                                  <b>OR</b>
+                                </Grid>
+                                <Grid item xs={10}>
+                                  (all caps) to search for <b>any</b> of those words.
+                                </Grid>
+                              </Grid>
+                              <Grid container spacing={1}>
+                                <Grid item xs={2}>
+                                  <b>NOT</b>
+                                </Grid>
+                                <Grid item xs={10}>
+                                  (all caps) to search to <b>exclude</b>words or a phrase.
+                                </Grid>
+                              </Grid>
+                              <Grid container spacing={1}>
+                                <Grid item xs={2}>
+                                  <b>{'" "'}</b>
+                                </Grid>
+                                <Grid item xs={10}>
+                                  Surround words with quotes (" ") to search for an exact phrase.
+                                </Grid>
+                              </Grid>
+                            </Grid>
                           </>
-                        )
-}
+                        )}
                       </>
                     </Grid>
                   </Grid>

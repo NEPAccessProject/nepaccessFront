@@ -6,8 +6,8 @@ import theme from '../../styles/theme';
 //import Grid from '@mui/material/Grid'; // Grid version 1
 import Grid from '@mui/material/Unstable_Grid2';
 import { makeStyles } from '@mui/styles';
+import SearchResultOptions from './SearchResultOptions';
 import SearchResultItems from './SearchResultsItems';
-
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
   ...theme.typography.body2,
@@ -66,84 +66,85 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const sortByRelevance = (a, b) => {
-  console.log("🚀 ~ file: SearchResults.jsx:69 ~ sortByRelevance ~ a, b:", a, b)
+  console.log('🚀 ~ file: SearchResults.jsx:69 ~ sortByRelevance ~ a, b:', a, b);
   return a.score > b.score;
 };
 
 export default function SearchResults(props) {
-  console.log("🚀 ~ file: SearchResults.jsx:74 ~ SearchResults ~ props:", props)
+  console.log('🚀 ~ file: SearchResults.jsx:74 ~ SearchResults ~ props:', props);
   const classes = useStyles(theme);
   const { results } = props;
   console.log('🚀 ~ file: SearchResults.jsx:104 ~ SearchResults ~ results:', results);
-  const {records} = results;
-  console.log("🚀 ~ file: SearchResults.jsx:78 ~ SearchResults ~ records:", records)
- // const sortedResults = results && results.length ? results.sort(sortByRelevance) : [];
-//  console.log('🚀 ~ file: SearchResults.jsx:106 ~ SearchResults ~ sortedResults:', sortedResults);
+  const { records } = results;
+  console.log('🚀 ~ file: SearchResults.jsx:78 ~ SearchResults ~ records:', records);
+  // const sortedResults = results && results.length ? results.sort(sortByRelevance) : [];
+  //  console.log('🚀 ~ file: SearchResults.jsx:106 ~ SearchResults ~ sortedResults:', sortedResults);
 
   //  console.log("🚀 ~ file: SearchResults.jsx:129 ~ SearchResults ~ results:", results)
   return (
     <div id="search-results-root">
-      {/* <Grid container flex={1} border={0}>
-        <Grid item xs={12} alignContent={'center'} justifyItems={'center'}><SearchResultOptions /></Grid>
-      </Grid> */}
-      {
-      (results && results.length && results.length > 0) ? (
+      <Grid container flex={1} border={0}>
+        <Grid item xs={12} alignContent={'center'} justifyItems={'center'}>
+          <SearchResultOptions />
+        </Grid>
+      </Grid>
+      {results && results.length && results.length > 0 ? (
         results.map((result, index) => {
-           return( 
+          return (
             <>
-            <SearchResultItems result={result} />
+              <SearchResult result={result} />
+              <SearchResultItems result={result} />
             </>
-           )
-
-        }))
-        : <div>
-<Grid>
-                  <Grid container spacing={1}>
-                      <Grid item xs={2}>
-                        <b>AND</b>
-                      </Grid>
-                      <Grid item xs={10}>
-                        This is the default. <b>all</b> words you enter must be found together to return a
-                        result.
-                      </Grid>
-                    </Grid>
-                    <Grid container spacing={1}>
-                      <Grid item xs={2}>
-                        <b>AND</b>
-                      </Grid>
-                      <Grid item xs={10}>
-                        This is the default. <b>all</b> words you enter must be found together to return a
-                        result.
-                      </Grid>
-                    </Grid>
-                    <Grid container spacing={1}>
-                      <Grid item xs={2}>
-                        <b>OR</b>
-                      </Grid>
-                      <Grid item xs={10}>
-                        (all caps) to search for <b>any</b> of those words.
-                      </Grid>
-                    </Grid>
-                    <Grid container spacing={1}>
-                      <Grid item xs={2}>
-                        <b>NOT</b>
-                      </Grid>
-                      <Grid item xs={10}>
-                        (all caps) to search to <b>exclude</b>words or a phrase.
-                      </Grid>
-                    </Grid>
-                    <Grid container spacing={1}>
-                      <Grid item xs={2}>
-                        <b>{'" "'}</b>
-                      </Grid>
-                      <Grid item xs={10}>
-                        Surround words with quotes (" ") to search for an exact phrase.
-                      </Grid>
-                    </Grid>
-                  </Grid>
-
+          );
+        })
+      ) : (
+        <div>
+          <Grid>
+            <Grid container spacing={1}>
+              <Grid item xs={2}>
+                <b>AND</b>
+              </Grid>
+              <Grid item xs={10}>
+                This is the default. <b>all</b> words you enter must be found together to return a
+                result.
+              </Grid>
+            </Grid>
+            <Grid container spacing={1}>
+              <Grid item xs={2}>
+                <b>AND</b>
+              </Grid>
+              <Grid item xs={10}>
+                This is the default. <b>all</b> words you enter must be found together to return a
+                result.
+              </Grid>
+            </Grid>
+            <Grid container spacing={1}>
+              <Grid item xs={2}>
+                <b>OR</b>
+              </Grid>
+              <Grid item xs={10}>
+                (all caps) to search for <b>any</b> of those words.
+              </Grid>
+            </Grid>
+            <Grid container spacing={1}>
+              <Grid item xs={2}>
+                <b>NOT</b>
+              </Grid>
+              <Grid item xs={10}>
+                (all caps) to search to <b>exclude</b>words or a phrase.
+              </Grid>
+            </Grid>
+            <Grid container spacing={1}>
+              <Grid item xs={2}>
+                <b>{'" "'}</b>
+              </Grid>
+              <Grid item xs={10}>
+                Surround words with quotes (" ") to search for an exact phrase.
+              </Grid>
+            </Grid>
+          </Grid>
         </div>
-      }
+      )}
     </div>
   );
 }
@@ -162,6 +163,22 @@ export function SearchResult(props) {
           elevation: 1,
         }}
       >
+        {result.records && Object.keys(result.records).length > 0 ? (
+          Object.keys(result.records).map((key, index) => (
+            <>
+              <Grid container>
+                <Grid item xs={2}>
+                  <b>{key}</b>
+                </Grid>
+                <Grid item xs={10}>
+                  {result[key]}
+                </Grid>
+              </Grid>
+            </>
+          ))
+        ) : (
+          <>Nothing</>
+        )}
         Status: <b>{result.decision ? result.decision : 'N/A'}</b>
       </Item>
       <Item
@@ -214,6 +231,31 @@ export function SearchResult(props) {
       >
         Decision <b>{result.decision ? result.decision : 'N/A'}</b>
       </Item>
+      {/* {(result.commentDate) 
+            ? ( */}
+      <Item
+        className={classes.itemHeader}
+        sx={{
+          margin: 0.5,
+          padding: 1,
+          elevation: 1,
+        }}
+      >
+        Project Start Date: <b>{result.registerDate ? result.registerDate : 'N/A'}</b>
+      </Item>
+      <Item
+        className={classes.itemHeader}
+        sx={{
+          margin: 0.5,
+          padding: 1,
+          elevation: 1,
+        }}
+      >
+        Project Endate Date: <b>{result.commentDate ? result.commentDate : 'N/A'}</b>
+      </Item>
+      {/* ) : (
+        <></>
+      )} */}
     </Grid>
   );
 }

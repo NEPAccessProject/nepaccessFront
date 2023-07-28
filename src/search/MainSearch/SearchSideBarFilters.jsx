@@ -97,13 +97,7 @@ export default function SearchSideBarFilters(props) {
     setSearchState({ ...searchState, startPublish: date.toLocaleString });
   };
 
-  const onCheckboxChange = (evt) => {
-    console.log('Checkbox changed, setting showContext to ', evt.target.checked);
-    setSearchState({
-      ...searchState,
-      showContext: evt.target.checked
-    });
-  };
+
 
   // #endregion
   // region Render Return
@@ -128,23 +122,7 @@ export default function SearchSideBarFilters(props) {
             label="Search Only Within Titles"
           />
         </Item>
-        <Item alignItems="center">
-          <Box marginBottom={0}>
-            <FormControlLabel
-              control={
-                <Checkbox
-                  // checked={searchOptions}
-                  checked={showContext}
-                  onChange={onCheckboxChange}
-                  disabled={snippetsDisabled}
-                />
-              }
-              label="Show Text Snippets"
-            />
-
-            {/* {this.showDownloadButton()} */}
-          </Box>
-        </Item>
+        
         {/* #region Proximity Filter */}
         <Item>
           <FormControl

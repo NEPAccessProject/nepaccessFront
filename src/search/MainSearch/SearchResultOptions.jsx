@@ -1,30 +1,42 @@
-import React, { useState, useEffect, useContext } from 'react';
 import {
-  Box,
-  Grid,
-  List,
-  ListItem,
-  FormControl,
-  MenuItem,
-  Select,
-  Divider,
-  InputLabel,
-  Typography,
-  FormLabel,
-} from '@mui/material';
-import {
-  SortOutlined,
-  SortByAlphaIcon,
-  StarIcon,
-  FavoriteBorderIcon,
   Download,
   Favorite,
-  FilterListIcon,
-  Filter,
+  SortOutlined
 } from '@mui/icons-material';
+import {
+  Divider,
+  FormControl,
+  Grid,
+  InputLabel,
+  MenuItem,
+  Paper,
+  Select,
+  Typography
+} from '@mui/material';
+import { styled } from '@mui/material/styles';
+import React, { useContext } from 'react';
 import SearchContext from '../MainSearch/SearchContext';
-import { on } from 'events';
 
+const Item = styled(Paper)(({ theme }) => ({
+  backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
+  padding: theme.spacing(1),
+  color: theme.palette.text.secondary,
+  elevation: 1,
+  borderRadius: 1,
+  mt: 1,
+  mb: 1,
+  pl: 0,
+  pr: 0,
+  '&:hover': {
+    // //           backgroundColor: //theme.palette.grey[200],
+    // boxShadow: '0px 4px 8px rgba(0.5, 0.5, 0.5, 0.25)',
+    // backgroundColor: '#eee',
+    // cursor: 'pointer',
+    // '& .addIcon': {
+    //   color: 'darkgrey',
+    // },
+  },
+}));
 export default function SearchResultOptions() {
   const {
     searchState,
@@ -35,12 +47,13 @@ export default function SearchResultOptions() {
     onDownloadClick,
     onSaveSearchResultsClick,
   } = useContext(SearchContext);
-  const { sortBy, sortDirection, limit } = searchState;
+  const { sortBy, sortDirection, limit, showContext } = searchState;
+  console.log("🚀 ~ file: SearchResultOptions.jsx:54 ~ SearchResultOptions ~ searchState:", searchState)
   return (
     <>
-      <Grid flexGrow={1}  container spacing={2} alignItems="flex-end" justifyContent="flex-end ">
-        <Grid item md={4} justifyContent={'center'} >
-        <Typography
+      <Grid flexGrow={1} container spacing={2} alignItems="flex-end" justifyContent="flex-end ">
+        <Grid item md={3} justifyContent={'center'}>
+          <Typography
             variant="searchResultTitle"
             paddingTop={1}
             paddingBottom={1}
@@ -52,12 +65,10 @@ export default function SearchResultOptions() {
         </Grid>
         <Grid item md={2} justifyContent={'flex-end'}>
           <FormControl>
-            <InputLabel id="number-of-results-select-label" itemID='number-of-results-select' >Display:</InputLabel>
-            <Select
-              value={limit}
-              id="number-of-results-select"
-              onChange={onLimitChangeHandler}
-            >
+            <InputLabel id="number-of-results-select-label" itemID="number-of-results-select">
+              Display:
+            </InputLabel>
+            <Select value={limit} id="number-of-results-select" onChange={onLimitChangeHandler}>
               <MenuItem value={10}>10</MenuItem>
               <MenuItem value={20}>20</MenuItem>
               <MenuItem value={25}>25</MenuItem>
@@ -66,7 +77,25 @@ export default function SearchResultOptions() {
             </Select>
           </FormControl>
         </Grid>
-        <Grid md={3} justifyContent={'flex-end'} item>
+        {/* <Grid item md={2} justifyContent={'flex-end'}>
+          <Item alignItems="center">
+            <Box marginBottom={0}>
+              <FormControlLabel
+                control={
+                  <Checkbox
+                    // checked={searchOptions}
+                    checked={showContext}
+                    onChange={onCheckboxChange}
+                    disabled={snippetsDisabled}
+                  />
+                }
+                label="Show Text Snippets"
+              />
+
+            </Box>
+          </Item>
+        </Grid> */}
+        <Grid md={2} justifyContent={'flex-end'} item>
           <FormControl>
             <InputLabel id="sort-by-select-label">Sort By</InputLabel>
             <Select value={sortBy} onChange={onSortDirectionChangeHandler}>
@@ -98,7 +127,7 @@ export default function SearchResultOptions() {
           <Favorite onClick={onSaveSearchResultsClick} />
         </Grid>
       </Grid>
-      <Divider/>
+      <Divider />
     </>
   );
 }
