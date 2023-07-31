@@ -86,7 +86,9 @@ export default function Search(props) {
   const filterBy = props.filterResultsBy;
   const myRef = React.createRef();
   let _mounted = React.createRef(false);
+  let searchTerm = React.createRef('');
   let _queryParams = [];
+//  const searchTerm = useRef("")
   // Necessary for on-demand highlighting per page
 
   const doSearch = (terms) => {
@@ -2586,20 +2588,18 @@ export default function Search(props) {
       return;
     }
     let terms = parseTerms(searchState.titleRaw);
-    const currentTerm = terms;
     const q = Globals.getParameterByName('q');
-    if (q && q.length && currentTerm && currentTerm.length === 0) {
-      console.log('Search Terms from Params', q);
+    if ((q && q.length > 0)  && (terms.length === 0)) {
+      console.log(`Query Params found wiht No Search Term found setting to q: ${q}`);
       setSearchState({
         ...searchState,
         titleRaw: q,
       });
       // if there is a search term in the query params and the current term is empty set the search term to query params
-      if (currentTerm == '' && searchTerm && searchTerm.length) {
-        const terms = searchTerm;
+      if (terms && terms != "") {
         setSearchState({
           ...searchState,
-          titleRaw: searchTerm,
+          titleRaw: terms,
         });
       }
       // if (searchState.results && searchState.results.length === 0) {
@@ -2608,7 +2608,7 @@ export default function Search(props) {
       //   debouncedSearch(searchTerm);
       // }
     }
-  }, [_mounted,searchState,searchState.titleRaw]);
+  }, [_mounted,searchState.titleRaw]);
 
   // useEffect(() => {
   //   if (_mounted.current === false) {
@@ -2720,9 +2720,10 @@ export default function Search(props) {
                             </>
                           ) : (
                             <>
-                              {' '}
-                              <Typography>No Results found for {searchState.titleRaw}</Typography>
-                            </>
+                              {(searchState.titleRaw && searchState.results.length === 0)
+                                ? <Typography>No Results found for {searchState.titleRaw}</Typography>
+                                : <></>
+                              }</>
                           )
                         ) : (
                           <>

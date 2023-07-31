@@ -1,41 +1,29 @@
 import {
-  Download,
-  Favorite,
   SortOutlined
 } from '@mui/icons-material';
 import {
   Checkbox,
-  Divider,
   FormControl,
-  Grid,
-  InputLabel,
+  FormControlLabel,
   MenuItem,
   Paper,
   Select
 } from '@mui/material';
+import Grid from '@mui/material/Unstable_Grid2'; // Grid version 
 import { styled } from '@mui/material/styles';
 import React, { useContext } from 'react';
 import SearchContext from '../MainSearch/SearchContext';
-
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
+  ...theme.typography.body2,
   padding: theme.spacing(1),
+  textAlign: 'center',
   color: theme.palette.text.secondary,
-  elevation: 1,
-  borderRadius: 1,
-  mt: 1,
-  mb: 1,
-  pl: 0,
-  pr: 0,
-  '&:hover': {
-    // //           backgroundColor: //theme.palette.grey[200],
-    // boxShadow: '0px 4px 8px rgba(0.5, 0.5, 0.5, 0.25)',
-    // backgroundColor: '#eee',
-    // cursor: 'pointer',
-    // '& .addIcon': {
-    //   color: 'darkgrey',
-    // },
-  },
+  elevation: 0,
+  border:0,
+ height: 75,
+ borderRadius:0,
+
 }));
 export default function SearchResultOptions() {
   const {
@@ -47,42 +35,35 @@ export default function SearchResultOptions() {
     onDownloadClick,
     onSaveSearchResultsClick,
   } = useContext(SearchContext);
-  const { sortBy, sortDirection, limit, showContext } = searchState;
+  const { sortBy, sortDirection, limit, showContext,snippetsDisabled } = searchState;
+
+  const onCheckboxChange = (evt) => {
+    console.log('Checkbox changed, setting showContext to ', evt.target.checked);
+    setSearchState({
+      ...searchState,
+      showContext: evt.target.checked
+    });
+  };
   console.log("🚀 ~ file: SearchResultOptions.jsx:54 ~ SearchResultOptions ~ searchState:", searchState)
   return (
     <>
-      <Grid minWidth={'100%'} width={'100%'} flexGrow={1} container spacing={2} alignItems="flex-end" justifyContent="flex-end ">
-        <Grid item md={3} justifyContent={'center'}>
-          <FormControl>
-            <InputLabel itemID='display-text-snippets-checkbox' id="display-text-snippets-label">Display Text Snippets</InputLabel> 
-            <Checkbox
-                id='display-text-snippets-checkbox'
-                type="checkbox"
-                name="typeFinal"
-                className="sidebar-checkbox"
-                tabIndex="12"
-                checked={typeFinal}
-                onChange={onTypeChecked}
-              />
-          </FormControl>
-        </Grid>
-        <Grid item md={2} justifyContent={'flex-end'}>
-          <FormControl>
-            <InputLabel id="number-of-results-select-label" itemID="number-of-results-select">
-              Display:
-            </InputLabel>
-            <Select value={limit} id="number-of-results-select" onChange={onLimitChangeHandler}>
-              <MenuItem value={10}>10</MenuItem>
-              <MenuItem value={20}>20</MenuItem>
-              <MenuItem value={25}>25</MenuItem>
-              <MenuItem value={50}>50</MenuItem>
-              <MenuItem value={100}>100</MenuItem>
-            </Select>
-          </FormControl>
-        </Grid>
-        {/* <Grid item md={2} justifyContent={'flex-end'}>
-          <Item alignItems="center">
-            <Box marginBottom={0}>
+      <Grid
+        container
+        flex={1}
+        spacing={0}
+        justifyContent={'flex-start'}
+        backgroundColor="#ccc"
+      >
+        <Grid xs={4}>
+          <Item
+            justifyContent="center"
+            sx={{
+              justifyContent: 'center',
+              alignItems: 'center',
+              display: 'flex',
+            }}
+          >
+            <FormControl>
               <FormControlLabel
                 control={
                   <Checkbox
@@ -94,43 +75,96 @@ export default function SearchResultOptions() {
                 }
                 label="Show Text Snippets"
               />
-
-            </Box>
+            </FormControl>
           </Item>
-        </Grid> */}
-        <Grid md={2} justifyContent={'flex-end'} item>
-          <FormControl>
-            <InputLabel id="sort-by-select-label">Sort By</InputLabel>
-            <Select value={sortBy} onChange={onSortDirectionChangeHandler}>
+        </Grid>
+        <Grid xs={3}>
+          <Item
+            justifyContent="center"
+            sx={{
+              justifyContent: 'center',
+              alignItems: 'center',
+              display: 'flex',
+            }}
+          >
+            <Select
+              id="search-result-options-sort-by-select"
+              value={sortBy}
+              onChange={onSortDirectionChangeHandler}
+            >
               <MenuItem value="relevance">Relevance</MenuItem>
               <MenuItem value="title">Title</MenuItem>
               <MenuItem value="date">Date</MenuItem>
               <MenuItem value="distance">Distance</MenuItem>
             </Select>
-          </FormControl>
+          </Item>
         </Grid>
-        <Grid item md={1}>
-          <FormControl>
-            {/* <InputLabel id="sort-direction-select-label">Sort Direction</InputLabel> */}
-            <SortOutlined value={sortDirection} onChange={onSortDirectionChangeHandler} />
-            {/* <Select
-                value={sortDirection}
+        <Grid xs={3}>
+          <Item
+            justifyContent="center"
+            sx={{
+              justifyContent: 'center',
+              alignItems: 'center',
+              display: 'flex',
+            }}
+          >
+            <FormControl>
+              {/* <FormControlLabel itemID="search-result-options-sort-by-select" id="sort-by-select-label">
+                Sort By
+              </FormControlLabel> */}
+              <Select
+                id="search-result-options-sort-by-select"
+                value={sortBy}
                 onChange={onSortDirectionChangeHandler}
               >
-                <MenuItem value="asc">ASC</MenuItem>
-                <MenuItem value="desc">DESC</MenuItem>
-              </Select> */}
-          </FormControl>
+                <MenuItem value="relevance">Relevance</MenuItem>
+                <MenuItem value="title">Title</MenuItem>
+                <MenuItem value="date">Date</MenuItem>
+                <MenuItem value="distance">Distance</MenuItem>
+              </Select>
+            </FormControl>
+          </Item>
         </Grid>
+        <Grid xs={2} container spacing={0}>
+          <Grid xs={3} flex={1}>
+            <Item
+              justifyContent="center"
+              sx={{
+                justifyContent: 'center',
+                alignItems: 'center',
+                display: 'flex',
+              }}
+            >
+              <SortOutlined value={sortDirection} onChange={onSortDirectionChangeHandler} />
+            </Item>
+          </Grid>
+          <Grid xs={3} flex={1}>
+            <Item
+              justifyContent="center"
+              sx={{
+                justifyContent: 'center',
+                alignItems: 'center',
+                display: 'flex',
+              }}
+            >
+              <SortOutlined value={sortDirection} onChange={onSortDirectionChangeHandler} />
+            </Item>
+          </Grid>
 
-        <Grid item md={1}>
-          <Download onClick={onDownloadClick} />
-        </Grid>
-        <Grid item md={1}>
-          <Favorite onClick={onSaveSearchResultsClick} />
+          <Grid xs={3}>
+            <Item
+              sx={{
+                justifyContent: 'center',
+                justifyContent: 'center',
+                alignItems: 'center',
+                display: 'flex',
+              }}
+            >
+              <SortOutlined value={sortDirection} onChange={onSortDirectionChangeHandler} />
+            </Item>
+          </Grid>
         </Grid>
       </Grid>
-      <Divider />
     </>
   );
 }

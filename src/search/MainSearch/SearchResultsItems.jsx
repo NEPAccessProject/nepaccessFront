@@ -215,8 +215,9 @@ export function SearchResultItem(props) {
             <Box
               bgcolor="#f4f4f4"
               padding={1}
-              border={0}
-              borderColor={'lightgray'}
+              border={1}
+              
+              //borderColor={'lightgray'}
               borderRadius={1}
               paddingTop={1}
               paddingBottom={1}
@@ -249,16 +250,16 @@ export function SearchResultItem(props) {
               paddingTop={1}
               paddingBottom={1}
             >
-              {(record.plaintext[0] && record.plaintext[0].length >= 100) 
+              {(!isContentExpanded &&record.plaintext[0] && record.plaintext[0].length >= 100) 
               ? (
                 <Typography variant="expanderButton">Click to see more...</Typography>
               ) 
               : (
-                <>Something else</>
+                <Typography variant="expanderButton">Click to see less...</Typography>
               )}
             </Box>
           ) : (
-            <div>Click to see Less</div>
+              <></>
           )}
         </Grid>
         <Grid item xs={2} alignContent={'flex-end'} justifyContent={'flex-end'}>

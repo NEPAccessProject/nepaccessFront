@@ -9,7 +9,6 @@ import {
 } from '@mui/material';
 import React, { useContext } from 'react';
 import AvailableFilesDialog from './AvailableFilesDialog';
-import ProximitySelect from './ProximitySelect';
 import QuickStartDialog from './QuickStartDialog';
 import SearchContext from './SearchContext';
 import SearchTipsDialog from './SearchTipDialog';
@@ -38,7 +37,9 @@ export default function SearchHeader(props) {
   const {    
     isAvailableFiltersDialogOpen,
     isQuickStartDialogOpen,
-    isSearchTipsDialogIsOpen,titleRaw} = searchState;
+    isSearchTipsDialogIsOpen,titleRaw,proximityOptions} = searchState;
+
+
 
   return (
     <div id="search-text-div">
@@ -75,23 +76,7 @@ export default function SearchHeader(props) {
             </Box>
           </Grid>
         </Hidden>
-        <Grid item  xs={12} md={3}>
-          <Box
-           
-            id="proximity-search-box"
-            //   width={'100%'}
-            display={'flex'}
-            alignItems={'center'}
-            justifyContent={'flex-end'}
-            paddingLeft={1}
-            value={searchState.proximityOptions}
-          >
-            <ProximitySelect
-              onProximityChange={(evt) => onProximityChange(evt)}
-              options={searchState.proximityOption}
-            />
-          </Box>
-        </Grid>
+  
         <Grid item xs={12} md={7} borderLeft={0} id="search-box-grid-item">
           <Box
             id="search-box-box-item"

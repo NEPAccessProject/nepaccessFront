@@ -1,10 +1,9 @@
 import React from 'react';
 
-import { Paper } from '@mui/material';
+import { Grid, Paper } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import theme from '../../styles/theme';
 //import Grid from '@mui/material/Grid'; // Grid version 1
-import Grid from '@mui/material/Unstable_Grid2';
 import { makeStyles } from '@mui/styles';
 import SearchResultOptions from './SearchResultOptions';
 import SearchResultItems from './SearchResultsItems';
@@ -85,10 +84,15 @@ export default function SearchResults(props) {
   return (
     <div id="search-results-root">
       <Grid container display={'flex'} flex={1} border={0} width={'100%'}>
-        <Grid xs={12} border={1} justifyContent={'flex-start'} alignContent={'center'} justifyItems={'flex-start'}>
+        <Grid xs={12} border={0} justifyContent={'flex-start'} alignContent={'center'} justifyItems={'flex-start'}>
           <SearchResultOptions />
         </Grid>
+        {/* <Grid item xs={12}>
+          <GeoJsonMap/>
+        </Grid> */}
       </Grid>
+
+
       {results && results.length && results.length > 0 ? (
         results.map((result, index) => {
           return (
