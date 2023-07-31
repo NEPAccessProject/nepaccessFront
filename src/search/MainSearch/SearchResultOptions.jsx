@@ -20,11 +20,12 @@ const Item = styled(Paper)(({ theme }) => ({
   textAlign: 'center',
   color: theme.palette.text.secondary,
   elevation: 0,
-  border:0,
- height: 75,
- borderRadius:0,
-
+  border:1,
+  borderRight: 1,
+  borderColor: theme.palette.divider,
 }));
+// height: 75,
+
 export default function SearchResultOptions() {
   const {
     searchState,
@@ -47,20 +48,17 @@ export default function SearchResultOptions() {
   console.log("🚀 ~ file: SearchResultOptions.jsx:54 ~ SearchResultOptions ~ searchState:", searchState)
   return (
     <>
-      <Grid
-        container
-        flex={1}
-        spacing={0}
-        justifyContent={'flex-start'}
-        backgroundColor="#ccc"
-      >
+      <Grid container flex={1} spacing={0} border={0} justifyContent={'flex-start'}>
         <Grid xs={4}>
           <Item
+            elevation={0}
             justifyContent="center"
             sx={{
               justifyContent: 'center',
               alignItems: 'center',
               display: 'flex',
+              borderRight: 1,
+              borderColor: 'lightgray',
             }}
           >
             <FormControl>
@@ -81,10 +79,13 @@ export default function SearchResultOptions() {
         <Grid xs={3}>
           <Item
             justifyContent="center"
+            elevation={0}
             sx={{
               justifyContent: 'center',
               alignItems: 'center',
               display: 'flex',
+              borderRight: 1,
+              borderColor: 'lightgray',
             }}
           >
             <Select
@@ -102,10 +103,13 @@ export default function SearchResultOptions() {
         <Grid xs={3}>
           <Item
             justifyContent="center"
+            elevation={0}
             sx={{
               justifyContent: 'center',
               alignItems: 'center',
               display: 'flex',
+              borderRight: 1,
+              borderColor: 'lightgray',
             }}
           >
             <FormControl>
@@ -125,26 +129,45 @@ export default function SearchResultOptions() {
             </FormControl>
           </Item>
         </Grid>
-        <Grid xs={2} container spacing={0}>
-          <Grid xs={3} flex={1}>
+        <Grid
+          xs={2}
+          container
+          flex={1}
+          spacing={0}
+          elevation={0}
+          id="search-result-options-icon-container"
+          alignItems={'center'}
+          alignContent={'Center'}
+          justifyContent={'center'}
+        >
+          <Grid xs={3} flex={1} id="search-result-options-icon-items">
             <Item
+              id="search-result-options-icon-item"
               justifyContent="center"
+              elevation={0}
+              height="auto"
               sx={{
                 justifyContent: 'center',
                 alignItems: 'center',
                 display: 'flex',
+                borderRight: 1,
+                borderColor: 'lightgray',
               }}
             >
               <SortOutlined value={sortDirection} onChange={onSortDirectionChangeHandler} />
             </Item>
           </Grid>
-          <Grid xs={3} flex={1}>
+          <Grid xs={3} flex={1} id="search-result-options-grid-container">
             <Item
+              id="search-result-sort-item"
               justifyContent="center"
+              elevation={0}
               sx={{
                 justifyContent: 'center',
                 alignItems: 'center',
                 display: 'flex',
+                borderRight: 0,
+                borderColor: 'lightgray',
               }}
             >
               <SortOutlined value={sortDirection} onChange={onSortDirectionChangeHandler} />
@@ -153,11 +176,13 @@ export default function SearchResultOptions() {
 
           <Grid xs={3}>
             <Item
+              elevation={0}
               sx={{
-                justifyContent: 'center',
                 justifyContent: 'center',
                 alignItems: 'center',
                 display: 'flex',
+                borderLeft: 1,
+                borderColor: 'lightgray',
               }}
             >
               <SortOutlined value={sortDirection} onChange={onSortDirectionChangeHandler} />

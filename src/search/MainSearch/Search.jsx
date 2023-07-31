@@ -2406,6 +2406,7 @@ export default function Search(props) {
     isQuickStartDialogOpen: false,
     isSearchTipsDialogIsOpen: false,
     lastSearchedTerm: '',
+    hadSearched: false,
     lastYear: null,
     limit: 100,
     loaded: false,
@@ -2434,7 +2435,7 @@ export default function Search(props) {
     searching: false,
     searchOption: 'B',
     shouldUpdate: false,
-    showContext: false, //default should be false
+    showContext: true, 
     snippetsDisabled: false,
     sortBy: 'relevance',
     sortDirection: 'ASC',
@@ -2519,6 +2520,7 @@ export default function Search(props) {
         surveyDone: false,
         isDirty: true,
         inputMessage: proximityValues._inputMessage,
+        hasSearched: true
       });
       doSearch(terms);
     }
@@ -2712,6 +2714,14 @@ export default function Search(props) {
                   <Grid padding={2} container flex={1} flexGrow={1} minHeight={'100vh'}>
                     <Grid item xs={12} width={'100%'}>
                       <>
+                      <h2>Results</h2>
+                      {JSON.stringify(searchState.results)}
+                      <h2>All Results</h2>
+                      {JSON.stringify(searchState.allResults)}
+                      <h2>Current Results</h2>
+                      {searchState.currentResults}
+
+
                         {searchState.titleRaw && searchState.titleRaw.length > 0 ? (
                           searchState.results && searchState.results.length > 0 ? (
                             <>

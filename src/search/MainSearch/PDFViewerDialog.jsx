@@ -41,14 +41,14 @@ export default function PDFViewerDialog(props) {
     setNumPages(numPages);
   }
 
-  useEffect(() => {
-    _mounted.current = true;
-    console.log(`Mounted `, _mounted);
-    () => {
-      console.log('cleaning up mounted check after useEffect');
-      _mounted.current = false;
-    };
-  }, [_mounted.current]);
+  // useEffect(() => {
+  //   _mounted.current = true;
+  //   console.log(`Mounted `, _mounted);
+  //   () => {
+  //     console.log('cleaning up mounted check after useEffect');
+  //     _mounted.current = false;
+  //   };
+  // }, [_mounted.current]);
 
   const handleMaxWidthChange = (event) => {
     setMaxWidth(
@@ -62,11 +62,11 @@ export default function PDFViewerDialog(props) {
     setFullWidth(event.target.checked);
   };
 
-  useEffect(()=> {
-    `Getting file list for id ${id}`;
-     const files = getFilesById(id);
-     setFiles(files);
-  },[id])
+  // useEffect(()=> {
+  //   `Getting file list for id ${id}`;
+  //    const files = getFilesById(id);
+  //    setFiles(files);
+  // },[id])
 
 const getFilesById = (id) => {
   let url = Globals.currentHost + `file/nepafiles?id=${id}`;

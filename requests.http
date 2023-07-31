@@ -1,50 +1,162 @@
+@host = http://localhost:8080/
 
 ###
-POST http://localhost:8080/text/get_highlightsFVH HTTP/1.1
-content-type: application/jsonp
+GET {{host}}stats/eis_count HTTP/1.1
+authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJnbXMiLCJleHAiOjE2OTA4NDY5ODgsImp0aSI6IjY0NSJ9.rF3uctOM2yxzdHFbBFpEH1q2QbjToxLhM3vrs4FA9pxsF6F8bHS61OFEVrnVzrhe4iM9jLlXBrBmverbsvSUVw
+
+key: test_key_only
+
+###
+POST {{host}}test/check HTTP/1.1
+authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJnbXMiLCJleHAiOjE2OTA4NDY5ODgsImp0aSI6IjY0NSJ9.rF3uctOM2yxzdHFbBFpEH1q2QbjToxLhM3vrs4FA9pxsF6F8bHS61OFEVrnVzrhe4iM9jLlXBrBmverbsvSUVw
+key: test_key_only
+
+###
+POST {{host}}text/search_no_context HTTP/1.1
+authorization: Bearer 
+key: test_key_only
+Content-Type: application/json
+Accept: application/json
 
 {
-    "unhighlighted": [
-        {
-            "luceneIds": [
-                269
-            ],
-            "filename": "App A_Vol_1of3_Public Scoping_Compressed.pdf"
-        },
-        {
-            "luceneIds": [
-                243
-            ],
-            "filename": "App A_Public Involvement.pdf"
-        },
-        {
-            "luceneIds": [
-                42804
-            ],
-            "filename": "110144/110144_0001.pdf"
-        },
-        {
-            "luceneIds": [
-                32279
-            ],
-            "filename": "080122/080122_0001.pdf"
-        },
-        {
-            "luceneIds": [
-                54036
-            ],
-            "filename": "Appendix M_ProtectedLands.pdf"
-        },
-        {
-            "luceneIds": [
-                37200
-            ],
-            "filename": "080006/080006_0001.pdf"
-        }
-    ],
-    "terms": "F-35",
-    "markup": true,
-    "fragmentSizeValue": 2
+    "title": "Bay"
 }
 
+###
+POST {{host}}text/search_top/ HTTP/1.1
+authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJnbXMiLCJleHAiOjE2ODk0Njg2MTIsImp0aSI6IjY0NSJ9.xeq97UA4CxkHukarpVBYH8iy6NoPMsGx_NOK7kEra3Y_C7UO9xz9zA5SsmVQCJ6U1D4cVwSf6-k3afs0fK0tAA
+key: test_key_only
+Content-Type: application/json
+Accept: application/json
 
+{
+ 
+    "title": "2005"
+}
+
+###
+POST {{host}}text/search/ HTTP/1.1
+authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJnbXMiLCJleHAiOjE2ODk0Njg2MTIsImp0aSI6IjY0NSJ9.xeq97UA4CxkHukarpVBYH8iy6NoPMsGx_NOK7kEra3Y_C7UO9xz9zA5SsmVQCJ6U1D4cVwSf6-k3afs0fK0tAA
+key: test_key_only
+Content-Type: application/json
+Accept: application/json
+
+{
+ 
+    "title": "Bay" 
+}
+
+###
+POST {{host}}text/search_test HTTP/1.1
+authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJnbXMiLCJleHAiOjE2ODk0Njg2MTIsImp0aSI6IjY0NSJ9.xeq97UA4CxkHukarpVBYH8iy6NoPMsGx_NOK7kEra3Y_C7UO9xz9zA5SsmVQCJ6U1D4cVwSf6-k3afs0fK0tAA
+key: test_key_only
+Content-Type: application/json
+Accept: application/json
+
+{
+    "id": "2003"
+}
+
+###
+POST {{host}}text/get_highlightsFVH HTTP/1.1
+authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJnbXMiLCJleHAiOjE2ODk0Njg2MTIsImp0aSI6IjY0NSJ9.xeq97UA4CxkHukarpVBYH8iy6NoPMsGx_NOK7kEra3Y_C7UO9xz9zA5SsmVQCJ6U1D4cVwSf6-k3afs0fK0tAA
+key: test_key_only
+Content-Type: application/json
+Accept: application/json
+
+
+{
+  "unhighlighted": [
+    {
+      "luceneIds": [
+        6148
+      ],
+      "filename": "01-17-aprcs-feis-record-of-decision.pdf"
+    }
+  ],
+  "terms": "2003",
+  "markup": true,
+  "fragmentSizeValue": 2
+}  
+###
+GET {{host}}text/test_terms?terms=2020 HTTP/1.1
+authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJnbXMiLCJleHAiOjE2ODk0Njg2MTIsImp0aSI6IjY0NSJ9.xeq97UA4CxkHukarpVBYH8iy6NoPMsGx_NOK7kEra3Y_C7UO9xz9zA5SsmVQCJ6U1D4cVwSf6-k3afs0fK0tAA
+key: test_key_only
+Content-Type: application/json
+Accept: application/json
+###
+GET {{host}}text/get_by_title?title=Meeks HTTP/1.1
+authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJnbXMiLCJleHAiOjE2ODk0Njg2MTIsImp0aSI6IjY0NSJ9.xeq97UA4CxkHukarpVBYH8iy6NoPMsGx_NOK7kEra3Y_C7UO9xz9zA5SsmVQCJ6U1D4cVwSf6-k3afs0fK0tAA
+key: test_key_only
+Content-Type: application/json
+Accept: application/json
+
+###
+GET {{host}}text/search/suggest?terms=Bay HTTP/1.1
+authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJnbXMiLCJleHAiOjE2ODk0Njg2MTIsImp0aSI6IjY0NSJ9.xeq97UA4CxkHukarpVBYH8iy6NoPMsGx_NOK7kEra3Y_C7UO9xz9zA5SsmVQCJ6U1D4cVwSf6-k3afs0fK0tAA
+key: test_key_only
+Content-Type: application/json
+Accept: application/json
+
+###
+GET {{host}}text/get_by_filename?filename=CommentLetters-79624.zip HTTP/1.1
+authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJnbXMiLCJleHAiOjE2ODk0Njg2MTIsImp0aSI6IjY0NSJ9.xeq97UA4CxkHukarpVBYH8iy6NoPMsGx_NOK7kEra3Y_C7UO9xz9zA5SsmVQCJ6U1D4cVwSf6-k3afs0fK0tAA
+key: test_key_only
+Content-Type: application/json
+Accept: application/json
+
+### 
+GET {{host}}stats/earliest_year HTTP/1.1
+authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJnbXMiLCJleHAiOjE2ODk0Njg2MTIsImp0aSI6IjY0NSJ9.xeq97UA4CxkHukarpVBYH8iy6NoPMsGx_NOK7kEra3Y_C7UO9xz9zA5SsmVQCJ6U1D4cVwSf6-k3afs0fK0tAA
+key: test_key_only
+
+###
+POST {{host}}user/get_role HTTP/1.1
+authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJnbXMiLCJleHAiOjE2ODk0Njg2MTIsImp0aSI6IjY0NSJ9.xeq97UA4CxkHukarpVBYH8iy6NoPMsGx_NOK7kEra3Y_C7UO9xz9zA5SsmVQCJ6U1D4cVwSf6-k3afs0fK0tAA
+key: test_key_only
+###
+POST {{host}}scraper/restart HTTP/1.1
+authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJnbXMiLCJleHAiOjE2ODk0Njg2MTIsImp0aSI6IjY0NSJ9.xeq97UA4CxkHukarpVBYH8iy6NoPMsGx_NOK7kEra3Y_C7UO9xz9zA5SsmVQCJ6U1D4cVwSf6-k3afs0fK0tAA
+key: test_key_only
+
+###
+GET {{host}}scraper/is_shutdown HTTP/1.1
+authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJnbXMiLCJleHAiOjE2ODk0Njg2MTIsImp0aSI6IjY0NSJ9.xeq97UA4CxkHukarpVBYH8iy6NoPMsGx_NOK7kEra3Y_C7UO9xz9zA5SsmVQCJ6U1D4cVwSf6-k3afs0fK0tAA
+key: test_key_only
+
+
+
+###
+GET http://localhost:8080/geojson/get_all_state_county HTTP/1.1
+authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJnbXMiLCJleHAiOjE2ODk0Njg2MTIsImp0aSI6IjY0NSJ9.xeq97UA4CxkHukarpVBYH8iy6NoPMsGx_NOK7kEra3Y_C7UO9xz9zA5SsmVQCJ6U1D4cVwSf6-k3afs0fK0tAA
+key: test_key_only
+
+
+
+###
+POST {{host}}scraper/sync HTTP/1.1
+authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJnbXMiLCJleHAiOjE2ODk0Njg2MTIsImp0aSI6IjY0NSJ9.xeq97UA4CxkHukarpVBYH8iy6NoPMsGx_NOK7kEra3Y_C7UO9xz9zA5SsmVQCJ6U1D4cVwSf6-k3afs0fK0tAA
+key: test_key_only
+###
+
+
+###
+POST {{host}}user/checkAdmin HTTP/1.1
+authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJnbXMiLCJleHAiOjE2ODk0Njg2MTIsImp0aSI6IjY0NSJ9.xeq97UA4CxkHukarpVBYH8iy6NoPMsGx_NOK7kEra3Y_C7UO9xz9zA5SsmVQCJ6U1D4cVwSf6-k3afs0fK0tAA
+key: test_key_only
+
+###
+GET {{host}}text/sync HTTP/1.1
+authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJnbXMiLCJleHAiOjE2ODk0Njg2MTIsImp0aSI6IjY0NSJ9.xeq97UA4CxkHukarpVBYH8iy6NoPMsGx_NOK7kEra3Y_C7UO9xz9zA5SsmVQCJ6U1D4cVwSf6-k3afs0fK0tAA
+key: test_key_only
+
+
+###
+GET {{host}}text/get_by_id?id=24155 HTTP/1.1
+authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJnbXMiLCJleHAiOjE2ODk0Njg2MTIsImp0aSI6IjY0NSJ9.xeq97UA4CxkHukarpVBYH8iy6NoPMsGx_NOK7kEra3Y_C7UO9xz9zA5SsmVQCJ6U1D4cVwSf6-k3afs0fK0tAA
+key: test_key_only
+
+###
+GET {{host}}text/get_length_ids?id=24155 HTTP/1.1
+authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJnbXMiLCJleHAiOjE2ODk0Njg2MTIsImp0aSI6IjY0NSJ9.xeq97UA4CxkHukarpVBYH8iy6NoPMsGx_NOK7kEra3Y_C7UO9xz9zA5SsmVQCJ6U1D4cVwSf6-k3afs0fK0tAA
+key: test_key_only

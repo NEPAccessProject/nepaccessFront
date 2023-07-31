@@ -12,6 +12,7 @@ import AvailableFilesDialog from './AvailableFilesDialog';
 import QuickStartDialog from './QuickStartDialog';
 import SearchContext from './SearchContext';
 import SearchTipsDialog from './SearchTipDialog';
+import SearchResultOptions from './SearchResultOptions';
 
 import theme from '../../styles/theme';
 const useStyles = (theme) => ({
@@ -54,7 +55,6 @@ export default function SearchHeader(props) {
         borderColor="darkgray"
       >
         <Hidden mdDown>
-          
           <Grid item xs={12} md={2}>
             <Box
               id="search-text-grid-item"
@@ -76,63 +76,72 @@ export default function SearchHeader(props) {
             </Box>
           </Grid>
         </Hidden>
-  
-        <Grid item xs={12} md={9} borderLeft={0} id="search-box-grid-item">
-          <Box
-            id="search-box-box-item"
 
-            display={'flex'}
-            justifyContent={'center'}
-            justifyItems={'center'}
-            alignItems={'center'}
-            alignContent={'center'}
-            height={115}
-            paddingLeft={2}
-            paddingRight={2}
-            padding={1}
-            elevation={1}
-            borderRadius={0}
+        <Grid container flex={1}>
+          <Grid
+            item
+            xs={12}
             border={0}
-            borderColor={'#CCC'}
+            borderColor={'#DDD'}
+            md={12}
             borderLeft={0}
-            marginLeft={0}
-            marginRight={0}
+            marginTop={2}
+            id="search-box-grid-item"
           >
-            {' '}
-            <TextField
-              fullWidth
-              backgroundColor={'white'}
-              id="main-search-text-field"
-              name='titleRaw'
-              variant="outlined"
-              focused
-              onInput={onInput}
-              onKeyUp={onKeyUp}
-              onKeyDown={onKeyDown}
-              placeholder="Search for NEPA documents"
-              value={titleRaw ? titleRaw : ''}
-              autoFocus
-              InputProps={{
-                endAdornment: (
-                  <IconButton onClick={(evt)=>onIconClick(evt)}>
-                    <SearchOutlined />
-                  </IconButton>
-                ),
-              }}
-            />
-          </Box>
+            <Box
+              id="search-box-box-item"
+              display={'flex'}
+              justifyContent={'center'}
+              justifyItems={'center'}
+              alignItems={'center'}
+              alignContent={'center'}
+              height={60}
+              paddingLeft={0}
+              paddingRight={2}
+              padding={0}
+              elevation={1}
+              borderRadius={0}
+              border={0}
+              borderColor={'#CCC'}
+              borderLeft={0}
+              marginLeft={0}
+              marginRight={0}
+            >
+              {' '}
+              <TextField
+                fullWidth
+                backgroundColor={'white'}
+                id="main-search-text-field"
+                name="titleRaw"
+                variant="outlined"
+                focused
+                onInput={onInput}
+                onKeyUp={onKeyUp}
+                onKeyDown={onKeyDown}
+                placeholder="Search for NEPA documents"
+                value={titleRaw ? titleRaw : ''}
+                autoFocus
+                InputProps={{
+                  endAdornment: (
+                    <IconButton onClick={(evt) => onIconClick(evt)}>
+                      <SearchOutlined />
+                    </IconButton>
+                  ),
+                }}
+              />
+            </Box>
+          </Grid>
+          <Grid item xs={12} md={12} borderLeft={0} id="search-box-result-options-container">
+            <SearchResultOptions />
+          </Grid>
         </Grid>
       </Grid>
-      <SearchTipsDialog 
-        isOpen={isSearchTipsDialogIsOpen} 
-        onDialogClose={toggleSearchTipsDialog} />
+      <SearchTipsDialog isOpen={isSearchTipsDialogIsOpen} onDialogClose={toggleSearchTipsDialog} />
       <AvailableFilesDialog
         isOpen={isAvailableFiltersDialogOpen}
         onDialogClose={toggleAvailableFilesDialog}
       />
-      <QuickStartDialog 
-        isOpen={isQuickStartDialogOpen}
-        onDialogClose={toggleQuickStartDialog} />
+      <QuickStartDialog isOpen={isQuickStartDialogOpen} onDialogClose={toggleQuickStartDialog} />
     </div>
   );
 }

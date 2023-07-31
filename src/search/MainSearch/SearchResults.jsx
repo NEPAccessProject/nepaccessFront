@@ -82,16 +82,9 @@ export default function SearchResults(props) {
   //  console.log("🚀 ~ file: SearchResults.jsx:129 ~ SearchResults ~ results:", results)
   return (
     <div id="search-results-root">
-      <Grid container display={'flex'} flex={1} border={0} width={'100%'}>
-        <Grid xs={12} border={0} justifyContent={'flex-start'} alignContent={'center'} justifyItems={'flex-start'}>
-          <SearchResultOptions />
-        </Grid>
-        {/* <Grid item xs={12}>
-          <GeoJsonMap/>
-        </Grid> */}
-      </Grid>
-
-
+      <h2>Search Result Items Result</h2>
+      {JSON.stringify(results)}
+      
       {results && results.length && results.length > 0 ? (
         results.map((result, index) => {
           return (
