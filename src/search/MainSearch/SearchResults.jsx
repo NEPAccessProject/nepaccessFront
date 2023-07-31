@@ -7,7 +7,6 @@ import theme from '../../styles/theme';
 import { makeStyles } from '@mui/styles';
 import SearchResultOptions from './SearchResultOptions';
 import SearchResultItems from './SearchResultsItems';
-import SearchTips from './SearchTips';
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
   ...theme.typography.body2,
@@ -103,7 +102,7 @@ export default function SearchResults(props) {
         })
       ) : (
         <>
-        <SearchTips/>
+        {/* <SearchTips/> */}
         </>
       )}
     </div>

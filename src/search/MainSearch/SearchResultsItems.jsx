@@ -171,14 +171,18 @@ export function SearchResultItem(props) {
         elevation: 0,
       }}
     >
-      <Typography variant="searchResultSubTitle" padding={2}>
-        {documentType} - {title} - ID {record.id}
-      </Typography>
+<>
+        <Typography variant="searchResultSubTitle" padding={2}>
+          {documentType} - {title}
+        </Typography>
+</>
       <Grid
         className={'search-result-item-grid-container'}
         flex={1}
         flexGrow={1}
         display={'flex'}
+        border={1}
+        borderColor={"darkgray"}
         container
       >
         <Grid item
@@ -210,21 +214,20 @@ export function SearchResultItem(props) {
             {year ? year : 'N/A'}
           </Typography>
         </Grid>
-        <Grid item xs={9} id="search-result-item">
+        <Grid item xs={7} id="search-result-item">
           <Box className={'search-result-item-container'}>
             <Box
-              bgcolor="#f4f4f4"
               padding={1}
-              border={1}
+              // border={1}
               
-              //borderColor={'lightgray'}
-              borderRadius={1}
-              paddingTop={1}
-              paddingBottom={1}
-              sx={{
-                border: 1,
-                borderColor: '#ccc',
-              }}
+              // //borderColor={'lightgray'}
+              // borderRadius={1}
+              // paddingTop={1}
+              // paddingBottom={1}
+              // sx={{
+              //   border: 1,
+              //   borderColor: '#ccc',
+              // }}
             >
               {(isContentExpanded && record.plaintext[0] && record.plaintext[0].length >= 100)
               ? (
@@ -262,32 +265,39 @@ export function SearchResultItem(props) {
               <></>
           )}
         </Grid>
-        <Grid item xs={2} alignContent={'flex-end'} justifyContent={'flex-end'}>
-          <Button
-            color="primary"
-            onClick={(evt) => handleDownloadClick(evt, id)}
-            sx={{
-              width: '90%',
-            }}
-          >
-            Download
-          </Button>
-          <PDFViewerDialog
-            id={id}
-            record={record}
-            isOpen={isPDFViewOpen}
-            onDialogClose={(evt) => closePDFPreview(id, evt)}
-          />
-          <Button
-            onClick={(evt) => openPDFPreview(id, evt)}
-            color={'secondary'}
-            sx={{
-              mt: 1,
-              width: '90%',
-            }}
-          >
-            Preview
-          </Button>
+        <Grid item xs={4} alignContent={'space-evenly'} justifyContent={'center'}>
+          <Grid container spacing={1} border={1}>
+
+<Grid xs={6}>
+              <Button
+                color="primary"
+                onClick={(evt) => handleDownloadClick(evt, id)}
+                sx={{
+                  width: '80%',
+                }}
+              >
+                Download
+              </Button>
+</Grid>
+            <Grid xs={6}>
+              <PDFViewerDialog
+                id={id}
+                record={record}
+                isOpen={isPDFViewOpen}
+                onDialogClose={(evt) => closePDFPreview(id, evt)}
+              />
+              <Button
+                onClick={(evt) => openPDFPreview(id, evt)}
+                color={'secondary'}
+                sx={{
+                  mt: 1,
+                  width: '80%',
+                }}
+              >
+                Preview
+              </Button>
+            </Grid>
+          </Grid>
         </Grid>
       </Grid>
     </Grid>

@@ -2721,8 +2721,14 @@ export default function Search(props) {
                           ) : (
                             <>
                               {(searchState.titleRaw && searchState.results.length === 0)
-                                ? <Typography>No Results found for {searchState.titleRaw}</Typography>
-                                : <></>
+                                ? 
+                                <>
+                                  <SearchTips/>
+                                  <Typography>No Results found for {searchState.titleRaw}</Typography>
+                                 </>
+                                : <>
+                                
+                                </>
                               }</>
                           )
                         ) : (

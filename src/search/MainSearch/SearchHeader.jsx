@@ -51,7 +51,7 @@ export default function SearchHeader(props) {
         layout={'row'}
         spacing={1}
         border={0}
-        borderColor={'#DDD'}
+        borderColor="darkgray"
       >
         <Hidden mdDown>
           
@@ -61,7 +61,7 @@ export default function SearchHeader(props) {
               // backgroundColor="transparent"
               height={115}
               borderRadius={0}
-              borderRight={1}
+              borderRight={0}
               borderColor={'#CCC'}
             >
               <ListItem onClick={toggleSearchTipsDialog}>
@@ -77,7 +77,7 @@ export default function SearchHeader(props) {
           </Grid>
         </Hidden>
   
-        <Grid item xs={12} md={7} borderLeft={0} id="search-box-grid-item">
+        <Grid item xs={12} md={9} borderLeft={0} id="search-box-grid-item">
           <Box
             id="search-box-box-item"
 
@@ -92,6 +92,7 @@ export default function SearchHeader(props) {
             padding={1}
             elevation={1}
             borderRadius={0}
+            border={0}
             borderColor={'#CCC'}
             borderLeft={0}
             marginLeft={0}
