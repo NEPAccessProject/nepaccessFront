@@ -1,6 +1,6 @@
 import { Box, Button, Divider, Grid, Paper, Typography } from '@mui/material';
 import { styled } from '@mui/material/styles';
-import React, { useContext, useState,useEffect } from 'react';
+import React, { useContext, useState } from 'react';
 import theme from '../../styles/theme';
 import PDFViewerDialog from './PDFViewerDialog';
 import SearchContext from './SearchContext';
@@ -193,23 +193,17 @@ export function SearchResultItem(props) {
           item
           id="status-box"
           display={'flex'}
-          xs={1}
-          alignContent={'center'}
-          justifyContent="center"
-          alignItems={'center'}
+          xs={2}
+          alignContent={'center'} justifyContent="center" alignItems={'center'}
           borderRight={1}
           borderLeft={1}
           borderColor={'#ccc'}
           className={classes.centeredContent}
         >
           <Typography
+            textAlign={'center'}
+            justifySelf={'center'}
             id="status-typography"
-            sx={{
-              alignContent: 'center',
-              justifyItems: 'center',
-              border: 0,
-              borderColor: '#ccc',
-            }}
             fontWeight={'bold'}
           >
             {documentType}
@@ -219,7 +213,7 @@ export function SearchResultItem(props) {
           display={'flex'}
           container
           id="button-grid-container"
-          xs={7}
+          xs={6}
           flex={1}
           // borderColor={'#ccc'}
           // border={1}
@@ -301,9 +295,6 @@ export function RenderSnippets(props){
     function convertToHTML(content) {
       return { __html: content };
     }
-    record.plaintext.push(
-      'nim sed faucibus turpis in eu mi bibendum neque egestas congue quisque egestas diam in arcu cursus euismod quis viverra nibh cras pulvinar mattis nunc sed blandit libero volutpat sed cras ornare arcu dui vivamus arcu felis bibendum ut tristique et egestas quis ipsum',
-    );
     function toggleContentExpansion(evt, id) {
       console.log(`toggleContentExpansion id: ${id} evt~ evt`, evt);
       console.log('Setting isContentExpanded to',!isContentExpanded);
@@ -321,7 +312,7 @@ export function RenderSnippets(props){
           {isContentExpanded && record.plaintext[0] && record.plaintext[0].length >= 100 ? (
             <div dangerouslySetInnerHTML={convertToHTML(record.plaintext[0])} />
           ) : record.plaintext[0] && record.plaintext[0].length >= 100 ? (
-            `${record.plaintext[0].substring(0, 100)}...`
+            <div dangerouslySetInnerHTML={convertToHTML(record.plaintext[0].substring(0, 100) + '...')} />
           ) : (
             <div></div>
           )}
@@ -350,6 +341,7 @@ export function RenderSnippets(props){
       ) : (
         <>
           <Typography>This document's content is not available</Typography>
+          {record.plaintext[0]}
         </>
       )}
     </>
