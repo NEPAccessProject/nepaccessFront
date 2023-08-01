@@ -77,21 +77,22 @@ export default function SearchResults(props) {
   //  console.log("🚀 ~ file: SearchResults.jsx:129 ~ SearchResults ~ results:", results)
   return (
     <div id="search-results-root">
-      <Typography variant="searchResultSubTitle" padding={2}>
+      {/* <Typography variant="searchResultSubTitle" padding={2}>
         {results[0].title}
-      </Typography>
+      </Typography> */}
       {results && results.length && results.length > 0 ? (
         results.map((result, index) => {
           return (
-            <>
-              <Typography variant="searchResultSubTitle" padding={2}>
-                {/* <a href="#">{title}</a> */}
-
-                <Divider />
+             <>
+             <Typography variant="searchResultSubTitle" padding={2}>
+              {(result.records && result.records[0].title) &&
+                <a href="#">{result.records[0].title}</a>
+              }
               </Typography>
-              <SearchResultCards result={result}/>
+                            <SearchResultCards result={result}/>
+              <Divider/>
               <SearchResultItems result={result} />
-            </>
+              </>
           );
         })
       ) : (

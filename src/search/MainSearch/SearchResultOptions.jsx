@@ -41,13 +41,10 @@ export default function SearchResultOptions() {
     console.log('Checkbox changed, setting showContext to ', evt.target.checked);
     setSearchState({
       ...searchState,
+      hidden: !searchState.hidden,
       showContext: evt.target.checked,
     });
   };
-  console.log(
-    '🚀 ~ file: SearchResultOptions.jsx:54 ~ SearchResultOptions ~ searchState:',
-    searchState,
-  );
   return (
     <>
       <Grid container flex={1} spacing={0} border={0} justifyContent={'flex-start'}>

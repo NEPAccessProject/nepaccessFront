@@ -40,13 +40,7 @@ const useStyles = (theme) => ({
   autocomplete: {},
 });
 
-const sortByDate = (a, b) => {
-  if (a.record && a.record.commentDate && b.record && b.record.commentDate) {
-    return a.commentDate > b.commentDate;
-  } else if (a.commentDate && a.commentDate) {
-    return a.commentDate > b.commentDate;
-  }
-};
+
 export default function SearchResultItems(props) {
   const { showContext } = useContext(SearchContext);
   const classes = useStyles(theme);
@@ -54,20 +48,18 @@ export default function SearchResultItems(props) {
 
   //console.log('SearchResultItems vprops', props);
   let result = props.result || [];
-  const { doc, records } = result;
-  //console.log('search result records?', records);
+  console.log("🚀 ~ file: SearchResultsItems.jsx:51 ~ SearchResultItems ~ result:", result)
+  const records = props.result.records || [];
+
+//  console.log('search result records?', records);
   let sortedRecords = [];
   function sortByDate(a, b) {
-    //console.log('A > B', a, b);
     a.commentDate > b.commentDate;
   }
-  if (records && records.length) {
-    sortedRecords = records.sort(sortByDate);
-  }
-  if (result.doc && result.doc.commentDate) {
-    sortedRecords = result;
-  }
-
+//  sortedRecords = result.records.sort(sortByDate);
+sortedRecords = result.records || [];
+  
+//console.log("🚀 ~ file: SearchResultsItems.jsx:59 ~ SearchResultItems ~ sortedRecords:", sortedRecords)
   // const initialSearch = (records.length) ? records.sort(sortByDate): [];
   /* Merge doc and records */
   return (
@@ -75,13 +67,16 @@ export default function SearchResultItems(props) {
       {/* <h2>Search Result Items Result?</h2>
     {JSON.stringify(result)} */}
       <Box marginTop={1} marginBottom={1} id="search-results-container-box">
-        {result && result.records && result.records.length ? (
-          result.records.map((record, idx) => {
+        {sortedRecords &&  sortedRecords.length ? (
+          sortedRecords.map((record, idx) => {
             return (
-              <Item key={idx} className="search-result-item-container">
-                <SearchResultItem record={record} />
-                <Divider/>
-              </Item>
+<>
+                {/* <Typography variant="searchResultSubTitle" padding={2}>{record.title}</Typography> */}
+                <Item key={idx} className="search-result-item-container">
+                  <SearchResultItem record={record} />
+                  <Divider/>
+                </Item>
+</>
             );
           })
         ) : (
@@ -291,7 +286,11 @@ export function RenderSnippets(props){
     const { record } = props;
     const [isPDFViewOpen, setIsPDFViewOpen] = useState(false);
     const [isContentExpanded, setIsContentExpanded] = useState(false);
-  const { seachState, setSearchState, showContext } = useContext(SearchContext);
+  const { searchState, setSearchState, showContext } = useContext(SearchContext);
+  const {hideText,hidden} = searchState;
+
+
+  console.log(`${record.title} plaintext`,record.plaintext)
     function convertToHTML(content) {
       return { __html: content };
     }
@@ -309,13 +308,13 @@ export function RenderSnippets(props){
 
       <Box className={'search-result-item-container'}>
         <Box padding={1}>
-          {isContentExpanded && record.plaintext[0] && record.plaintext[0].length >= 100 ? (
-            <div dangerouslySetInnerHTML={convertToHTML(record.plaintext[0])} />
-          ) : record.plaintext[0] && record.plaintext[0].length >= 100 ? (
-            <div dangerouslySetInnerHTML={convertToHTML(record.plaintext[0].substring(0, 100) + '...')} />
-          ) : (
-            <div></div>
-          )}
+            {isContentExpanded && record.plaintext[0] && record.plaintext[0].length >= 100 ? (
+              <div dangerouslySetInnerHTML={convertToHTML(record.plaintext[0])} />
+            ) : record.plaintext[0] && record.plaintext[0].length >= 100 ? (
+              <div dangerouslySetInnerHTML={convertToHTML(record.plaintext[0].substring(0, 100) + '...')} />
+            ) : (
+              <div></div>
+            )}
         </Box>
       </Box>
       {record.plaintext[0] && record.plaintext[0].length ? (
