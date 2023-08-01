@@ -1,6 +1,7 @@
-import { Box, Button, Grid, Paper, Typography } from '@mui/material';
+import { Box, Button, Divider, Grid, Paper, Typography } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import React, { useContext, useState } from 'react';
+import theme from '../../styles/theme';
 import PDFViewerDialog from './PDFViewerDialog';
 import SearchContext from './SearchContext';
 import SearchTips from './SearchTips';
@@ -25,6 +26,19 @@ const Item = styled(Paper)(({ theme }) => ({
   },
 }));
 
+const useStyles = (theme) => ({
+  centeredContent: {
+  verticalAlign: 'center',
+        textAlign: 'center',
+        alignContent: 'center',
+        justifyContent: 'center',
+        justifyItems: 'center',
+        border: 1,
+        borderColor:"black",
+  },
+  autocomplete: {},
+});
+
 const sortByDate = (a, b) => {
   if (a.record && a.record.commentDate && b.record && b.record.commentDate) {
     return a.commentDate > b.commentDate;
@@ -34,6 +48,8 @@ const sortByDate = (a, b) => {
 };
 export default function SearchResultItems(props) {
   const { showContext } = useContext(SearchContext);
+  const classes = useStyles(theme);
+
   console.log(
     '🚀 ~ file: SearchResultsItems.jsx:37 ~ SearchResultItems ~ SearchContext:',
     SearchContext,
@@ -71,9 +87,8 @@ export default function SearchResultItems(props) {
           result.records.map((record, idx) => {
             return (
               <Item key={idx} className="search-result-item-container">
-                {/* <h2>Passing Record?</h2>
-                {JSON.stringify(record)} */}
                 <SearchResultItem record={record} />
+                <Divider/>
               </Item>
             );
           })
@@ -96,7 +111,8 @@ export function SearchResultItem(props) {
   const [isPDFViewOpen, setIsPDFViewOpen] = useState(false);
   const [isContentExpanded, setIsContentExpanded] = useState(false);
   const { seachState, setSearchState, showContext } = useContext(SearchContext);
-
+  const classes= useStyles(theme);
+  
   const onCheckboxChange = (evt) => {
     console.log('Checkbox changed, setting showContext to ', evt.target.checked);
     setSearchState({
@@ -136,16 +152,7 @@ export function SearchResultItem(props) {
   function closePDFPreview(id) {
     setIsPDFViewOpen(false);
   }
-  function toggleContentExpansion(id, evt) {
-    console.log(
-      '🚀 ~ file: SearchResultsItems.jsx:121 ~ toggleContentExpansion ~ evt:',
-      evt.name,
-      evt.name.value,
-    );
-    evt.preventDefault();
-    console.log(`Open toggleContentExpansion for ID: ${id}`);
-    setIsContentExpanded(!isContentExpanded);
-  }
+
   const handleDownloadClick = (evt, id) => {
     evt.preventDefault();
     console.log('Download ID Value and filename', id, filename);
@@ -165,141 +172,185 @@ export function SearchResultItem(props) {
       id="search-result-item-root-item"
       flex={1}
       flexGrow={1}
-      xs={{
+      className={classes.centeredContent}
+      xs={12}
+      border={1}
+      sx={{
         marginTop: 2,
         marginBottom: 2,
         elevation: 0,
       }}
     >
-<>
-        <Typography variant="searchResultSubTitle" padding={2}>
+      <>
+        {/* <Typography variant="searchResultSubTitle" padding={2}>
           {documentType} - {title}
-        </Typography>
-</>
-      <Grid
-        className={'search-result-item-grid-container'}
-        flex={1}
-        flexGrow={1}
-        display={'flex'}
-        border={1}
-        borderColor={"darkgray"}
-        container
-      >
-        <Grid item
+        </Typography> */}
+      </>
+        <Grid
+          item
           id="year-box"
           display={'flex'}
           xs={1}
           borderColor={'#lightgray'}
-          border={0}
-          alignItems={'center'}
-          justifyContent={'center'}
-          sx={{
-            verticalAlign: 'center',
-            textAlign: 'center',
-            alignContent: 'center',
-            justifyContent: 'center',
-            justifyItems: 'center',
-          }}
+          border={1}
+          classes={classes.centeredContent}
         >
           <Typography
             id="year-typography"
             sx={{
               alignContent: 'center',
               justifyItems: 'center',
-              border: 1,
+              border: 0,
               borderColor: '#ccc',
             }}
             fontWeight={'bold'}
           >
             {year ? year : 'N/A'}
           </Typography>
-        </Grid>
-        <Grid item xs={7} id="search-result-item">
-          <Box className={'search-result-item-container'}>
-            <Box
-              padding={1}
-              // border={1}
-              
-              // //borderColor={'lightgray'}
-              // borderRadius={1}
-              // paddingTop={1}
-              // paddingBottom={1}
-              // sx={{
-              //   border: 1,
-              //   borderColor: '#ccc',
-              // }}
-            >
-              {(isContentExpanded && record.plaintext[0] && record.plaintext[0].length >= 100)
-              ? (
-                  <div dangerouslySetInnerHTML={convertToHTML(record.plaintext[0])} />
-              )
-              :
-                (
-                (record.plaintext[0] && record.plaintext[0].length >= 100) 
-                  ? (`${record.plaintext[0].substring(0, 100)}...`) 
-                  : (<div></div>)
-                
-              )}
-            </Box>
-          </Box>
-          {record.plaintext[0] && record.plaintext[0].length ? (
-            <Box
-              id="click-to-see-more-box"
-              width={'100%'}
-              alignContent={'center'}
-              textAlign={'center'}
-              onClick={toggleContentExpansion}
-              bgcolor="#A2A5A6"
-              paddingTop={1}
-              paddingBottom={1}
-            >
-              {(!isContentExpanded &&record.plaintext[0] && record.plaintext[0].length >= 100) 
-              ? (
-                <Typography variant="expanderButton">Click to see more...</Typography>
-              ) 
-              : (
-                <Typography variant="expanderButton">Click to see less...</Typography>
-              )}
-            </Box>
-          ) : (
-              <></>
-          )}
-        </Grid>
-        <Grid item xs={4} alignContent={'space-evenly'} justifyContent={'center'}>
-          <Grid container spacing={1} border={1}>
+          </Grid>
 
-<Grid xs={6}>
-              <Button
-                color="primary"
-                onClick={(evt) => handleDownloadClick(evt, id)}
-                sx={{
-                  width: '80%',
-                }}
-              >
-                Download
-              </Button>
-</Grid>
-            <Grid xs={6}>
-              <PDFViewerDialog
-                id={id}
-                record={record}
-                isOpen={isPDFViewOpen}
-                onDialogClose={(evt) => closePDFPreview(id, evt)}
-              />
-              <Button
-                onClick={(evt) => openPDFPreview(id, evt)}
-                color={'secondary'}
-                sx={{
-                  mt: 1,
-                  width: '80%',
-                }}
-              >
-                Preview
-              </Button>
-            </Grid>
+        <Grid
+          item
+          id="status-box"
+          display={'flex'}
+          xs={1}
+          borderColor={'darkgray'}
+          border={1}
+          className={classes.centeredContent}
+        >
+          <Typography
+            id="status-typography"
+            sx={{
+              alignContent: 'center',
+              justifyItems: 'center',
+              border: 0,
+              borderColor: '#ccc',
+            }}
+            fontWeight={'bold'}
+          >
+            {documentType}
+          </Typography>
+        </Grid>
+        <Grid
+          display={'flex'}
+          container
+          id="button-grid-container"
+          xs={7}
+          flex={1}
+          border={0}
+          className={classes.centeredContent}
+        >
+          Text goes here
+          <RenderSnippets record={record}/>
+        </Grid>
+        <Grid
+          display={'flex'}
+          container
+          id="button-grid-container"
+          xs={3}
+          flex={1}
+          border={0}
+          className={classes.centeredContent}
+        >
+          <Grid
+            id="preview-button-grid-item"
+            item
+            display={'flex'}
+            xs={6}
+            className={classes.centeredContent}           
+            border={0}
+          >
+            <PDFViewerDialog
+              id="preview-button-grid-item"
+              record={record}
+              isOpen={isPDFViewOpen}
+              onDialogClose={(evt) => closePDFPreview(id, evt)}
+            />
+            <Button onClick={(evt) => openPDFPreview(id, evt)} color={'secondary'}>
+              Preview
+            </Button>
+          </Grid>
+          <Grid
+            id="preview-button-grid-item"
+            item
+            display={'flex'}
+            xs={6}
+            className={classes.centeredContent}
+            border={0}
+          >
+            <PDFViewerDialog
+              id={id}
+              record={record}
+              isOpen={isPDFViewOpen}
+              onDialogClose={(evt) => closePDFPreview(id, evt)}
+            />
+            <Button
+              onClick={(evt) => openPDFPreview(id, evt)}
+              color={'secondary'}
+              sx={{
+                //             width: '80%',
+                alignSelf: 'center',
+                justifySelf: 'center',
+              }}
+            >
+              Download
+            </Button>
           </Grid>
         </Grid>
       </Grid>
-    </Grid>
+  );
+}
+
+export function RenderSnippets(props){
+    const { record } = props;
+    const [isPDFViewOpen, setIsPDFViewOpen] = useState(false);
+    const [isContentExpanded, setIsContentExpanded] = useState(false);
+    const { seachState, setSearchState, showContext } = useContext(SearchContext);
+
+    function toggleContentExpansion(id, evt) {
+      console.log(
+        '🚀 ~ file: SearchResultsItems.jsx:121 ~ toggleContentExpansion ~ evt:',
+        evt.name,
+        evt.name.value,
+      );
+      evt.preventDefault();
+      console.log(`Open toggleContentExpansion for ID: ${id}`);
+      setIsContentExpanded(!isContentExpanded);
+    }
+  return (
+    <>
+    
+        <Box className={'search-result-item-container'}>
+          <Box padding={1}>
+            {isContentExpanded && record.plaintext[0] && record.plaintext[0].length >= 100 ? (
+              <div dangerouslySetInnerHTML={convertToHTML(record.plaintext[0])} />
+            ) : record.plaintext[0] && record.plaintext[0].length >= 100 ? (
+              `${record.plaintext[0].substring(0, 100)}...`
+            ) : (
+              <div></div>
+            )}
+          </Box>
+        </Box>
+        {record.plaintext[0] && record.plaintext[0].length ? (
+          <Box
+            id="click-to-see-more-box"
+            width={'100%'}
+            alignContent={'center'}
+            textAlign={'center'}
+            onClick={toggleContentExpansion}
+            bgcolor="#A2A5A6"
+            paddingTop={1}
+            paddingBottom={1}
+          >
+            {!isContentExpanded && record.plaintext[0] && record.plaintext[0].length >= 100 ? (
+              <Typography variant="expanderButton">Click to see more...</Typography>
+            ) : (
+              <Typography variant="expanderButton">Click to see less...</Typography>
+            )}
+          </Box>
+        ) : (
+          <></>
+        )}
+    </>
   );
 }

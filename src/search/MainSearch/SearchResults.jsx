@@ -1,11 +1,10 @@
 import React from 'react';
 
-import { Grid, Paper } from '@mui/material';
+import { Divider, Grid, Paper, Typography } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import theme from '../../styles/theme';
 //import Grid from '@mui/material/Grid'; // Grid version 1
 import { makeStyles } from '@mui/styles';
-import SearchResultOptions from './SearchResultOptions';
 import SearchResultItems from './SearchResultsItems';
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
@@ -82,21 +81,25 @@ export default function SearchResults(props) {
   //  console.log("🚀 ~ file: SearchResults.jsx:129 ~ SearchResults ~ results:", results)
   return (
     <div id="search-results-root">
-      <h2>Search Result Items Result</h2>
-      {JSON.stringify(results)}
-      
+      <Typography variant="searchResultSubTitle" padding={2}>
+        {results[0].title}
+      </Typography>
       {results && results.length && results.length > 0 ? (
         results.map((result, index) => {
           return (
             <>
+              <Typography variant="searchResultSubTitle" padding={2}>
+                {/* <a href="#">{title}</a> */}
+
+                <Divider />
+              </Typography>
+              <SearchResult result={result}/>
               <SearchResultItems result={result} />
             </>
           );
         })
       ) : (
-        <>
-        {/* <SearchTips/> */}
-        </>
+        <>{/* <SearchTips/> */}</>
       )}
     </div>
   );

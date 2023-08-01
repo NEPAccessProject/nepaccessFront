@@ -2714,14 +2714,6 @@ export default function Search(props) {
                   <Grid padding={2} container flex={1} flexGrow={1} minHeight={'100vh'}>
                     <Grid item xs={12} width={'100%'}>
                       <>
-                      <h2>Results</h2>
-                      {JSON.stringify(searchState.results)}
-                      <h2>All Results</h2>
-                      {JSON.stringify(searchState.allResults)}
-                      <h2>Current Results</h2>
-                      {searchState.currentResults}
-
-
                         {searchState.titleRaw && searchState.titleRaw.length > 0 ? (
                           searchState.results && searchState.results.length > 0 ? (
                             <>
