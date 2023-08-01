@@ -1,15 +1,14 @@
-import {
-  SortOutlined
-} from '@mui/icons-material';
+import { SortOutlined } from '@mui/icons-material';
 import {
   Checkbox,
   FormControl,
   FormControlLabel,
   MenuItem,
   Paper,
-  Select
+  Select,
+  Typography,
 } from '@mui/material';
-import Grid from '@mui/material/Unstable_Grid2'; // Grid version 
+import Grid from '@mui/material/Unstable_Grid2'; // Grid version
 import { styled } from '@mui/material/styles';
 import React, { useContext } from 'react';
 import SearchContext from '../MainSearch/SearchContext';
@@ -20,7 +19,7 @@ const Item = styled(Paper)(({ theme }) => ({
   textAlign: 'center',
   color: theme.palette.text.secondary,
   elevation: 0,
-  border:1,
+  border: 1,
   borderRight: 1,
   borderColor: theme.palette.divider,
 }));
@@ -36,16 +35,19 @@ export default function SearchResultOptions() {
     onDownloadClick,
     onSaveSearchResultsClick,
   } = useContext(SearchContext);
-  const { sortBy, sortDirection, limit, showContext,snippetsDisabled } = searchState;
+  const { sortBy, sortDirection, limit, showContext, snippetsDisabled } = searchState;
 
   const onCheckboxChange = (evt) => {
     console.log('Checkbox changed, setting showContext to ', evt.target.checked);
     setSearchState({
       ...searchState,
-      showContext: evt.target.checked
+      showContext: evt.target.checked,
     });
   };
-  console.log("🚀 ~ file: SearchResultOptions.jsx:54 ~ SearchResultOptions ~ searchState:", searchState)
+  console.log(
+    '🚀 ~ file: SearchResultOptions.jsx:54 ~ SearchResultOptions ~ searchState:',
+    searchState,
+  );
   return (
     <>
       <Grid container flex={1} spacing={0} border={0} justifyContent={'flex-start'}>
@@ -88,16 +90,30 @@ export default function SearchResultOptions() {
               borderColor: 'lightgray',
             }}
           >
-            <Select
-              id="search-result-options-sort-by-select"
-              value={sortBy}
-              onChange={onSortDirectionChangeHandler}
-            >
-              <MenuItem value="relevance">Relevance</MenuItem>
-              <MenuItem value="title">Title</MenuItem>
-              <MenuItem value="date">Date</MenuItem>
-              <MenuItem value="distance">Distance</MenuItem>
-            </Select>
+            <FormControlLabel
+              itemID="sort"
+              id="sort-by-select-label"
+              labelPlacement="start"
+              label={<Typography variant="formContolLabel" sx={{ marginRight: 2 }}>Sort by:</Typography>}
+              control={
+                <Select
+                  id="search-result-options-sort-by-select"
+                  value={sortBy}
+                  label={
+                    <Typography variant="formContolLabel" sx={{ marginRight: 2 }}>
+                      Sort By:
+                    </Typography>
+                  }
+                  defaultValue={25}
+                  onChange={onSortDirectionChangeHandler}
+                >
+                  <MenuItem value="relevance">Relevance</MenuItem>
+                  <MenuItem value="title">Title</MenuItem>
+                  <MenuItem value="date">Date</MenuItem>
+                  <MenuItem value="distance">Distance</MenuItem>
+                </Select>
+              }
+            ></FormControlLabel>
           </Item>
         </Grid>
         <Grid xs={3}>
@@ -113,19 +129,30 @@ export default function SearchResultOptions() {
             }}
           >
             <FormControl>
-              {/* <FormControlLabel itemID="search-result-options-sort-by-select" id="sort-by-select-label">
-                Sort By
-              </FormControlLabel> */}
-              <Select
-                id="search-result-options-sort-by-select"
-                value={sortBy}
-                onChange={onSortDirectionChangeHandler}
-              >
-                <MenuItem value="relevance">Relevance</MenuItem>
-                <MenuItem value="title">Title</MenuItem>
-                <MenuItem value="date">Date</MenuItem>
-                <MenuItem value="distance">Distance</MenuItem>
-              </Select>
+              <FormControlLabel
+                itemID="search-result-options-pagesize-select"
+                id="sort-by-select-label"
+                labelPlacement="start"
+                label={
+                  <Typography variant="formContolLabel" sx={{ marginRight: 2 }}>
+                    Page Size:
+                  </Typography>
+                }
+                control={
+                  <Select
+                    id="search-result-options-sort-by-select"
+                    value={searchState.limit}
+                    defaultValue={25}
+                    onChange={onSortDirectionChangeHandler}
+                    label="Page Size"
+                  >
+                    <MenuItem value={10}>10</MenuItem>
+                    <MenuItem value={25}>25</MenuItem>
+                    <MenuItem value={50}>50</MenuItem>
+                    <MenuItem value={100}>100</MenuItem>
+                  </Select>
+                }
+              ></FormControlLabel>
             </FormControl>
           </Item>
         </Grid>

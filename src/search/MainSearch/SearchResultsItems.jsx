@@ -306,7 +306,7 @@ export function RenderSnippets(props){
     const [isPDFViewOpen, setIsPDFViewOpen] = useState(false);
     const [isContentExpanded, setIsContentExpanded] = useState(false);
     const { seachState, setSearchState, showContext } = useContext(SearchContext);
-
+    record.plaintext.push("placeholder text");
     function toggleContentExpansion(id, evt) {
       console.log(
         '🚀 ~ file: SearchResultsItems.jsx:121 ~ toggleContentExpansion ~ evt:',

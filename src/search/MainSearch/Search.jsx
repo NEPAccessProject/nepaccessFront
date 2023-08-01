@@ -2368,7 +2368,7 @@ export default function Search(props) {
   const [searchState, setSearchState] = useState({
     agency: [],
     endPublish: '',
-    limit: 100,
+    limit: 25,
     needsComments: false,
     needsDocument: false,
     startPublish: '',
