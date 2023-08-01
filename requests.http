@@ -12,6 +12,12 @@ authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJnbXMiLCJle
 key: test_key_only
 
 ###
+GET {{host}}stats/draft_final_count_year HTTP/1.1 
+authorization: Bearer 
+key: test_key_only
+Content-Type: application/json
+Accept: application/json
+###
 POST {{host}}text/search_no_context HTTP/1.1
 authorization: Bearer 
 key: test_key_only

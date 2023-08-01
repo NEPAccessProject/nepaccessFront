@@ -1,3 +1,4 @@
+import React, { useEffect, useState } from 'react';
 import {
   Container,
   Dialog,
@@ -8,7 +9,7 @@ import {
   IconButton,
   Typography
 } from '@mui/material';
-import React, { useEffect, useState } from 'react';
+import PDFViewer from './PDFViewer';
 // const [fullWidth, setFullWidth] = React.useState(true);
 // const [maxWidth, setMaxWidth] = React.useState('md');
 // import SearchContext from './SearchContext';
@@ -23,7 +24,7 @@ import Globals from '../../globals';
 // ).toString();
 
 export default function PDFViewerDialog(props) {
-  console.log("🚀 ~ file: PDFViewerDialog.jsx ~ line 25 ~ PDFViewerDialog ~ props", JSON.stringify(props))
+//  console.log("🚀 ~ file: PDFViewerDialog.jsx ~ line 25 ~ PDFViewerDialog ~ props", JSON.stringify(props))
   const {id,record} = props
   //    pdfjs.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.js`;
   const [numPages, setNumPages] = useState(null);
@@ -36,7 +37,7 @@ export default function PDFViewerDialog(props) {
   const [isLoaded, setIsLoaded] = useState(false);
   const samplePDF = 'https://arxiv.org/pdf/quant-ph/0410100.pdf';
   function onDocumentLoadSuccess({ numPages }) {
-    console.log('onDocumentLoadSuccess', numPages);
+    //console.log('onDocumentLoadSuccess', numPages);
     setIsLoaded(true);
     setNumPages(numPages);
   }
@@ -58,7 +59,7 @@ export default function PDFViewerDialog(props) {
   };
 
   const handleFullWidthChange = (event) => {
-    console.log('handleFullWidth', event.target.checked);
+    //console.log('handleFullWidth', event.target.checked);
     setFullWidth(event.target.checked);
   };
 
@@ -70,13 +71,13 @@ export default function PDFViewerDialog(props) {
 
 const getFilesById = (id) => {
   let url = Globals.currentHost + `file/nepafiles?id=${id}`;
-  console.log(`🚀 ~ file: PDFViewerDialog.jsx ~ line 52 ~ getFilesById ~ url ${url}`)
+  //console.log(`🚀 ~ file: PDFViewerDialog.jsx ~ line 52 ~ getFilesById ~ url ${url}`)
 
   axios
     .get(url)
     .then((response)=> {
-      console.log('file response')
-      console.log(response);
+      //console.log('file response')
+      //console.log(response);
       return response.data;
     })
     .catch((e)=>{
@@ -122,7 +123,7 @@ const getFilesById = (id) => {
               })
                : <></>
             }
-            {/* <PDFViewer id={id} /> */}
+            <PDFViewer id={id} />
             {/* <Grid flex={1} container>
               <Grid item justifyContent={'flex-start'} xs={4}><Button variant='outlined' onClick={() => setPageNumber(pageNumber - 1)}>{'<'} Previous Page</Button></Grid>
               <Grid item xs={4} justifyContent={'center'}>

@@ -79,10 +79,8 @@ const summary = {
 };
 
 export default function Search(props) {
-  //  console.log("SEARCH PROPS", props)
   const classes = useStyles(theme);
   const isMobile = useMediaQuery('(max-width:768px)');
-  //  console.log("🚀 ~ file: Search.jsx:121 ~ Search ~ results:", results)
   const filterBy = props.filterResultsBy;
   const myRef = React.createRef();
   let _mounted = React.createRef(false);
@@ -92,7 +90,7 @@ export default function Search(props) {
   // Necessary for on-demand highlighting per page
 
   const doSearch = (terms) => {
-    console.log('doSearch terms', terms);
+    //console.log('doSearch terms', terms);
     const searchTerm = parseTerms(terms);
     setSearchState({
       ...searchState,
@@ -147,9 +145,9 @@ export default function Search(props) {
   const setPageInfo = (page, pageSize) => {
     _page = page;
     _pageSize = pageSize;
-    console.log('page, pageSize', _page, _pageSize);
+    //console.log('page, pageSize', _page, _pageSize);
     _searchId = _searchId + 1;
-    console.log('getatherPageHighlights _searchId', _searchId, searchState, searchState.results);
+    //console.log('getatherPageHighlights _searchId', _searchId, searchState, searchState.results);
     gatherPageHighlights(_searchId, searchState, searchState.results);
   };
 
@@ -160,7 +158,7 @@ export default function Search(props) {
     let rods = 0;
     let nois = 0;
     let scopings = 0;
-    console.log('Count Types Fired with searchState.results', searchState.results);
+    //console.log('Count Types Fired with searchState.results', searchState.results);
     searchState.results.forEach((process) => {
       process.records.forEach((item) => {
         if (Globals.isFinalType(item.documentType)) {
@@ -266,11 +264,11 @@ export default function Search(props) {
         false,
       );
       const results = filtered.filteredResults.sort(alphabetically(_sortVal, _ascVal));
-      console.log('Filter Results By filtered Results', results);
+      //console.log('Filter Results By filtered Results', results);
       // Even if there are no filters active we still need to update to reflect this,
       // because if there are no filters the results must be updated to the full unfiltered set
       if (results && results.length) {
-        console.log('Filtered Results?', results);
+        //console.log('Filtered Results?', results);
         setSearchState({
           ...searchState,
           results: results,
@@ -279,7 +277,7 @@ export default function Search(props) {
           shouldUpdate: true,
         });
       } else {
-        console.log('Filtered Results is empty!', results);
+        //console.log('Filtered Results is empty!', results);
         //don't want to overwrite existing results with an empty array [TODO] figure out why sort is buggy
         setSearchState({
           ...searchState,
@@ -294,7 +292,6 @@ export default function Search(props) {
       getGeoDebounced();
 
       _searchId = _searchId + 1;
-      console.log('🚀 ~ file: Search.jsx:349 ~ filterResultsBy ~ _searchId:', _searchId);
       gatherPageHighlightsDebounced(_searchId, searchState, filtered.filteredResults);
     }
   };
@@ -321,7 +318,7 @@ export default function Search(props) {
 
   /** Do all cleanup needed: Just set searching to false */
   const endEarly = () => {
-    console.log('search ended early. Search State:', searchState);
+    //console.log('search ended early. Search State:', searchState);
     if (searchState.searching) {
       setSearchState({
         ...searchState,
@@ -329,7 +326,7 @@ export default function Search(props) {
         searching: false,
       });
     } else {
-      console.log('searchState.searching is false already');
+      //console.log('searchState.searching is false already');
       14;
     }
   };
@@ -360,15 +357,15 @@ export default function Search(props) {
 
   /** Assign any existing highlights from the first-page highlight pass, which is now done before full record population */
   const mergeHighlights = (data) => {
-    console.log('trying to merge highlights data: ', data);
+    //console.log('trying to merge highlights data: ', data);
     if (!searchState.results || !searchState.results[0]) {
-      console.log('No Results here yet');
+      //console.log('No Results here yet');
       return data;
     }
 
     for (let i = 0; i < searchState.results.length; i++) {
       if (data[i]) {
-        console.log('searchState.results[i] ? ', searchState.results[i]);
+        //console.log('searchState.results[i] ? ', searchState.results[i]);
 
         for (let j = 0; j < searchState.results[i].records.length; j++) {
           if (
@@ -379,23 +376,15 @@ export default function Search(props) {
           ) {
             let same = data[i].records[j].id === searchState.results[i].records[j].id;
             if (same) {
-              console.log(
-                '🚀 ~ file: Search.jsx:379 ~ mergeHighlights ~ same:',
-                same,
-                ' searchState.results[i].records[j].plaintext',
-                searchState.results[i].records[j].plaintext,
-              );
               data[i].records[j].plaintext = searchState.results[i].records[j].plaintext;
             }
           } else {
             //do nothing for now
-            console.log("Doesn't exist for data[i]", data[i]);
+            //console.log("Doesn't exist for data[i]", data[i]);
           }
         }
       }
     }
-
-    console.log('🚀 ~ file: Search.jsx:396 ~ Done Merging Highlights:', data);
     return data;
   };
 
@@ -499,13 +488,12 @@ export default function Search(props) {
         return a.relevance - b.relevance;
       }),
     );
-    console.log('🚀 ~ Done merging Highlights:', highlights);
     return highlights;
   };
 
   // Start a brand new search.
   const startNewSearch = (searchState) => {
-    //    console.log("Starting New Search with searchState:", searchState)
+    //    //console.log("Starting New Search with searchState:", searchState)
 
     // Reset page, page size
     _page = 1;
@@ -565,10 +553,10 @@ export default function Search(props) {
   const debouncedSearch = _.debounce(startNewSearch, 300);
   /** Just get the top results quickly before launching the "full" search with initialSearch() */
   const startSearch = (searchState) => {
-    console.log('start search starting with searchState', searchState);
+    //console.log('start search starting with searchState', searchState);
     Globals.emitEvent('new_search');
     // if (!_mounted) { // User navigated away or reloaded
-    //   console.log('not mounted returned false', _mounted)
+    //   //console.log('not mounted returned false', _mounted)
     //     return;
     // }
 
@@ -601,8 +589,6 @@ export default function Search(props) {
     }
 
     _searchTerms = searchState.titleRaw;
-    console.log('🚀 ~ file: Search.jsx:649 ~ startSearch ~ _searchTerms:', _searchTerms);
-
     // Update query params
     // We could also probably clear them on reload (component will unmount) if anyone wants
     let currentUrlParams = new URLSearchParams(window.location.search);
@@ -649,7 +635,7 @@ export default function Search(props) {
     //Send the AJAX call to the server
     let shouldContinue = true;
 
-    console.log('Search init for url ' + searchUrl);
+    //console.log('Search init for url ' + searchUrl);
 
     axios({
       method: 'POST', // or 'PUT'
@@ -657,13 +643,9 @@ export default function Search(props) {
       data: dataToPass,
     })
       .then((response) => {
-        console.log(
-          'Search got response with01a status of ' + response.status + ' response: ',
-          response,
-        );
+        
         let responseOK = response && response.status === 200;
         if (responseOK) {
-          console.log('Initial search results returned with 202 with data? ', response.data);
           setSearchState({
             ...searchState,
             results: response.data,
@@ -684,7 +666,7 @@ export default function Search(props) {
           });
         } else if (response.status === 202) {
           //shouldContinue = false; // found all results already
-          console.log('202 with response data', response.data);
+          //console.log('202 with response data', response.data);
           shouldContinue = false;
           // setSearchState({
           //   ...searchState,
@@ -694,16 +676,11 @@ export default function Search(props) {
           // });
           return response.data;
         } else {
-          console.log(
-            `Unhandled response.status ${respons.status} - with response data`,
-            response.data,
-          );
           return null;
         }
       })
       .then((currentResults) => {
         let _data = [];
-        console.log('Raw results _data', _data, 'current Results', currentResults.length);
         if (currentResults && currentResults[0] && currentResults[0].doc) {
           _data = currentResults
             // .filter((result) => { // Soft rollout logic
@@ -711,7 +688,6 @@ export default function Search(props) {
             // })
             .map((result, idx) => {
               let doc = result.doc;
-              console.log('🚀 ~ file: Search.jsx:702 ~ .map ~ doc:', doc);
               let newObject = {
                 title: doc.title,
                 agency: doc.agency,
@@ -748,12 +724,11 @@ export default function Search(props) {
           // Important: This is where we're shifting to process-based results.
           let processResults = {};
           processResults = buildData(_data);
-          console.log('🚀 ~ file: Search.jsx:739 ~ .then ~ processResults:', processResults);
           _data = processResults;
 
           // At this point we don't need the hashmap design anymore, it's just very fast for its purpose.
           // Now we have to iterate through all of it anyway, and it makes sense to put it in an array.
-          console.log('Setting results from _data', _data);
+          //console.log('Setting results from _data', _data);
           setSearchState({
             ...searchState,
             searchResults: _data,
@@ -762,7 +737,7 @@ export default function Search(props) {
           });
           //[TODO] no callback with setSearchState would have to useEffect
 
-          console.log('All results', _data);
+          //console.log('All results', _data);
 
           // title-only (or blank search===no text search at all): return
           if (
@@ -780,24 +755,18 @@ export default function Search(props) {
               shouldUpdate: true,
             });
           } else if (!shouldContinue) {
-            console.log('First pass got everything');
+            //console.log('First pass got everything');
             // got all results already, so stop searching and start highlighting.
-            console.log(
-              `Gather first page highlights 760 - no results, filter by : ${_searchId} with data`,
-              _data,
-            );
+            //console.log(
             filterResultsBy(searchState.searcherInputs);
             countTypes();
           } else {
             // Highlight first page using function which then gets the rest of the metadata
-            console.log(
-              `Gather first page highlights 808 - searchId : ${_searchId} with data`,
-              _data,
-            );
+
             gatherFirstPageHighlightsThenFinishSearch(_searchId, searchState.searcherInputs, _data);
           }
         } else {
-          console.log(`No results where fount for the search term ${_searchTerms}`);
+          //console.log(`No results where fount for the search term ${_searchTerms}`);
           setSearchState({
             ...searchState,
             searching: false,
@@ -810,7 +779,7 @@ export default function Search(props) {
       .catch((error) => {
         // Server down or 408 (timeout)
         console.error('Exception', error);
-        console.log('Error searching for ' + _searchTerms + ' error ' + error);
+        //console.log('Error searching for ' + _searchTerms + ' error ' + error);
         //        console.error('Error searching for ' + _searchTerms + ' error ' + error.response);
         if (error.response && error.response.status === 408) {
           setSearchState({
@@ -832,20 +801,20 @@ export default function Search(props) {
           });
         } else if (error.response && error.response.status && error.response.status === 400) {
           // bad request
-          console.log('400 response' + error.response);
+          //console.log('400 response' + error.response);
           setSearchState({
             ...searchState,
             networkError: Globals.errorMessage.default,
             resultsText: "Couldn't parse terms, please try removing any special characters",
           });
         } else if (error && error.response && error.response.status === 202) {
-          console.log('Error with 202 status, data? ', response.data);
+          //console.log('Error with 202 status, data? ', response.data);
           setSearchState({
             ...searchState,
             networkError: Globals.errorMessage.default,
             resultsText: "Error: Couldn't get results from server",
           });
-          console.log('searchState', searchState);
+          //console.log('searchState', searchState);
         } else {
           console.warn('Unhandled Response error:', error);
         }
@@ -858,19 +827,19 @@ export default function Search(props) {
 
   /** Populates full results without text highlights and then starts the highlighting process */
   const initialSearch = () => {
-    // console.log('Is mounted? ' + _mounted);
+    // //console.log('Is mounted? ' + _mounted);
     // if (!_mounted) { // User navigated away or reloaded
     //     return;
     // }
 
-    console.log('initialSearch');
+    //console.log('initialSearch');
 
     let searchUrl = new URL('text/search_no_context', Globals.currentHost);
 
     let dataToPass = {
       title: searchState.titleRaw,
     };
-    console.log(`passing data to url ${searchUrl}`, dataToPass);
+    //console.log(`passing data to url ${searchUrl}`, dataToPass);
 
     // OPTION: If we restore a way to use search options for faster searches, we'll assign here
     if (searchState.useSearchOptions) {
@@ -918,7 +887,7 @@ export default function Search(props) {
       .then((response) => {
         let responseOK = response && response.status === 200;
         if (responseOK) {
-          console.log(`Recived response from ${searchUrl} got data:`, response.data);
+          //console.log(`Recived response from ${searchUrl} got data:`, response.data);
           setSearchState({
             ...searchState,
             results: response.data,
@@ -939,7 +908,6 @@ export default function Search(props) {
             results: response.data,
             resultsText: 'No results: Please check use of term modifiers',
           });
-          console.log('🚀 ~ file: Search.jsx:923 ~ initialSearch ~ response.data:', response.data);
           return response.data;
         } else if (response.status === 403) {
           // Not logged in
@@ -947,12 +915,11 @@ export default function Search(props) {
             loggedIn: false,
           });
         } else {
-          console.log(response.status);
+          //console.log(response.status);
           return null;
         }
       })
       .then((currentResults) => {
-        console.log('🚀 ~ file: Search.jsx:941 ~ .then ~ currentResults:', currentResults);
         let _data = [];
         if (currentResults && currentResults[0] && currentResults[0].doc) {
           _data = currentResults.map((result, idx) => {
@@ -1002,12 +969,12 @@ export default function Search(props) {
             },
             () => {
               filterResultsBy(searchState);
-              console.log('Mapped data', _data);
+              //console.log('Mapped data', _data);
               countTypes();
             },
           );
         } else {
-          console.log('No results');
+          //console.log('No results');
           setSearchState({
             ...searchState,
             searching: false,
@@ -1027,7 +994,7 @@ export default function Search(props) {
               resultsText: 'Error: Request timed out',
             },
             () => {
-              console.log('set State call back from error', searchState);
+              //console.log('set State call back from error', searchState);
             },
           );
         } else if (error.response && error.response.status === 403) {
@@ -1069,7 +1036,7 @@ export default function Search(props) {
           terms: _terms,
         },
       }).then((response) => {
-        console.log('Suggester response', response);
+        //console.log('Suggester response', response);
 
         setSearchState({
           ...searchState,
@@ -1099,15 +1066,15 @@ export default function Search(props) {
    * which we can use to skip having to loop through everything.
    */
   const gatherSpecificHighlights = (_index, record) => {
-    console.log(`gatherSpecificHighlights index: ${_index}`, record);
+    //console.log(`gatherSpecificHighlights index: ${_index}`, record);
     if (!_mounted) {
       // User navigated away or reloaded
-      console.log('Cancel specific highlighting');
+      //console.log('Cancel specific highlighting');
       return; // cancel search
     }
 
     if (!state.outputResults) {
-      console.log('Nothing here right now to highlight specifically');
+      //console.log('Nothing here right now to highlight specifically');
       return;
     }
 
@@ -1141,12 +1108,12 @@ export default function Search(props) {
 
     if (_unhighlighted.length === 0) {
       // nothing to do
-      console.log('Specific record already highlighted fully.');
+      //console.log('Specific record already highlighted fully.');
       endEarly();
       return;
     }
 
-    // console.log("terms, last", _searchTerms, state.lastSearchedTerm);
+    // //console.log("terms, last", _searchTerms, state.lastSearchedTerm);
 
     if (!_searchTerms) {
       _searchTerms = searchState.lastSearchedTerm;
@@ -1176,7 +1143,7 @@ export default function Search(props) {
       })
       .then((parsedJson) => {
         if (parsedJson) {
-          // console.log("Adding highlights", parsedJson);
+          // //console.log("Adding highlights", parsedJson);
           let allResults = setSearchState.searchResults;
 
           // Iterate through records until we find the correct one (sort/filter could change index within card)
@@ -1206,7 +1173,7 @@ export default function Search(props) {
           // Run our filter + sort which will intelligently populate outputResults from updated searchResults
           // and update the table
           filterResultsBy(_searcherState);
-          // console.log("All done with page highlights: all results, displayed results",
+          // //console.log("All done with page highlights: all results, displayed results",
           //     allResults, currentResults);
         }
       })
@@ -1235,12 +1202,6 @@ export default function Search(props) {
   };
 
   const gatherFirstPageHighlightsThenFinishSearch = (searchId, _inputs, currentResults) => {
-    console.log(
-      '🚀 ~ file: Search.jsx:1230 ~ gatherFirstPageHighlightsThenFinishSearch ~ searchId, _inputs, currentResults:',
-      searchId,
-      _inputs,
-      currentResults,
-    );
     if (!_inputs) {
       if (searchState.searcherInputs) {
         _inputs = searchState.searcherInputs;
@@ -1248,13 +1209,13 @@ export default function Search(props) {
         _inputs = { titleRaw: Globals.getParameterByName('q') };
       }
     }
-    console.log('Gathering page highlights', searchId, _page, _pageSize);
+    //console.log('Gathering page highlights', searchId, _page, _pageSize);
     // if (!_mounted) { // User navigated away or reloaded
     //     return; // cancel search
     // }
     if (searchId < _searchId) {
       // Search interrupted
-      console.log(`Search Interupted searchId ${searchId} _searchId: ${_searchId}`);
+      //console.log(`Search Interupted searchId ${searchId} _searchId: ${_searchId}`);
       return; // cancel search
     }
     if (typeof currentResults === 'undefined') {
@@ -1285,7 +1246,7 @@ export default function Search(props) {
         // For each record in result card
         // Push first lucene ID and filename
         if (!Globals.isEmptyOrSpaces(currentResults[i].records[j].name)) {
-          console.log('Pushing', i, j, currentResults[i].records[j].id);
+          //console.log('Pushing', i, j, currentResults[i].records[j].id);
 
           // Need to skip this entry on both sides if it already has plaintext.
           // If it has any, then skip here - we can get more on demand elsewhere, in separate logic.
@@ -1296,16 +1257,11 @@ export default function Search(props) {
             // Filenames delimited by > (impossible filename character)
             let firstFilename = currentResults[i].records[j].name.split('>')[0];
             let firstLuceneId = [currentResults[i].records[j].luceneIds[0]];
-
-            console.log('First filename, record ID and lucene ID'),
-              //     firstFilename, currentResults[i].records[j].id, firstLuceneId);
-
               _unhighlighted.push({
                 luceneIds: firstLuceneId,
                 filename: firstFilename,
               });
           } else {
-            console.log('Adding skip ID ' + [currentResults[i].records[j].id]);
             mustSkip[currentResults[i].records[j].id] = true;
           }
         }
@@ -1314,16 +1270,12 @@ export default function Search(props) {
 
     // If nothing to highlight, nothing to do on this page
     if (_unhighlighted.length === 0 || searchId < _searchId) {
-      console.log('nothing to highlight: finish search');
+      //console.log('nothing to highlight: finish search');
       initialSearch(_inputs);
       return;
     }
 
     const terms = postProcessTerms(_inputs.titleRaw);
-    console.log(
-      '🚀 ~ file: Search.jsx:1308 ~ gatherFirstPageHighlightsThenFinishSearch ~ terms:',
-      terms,
-    );
     let dataToPass = {
       unhighlighted: _unhighlighted,
       terms: 'Nuclear Weapon Complex',
@@ -1331,7 +1283,7 @@ export default function Search(props) {
       fragmentSizeValue: _inputs.fragmentSizeValue,
     };
 
-    console.log('For backend', dataToPass);
+    //console.log('For backend', dataToPass);
 
     //Send the AJAX call to the server
     axios({
@@ -1340,10 +1292,8 @@ export default function Search(props) {
       data: dataToPass,
     })
       .then((response) => {
-        console.log('🚀 ~ file: Search.jsx:1327 ~ .then ~ response:', response);
         let responseOK = response && response.status === 200;
         if (responseOK) {
-          console.log('🚀 ~ file: Search.jsx:1331 ~ .then ~ response.data:', response.data);
           return response.data;
         } else {
           return null;
@@ -1351,21 +1301,19 @@ export default function Search(props) {
       })
       .then((parsedJson) => {
         if (parsedJson) {
-          console.log('Adding highlights', parsedJson);
+          //console.log('Adding highlights', parsedJson);
 
           let allResults = searchState.results;
-          console.log('🚀 ~ file: Search.jsx:1340 ~ .then ~ allResults:', allResults);
-
           let x = 0;
           for (let i = startPoint; i < Math.min(currentResults.length, endPoint); i++) {
             for (let j = 0; j < currentResults[i].records.length; j++) {
               // If search is interrupted, updatedResults[i] may be undefined (TypeError)
               if (!Globals.isEmptyOrSpaces(currentResults[i].records[j].name)) {
-                console.log('Assigning', i, j, currentResults[i].records[j].name);
+                //console.log('Assigning', i, j, currentResults[i].records[j].name);
 
                 if (mustSkip[currentResults[i].records[j].id]) {
                   // do nothing; skip
-                  console.log('Skipping ID ' + [currentResults[i].records[j].id]);
+                  //console.log('Skipping ID ' + [currentResults[i].records[j].id]);
                 } else {
                   // Instead of currentResults[i].records[j].id, use the stored index
                   //     currentResults[i].originalIndex for record j);
@@ -1376,8 +1324,8 @@ export default function Search(props) {
               }
             }
           }
-          console.log('Setting currentResults line 1312', currentResults);
-          console.log('Setting allResults line 1312', allResults);
+          //console.log('Setting currentResults line 1312', currentResults);
+          //console.log('Setting allResults line 1312', allResults);
           setSearchState({
             ...searchState,
             searchResults: allResults,
@@ -1385,16 +1333,12 @@ export default function Search(props) {
             output: allResults,
             shouldUpdate: true,
           });
-          console.log('Got highlights, finish search');
+          //console.log('Got highlights, finish search');
           initialSearch(_inputs);
         }
       })
       .catch((error) => {
-        console.log(
-          '🚀 ~ file: Search.jsx:1372 ~ gatherFirstPageHighlightsThenFinishSearch ~ error:',
-          error,
-        );
-        if (error.name === 'TypeError') {
+              if (error.name === 'TypeError') {
           console.error(`gatherFirstPageHighlightsThenFinishSearch error ${error.name} is a TypeError`);
         } else {
           // Server down or 408 (timeout)
@@ -1412,14 +1356,14 @@ export default function Search(props) {
             resultsText: _resultsText,
             shouldUpdate: true,
           });
-          console.log('Error, finish search, doing initalSearch with _inputs', _inputs);
+          //console.log('Error, finish search, doing initalSearch with _inputs', _inputs);
           initialSearch(_inputs);
         }
       });
   };
 
   const gatherPageHighlights = (searchId, _inputs, currentResults) => {
-    console.log('Gathering page highlights', searchId, _page, _pageSize);
+    //console.log('Gathering page highlights', searchId, _page, _pageSize);
     if (!_inputs) {
       if (searchState.searcherInputs) {
         _inputs = searchState.searcherInputs;
@@ -1433,13 +1377,13 @@ export default function Search(props) {
     // }
     if (searchId < _searchId) {
       // Search interrupted
-      console.log(`Search Interupted searchId ${searchId} _searchId: ${_searchId}`);
+      //console.log(`Search Interupted searchId ${searchId} _searchId: ${_searchId}`);
       return; // cancel search
     }
     if (typeof currentResults === 'undefined') {
       currentResults = [];
     }
-    console.log('currentResults', currentResults);
+    //console.log('currentResults', currentResults);
     // No need for offset or limit. We just need to find the unhighlighted files on this page.
     // This requires only page number, number of cards per page and number of cards on page
     // (could be less than max page size)
@@ -1454,13 +1398,13 @@ export default function Search(props) {
     // Assuming filenames come in the correct order, we can ask for the first one only, and then
     // additional logic elsewhere could ask for all of the highlights.
     // Then we would never get any "hidden" highlights, resulting in more responsive UX
-    console.log('get_highlightsFVH currentResults', currentResults);
+    //console.log('get_highlightsFVH currentResults', currentResults);
     if (currentResults && currentResults.length > 0) {
       for (let i = startPoint; i < Math.min(currentResults.length, endPoint); i++) {
         for (let j = 0; j < currentResults[i].records.length; j++) {
           // Push first lucene ID and filename
           if (!Globals.isEmptyOrSpaces(currentResults[i].records[j].name)) {
-            console.log('Pushing', i, j, currentResults[i].records[j].id);
+            //console.log('Pushing', i, j, currentResults[i].records[j].id);
 
             // Need to skip this entry on both sides if it already has plaintext.
             // If it has any, then skip here - we can get more on demand elsewhere, in separate logic.
@@ -1474,26 +1418,19 @@ export default function Search(props) {
               let firstFilename = currentResults[i].records[j].name.split('>')[0];
               let firstLuceneId = [currentResults[i].records[j].luceneIds[0]];
 
-              console.log(
-                'First filename, record ID and lucene ID',
-                firstFilename,
-                currentResults[i].records[j].id,
-                firstLuceneId,
-              );
-
               _unhighlighted.push({
                 luceneIds: firstLuceneId,
                 filename: firstFilename,
               });
             } else {
-              console.log('Adding skip ID ' + [currentResults[i].records[j].id]);
+              //console.log('Adding skip ID ' + [currentResults[i].records[j].id]);
               mustSkip[currentResults[i].records[j].id] = true;
             }
           }
         }
       }
     } else {
-      console.log('No currentResults', currentResults);
+      //console.log('No currentResults', currentResults);
     }
 
     // If nothing to highlight, nothing to do on this page
@@ -1520,7 +1457,7 @@ export default function Search(props) {
       fragmentSizeValue: _inputs.fragmentSizeValue,
     };
 
-    console.log('For backend', dataToPass);
+    //console.log('For backend', dataToPass);
 
     //Send the AJAX call to the server
     axios({
@@ -1538,7 +1475,7 @@ export default function Search(props) {
       })
       .then((parsedJson) => {
         if (parsedJson) {
-          console.log('Adding highlights', parsedJson);
+          //console.log('Adding highlights', parsedJson);
 
           // TODO: If we want to avoid checking every ID until we run out of highlights,
           // data structures and a lot more must be changed
@@ -1550,10 +1487,10 @@ export default function Search(props) {
             for (let j = 0; j < currentResults[i].records.length; j++) {
               // If search is interrupted, updatedResults[i] may be undefined (TypeError)
               if (!Globals.isEmptyOrSpaces(currentResults[i].records[j].name)) {
-                console.log('Assigning', i, j, currentResults[i].records[j].name);
+                //console.log('Assigning', i, j, currentResults[i].records[j].name);
 
                 if (mustSkip[currentResults[i].records[j].id]) {
-                  console.log('Skipping ID ' + [currentResults[i].records[j].id]);
+                  //console.log('Skipping ID ' + [currentResults[i].records[j].id]);
                 } else {
                   currentResults[i].records[j].plaintext = parsedJson[x];
                   allResults[currentResults[i].originalIndex].records[j].plaintext = parsedJson[x];
@@ -1566,7 +1503,7 @@ export default function Search(props) {
           // Verify one last time we want this before we actually commit to these results,
           // otherwise it could be jarring UX to setSearchState here
           if (searchId < _searchId) {
-            console.log("There's another search call happening");
+            //console.log("There's another search call happening");
             return;
           } else {
             // Fin
@@ -1607,7 +1544,7 @@ export default function Search(props) {
         }
       })
       .finally(() => {
-        console.log('get_highlightsFVH finally. State: ', searchState);
+        //console.log('get_highlightsFVH finally. State: ', searchState);
       });
   };
 
@@ -1625,7 +1562,7 @@ export default function Search(props) {
     axios
       .post(checkURL)
       .then((response) => {
-        console.log('Recived response from check call', response);
+        //console.log('Recived response from check call', response);
         result = response && response.status === 200;
         setSearchState({
           ...searchState,
@@ -1644,7 +1581,7 @@ export default function Search(props) {
             down: true,
           });
         } else if (err.response && err.response.status === 403) {
-          console.log('CHECK ERROR ERR', err);
+          //console.log('CHECK ERROR ERR', err);
           setSearchState({
             ...searchState,
             verified: false,
@@ -1657,7 +1594,7 @@ export default function Search(props) {
           ...searchState,
           loaded: true,
         });
-        console.log('Finally SearchState loaded... ' + searchState);
+        //console.log('Finally SearchState loaded... ' + searchState);
       });
   };
 
@@ -1678,7 +1615,7 @@ export default function Search(props) {
         },
       );
     } catch (e) {
-      console.log('Scroll error', e);
+      //console.log('Scroll error', e);
     }
   };
 
@@ -1686,16 +1623,16 @@ export default function Search(props) {
     try {
       window.scrollTo({ top: 0, behavior: 'smooth' });
     } catch (e) {
-      console.log('Scroll error', e);
+      //console.log('Scroll error', e);
     }
   };
 
   const displayedRowsUnpopulated = () => {
-    console.log('Checking displayed rows...');
+    //console.log('Checking displayed rows...');
     for (let i = 0; i < searchState.displayRows.length; i++) {
-      console.log(searchState.displayRows[i].data);
+      //console.log(searchState.displayRows[i].data);
       if (searchState.displayRows[i].data.plaintext.length === 0) {
-        console.log('No text.  Should populate.');
+        //console.log('No text.  Should populate.');
         return true;
       }
     }
@@ -1841,7 +1778,7 @@ export default function Search(props) {
   };
 
   const onIconClick = (evt) => {
-    console.log('onIconClick clicked', evt.target.name);
+    //console.log('onIconClick clicked', evt.target.name);
     setSearchState({
       ...searchState,
       titleRaw: evt.target.name,
@@ -1925,7 +1862,7 @@ export default function Search(props) {
   const onInput = (evt) => {
     let userInput = evt.target.value;
     // if(!userInput || userInput.length <= 3){
-    //     console.log(`${userInput} is not long enught`)
+    //     //console.log(`${userInput} is not long enught`)
     // }
     let proximityValues = handleProximityValues(userInput);
 
@@ -1941,7 +1878,7 @@ export default function Search(props) {
 
   // suppress warning that there's no onChange event, handler (despite onChange rarely being the best event to take advantage of)
   const onChangeHandler = (evt) => {
-    console.log('onChangeHandler', evt.target.value);
+    //console.log('onChangeHandler', evt.target.value);
     // do nothing
   };
   const toggleSearchTipDialogClose = (isOpen) => {
@@ -1956,11 +1893,11 @@ export default function Search(props) {
         });
   };
   const onDialogOpen = () => {
-    console.log('onDialogOpen');
+    //console.log('onDialogOpen');
     setDialogOpen(true);
   };
   const geoFilter = (geodata) => {
-    // console.log(geodata.name, geodata.abbrev);
+    // //console.log(geodata.name, geodata.abbrev);
     if (geodata.geoType === Globals.geoType.STATE) {
       // Assuming Search and resultsMap talk to each other, we'll want two-way interaction.
       // So if it's sending us a state, we may want to enable or disable it.
@@ -2001,7 +1938,7 @@ export default function Search(props) {
   };
 
   const onFragmentSizeChange = (evt) => {
-    console.log('Val', evt.value);
+    //console.log('Val', evt.value);
     setSearchState({ ...searchState, fragmentSizeValue: evt.value, fragmentSize: evt });
   };
 
@@ -2072,17 +2009,12 @@ export default function Search(props) {
     });
   };
   const onProximityChange = (evt) => {
-    console.log('OnProximityChange', evt.target.value);
     if (evt.target.value === -1) {
       setSearchState({
         ...searchState,
         proximityOption: null,
       });
     } else {
-      console.log(
-        'OnProximityChange searchState proximityOption before update',
-        searchState.proximityOption,
-      );
       setSearchState({
         ...searchState,
         proximityOption: evt,
@@ -2090,12 +2022,11 @@ export default function Search(props) {
     }
   };
   const onLocationChange = (evt, item) => {
-    console.log('🚀 ~ file: SideBarFilters.jsx:86 ~ onLocationChange ~ evt:', evt);
     var stateValues = [];
     for (var i = 0; i < evt.length; i++) {
       stateValues.push(evt[i].value);
     }
-    console.log('State Values Length', stateValues.length);
+    //console.log('State Values Length', stateValues.length);
     setSearchState({
       ...searchState,
       state: stateValues,
@@ -2106,21 +2037,20 @@ export default function Search(props) {
 
   const onCountyChange = (evt, item) => {
     debugger;
-    console.log('onCountyChange - Value:', evt);
+    //console.log('onCountyChange - Value:', evt);
     var countyValues = [];
     for (var i = 0; i < evt.length; i++) {
       countyValues.push(evt[i].value);
     }
-    console.log('🚀 ~ file: Search.jsx:528 ~ onCountyChange ~ countyValues:', countyValues);
     setSearchState({ ...searchState, county: countyValues, countyRaw: evt });
   };
   const onAgencyChange = (evt) => {
-    console.log(`onAgencyChange evt.length: ${evt.length} evt.target.value`, evt.target.value);
+    //console.log(`onAgencyChange evt.length: ${evt.length} evt.target.value`, evt.target.value);
     var agencyLabels = [];
     for (var i = 0; i < evt.length; i++) {
       agencyLabels.push(evt[i].label.replace(/ \([A-Z]*\)/gi, ''));
     }
-    console.log('agency labels', agencyLabels);
+    //console.log('agency labels', agencyLabels);
     setSearchState({
       ...searchState,
       agency: agencyLabels,
@@ -2129,7 +2059,7 @@ export default function Search(props) {
   };
 
   const onCooperatingAgencyChange = (evt) => {
-    console.log('onCooperatingAgencyChange', evt.target.value);
+    //console.log('onCooperatingAgencyChange', evt.target.value);
     var agencyLabels = [];
     for (var i = 0; i < evt.length; i++) {
       agencyLabels.push(evt[i].label.replace(/ \([A-Z]*\)/gi, ''));
@@ -2141,7 +2071,7 @@ export default function Search(props) {
     });
   };
   const onTitleOnlyChecked = (evt) => {
-    console.log('onTitleOnlyChecked', evt.target.checked);
+    //console.log('onTitleOnlyChecked', evt.target.checked);
     if (evt.target.checked) {
       setSearchState({
         ...searchState,
@@ -2156,7 +2086,7 @@ export default function Search(props) {
   };
 
   const onMarkupChange = (evt) => {
-    console.log('onMarkupChange', evt.target.checked);
+    //console.log('onMarkupChange', evt.target.checked);
     let checked = evt.target.checked;
     setSearchState({
       ...searchState,
@@ -2164,7 +2094,6 @@ export default function Search(props) {
     });
   };
   const onTypeChecked = (evt) => {
-    console.log('🚀 ~ file: Search.jsx:520 ~ onTypeChecked ~ evt:', evt);
     if (evt.target.name === 'optionsChecked') {
       setSearchState({ ...searchState, [evt.target.name]: evt.target.checked });
     } else if (evt.target.name === 'typeAll' && evt.target.checked) {
@@ -2208,7 +2137,7 @@ export default function Search(props) {
 
   const get = (url, stateName) => {
     const _url = new URL(url, Globals.currentHost);
-    //console.log('Calling URL',_url);
+    ////console.log('Calling URL',_url);
     axios({
       url: _url,
       method: 'GET',
@@ -2220,7 +2149,7 @@ export default function Search(props) {
         //        setSearchState({ ...searchState, [stateName]: rsp });
       })
       .catch((error) => {
-        console.log('Error getting Results from the Server at ' + url, error);
+        //console.log('Error getting Results from the Server at ' + url, error);
       });
   };
 
@@ -2315,29 +2244,29 @@ export default function Search(props) {
   };
 
   const toggleSearchTipsDialog = () => {
-    console.log('toggleSearchTipsDialog with', searchState.isSearchTipsDialogIsOpen);
+    //console.log('toggleSearchTipsDialog with', searchState.isSearchTipsDialogIsOpen);
     setSearchState({
       ...searchState,
       isSearchTipsDialogIsOpen: !searchState.isSearchTipsDialogIsOpen,
     });
-    console.log('toggleSearchTipsDialog after', searchState.isSearchTipsDialogIsOpen);
+    //console.log('toggleSearchTipsDialog after', searchState.isSearchTipsDialogIsOpen);
   };
   const toggleAvailableFilesDialog = () => {
-    console.log('toggleAvailableFiltersDialog');
+    //console.log('toggleAvailableFiltersDialog');
     setSearchState({
       ...searchState,
       isAvailableFiltersDialogOpen: !searchState.isAvailableFiltersDialogOpen,
     });
   };
   const toggleQuickStartDialog = () => {
-    console.log('toggleQuickStartDialog');
+    //console.log('toggleQuickStartDialog');
     setSearchState({
       ...searchState,
       isQuickStartDialogOpen: !searchState.isQuickStartDialogOpen,
     });
   };
   const onSortByChangeHandler = (evt) => {
-    console.log('onSortByChangeHandler', evt.target.value);
+    //console.log('onSortByChangeHandler', evt.target.value);
     setSearchState({
       ...searchState,
       sortBy: evt.target.value,
@@ -2345,24 +2274,24 @@ export default function Search(props) {
   };
 
   const onLimitChangeHandler = (evt) => {
-    console.log('onLimitChangeHandler', evt.target.value);
+    //console.log('onLimitChangeHandler', evt.target.value);
     setSearchState({
       ...searchState,
       limit: evt.target.value,
     });
   };
   const onSortDirectionChangeHandler = (evt) => {
-    console.log('onSortDirectionChangeHandler', evt.target.value);
+    //console.log('onSortDirectionChangeHandler', evt.target.value);
     setSearchState({
       ...searchState,
       sortDirection: evt.target.value,
     });
   };
   const onDownloadClick = (evt) => {
-    console.log('onDownloadClick', evt);
+    //console.log('onDownloadClick', evt);
   };
   const onSaveresultsClick = (evt) => {
-    console.log('onSaveresultsClick');
+    //console.log('onSaveresultsClick');
   };
 
   const [searchState, setSearchState] = useState({
@@ -2491,14 +2420,14 @@ export default function Search(props) {
   let _scopingCount = '';
 
   const doSearchFromParams = useCallback(() => {
-    // console.log("Stored terms", _lastSearchTerms);
-    // console.log("State.", state);
+    // //console.log("Stored terms", _lastSearchTerms);
+    // //console.log("State.", state);
 
     var queryString = Globals.getParameterByName('q');
-    console.log('queryString params', queryString);
+    //console.log('queryString params', queryString);
     if (queryString === null || queryString === '') {
       // No query param/blank terms: Launch no-term search - Only if we have no results saved here already
-      // console.log("No query parameters, doing blank search.", props.count);
+      // //console.log("No query parameters, doing blank search.", props.count);
       //[TODO] I don't think we should return all records on the first load
       //doSearch("");
     } else if (queryString && queryString.length && queryString !== 'undefined') {
@@ -2508,10 +2437,6 @@ export default function Search(props) {
       let terms = parseTerms(queryString);
 
       const _lastSearchTerms = queryString;
-      console.log(
-        '🚀 ~ file: Search.jsx:2377 ~ doSearchFromParams ~ _lastSearchTerms:',
-        _lastSearchTerms,
-      );
       setSearchState({
         ...searchState,
         titleRaw: terms,
@@ -2528,16 +2453,12 @@ export default function Search(props) {
 
   const getEISDocCounts = useCallback(() => {
     const count = get('stats/eis_count', 'EISCount');
-    console.log(
-      '🚀 ~ file: Search.jsx ~ line 2456 ~ getEISDocCounts ~ count',
-      JSON.stringify(count),
-    );
-    setSearchState({
+       setSearchState({
       ...searchState,
       eis_count: count,
     }),
       () => {
-        console.log('Cleanup getEISDocCounts', searchState);
+        //console.log('Cleanup getEISDocCounts', searchState);
       };
   }, [searchState.eis_count]);
 
@@ -2547,22 +2468,22 @@ export default function Search(props) {
       return; //do nothing till cleanup
     }
     _mounted.current = true;
-    console.log(`Mounted `, _mounted);
+    //console.log(`Mounted `, _mounted);
     () => {
-      console.log('cleaning up mounted check after useEffect');
+      //console.log('cleaning up mounted check after useEffect');
       _mounted.current = false;
     };
   }, [_mounted.current]);
 
   // useEffect(() => {
-  //   console.log(
+  //   //console.log(
   //     'searchState.searchResults useEffect fired searchResults',
   //     searchState.searchResults,
   //   );
   // },[searchState.searchResults])
 
   // useEffect(()=>{
-  //   console.log('getPageHighlights setting pageInfo')
+  //   //console.log('getPageHighlights setting pageInfo')
   //   //gatherPageHighlights();
   //   setPageInfo(1, 25);
   // },[searchState.snippetsDisabled, searchState.searching, searchState.networkError]);
@@ -2581,7 +2502,7 @@ export default function Search(props) {
   };
 
   // useEffect(() => {
-  //   console.log('getPageHighlights setting gatherSpecificHighlights');
+  //   //console.log('getPageHighlights setting gatherSpecificHighlights');
   //   gatherPageHighlights();
   // }, [searchState.results]);
 
@@ -2592,7 +2513,7 @@ export default function Search(props) {
     let terms = parseTerms(searchState.titleRaw);
     const q = Globals.getParameterByName('q');
     if ((q && q.length > 0)  && (terms.length === 0)) {
-      console.log(`Query Params found wiht No Search Term found setting to q: ${q}`);
+      //console.log(`Query Params found wiht No Search Term found setting to q: ${q}`);
       setSearchState({
         ...searchState,
         titleRaw: q,
@@ -2606,7 +2527,7 @@ export default function Search(props) {
       }
       // if (searchState.results && searchState.results.length === 0) {
       //   //if there is no search results but queryparams are present than start
-      //   console.log('No results from queryParams - startNewSearch', searchState.results);
+      //   //console.log('No results from queryParams - startNewSearch', searchState.results);
       //   debouncedSearch(searchTerm);
       // }
     }
@@ -2616,16 +2537,16 @@ export default function Search(props) {
   //   if (_mounted.current === false) {
   //     return false;
   //   }
-  //   console.log(`UseEffect for results `, searchState.results);
+  //   //console.log(`UseEffect for results `, searchState.results);
   //   searchState.results.map(
   //     (result, idx) => {
-  //       console.log(`result gatherSpecific Highlights for idx: ${idx}`, result);
+  //       //console.log(`result gatherSpecific Highlights for idx: ${idx}`, result);
   //       gatherSpecificHighlights(idx, result.doc);
   //     },
   //     [searchState.results],
   //   );
 
-  //   console.log('Results use Effect fired', searchState.results);
+  //   //console.log('Results use Effect fired', searchState.results);
   // }, [searchState.results]);
 
   // useEffect(()=>{
@@ -2633,14 +2554,14 @@ export default function Search(props) {
   //     return false;
   //   }
 
-  //   console.log('Use Effect for Title Raw',searchState.titleRaw);
+  //   //console.log('Use Effect for Title Raw',searchState.titleRaw);
   //   },[searchState.titleRaw])
 
   // useEffect(()=>{
   //   if(_mounted.current === false){
   //     return false;
   //   }
-  //   console.log(`searchState useEffect:`,searchState)
+  //   //console.log(`searchState useEffect:`,searchState)
   // },[searchState]);
 
   //  const { markup, proximityDisabled, agencyRaw, state, county, proximityOption } = searchState;
@@ -2674,7 +2595,7 @@ export default function Search(props) {
     toggleQuickStartDialog,
     toggleSearchTipsDialog,
   };
-  //console.log('SEARCH SearchState',searchState);
+  ////console.log('SEARCH SearchState',searchState);
   // #region Return Method
 
   return (
@@ -2725,8 +2646,9 @@ export default function Search(props) {
                               {(searchState.titleRaw && searchState.results.length === 0)
                                 ? 
                                 <>
-                                  <SearchTips/>
-                                  <Typography>No Results found for {searchState.titleRaw}</Typography>
+                                  <SearchTips label={<Typography>No Results found for {searchState.titleRaw}</Typography>}/>
+                                
+                                  {/* <Typography>No Results found for {searchState.titleRaw}</Typography> */}
                                  </>
                                 : <>
                                 
@@ -2776,7 +2698,6 @@ function preProcessTerms(terms) {
 
 /** Return modified terms but not for user to see */
 function postProcessTerms(terms) {
-  console.log('🚀 ~ file: Search.jsx:2562 ~ postProcessTerms ~ terms:', terms);
   return terms ? terms.replaceAll(':', '') : '';
   // .replaceAll(/(^|[\s]+)US($|[\s]+)/g,' ("U. S." | U.S. | US) ') // this was a very bad idea
   // .replaceAll(/(^|[\s]+)U\.S\.($|[\s]+)/g,' ("U. S." | U.S. | US) ');

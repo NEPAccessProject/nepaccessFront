@@ -14,8 +14,9 @@ import DownloadFiles from '../DownloadFiles.js';
 // buildProcess() gets all metadata for process ID.  Move that to the ?id= param and give it the process ID from the results
 // Then for each metadata record, populate each with a filenames call.  Show DownloadFile for whole folder like before, but
 // for all of them.  Expandable individual downloads.
-// Finally, decide which metadata to show at the top (use latest except account for blanks), and which per record 
+// Finally, decide which metadata to show at the top (use latest except account for blanks), and which per record
 // Maybe show a timeline of all dates using d3-timeline
+
 export default class ProcessDetailsTab extends React.Component {
 
 	constructor(props){

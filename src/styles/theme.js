@@ -59,7 +59,7 @@ const theme = createTheme({
     searchResultSubTitle: {
       color: '#000',
       fontFamily: 'open sans',
-      fontSize: '1.25rem',
+      fontSize: '1.10rem',
       border: 1,
       color: 'rgb(64,7,162)',
       p: 2,

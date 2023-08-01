@@ -2,6 +2,7 @@ import { Divider, Grid, Typography } from '@mui/material';
 import React from 'react';
 
 export default function SearchTips(props){
+  //console.log('searchTips Props',props);
     return(
         <>
         <div id="search-tips-root">

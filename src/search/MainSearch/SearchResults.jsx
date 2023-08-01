@@ -64,17 +64,13 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const sortByRelevance = (a, b) => {
-  console.log('🚀 ~ file: SearchResults.jsx:69 ~ sortByRelevance ~ a, b:', a, b);
   return a.score > b.score;
 };
 
 export default function SearchResults(props) {
-  console.log('🚀 ~ file: SearchResults.jsx:74 ~ SearchResults ~ props:', props);
   const classes = useStyles(theme);
   const { results } = props;
-  console.log('🚀 ~ file: SearchResults.jsx:104 ~ SearchResults ~ results:', results);
   const { records } = results;
-  console.log('🚀 ~ file: SearchResults.jsx:78 ~ SearchResults ~ records:', records);
   // const sortedResults = results && results.length ? results.sort(sortByRelevance) : [];
   //  console.log('🚀 ~ file: SearchResults.jsx:106 ~ SearchResults ~ sortedResults:', sortedResults);
 
@@ -93,7 +89,7 @@ export default function SearchResults(props) {
 
                 <Divider />
               </Typography>
-              <SearchResult result={result}/>
+              <SearchResultCards result={result}/>
               <SearchResultItems result={result} />
             </>
           );
@@ -105,8 +101,7 @@ export default function SearchResults(props) {
   );
 }
 
-export function SearchResult(props) {
-  console.log('🚀 ~ file: SearchResult.jsx:152 ~ SearchResult ~ props:', props);
+export function SearchResultCards(props) {
   const classes = useStyles(theme);
   const { result } = props;
   return (
