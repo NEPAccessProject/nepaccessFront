@@ -80,22 +80,24 @@ export default function SearchResults(props) {
       {/* <Typography variant="searchResultSubTitle" padding={2}>
         {results[0].title}
       </Typography> */}
-      {results && results.length && results.length > 0 ? (
-        results.map((result, index) => {
-          return (
-             <>
-             <Typography variant="searchResultSubTitle" padding={2}>
-              {(result.records && result.records[0].title) &&
-                <a href="#">{result.records[0].title}</a>
-              }
-              </Typography>
-                <Box sx={{marginTop:2}}><SearchResultCards result={result}/>              <SearchResultItems result={result} /></Box>
-              </>
-          );
-        })
-      ) : (
-        <>{/* <SearchTips/> */}</>
-      )}
+      <>
+          {results && results.length && results.length > 0 ? (
+          results.map((result, index) => {
+            return (
+               <>
+               <Typography variant="searchResultSubTitle" padding={2}>
+                {(result.records && result.records[0].title) &&
+                  <a href="#">{result.records[0].title}</a>
+                }
+                </Typography>
+                  <Box sx={{marginTop:2}}><SearchResultCards result={result}/>              <SearchResultItems result={result} /></Box>
+                </>
+            );
+          })
+        ) : (
+          <>{/* <SearchTips/> */}</>
+        )}
+      </>
     </Paper>
   );
 }

@@ -46,12 +46,9 @@ export default function SearchResultItems(props) {
   const classes = useStyles(theme);
 
 
-  //console.log('SearchResultItems vprops', props);
   let result = props.result || [];
-  console.log("🚀 ~ file: SearchResultsItems.jsx:51 ~ SearchResultItems ~ result:", result)
   const records = props.result.records || [];
 
-//  console.log('search result records?', records);
   let sortedRecords = [];
   function sortByDate(a, b) {
     a.commentDate > b.commentDate;
@@ -59,9 +56,6 @@ export default function SearchResultItems(props) {
 //  sortedRecords = result.records.sort(sortByDate);
 sortedRecords = result.records || [];
   
-//console.log("🚀 ~ file: SearchResultsItems.jsx:59 ~ SearchResultItems ~ sortedRecords:", sortedRecords)
-  // const initialSearch = (records.length) ? records.sort(sortByDate): [];
-  /* Merge doc and records */
   return (
     <>
       {/* <h2>Search Result Items Result?</h2>
@@ -286,17 +280,14 @@ export function RenderSnippets(props){
     const { record } = props;
     const [isPDFViewOpen, setIsPDFViewOpen] = useState(false);
     const [isContentExpanded, setIsContentExpanded] = useState(false);
-  const { searchState, setSearchState, showContext } = useContext(SearchContext);
-  const {hideText,hidden} = searchState;
-
+  const { searchState, setSearchState } = useContext(SearchContext);
+  const {hideText, hidden} = searchState;
 
   console.log(`${record.title} plaintext`,record.plaintext)
     function convertToHTML(content) {
       return { __html: content };
     }
     function toggleContentExpansion(evt, id) {
-      console.log(`toggleContentExpansion id: ${id} evt~ evt`, evt);
-      console.log('Setting isContentExpanded to',!isContentExpanded);
       setIsContentExpanded(!isContentExpanded);
       evt.preventDefault();
   }
@@ -305,44 +296,46 @@ export function RenderSnippets(props){
   // },[isContentExpanded]);
   return (
     <>
-
-      <Box className={'search-result-item-container'}>
-        <Box padding={1}>
+     {!hidden &&
+      <Box>
+        <Box className={'search-result-item-container'}>
+          <Box padding={1}>
+              {isContentExpanded && record.plaintext[0] && record.plaintext[0].length >= 100 ? (
+                <div dangerouslySetInnerHTML={convertToHTML(record.plaintext[0])} />
+              ) : record.plaintext[0] && record.plaintext[0].length >= 100 ? (
+                <div dangerouslySetInnerHTML={convertToHTML(record.plaintext[0].substring(0, 100) + '...')} />
+              ) : (
+                <div></div>
+              )}
+          </Box>
+        </Box>
+        {record.plaintext[0] && record.plaintext[0].length ? (
+          <Box
+            id="click-to-see-more-box"
+            width={'100%'}
+            alignContent={'center'}
+            textAlign={'center'}
+            justifyContent={'center'}
+            onClick={(evt) => toggleContentExpansion(evt, record.id)}
+            bgcolor="#A2A5A6"
+            paddingTop={1}
+            paddingBottom={1}
+          >
             {isContentExpanded && record.plaintext[0] && record.plaintext[0].length >= 100 ? (
-              <div dangerouslySetInnerHTML={convertToHTML(record.plaintext[0])} />
-            ) : record.plaintext[0] && record.plaintext[0].length >= 100 ? (
-              <div dangerouslySetInnerHTML={convertToHTML(record.plaintext[0].substring(0, 100) + '...')} />
+              <Typography variant="expanderButton">
+                Click to See less
+              </Typography>
             ) : (
-              <div></div>
+              <Typography variant="expanderButton">Click to to See More...</Typography>
             )}
-        </Box>
+          </Box>
+        ) : (
+          <>
+            <Typography>This document's content is not available</Typography>
+          </>
+        )}
       </Box>
-      {record.plaintext[0] && record.plaintext[0].length ? (
-        <Box
-          id="click-to-see-more-box"
-          width={'100%'}
-          alignContent={'center'}
-          textAlign={'center'}
-          justifyContent={'center'}
-          onClick={(evt) => toggleContentExpansion(evt, record.id)}
-          bgcolor="#A2A5A6"
-          paddingTop={1}
-          paddingBottom={1}
-        >
-          {isContentExpanded && record.plaintext[0] && record.plaintext[0].length >= 100 ? (
-            <Typography variant="expanderButton">
-              Click to See less
-            </Typography>
-          ) : (
-            <Typography variant="expanderButton">Click to to See More...</Typography>
-          )}
-        </Box>
-      ) : (
-        <>
-          <Typography>This document's content is not available</Typography>
-          {record.plaintext[0]}
-        </>
-      )}
+}
     </>
   );
 }
