@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { Divider, Grid, Paper, Typography } from '@mui/material';
+import { Box, Grid, Paper, Typography } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import theme from '../../styles/theme';
 //import Grid from '@mui/material/Grid'; // Grid version 1
@@ -76,7 +76,7 @@ export default function SearchResults(props) {
 
   //  console.log("🚀 ~ file: SearchResults.jsx:129 ~ SearchResults ~ results:", results)
   return (
-    <div id="search-results-root">
+    <Paper id="search-results-root">
       {/* <Typography variant="searchResultSubTitle" padding={2}>
         {results[0].title}
       </Typography> */}
@@ -89,16 +89,14 @@ export default function SearchResults(props) {
                 <a href="#">{result.records[0].title}</a>
               }
               </Typography>
-                            <SearchResultCards result={result}/>
-              <Divider/>
-              <SearchResultItems result={result} />
+                <Box sx={{marginTop:2}}><SearchResultCards result={result}/>              <SearchResultItems result={result} /></Box>
               </>
           );
         })
       ) : (
         <>{/* <SearchTips/> */}</>
       )}
-    </div>
+    </Paper>
   );
 }
 

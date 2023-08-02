@@ -1,4 +1,3 @@
-import React, { useEffect, useState } from 'react';
 import {
   Container,
   Dialog,
@@ -9,14 +8,14 @@ import {
   IconButton,
   Typography
 } from '@mui/material';
-import PDFViewer from './PDFViewer';
+import React, { useState } from 'react';
 // const [fullWidth, setFullWidth] = React.useState(true);
 // const [maxWidth, setMaxWidth] = React.useState('md');
 // import SearchContext from './SearchContext';
 //https://codesandbox.io/s/pdf-view-l3i46?file=/src/Components/DrawArea.js
 //https://react-pdf-viewer.dev/examples/
 import axios from 'axios';
-import { useRef } from 'react';
+import { useCallback, useEffect, useRef } from 'react';
 import Globals from '../../globals';
 // pdfjs.GlobalWorkerOptions.workerSrc = new URL(
 //   'pdfjs-dist/build/pdf.worker.min.js',
@@ -42,14 +41,14 @@ export default function PDFViewerDialog(props) {
     setNumPages(numPages);
   }
 
-  // useEffect(() => {
-  //   _mounted.current = true;
-  //   console.log(`Mounted `, _mounted);
-  //   () => {
-  //     console.log('cleaning up mounted check after useEffect');
-  //     _mounted.current = false;
-  //   };
-  // }, [_mounted.current]);
+  useEffect(() => {
+    _mounted.current = true;
+    console.log(`Mounted `, _mounted);
+    () => {
+      console.log('cleaning up mounted check after useEffect');
+      _mounted.current = false;
+    };
+  }, [_mounted]);
 
   const handleMaxWidthChange = (event) => {
     setMaxWidth(
@@ -69,22 +68,30 @@ export default function PDFViewerDialog(props) {
   //    setFiles(files);
   // },[id])
 
-const getFilesById = (id) => {
-  let url = Globals.currentHost + `file/nepafiles?id=${id}`;
-  //console.log(`🚀 ~ file: PDFViewerDialog.jsx ~ line 52 ~ getFilesById ~ url ${url}`)
-
-  axios
+const getFilesById = useCallback((id) => {
+   console.log("🚀 ~ file: PDFViewerDialog.jsx:72 ~ getFilesById ~ id:", id)
+   let url = Globals.currentHost + `file/nepafiles?id=${id}`;   
+   
+   axios
     .get(url)
     .then((response)=> {
-      //console.log('file response')
-      //console.log(response);
+      console.log('file response')
+      console.log('getFiles data',response.data);
       return response.data;
     })
     .catch((e)=>{
         console.error(`Failed to get a list of files for id ${id}.With an Exception`,e)
         return [];
     })
-}
+  },[files]);
+
+  useEffect(() => {
+    console.log('useEffect',id);
+    const files = getFilesById(id);
+    console.log("🚀 ~ file: PDFViewerDialog.jsx:90 ~ useEffect ~ files:", files)
+    setFiles(files);
+  },[getFilesById])
+
   //const {searchState,setSearchState} = useContext(SearchContext);
   const { isOpen, onDialogClose, docId, docTitle } = props;
   return (
@@ -112,6 +119,10 @@ const getFilesById = (id) => {
           </Grid>
         </DialogTitle>
         <DialogContentText id="pdf-viewer-dialog-content">
+          {/* {(files.length) && (files.map((file,idx)=>(
+            <span key={idx}>filename : {file}</span>
+          )))} */}
+          {JSON.stringify(files)}
           <Typography>{record.title}</Typography>
           {/* {isLoaded ? <CircularProgress /> : ( */}
           <Container id="pdf-viewer-document-container">
@@ -123,7 +134,7 @@ const getFilesById = (id) => {
               })
                : <></>
             }
-            <PDFViewer id={id} />
+            {/* <PDFViewer id={id} /> */}
             {/* <Grid flex={1} container>
               <Grid item justifyContent={'flex-start'} xs={4}><Button variant='outlined' onClick={() => setPageNumber(pageNumber - 1)}>{'<'} Previous Page</Button></Grid>
               <Grid item xs={4} justifyContent={'center'}>

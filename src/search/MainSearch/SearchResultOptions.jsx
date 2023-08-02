@@ -38,7 +38,7 @@ export default function SearchResultOptions() {
   const { sortBy, sortDirection, limit, showContext, snippetsDisabled } = searchState;
 
   const onCheckboxChange = (evt) => {
-    console.log('Checkbox changed, setting showContext to ', evt.target.checked);
+    console.log('Checkbox changed, setting content to  ', !searchState.hidden);
     setSearchState({
       ...searchState,
       hidden: !searchState.hidden,

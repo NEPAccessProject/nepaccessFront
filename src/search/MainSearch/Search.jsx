@@ -1338,6 +1338,7 @@ export default function Search(props) {
         }
       })
       .catch((error) => {
+        console.error('error calling service',error);
               if (error.name === 'TypeError') {
           console.error(`gatherFirstPageHighlightsThenFinishSearch error ${error.name} is a TypeError`);
         } else {
