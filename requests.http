@@ -63,6 +63,18 @@ Accept: application/json
     "id": "2003"
 }
 
+GET {{host}}text/search_test HTTP/1.1
+authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJnbXMiLCJleHAiOjE2ODk0Njg2MTIsImp0aSI6IjY0NSJ9.xeq97UA4CxkHukarpVBYH8iy6NoPMsGx_NOK7kEra3Y_C7UO9xz9zA5SsmVQCJ6U1D4cVwSf6-k3afs0fK0tAA
+key: test_key_only
+Content-Type: application/json
+Accept: application/json
+
+{
+    "id": "2003"
+}
+
+###
+GET {{host}}test/get_process_full?processId=1000331 HTTP/1.1
 ###
 POST {{host}}text/get_highlightsFVH HTTP/1.1
 authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJnbXMiLCJleHAiOjE2ODk0Njg2MTIsImp0aSI6IjY0NSJ9.xeq97UA4CxkHukarpVBYH8iy6NoPMsGx_NOK7kEra3Y_C7UO9xz9zA5SsmVQCJ6U1D4cVwSf6-k3afs0fK0tAA

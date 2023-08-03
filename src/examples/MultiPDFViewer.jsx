@@ -1,7 +1,9 @@
 import {
+    Box,
     Container,
+    Grid,
     Paper,
-    Typography
+    Typography,
 } from '@mui/material';
 import React, { useState } from 'react';
 // const [fullWidth, setFullWidth] = React.useState(true);
@@ -14,10 +16,9 @@ import { useCallback, useEffect, useRef } from 'react';
 import Globals from '../globals';
 
 export default function MultiPDFViewer(props) {
-//  console.log("🚀 ~ file: PDFViewerDialog.jsx ~ line 25 ~ PDFViewerDialog ~ props", JSON.stringify(props))
+  //  console.log("🚀 ~ file: PDFViewerDialog.jsx ~ line 25 ~ PDFViewerDialog ~ props", JSON.stringify(props))
   //const {id,record} = props
   //Hard Code for Demo
-  const id = 11052;
   const record = {
     title: "Test Record"
   }
@@ -28,7 +29,7 @@ export default function MultiPDFViewer(props) {
   const [fullWidth, setFullWidth] = React.useState(true);
   const [maxWidth, setMaxWidth] = React.useState('md');
   //  const { isOpen, onDialogClose,fileName } = props;
-  const [files,setFiles] = useState([]);
+  const [files, setFiles] = useState([]);
   let _mounted = useRef(false);
   const [isLoaded, setIsLoaded] = useState(true);
   const samplePDF = 'https://arxiv.org/pdf/quant-ph/0410100.pdf';
@@ -37,6 +38,15 @@ export default function MultiPDFViewer(props) {
     setIsLoaded(true);
     setNumPages(numPages);
   }
+  //value is null to trigger the effect when it is loaded
+  const getId = () => {
+    const urlParams = new URLSearchParams(window.location.search);
+    console.log(`file: MultiPDFViewer.jsx:43 - id - urlParams:`, urlParams);
+    const process_id = urlParams.get('process_id');
+    console.log(`file: MultiPDFViewer.jsx:44 - id - process_id:`, process_id);
+    return process_id;
+  };
+  
 
   // useEffect(() => {
   //   _mounted.current = true;
@@ -59,63 +69,77 @@ export default function MultiPDFViewer(props) {
     setFullWidth(event.target.checked);
   };
 
-  // useEffect(()=> {
-  //   `Getting file list for id ${id}`;
-  //    const files = getFilesById(id);
-  //    setFiles(files);
-  // },[id])
+  let process_id = null;
 
-const getFilesById = useCallback((id) => {
-   console.log("🚀 ~ file: PDFViewerDialog.jsx:72 ~ getFilesById ~ id:", id)
-   let url = Globals.currentHost + `file/nepafiles?id=${id}`;   
+  const getFilesById = (process_id) => {
+    console.log("🚀 ~ file: PDFViewerDialog.jsx:72 ~ getFilesById ~ process_id:", process_id)
+    let url = Globals.currentHost + `test/get_process_full?processId=${process_id}`;
    
-   axios
-    .get(url)
-    .then((response)=> {
-      console.log('file response')
-      console.log('getFiles data',response.data);
-      return response.data;
-    })
-    .catch((e)=>{
-        console.error(`Failed to get a list of files for id ${id}.With an Exception`,e)
-        return [];
-    })
-  },[id]);
+    console.log(`file: MultiPDFViewer.jsx:80 - getFilesById - url:`, url);
+    axios
+      .get(url)
+      .then((response) => {
+        console.log(`file: MultiPDFViewer.jsx:81 - .then - response:`, response);
+        console.log('getFiles data', response.data);
+        setFiles(response.data);
+      })
+      .catch((e) => {
+        console.error(`Failed to get a list of files for process_id ${process_id}.With an Exception`, e.message);
+        
+      })
+  };
 
   useEffect(() => {
-    console.log('useEffect Moundted')
-    if(_mounted.current === false){
-      return;
-    }
-    console.log('useEffect',id);
-    const files = getFilesById(id);
-    console.log("🚀 ~ file: PDFViewerDialog.jsx:90 ~ useEffect ~ files:", files)
-    setFiles(files);
-  },[getFilesById])
+    // if(_mounted.current === false){
+    //   return;
+    // }
+    const process_id = getId();
+    console.log(`file: MultiPDFViewer.jsx:96 - useEffect - process_id:`, process_id);
+    console.log('useEffect', process_id);
+    const files = getFilesById(process_id)
+    console.log("🚀 ~ file: PDFViewerDialog.jsx:90 ~ useEffect ~ files:", files, "process_id", process_id)
+
+  }, [process_id]);
 
   //const {searchState,setSearchState} = useContext(SearchContext);
   const { isOpen, onDialogClose, docId, docTitle } = props;
   return (
-    <Paper>
-        <h3>PDFS</h3>
-          {/* {(files.length) && (files.map((file,idx)=>(
-            <span key={idx}>filename : {file}</span>
-          )))} */}
-          {JSON.stringify(files)}
-          <Typography>{record.title}</Typography>
-          {/* {isLoaded ? <CircularProgress /> : ( */}
-          <Container id="pdf-viewer-document-container">
-            {/* <FloatingToolbar/> */}
-            <Typography> {record.title} </Typography>
-            {(files && files.length) 
-              ? files.map((file,idx)=>{
-                  return(<span key={idx}>filename : {file}</span>)
-              })
-               : <></>
-            }
-           
+    <Container sx={{
+      backgroundColor: '#fff',
+      border: 1,
+      marginTop: '125px'
+    }}>
+      <Paper border={1} elevation={1} backgroundColor="#fff">
 
-          </Container>
-          </Paper>
-  );
+        {/* <Typography variant="h4" sx={{ my: 2 }}>
+            {docTitle}
+          </Typography>
+          <Typography variant="h6" sx={{ my: 2 }}>
+            {id}
+          </Typography>
+          <Typography variant="h6" sx={{ my: 2 }}>
+            {docId}
+          </Typography>
+          <Typography variant="h6" sx={{ my: 2 }}>
+          {record.title}
+          </Typography> */}
+        <Grid Container>
+          <Grid item xs={12}>
+            {(files).map((file, index) => {
+              return (
+                file.filenames.map((filename, idx) => {
+                  return (
+                    <Typography key={filename}>
+                      {filename}
+                    </Typography>
+                  )
+                }))
+            })}            
+                
+                { JSON.stringify(files[0]) }
+  </Grid>
+        </Grid>
+      </Paper>
+    </Container>
+  )
 }
