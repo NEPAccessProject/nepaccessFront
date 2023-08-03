@@ -1,4 +1,5 @@
 import {
+  Button,
   Container,
   Dialog,
   DialogContent,
@@ -17,6 +18,7 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import { useCallback, useEffect, useRef } from 'react';
 import Globals from '../../globals';
+import PDFViewer from './PDFViewer';
 // pdfjs.GlobalWorkerOptions.workerSrc = new URL(
 //   'pdfjs-dist/build/pdf.worker.min.js',
 //   import.meta.url,
@@ -68,9 +70,9 @@ export default function PDFViewerDialog(props) {
   //    setFiles(files);
   // },[id])
 
-const getFilesById = useCallback((id) => {
-   console.log("🚀 ~ file: PDFViewerDialog.jsx:72 ~ getFilesById ~ id:", id)
-   let url = Globals.currentHost + `file/nepafiles?id=${id}`;   
+const getFilesById = useCallback((processId) => {
+   console.log("🚀 ~ file: PDFViewerDialog.jsx:72 ~ getFilesById ~ id:", processId)
+   let url = Globals.currentHost + `file/nepafiles?processId=${processId}`;   
    
    axios
     .get(url)
@@ -93,7 +95,7 @@ const getFilesById = useCallback((id) => {
   },[getFilesById])
 
   //const {searchState,setSearchState} = useContext(SearchContext);
-  const { isOpen, onDialogClose, docId, docTitle } = props;
+  const { isOpen, onDialogClose, docId, docTitle,processId } = props;
   return (
     <Dialog
       id="pdf-viewer-dialog"
@@ -105,6 +107,7 @@ const getFilesById = useCallback((id) => {
       <DialogContent>
         <DialogTitle>
           <Grid container>
+            {JSON.stringify(processId)}
             <Grid item xs={10} textAlign={'left'} justifyContent={'flex-start'} justifyItems={'flex-start'}>
               <Typography color={'black'} fontSize={18} fontWeight={'bold'}>
                 {(docTitle) ? docTitle : ''}
@@ -134,8 +137,8 @@ const getFilesById = useCallback((id) => {
               })
                : <></>
             }
-            {/* <PDFViewer id={id} /> */}
-            {/* <Grid flex={1} container>
+            <PDFViewer id={id} />
+            <Grid flex={1} container>
               <Grid item justifyContent={'flex-start'} xs={4}><Button variant='outlined' onClick={() => setPageNumber(pageNumber - 1)}>{'<'} Previous Page</Button></Grid>
               <Grid item xs={4} justifyContent={'center'}>
                 Page {pageNumber} of {numPages}
@@ -143,6 +146,7 @@ const getFilesById = useCallback((id) => {
               <Grid item justifyContent={'flex-end'} xs={4}><Button variant='outlined' onClick={() => setPageNumber(pageNumber + 1)}>Next Page {'>'}</Button></Grid>
 
             </Grid>
+            {/*
             <Document file={samplePDF} onLoadSuccess={onDocumentLoadSuccess}>
               <Page pageNumber={pageNumber} />
               {Array.from(new Array(numPages), (el, index) => (

@@ -1,7 +1,7 @@
-import * as React from 'react';
-import { OpenFile, Viewer, Worker } from '@react-pdf-viewer/core';
+import { Viewer, Worker } from '@react-pdf-viewer/core';
 import { SelectionMode } from '@react-pdf-viewer/selection-mode';
-import { toolbarPlugin, ToolbarSlot } from '@react-pdf-viewer/toolbar';
+import { toolbarPlugin } from '@react-pdf-viewer/toolbar';
+import * as React from 'react';
 
 import '@react-pdf-viewer/core/lib/styles/index.css';
 import '@react-pdf-viewer/toolbar/lib/styles/index.css';
@@ -10,6 +10,7 @@ const workerUrl = "https://unpkg.com/pdfjs-dist@3.4.120/build/pdf.worker.min.js"
 
 const PDFViewerExample = (props) => {
     //    const {fileUrl} = props;
+    const {filename, doc} = props
     const fileUrl = './example.pdf'
     const toolbarPluginInstance = toolbarPlugin({
         getFilePlugin: {

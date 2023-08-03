@@ -46,9 +46,12 @@ export default function SearchResultItems(props) {
   const classes = useStyles(theme);
 
 
+  //console.log('SearchResultItems vprops', props);
   let result = props.result || [];
+  console.log("🚀 ~ file: SearchResultsItems.jsx:51 ~ SearchResultItems ~ result:", result)
   const records = props.result.records || [];
 
+//  console.log('search result records?', records);
   let sortedRecords = [];
   function sortByDate(a, b) {
     a.commentDate > b.commentDate;
@@ -56,6 +59,9 @@ export default function SearchResultItems(props) {
 //  sortedRecords = result.records.sort(sortByDate);
 sortedRecords = result.records || [];
   
+//console.log("🚀 ~ file: SearchResultsItems.jsx:59 ~ SearchResultItems ~ sortedRecords:", sortedRecords)
+  // const initialSearch = (records.length) ? records.sort(sortByDate): [];
+  /* Merge doc and records */
   return (
     <>
       {/* <h2>Search Result Items Result?</h2>
@@ -117,18 +123,19 @@ export function SearchResultItem(props) {
     status,
     subtype,
     title,
+    processId,
   } = record;
 
   function onDocumentLoadSuccess({ numPages }) {
     setSearchState({ ...searchState, numPages: numPages });
     setNumPages(numPages);
   }
-  function openPDFPreview(evt,id) {
+  function openPDFPreview(evt,processId) {
     console.log(`Open PDF for ID: ${id} evt: `, evt);
     setIsPDFViewOpen(true);
     evt.preventDefault();
   }
-  function closePDFPreview(evt,id) {
+  function closePDFPreview(evt,processId) {
     setIsPDFViewOpen(false);
   }
 
@@ -237,10 +244,10 @@ export function SearchResultItem(props) {
               id="preview-button-grid-item"
               record={record}
               isOpen={isPDFViewOpen}
-              onDialogClose={(evt) => closePDFPreview(evt,id)}
+              onDialogClose={(evt) => closePDFPreview(evt,processId)}
             />
             <Button
-              onClick={(evt) => openPDFPreview(evt, id)}
+              onClick={(evt) => openPDFPreview(evt, processId)}
               color={'secondary'}
             >
               Preview
@@ -258,13 +265,13 @@ export function SearchResultItem(props) {
             display={'flex'}
           >
             <PDFViewerDialog
-              id={id}
+              processId={processId}
               record={record}
               isOpen={isPDFViewOpen}
-              onDialogClose={(evt) => closePDFPreview(evt, id)}
+              onDialogClose={(evt) => closePDFPreview(evt, processId)}
             />
             <Button
-              onClick={(evt) => openPDFPreview(evt,id)}
+              onClick={(evt) => openPDFPreview(evt,processId)}
               color={'secondary'}
               display={'flex'}> 
               Download
@@ -280,62 +287,68 @@ export function RenderSnippets(props){
     const { record } = props;
     const [isPDFViewOpen, setIsPDFViewOpen] = useState(false);
     const [isContentExpanded, setIsContentExpanded] = useState(false);
-  const { searchState, setSearchState } = useContext(SearchContext);
-  const {hideText, hidden} = searchState;
+  const { searchState, setSearchState, showContext } = useContext(SearchContext);
+  const {hideText,hidden} = searchState;
+
 
   console.log(`${record.title} plaintext`,record.plaintext)
     function convertToHTML(content) {
       return { __html: content };
     }
     function toggleContentExpansion(evt, id) {
+      console.log(`toggleContentExpansion id: ${id} evt~ evt`, evt);
+      console.log('Setting isContentExpanded to',!isContentExpanded);
       setIsContentExpanded(!isContentExpanded);
       evt.preventDefault();
   }
   // useEffect(() => {
   //   console.log('useEffect for content expanded');
   // },[isContentExpanded]);
+  if(!hidden){
   return (
     <>
-     {!hidden &&
-      <Box>
-        <Box className={'search-result-item-container'}>
-          <Box padding={1}>
-              {isContentExpanded && record.plaintext[0] && record.plaintext[0].length >= 100 ? (
-                <div dangerouslySetInnerHTML={convertToHTML(record.plaintext[0])} />
-              ) : record.plaintext[0] && record.plaintext[0].length >= 100 ? (
-                <div dangerouslySetInnerHTML={convertToHTML(record.plaintext[0].substring(0, 100) + '...')} />
-              ) : (
-                <div></div>
-              )}
-          </Box>
-        </Box>
-        {record.plaintext[0] && record.plaintext[0].length ? (
-          <Box
-            id="click-to-see-more-box"
-            width={'100%'}
-            alignContent={'center'}
-            textAlign={'center'}
-            justifyContent={'center'}
-            onClick={(evt) => toggleContentExpansion(evt, record.id)}
-            bgcolor="#A2A5A6"
-            paddingTop={1}
-            paddingBottom={1}
-          >
+      
+      <Box className={'search-result-item-container'}>
+        <Box padding={1}>
             {isContentExpanded && record.plaintext[0] && record.plaintext[0].length >= 100 ? (
-              <Typography variant="expanderButton">
-                Click to See less
-              </Typography>
+              <div dangerouslySetInnerHTML={convertToHTML(record.plaintext[0])} />
+            ) : record.plaintext[0] && record.plaintext[0].length >= 100 ? (
+              <div dangerouslySetInnerHTML={convertToHTML(record.plaintext[0].substring(0, 100) + '...')} />
             ) : (
-              <Typography variant="expanderButton">Click to to See More...</Typography>
+              <div></div>
             )}
-          </Box>
-        ) : (
-          <>
-            <Typography>This document's content is not available</Typography>
-          </>
-        )}
+        </Box>
       </Box>
-}
+      {!hidden && record.plaintext[0] && record.plaintext[0].length ? (
+        <Box
+          id="click-to-see-more-box"
+          width={'100%'}
+          alignContent={'center'}
+          textAlign={'center'}
+          justifyContent={'center'}
+          onClick={(evt) => toggleContentExpansion(evt, record.id)}
+          bgcolor="#A2A5A6"
+          paddingTop={1}
+          paddingBottom={1}
+        >
+          {isContentExpanded && record.plaintext[0] && record.plaintext[0].length >= 100 ? (
+            <Typography variant="expanderButton">
+              Click to See less
+            </Typography>
+          ) : (
+            <Typography variant="expanderButton">Click to to See More...</Typography>
+          )}
+        </Box>
+      ) : (
+        <>
+          <Typography>This document's content is not available</Typography>
+          {record.plaintext[0]}
+        </>
+      )}
     </>
   );
+      }
+  else {
+    return(<></>)
+  }
 }

@@ -482,7 +482,7 @@ export default function Search(props) {
     });
 
     // Have to "flatten" and also sort that by relevance, then merge any existing highlights
-    console.log('processResults',processResults);
+
     const highlights = mergeHighlights(
       Object.values(processResults).sort(function (a, b) {
         return a.relevance - b.relevance;
@@ -724,18 +724,27 @@ export default function Search(props) {
           // Important: This is where we're shifting to process-based results.
           let processResults = {};
           processResults = buildData(_data);
-          console.log("🚀 ~ file: Search.jsx:727 ~ .then ~ processResults:", processResults)
-          //_data = processResults;
+          _data = processResults;
 
           // At this point we don't need the hashmap design anymore, it's just very fast for its purpose.
           // Now we have to iterate through all of it anyway, and it makes sense to put it in an array.
           //console.log('Setting results from _data', _data);
           setSearchState({
             ...searchState,
-            searchResults: processResults,
-            outputResults: processResults,
-            results: processResults,
+            searchResults: _data,
+            outputResults: _data,
+            results: _data,
           });
+
+          //   setSearchState({
+          //   ...searchState,
+          //   // searchResults: processResults,
+          //   // outputResults: processResults,
+          //   // results: processResults,
+          //   searchResults: _data,
+          //   outputResults: _data,
+          //   results: _data,
+          // });
           //[TODO] no callback with setSearchState would have to useEffect
 
           //console.log('All results', _data);
@@ -2339,7 +2348,7 @@ export default function Search(props) {
     lastSearchedTerm: '',
     hadSearched: false,
     lastYear: null,
-    limit: 25,
+    limit: 100,
     loaded: false,
     lookupResult: [[null]],
     markup: true,
@@ -2356,7 +2365,7 @@ export default function Search(props) {
     searcherInputs: {
       agency: [],
       endPublish: '',
-      limit: 25,
+      limit: 100,
       needsComments: false,
       needsDocument: false,
       startPublish: '',

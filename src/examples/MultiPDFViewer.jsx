@@ -1,9 +1,7 @@
 import {
-    Box,
-    Container,
-    Grid,
-    Paper,
-    Typography,
+  Container,
+  Grid,
+  Paper
 } from '@mui/material';
 import React, { useState } from 'react';
 // const [fullWidth, setFullWidth] = React.useState(true);
@@ -12,8 +10,9 @@ import React, { useState } from 'react';
 //https://codesandbox.io/s/pdf-view-l3i46?file=/src/Components/DrawArea.js
 //https://react-pdf-viewer.dev/examples/
 import axios from 'axios';
-import { useCallback, useEffect, useRef } from 'react';
+import { useEffect, useRef } from 'react';
 import Globals from '../globals';
+import PDFViewer from '../search/MainSearch/PDFViewer';
 
 export default function MultiPDFViewer(props) {
   //  console.log("🚀 ~ file: PDFViewerDialog.jsx ~ line 25 ~ PDFViewerDialog ~ props", JSON.stringify(props))
@@ -129,9 +128,11 @@ export default function MultiPDFViewer(props) {
               return (
                 file.filenames.map((filename, idx) => {
                   return (
-                    <Typography key={filename}>
+                    <Paper key={filename}>
                       {filename}
-                    </Typography>
+                      <PDFViewer filename={filename} doc={file.doc} />
+                    </Paper>
+                    
                   )
                 }))
             })}            

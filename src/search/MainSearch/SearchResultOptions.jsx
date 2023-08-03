@@ -35,13 +35,13 @@ export default function SearchResultOptions() {
     onDownloadClick,
     onSaveSearchResultsClick,
   } = useContext(SearchContext);
-  const { sortBy, sortDirection, limit,hideText, hidden, showContext, snippetsDisabled } = searchState;
+  const { sortBy, sortDirection, limit, showContext, snippetsDisabled } = searchState;
 
   const onCheckboxChange = (evt) => {
-    console.log('Checkbox changed, setting content to  ', !hidden);
+    console.log('Checkbox changed, setting content to  ', !searchState.hidden);
     setSearchState({
       ...searchState,
-      hidden: !hidden,
+      hidden: !searchState.hidden,
       showContext: evt.target.checked,
     });
   };
@@ -65,7 +65,7 @@ export default function SearchResultOptions() {
                 control={
                   <Checkbox
                     // checked={searchOptions}
-                    checked={!hidden}
+                    checked={showContext}
                     onChange={onCheckboxChange}
                     disabled={snippetsDisabled}
                   />
@@ -144,7 +144,7 @@ export default function SearchResultOptions() {
                     label="Page Size"
                   >
                     <MenuItem value={10}>10</MenuItem>
-                    <MenuItem selected={true} value={25}>25</MenuItem>
+                    <MenuItem value={25}>25</MenuItem>
                     <MenuItem value={50}>50</MenuItem>
                     <MenuItem value={100}>100</MenuItem>
                   </Select>
