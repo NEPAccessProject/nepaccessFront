@@ -71,6 +71,7 @@ export default function SearchResults(props) {
   const classes = useStyles(theme);
   const { results } = props;
   const { records } = results;
+  console.log('Search Results records',records)
   // const sortedResults = results && results.length ? results.sort(sortByRelevance) : [];
   //  console.log('🚀 ~ file: SearchResults.jsx:106 ~ SearchResults ~ sortedResults:', sortedResults);
 
@@ -86,7 +87,7 @@ export default function SearchResults(props) {
              <>
              <Typography variant="searchResultSubTitle" padding={2}>
               {(result.records && result.records[0].title) &&
-                <a href="#">{result.records[0].title}</a>
+                <a href="#">{result.records[0].title} - {result.records.id}</a>
               }
               </Typography>
                 <Box sx={{marginTop:2}}><SearchResultCards result={result}/>              <SearchResultItems result={result} /></Box>
@@ -103,6 +104,7 @@ export default function SearchResults(props) {
 export function SearchResultCards(props) {
   const classes = useStyles(theme);
   const { result } = props;
+  console.log('Search Result Card Props',props);
   return (
     <Grid padding={2} container xs={12} flexDirection={'row'} flex={1}>
       <Item
@@ -188,6 +190,38 @@ export function SearchResultCards(props) {
       >
         Project Endate Date: <b>{result.commentDate ? result.commentDate : 'N/A'}</b>
       </Item>
+      <Item
+        className={classes.itemHeader}
+        sx={{
+          margin: 0.5,
+          padding: 1,
+          elevation: 1,
+        }}
+      >
+        Final NOA: <b>{result.finalNoa ? result.finalNoa : 'N/A'}</b>
+      </Item>
+      <Item
+        className={classes.itemHeader}
+        sx={{
+          margin: 0.5,
+          padding: 1,
+          elevation: 1,
+        }}
+      >
+        Draft NOA: <b>{result.draftNoa ? result.draftNoa : 'N/A'}</b>
+      </Item>
+      <Item
+        className={classes.itemHeader}
+        sx={{
+          margin: 0.5,
+          padding: 1,
+          elevation: 1,
+        }}
+      >
+        Process ID: <b>{result.processId ? result.processId : 'N/A'}</b>
+      </Item>
+          
+      
       {/* ) : (
         <></>
       )} */}

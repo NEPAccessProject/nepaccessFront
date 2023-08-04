@@ -240,12 +240,12 @@ export function SearchResultItem(props) {
             justifyContent="center"
             alignItems={'center'}
           >
-            <PDFViewerDialog
+            {/* <PDFViewerDialog
               id="preview-button-grid-item"
               record={record}
               isOpen={isPDFViewOpen}
               onDialogClose={(evt) => closePDFPreview(evt,processId)}
-            />
+            /> */}
             <Button
               onClick={(evt) => openPDFPreview(evt, processId)}
               color={'secondary'}

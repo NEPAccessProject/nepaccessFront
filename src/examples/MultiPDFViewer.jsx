@@ -21,7 +21,7 @@ export default function MultiPDFViewer(props) {
   const record = {
     title: "Test Record"
   }
-
+  const filenames = props.filenames
   //    pdfjs.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.js`;
   const [numPages, setNumPages] = useState(null);
   const [pageNumber, setPageNumber] = useState(1);

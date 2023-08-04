@@ -125,7 +125,7 @@ const getFilesById = useCallback((processId) => {
           {/* {(files.length) && (files.map((file,idx)=>(
             <span key={idx}>filename : {file}</span>
           )))} */}
-          {JSON.stringify(files)}
+
           <Typography>{record.title}</Typography>
           {/* {isLoaded ? <CircularProgress /> : ( */}
           <Container id="pdf-viewer-document-container">
@@ -137,7 +137,8 @@ const getFilesById = useCallback((processId) => {
               })
                : <></>
             }
-            <PDFViewer id={id} />
+                      {JSON.stringify(files)}
+            <PDFViewer processId={processId} />
             <Grid flex={1} container>
               <Grid item justifyContent={'flex-start'} xs={4}><Button variant='outlined' onClick={() => setPageNumber(pageNumber - 1)}>{'<'} Previous Page</Button></Grid>
               <Grid item xs={4} justifyContent={'center'}>
