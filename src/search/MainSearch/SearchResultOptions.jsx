@@ -1,4 +1,7 @@
 import { SortOutlined } from '@mui/icons-material';
+import CloudDownloadIcon from '@mui/icons-material/CloudDownload';
+import FavoriteIcon from '@mui/icons-material/Favorite';
+
 import {
   Checkbox,
   FormControl,
@@ -194,7 +197,7 @@ export default function SearchResultOptions() {
                 borderColor: 'lightgray',
               }}
             >
-              <SortOutlined value={sortDirection} onChange={onSortDirectionChangeHandler} />
+              <CloudDownloadIcon value={sortDirection} onChange={onSortDirectionChangeHandler} />
             </Item>
           </Grid>
 
@@ -209,7 +212,7 @@ export default function SearchResultOptions() {
                 borderColor: 'lightgray',
               }}
             >
-              <SortOutlined value={sortDirection} onChange={onSortDirectionChangeHandler} />
+              <FavoriteIcon value={sortDirection} onChange={onSortDirectionChangeHandler} />
             </Item>
           </Grid>
         </Grid>

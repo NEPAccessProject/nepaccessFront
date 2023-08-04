@@ -2,6 +2,7 @@ import { Viewer, Worker } from '@react-pdf-viewer/core';
 import { defaultLayoutPlugin } from '@react-pdf-viewer/default-layout';
 import { thumbnailPlugin } from '@react-pdf-viewer/thumbnail';
 import { toolbarPlugin } from '@react-pdf-viewer/toolbar';
+
 import * as React from 'react';
 //[TODO][Feature Request] - Feiz would like to see if we can highlight the section in the PDF where the most relevant / first snippet that is displayed is focused and highlighted
 // Import styles
