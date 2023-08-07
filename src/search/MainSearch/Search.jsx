@@ -85,8 +85,6 @@ export default function Search(props) {
   const myRef = React.createRef();
   let _mounted = React.createRef(false);
   //let searchTerm = React.createRef('');
-  const _queryParams = Globals.getParameterByName('q');
-  console.log("🚀 ~ file: Search.jsx:90 ~ Search ~ qry:", _queryParams)
 
 //  const searchTerm = useRef("")
   // Necessary for on-demand highlighting per page
@@ -2675,12 +2673,7 @@ export default function Search(props) {
   //#endregion
   //run only at startup
   useEffect(() => {
-    if (_mounted.value === false) {
-      console.log(`component not mounted it is :  ${_mounted.current}`)
-      return; //do nothing till cleanup
-    }
     _mounted.current = true;
-      console.log(`Mounted `, _mounted);
     () => {
       //console.log('cleaning up mounted check after useEffect');
       _mounted.current = false;
@@ -2693,44 +2686,24 @@ export default function Search(props) {
       console.log('queryParams effect not mounted exit');
       return;
     }
-    console.log(`halt queryParams effect search is not mounted`);
+    const _queryParams = Globals.getParameterByName('q');
+    console.log(`_queryParams? ${_queryParams}`);
     if(_queryParams && _queryParams.length > 0 && searchState.titleRaw == '');
-      setSearchState((prevState)=>{
-        return {
-        ...prevState,
-          titleRaw: parseTerms(_queryParams)
-        }
-      })   
-  },[_queryParams]);
+      setSearchState({
+          //...prevState,
+          "queryParams" : _queryParams
+      })
+  });
 
-  
-//   useEffect(()=>{
-//     if(_mounted.current === false){
-//       console.log('queryParams effect not mounted exit');
-//       return;
-//     }
-// //    const terms = parseTerms()
-//     //cant do a resonable search with less thant 3 chars (i think...)
-//     if(searchState.titleRaw && searchState.titleRaw.length > 2);
+  React.useDebugValue(
+    searchState.queryParams ? `found query Params ${searchState.queryParams}` : `no query Params?`
+  );
+//  React.useDebugValue()
 
-//     console.log('Current Title Raw Value',searchState.titleRaw)
+  // React.useDebugValue(searchState.titleRaw, searchState.titleRaw =>
+  //   searchState.titleRaw ? searchState.titleRaw : ""
+  // );
 
-
-//   },[searchState.titleRaw]);
-
-
-  // useEffect(() => {
-  //   //console.log(
-  //     'searchState.searchResults useEffect fired searchResults',
-  //     searchState.searchResults,
-  //   );
-  // },[searchState.searchResults])
-
-  // useEffect(()=>{
-  //   //console.log('getPageHighlights setting pageInfo')
-  //   //gatherPageHighlights();
-  //   setPageInfo(1, 25);
-  // },[searchState.snippetsDisabled, searchState.searching, searchState.networkError]);
   const hideText = (_offsetY, _index, record) => {
     offsetY = _offsetY;
 
@@ -2739,33 +2712,10 @@ export default function Search(props) {
       setSearchState({ ...searchState, hidden: hidden });
     } else {
       hidden.add(record.id);
-      setSearchState({ ...searchState, hidden: hidden }, () => {
+      setSearchState({ ...searchState, hidden: hidden });
         gatherSpecificHighlights(_index, record);
-      });
     }
   };
-
-
-  //check to see if there a query param on first render then set titleRaw to that untill it changes 
-  // useEffect(()=>{
-  //   if(_mounted.current == false){
-  //     console.log(`halt effect search is not mounted`);
-  //     return;
-  //   }
-  //   const q = Globals.getParameterByName('q');
-  //   console.log("🚀 ~ file: Search.jsx:2708 ~ useEffect ~ query String:", q)
-  //   if (q && q.length > 0) {
-  //     //console.log(`Query Params found wiht No Search Term found setting to q: ${q}`);
-  //     setSearchState({
-  //       ...searchState,
-  //       titleRaw: q,
-  //     });
-  //     // if there is a search term in the query params and the current term is empty set the search term to query params
-     
-  //   }
-  // });
-
-
   const value = {
     searchState,
     hideText,
