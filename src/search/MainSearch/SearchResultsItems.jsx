@@ -28,13 +28,13 @@ const Item = styled(Paper)(({ theme }) => ({
 
 const useStyles = (theme) => ({
   centeredContent: {
-  verticalAlign: 'center',
-        textAlign: 'center',
-        alignContent: 'center',
-        justifyContent: 'center',
-        justifyItems: 'center',
-        borderColor:'#ccc',
-        border:1,
+    verticalAlign: 'center',
+    textAlign: 'center',
+    alignContent: 'center',
+    justifyContent: 'center',
+    justifyItems: 'center',
+    borderColor: '#ccc',
+    border: 1,
 
   },
   autocomplete: {},
@@ -42,24 +42,25 @@ const useStyles = (theme) => ({
 
 
 export default function SearchResultItems(props) {
-  const { showContext } = useContext(SearchContext);
+  console.log("🚀 ~ file: SearchResultsItems.jsx:45 ~ SearchResultItems ~ props:", props)
+  const context = useContext(SearchContext);
   const classes = useStyles(theme);
 
 
   //console.log('SearchResultItems vprops', props);
   let result = props.result || [];
   console.log("🚀 ~ file: SearchResultsItems.jsx:51 ~ SearchResultItems ~ result:", result)
-  const records = props.result.records || [];
+  const records = (props.result && props.result.records) ? props.result.records : [];
 
-//  console.log('search result records?', records);
+  //  console.log('search result records?', records);
   let sortedRecords = [];
   function sortByDate(a, b) {
     a.commentDate > b.commentDate;
   }
-//  sortedRecords = result.records.sort(sortByDate);
-sortedRecords = result.records || [];
-  
-//console.log("🚀 ~ file: SearchResultsItems.jsx:59 ~ SearchResultItems ~ sortedRecords:", sortedRecords)
+  //  sortedRecords = result.records.sort(sortByDate);
+  sortedRecords = result.records || [];
+
+  //console.log("🚀 ~ file: SearchResultsItems.jsx:59 ~ SearchResultItems ~ sortedRecords:", sortedRecords)
   // const initialSearch = (records.length) ? records.sort(sortByDate): [];
   /* Merge doc and records */
   return (
@@ -67,16 +68,16 @@ sortedRecords = result.records || [];
       {/* <h2>Search Result Items Result?</h2>
     {JSON.stringify(result)} */}
       <Box marginTop={1} marginBottom={1} id="search-results-container-box">
-        {sortedRecords &&  sortedRecords.length ? (
+        {sortedRecords && sortedRecords.length ? (
           sortedRecords.map((record, idx) => {
             return (
-<>
+              <>
                 {/* <Typography variant="searchResultSubTitle" padding={2}>{record.title}</Typography> */}
                 <Item key={idx} className="search-result-item-container">
                   <SearchResultItem record={record} />
-                  <Divider/>
+                  <Divider />
                 </Item>
-</>
+              </>
             );
           })
         ) : (
@@ -84,7 +85,7 @@ sortedRecords = result.records || [];
             <Typography>
               No results Found
             </Typography>
-            <SearchTips/>
+            <SearchTips />
 
           </div>
         )}
@@ -97,8 +98,8 @@ export function SearchResultItem(props) {
   const [isPDFViewOpen, setIsPDFViewOpen] = useState(false);
   const [isContentExpanded, setIsContentExpanded] = useState(false);
   const { seachState, setSearchState, showContext } = useContext(SearchContext);
-  const classes= useStyles(theme);
-  
+  const classes = useStyles(theme);
+
   const onCheckboxChange = (evt) => {
     //console.log('Checkbox changed, setting showContext to ', evt.target.checked);
     setSearchState({
@@ -125,17 +126,18 @@ export function SearchResultItem(props) {
     title,
     processId,
   } = record;
+  console.log("🚀 ~ file: SearchResultsItems.jsx:129 ~ SearchResultItem ~ record:", record)
 
   function onDocumentLoadSuccess({ numPages }) {
     setSearchState({ ...searchState, numPages: numPages });
     setNumPages(numPages);
   }
-  function openPDFPreview(evt,processId) {
+  function openPDFPreview(evt, processId) {
     console.log(`Open PDF for ID: ${id} evt: `, evt);
     setIsPDFViewOpen(true);
     evt.preventDefault();
   }
-  function closePDFPreview(evt,processId) {
+  function closePDFPreview(evt, processId) {
     setIsPDFViewOpen(false);
   }
 
@@ -143,12 +145,33 @@ export function SearchResultItem(props) {
     evt.preventDefault();
     //console.log('Download ID Value and filename', id, filename);
   };
+
   const year = commentDate && commentDate.length > 0 ? new Date(commentDate).getFullYear() : 'N/A';
   //console.log('SEARCH STATE SearchResultComponent');
   const text = record.plaintext || '';
   return (
     <>
-          
+      <Grid container display={'flex'} border={1} borderColor={"#ddd"} flex={1}>
+        <Grid item xs={2}>
+          Year
+        </Grid>
+        <Grid item xs={2}>
+          Status
+        </Grid>
+        <Grid item xs={5}>
+            Spacer
+        </Grid>
+        <Grid item xs={2}>
+            Button
+        </Grid>
+
+        </Grid>
+                
+      <Grid container display={'flex'} xs={12} border={1} borderTop={0} borderColor={"#ddd"}>
+        <Grid item xs={12}>
+          <RenderSnippets record={record} />
+        </Grid>
+      </Grid>
       <Grid
         container
         id="search-result-item-root-item"
@@ -184,7 +207,7 @@ export function SearchResultItem(props) {
             {year ? year : 'N/A'}
           </Typography>
         </Grid>
-  
+
         <Grid
           item
           id="status-box"
@@ -228,7 +251,7 @@ export function SearchResultItem(props) {
           id="button-grid-container"
           xs={3}
           flex={1}
-          //       className={classes.centeredContent}
+        //       className={classes.centeredContent}
         >
           <Grid
             id="preview-button-grid-item"
@@ -240,12 +263,12 @@ export function SearchResultItem(props) {
             justifyContent="center"
             alignItems={'center'}
           >
-            {/* <PDFViewerDialog
+            <PDFViewerDialog
               id="preview-button-grid-item"
               record={record}
               isOpen={isPDFViewOpen}
-              onDialogClose={(evt) => closePDFPreview(evt,processId)}
-            /> */}
+              onDialogClose={(evt) => closePDFPreview(evt, processId)}
+            />
             <Button
               onClick={(evt) => openPDFPreview(evt, processId)}
               color={'secondary'}
@@ -264,52 +287,103 @@ export function SearchResultItem(props) {
             alignItems={'center'}
             display={'flex'}
           >
-            <PDFViewerDialog
-              processId={processId}
-              record={record}
-              isOpen={isPDFViewOpen}
-              onDialogClose={(evt) => closePDFPreview(evt, processId)}
-            />
+            {(processId) &&
+              <PDFViewerDialog
+                processId={processId}
+                record={record}
+                isOpen={isPDFViewOpen}
+                onDialogClose={(evt) => closePDFPreview(evt, processId)}
+              />}
             <Button
-              onClick={(evt) => openPDFPreview(evt,processId)}
+              onClick={(evt) => openPDFPreview(evt, processId)}
               color={'secondary'}
-              display={'flex'}> 
+              display={'flex'}>
               Download
             </Button>
           </Grid>
         </Grid>
       </Grid>
-   </>
+    </>
   );
 }
 
-export function RenderSnippets(props){
-    const { record } = props;
-    const [isPDFViewOpen, setIsPDFViewOpen] = useState(false);
-    const [isContentExpanded, setIsContentExpanded] = useState(false);
+export function DisplayGrid() {
+  return (
+    <>
+      <Grid item xs={1} className={classes.centeredContent} borderRight={1} borderColor={"#ddd"}>
+        2022
+      </Grid>
+      <Grid xs={2} borderRight={1} borderColor={"#ddd"}>           <Typography
+        textAlign={'center'}
+        justifySelf={'center'}
+        id="status-typography"
+        fontWeight={'bold'}
+      >
+        {documentType}
+      </Typography> </Grid>
+      <Grid item xs={6} className={classes.centeredContent} borderRight={1} borderColor={"#ddd"}>Space</Grid>
+      <Grid container display={'flex'} xs={3} className={classes.centeredContent} border={0}>
+        <Grid item xs={6}
+          border={0}
+          alignContent={'center'}
+          justifyContent="center"
+          alignItems={'center'}
+          display={'flex'}>
+          <Button
+            onClick={(evt) => openPDFPreview(evt, processId)}
+            color={'secondary'}
+          >
+            Preview
+          </Button>
+        </Grid>
+        <Grid xs={6}
+          id="preview-button-grid-item"
+          item
+          //         display={'flex'}
+          border={0}
+          alignContent={'center'}
+          justifyContent="center"
+          alignItems={'center'}
+          display={'flex'}>
+          <Button
+            onClick={(evt) => openPDFPreview(evt, processId)}
+            color={'secondary'}
+            display={'flex'}>
+            Download
+          </Button>
+        </Grid>
+
+      </Grid>
+    </>
+  )
+}
+
+export function RenderSnippets(props) {
+  const { record } = props;
+  const [isPDFViewOpen, setIsPDFViewOpen] = useState(false);
+  const [isContentExpanded, setIsContentExpanded] = useState(false);
   const { searchState, setSearchState, showContext } = useContext(SearchContext);
-  const {hideText,hidden} = searchState;
+  const { hideText, hidden } = searchState;
 
-
-  console.log(`${record.title} plaintext`,record.plaintext)
-    function convertToHTML(content) {
-      return { __html: content };
-    }
-    function toggleContentExpansion(evt, id) {
-      console.log(`toggleContentExpansion id: ${id} evt~ evt`, evt);
-      console.log('Setting isContentExpanded to',!isContentExpanded);
-      setIsContentExpanded(!isContentExpanded);
-      evt.preventDefault();
+  console.log(`${record.title} plaintext`, record.plaintext)
+  function convertToHTML(content) {
+    return { __html: content };
+  }
+  function toggleContentExpansion(evt, id) {
+    //console.log(`toggleContentExpansion id: ${id} evt~ evt`, evt);
+    //console.log('Setting isContentExpanded to',!isContentExpanded);
+    setIsContentExpanded(!isContentExpanded);
+    evt.preventDefault();
   }
   // useEffect(() => {
   //   console.log('useEffect for content expanded');
   // },[isContentExpanded]);
-  if(!hidden){
-  return (
-    <>
-      
-      <Box className={'search-result-item-container'}>
-        <Box padding={1}>
+  if (!hidden) {
+    return (
+      <>
+
+        <Box className={'search-result-item-container'}>
+          <Box padding={1}>
             {isContentExpanded && record.plaintext[0] && record.plaintext[0].length >= 100 ? (
               <div dangerouslySetInnerHTML={convertToHTML(record.plaintext[0])} />
             ) : record.plaintext[0] && record.plaintext[0].length >= 100 ? (
@@ -317,38 +391,38 @@ export function RenderSnippets(props){
             ) : (
               <div></div>
             )}
+          </Box>
         </Box>
-      </Box>
-      {!hidden && record.plaintext[0] && record.plaintext[0].length ? (
-        <Box
-          id="click-to-see-more-box"
-          width={'100%'}
-          alignContent={'center'}
-          textAlign={'center'}
-          justifyContent={'center'}
-          onClick={(evt) => toggleContentExpansion(evt, record.id)}
-          bgcolor="#A2A5A6"
-          paddingTop={1}
-          paddingBottom={1}
-        >
-          {isContentExpanded && record.plaintext[0] && record.plaintext[0].length >= 100 ? (
-            <Typography variant="expanderButton">
-              Click to See less
-            </Typography>
-          ) : (
-            <Typography variant="expanderButton">Click to to See More...</Typography>
-          )}
-        </Box>
-      ) : (
-        <>
-          <Typography>This document's content is not available</Typography>
-          {record.plaintext[0]}
-        </>
-      )}
-    </>
-  );
-      }
+        {!hidden && record.plaintext[0] && record.plaintext[0].length ? (
+          <Box
+            id="click-to-see-more-box"
+            width={'100%'}
+            alignContent={'center'}
+            textAlign={'center'}
+            justifyContent={'center'}
+            onClick={(evt) => toggleContentExpansion(evt, record.id)}
+            bgcolor="#A2A5A6"
+            paddingTop={1}
+            paddingBottom={1}
+          >
+            {isContentExpanded && record.plaintext[0] && record.plaintext[0].length >= 100 ? (
+              <Typography variant="expanderButton">
+                Click to See less
+              </Typography>
+            ) : (
+              <Typography variant="expanderButton">Click to to See More...</Typography>
+            )}
+          </Box>
+        ) : (
+          <>
+            <Typography align='center'>This document's content is not available</Typography>
+            {record.plaintext[0]}
+          </>
+        )}
+      </>
+    );
+  }
   else {
-    return(<></>)
+    return (<></>)
   }
 }
