@@ -1,5 +1,5 @@
-import { Grid, Paper } from '@mui/material';
 import React from 'react';
+import { Button, CardContent, CardHeader, Grid, Paper } from '@mui/material';
 import CalloutCard from './CalloutCard';
 const cards = [
   {
@@ -12,7 +12,7 @@ const cards = [
   {
     header: 'What is NEPAccess?',
     content:
-      'localhost:8808 is a knowledge-discovery platform for finding and analyzing decades of applied science and records of public participation in U.S. environmental decision-making processes.',
+      'NEPAccess.org is a knowledge-discovery platform for finding and analyzing decades of applied science and records of public participation in U.S. environmental decision-making processes.',
     buttonText: 'Learn More',
     buttonLink: '/about',
   },

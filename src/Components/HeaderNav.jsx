@@ -1,24 +1,35 @@
 import {
-    AppBar,
-    Box,
-    Button,
-    Container,
-    Divider,
-    Drawer,
-    Grid,
-    IconButton,
-    Link,
-    MenuItem,
-    Toolbar,
-    makeStyles
+  AppBar,
+  Toolbar,
+  Typography,
+  makeStyles,
+  Button,
+  IconButton,
+  Drawer,
+  Link,
+  MenuItem,
+  Paper,
+  Box,
+  Container,
+  Divider,
+  Grid,
+  Menu,
+  List,
+  ListItem,
+  useMediaQuery,
 } from '@material-ui/core';
 import MenuIcon from '@material-ui/icons/Menu';
-import React, { useEffect, useState } from 'react';
-import { Helmet } from 'react-helmet';
-import MediaQuery from 'react-responsive';
+import { withMediaQuery } from 'react-responsive';
+import React, { useState, useEffect } from 'react';
 import { Link as RouterLink } from 'react-router-dom';
-import { NavLink } from 'react-router-dom/cjs/react-router-dom.min';
 import '../index.css';
+import { Helmet } from 'react-helmet';
+import Landing from '../Landing';
+import CalloutContainer from '../CalloutContainer';
+import SearcherLanding from '../search/SearcherLanding';
+import MediaQuery from 'react-responsive';
+import Dropdown from 'react-dropdown';
+import { NavLink } from 'react-router-dom/cjs/react-router-dom.min';
 const headersData = [
   {
     label: 'Search',
@@ -450,7 +461,7 @@ export function NavLinks() {
           name="description"
           content="Bringing NEPA into the 21st Century through the power of data science. Find and engage with data from thousands of environmental review documents."
         />
-        <link rel="canonical" href="https://www.localhost:8808/" />
+        <link rel="canonical" href="https://www.nepaccess.org/" />
       </Helmet>
 
       <div id="header" className={getHeaderCss() + headerLandingCss}>

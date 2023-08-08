@@ -51,7 +51,7 @@ export default function SearchResultOptions() {
   return (
     <>
       <Grid container flex={1} spacing={0} border={0} justifyContent={'flex-start'}>
-        <Grid xs={4} md={4}>
+        <Grid xs={4}>
           <Item
             elevation={0}
             justifyContent="center"
@@ -78,7 +78,7 @@ export default function SearchResultOptions() {
             </FormControl>
           </Item>
         </Grid>
-        <Grid xs={6} md={3}>
+        <Grid xs={3}>
           <Item
             justifyContent="center"
             elevation={0}
@@ -116,7 +116,7 @@ export default function SearchResultOptions() {
             ></FormControlLabel>
           </Item>
         </Grid>
-        <Grid xs={6} md={3}>
+        <Grid xs={3}>
           <Item
             justifyContent="center"
             elevation={0}
@@ -157,8 +157,7 @@ export default function SearchResultOptions() {
           </Item>
         </Grid>
         <Grid
-          xs={6}
-          md={2}
+          xs={2}
           container
           flex={1}
           spacing={0}
@@ -168,7 +167,7 @@ export default function SearchResultOptions() {
           alignContent={'Center'}
           justifyContent={'center'}
         >
-          <Grid xs={6} flex={1} id="search-result-options-icon-items">
+          <Grid xs={3} flex={1} id="search-result-options-icon-items">
             <Item
               id="search-result-options-icon-item"
               justifyContent="center"
@@ -185,7 +184,7 @@ export default function SearchResultOptions() {
               <SortOutlined value={sortDirection} onChange={onSortDirectionChangeHandler} />
             </Item>
           </Grid>
-          <Grid xs={6} md={3} flex={1} id="search-result-options-grid-container">
+          <Grid xs={3} flex={1} id="search-result-options-grid-container">
             <Item
               id="search-result-sort-item"
               justifyContent="center"
@@ -202,7 +201,7 @@ export default function SearchResultOptions() {
             </Item>
           </Grid>
 
-          <Grid xs={6} md={3}>
+          <Grid xs={3}>
             <Item
               elevation={0}
               sx={{
