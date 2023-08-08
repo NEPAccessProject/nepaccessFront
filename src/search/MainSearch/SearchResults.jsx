@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 
 import { Box, Grid, Paper, Typography } from '@mui/material';
 import { styled } from '@mui/material/styles';
@@ -67,11 +67,58 @@ const sortByRelevance = (a, b) => {
   return a.score > b.score;
 };
 
-export default function SearchResults(props) {
+//not having a dependency should... only run once per result set
+const SearchResults = (props) => {
+  console.log("🚀 ~ file: SearchResults.jsx:71 ~ SearchResults ~ props:", props)
   const classes = useStyles(theme);
   const { results } = props;
-  const { records } = results;
-  console.log('Search Results records',records)
+  const { records,docs } = results;
+  console.log("🚀 ~ file: SearchResults.jsx:75 ~ SearchResults ~ docs:", docs)
+  console.log("🚀 ~ file: SearchResults.jsx:75 ~ SearchResults ~ records:", records)
+  const [sortedResults, setSortedResults] = useState([]);
+  const _mounted = useRef(false);
+  useEffect(()=>{
+    _mounted.current = true;
+  },()=>{
+    console.log('unmounted searchResults')
+    _mounted.current = false;
+  })
+
+  const sortResults = (results)=> {
+    results.map((result,idx)=>{
+      if(result.records){
+        console.log('pre stored records',result.records);
+        result.records.sort((a,b) => {
+          const sortedRecords =  Date.parse(a.commentDate) > Date.parse(b.commentDate);
+          result.records = sortedRecords;
+
+          console.log('Sorted is result records are now',result.records);
+          setSortedResults(result);
+//          sortedResults.push(result)
+      })
+      } 
+      else{
+        console.log('Result has no records?',result)
+        result.records = [];
+      }
+    })
+
+  };
+
+  useEffect(()=>{
+    if(_mounted.current === false){
+      console.log('Component not mounted, exit sort results effect');
+      return;
+    }
+
+    console.log('Search Results useEffect',props.results);
+    const sorted = sortResults(props.results);
+    console.log("🚀 ~ file: SearchResults.jsx:116 ~ useEffect ~ sorted:", sorted);
+     console.log("🚀 ~ file: SearchResults.jsx:107 ~ useEffect ~ sortResults:", sortResults);
+  
+  },[props.results]);
+
+ 
   // const sortedResults = results && results.length ? results.sort(sortByRelevance) : [];
   //  console.log('🚀 ~ file: SearchResults.jsx:106 ~ SearchResults ~ sortedResults:', sortedResults);
 
@@ -81,14 +128,14 @@ export default function SearchResults(props) {
       {/* <Typography variant="searchResultSubTitle" padding={2}>
         {results[0].title}
       </Typography> */}
-      {results && results.length && results.length > 0 ? (
+      {results && results.length ? (
         results.map((result, index) => {
           return (
              <>
              <Typography variant="searchResultSubTitle" padding={2}>
-              {(result.records && result.records[0].title) &&
-                <a href="#">{result.records[0].title} - {result.records.id}</a>
-              }
+              {/* {(result.records && result.records[0].title) &&
+                <a href="#">{result.records[0].title} - {result.records[0].id}</a>
+              } */}
               </Typography>
                 <Box sx={{marginTop:2}}><SearchResultCards result={result}/>              <SearchResultItems result={result} /></Box>
               </>
@@ -100,6 +147,9 @@ export default function SearchResults(props) {
     </Paper>
   );
 }
+export default React.memo(SearchResults);
+ 
+//useMemo(()=>SearchResults,[results]);
 
 export function SearchResultCards(props) {
   const classes = useStyles(theme);
