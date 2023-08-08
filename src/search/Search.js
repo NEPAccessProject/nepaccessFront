@@ -6,30 +6,26 @@ import axios from 'axios';
 
 
 import '../css/tabulator.css';
-import "./search.css";
 import "../sidebar.css";
 import '../survey.css';
+import "./search.css";
 //import "react-datepicker/dist/react-datepicker.css";
 //import DatePicker from 'react-datepicker';
-import 'tippy.js/dist/tippy.css'; // optional
-import Tippy from '@tippyjs/react';
+import { Autocomplete, Container, Divider, Typography } from '@mui/material';
 import Checkbox from '@mui/material/Checkbox';
+import { withStyles } from '@mui/styles';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import Tippy from '@tippyjs/react';
+import { withRouter } from "react-router";
+import 'tippy.js/dist/tippy.css'; // optional
+import TippySearchTips from '../TippySearchTips.js';
 import Globals from '../globals.js';
 import persist from '../persist.js';
 import theme from '../styles/theme.js';
-import { withRouter } from "react-router";
-import TippySearchTips from '../TippySearchTips.js';
-import { Paper, Button, Input, Box, Divider, FormControl, Autocomplete, InputLabel, TextField, Typography, Container, FormLabel } from '@mui/material';
-import Grid from '@mui/material/Unstable_Grid2';
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { DatePicker } from '@mui/x-date-pickers/DatePicker';
-import { InputAdornment } from '@mui/icons-material';
-import { makeStyles, withStyles } from '@mui/styles';
-import dayjs from 'dayjs';
-import Select from 'react-select';
-import SearchFilter from './MainSearch/SearchFilter.jsx';
 import SearchBar from './MainSearch/SearchBar.jsx';
+import SearchFilter from './MainSearch/SearchFilter.jsx';
 //import { DatePicker } from '@mui/lab';
 const _ = require('lodash');
 const drawerWidth = 200; 
