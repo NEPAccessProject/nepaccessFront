@@ -85,15 +85,16 @@ export default function Search(props) {
   const myRef = React.createRef();
   let _mounted = React.createRef(false);
   //let searchTerm = React.createRef('');
-
 //  const searchTerm = useRef("")
   // Necessary for on-demand highlighting per page
 
   const doSearch = (terms) => {
-    //console.log('doSearch terms', terms);
+    console.log('doSearch terms', terms);
     const searchTerm = parseTerms(terms);
-    setSearchState({
-      ...searchState,
+    setSearchState((prevState,props)=> {      
+      console.log('doSearch prevstate and props',prevState,props);
+      return {
+      ...prevState,
       search: terms,
       searchOptionsChecked: false,
       _lastSearchTerms: terms,
@@ -102,7 +103,8 @@ export default function Search(props) {
       surveyChecked: false,
       surveyDone: false,
       isDirty: true,
-    });
+  }
+});
     debouncedSearch(searchState);
 
     //startNewSearch(searchState);
@@ -137,9 +139,12 @@ export default function Search(props) {
   };
 
   const optionsChanged = (val) => {
-    setSearchState({
+    setSearchState((prevState,props)=>
+    {
+      return {
       ...searchState,
       useSearchOptions: val,
+      }
     });
   };
 
@@ -308,12 +313,14 @@ export default function Search(props) {
 
   /** Sort, then highlight */
   const sortDataByFieldThenHighlight = (field, ascending) => {
-    setSearchState({
-      ...searchState,
+    console.log("🚀 ~ file: Search.jsx:310 ~ sortDataByFieldThenHighlight ~ field:", field)
+    setSearchState((prevState)=> {
+      return {
+      ...prevState,
       searching: true,
       results: searchState.results.sort(alphabetically(field, ascending)),
-    }); //, () => {
-    gatherPageHighlightsDebounced(_searchId, searchState, searchState.results);
+  }}); //, () => {
+    gatherPageHighlights(_searchId, searchState, searchState.results);
     //});
   };
 
@@ -321,14 +328,14 @@ export default function Search(props) {
   const endEarly = () => {
     //console.log('search ended early. Search State:', searchState);
     if (searchState.searching) {
-      setSearchState({
-        ...searchState,
-
+      setSearchState((prevState)=>{
+      return {
+        ...prevState,
         searching: false,
-      });
+      }
+    });
     } else {
-      //console.log('searchState.searching is false already');
-      14;
+      console.log('335 - searchState.searching is false already');
     }
   };
 
@@ -489,22 +496,26 @@ export default function Search(props) {
         return a.relevance - b.relevance;
       }),
     );
+    console.log("🚀 ~ file: Search.jsx:496 ~ buildData ~ highlights:", highlights)
     return highlights;
   };
 
   // Start a brand new search.
   const startNewSearch = (searchState) => {
+    console.log("🚀 ~ file: Search.jsx:498 ~ startNewSearch ~ searchState:", searchState)
     //    //console.log("Starting New Search with searchState:", searchState)
-
     // Reset page, page size
     _page = 1;
+
     _pageSize = 10;
 
     // throw out anything we really don't want to support/include
     const terms = preProcessTerms(searchState.titleRaw);
-    setSearchState({
-      ...searchState,
+    setSearchState((prevState)=> {
+      return {
+      ...prevState,
       titleRaw: terms,
+      }
     });
 
     // Parse terms, set to what Lucene will actually use for full transparency.  Disabled on request
@@ -543,7 +554,8 @@ export default function Search(props) {
     //        - Consolidate all of the filenames by metadata record into singular results
     //          (maintaining original order by first appearance)
     //startSearch(searchState);
- debouncedSearch(searchState);
+    console.log("🚀 ~ file: Search.jsx:558 Calling debouncedSearch ~ startNewSearch ~ searchState:", searchState)
+//   debouncedSearch(searchState);
     // 2: Begin collecting text fragments 10-100 at a time or all for current page,
     //          assign accordingly, in a cancelable recursive function
     //          IF TITLE ONLY SEARCH: We can stop here.
@@ -552,6 +564,7 @@ export default function Search(props) {
     //     console.error(error);
     // })
   };
+
 
 
   /** Just get the top results quickly before launching the "full" search with initialSearch() */
@@ -652,6 +665,7 @@ export default function Search(props) {
       .then((response) => {
         
         let responseOK = response && response.status === 200;
+        console.log("🚀 ~ file: Search.jsx:656 ~ .then ~ response:", response)
         if (responseOK) {
           setSearchState({
             ...searchState,
@@ -758,12 +772,14 @@ export default function Search(props) {
             filterResultsBy(searchState.searcherInputs);
             countTypes();
 
-            setSearchState({
-              ...searchState,
+            setSearchState((prevState)=>{
+            return {
+              ...prevState,
               searching: false,
               snippetsDisabled: true,
               shouldUpdate: true,
-            });
+            }
+          });
           } else if (!shouldContinue) {
             //console.log('First pass got everything');
             // got all results already, so stop searching and start highlighting.
@@ -895,6 +911,7 @@ export default function Search(props) {
       data: dataToPass,
     })
       .then((response) => {
+        console.log("🚀 ~ file: Search.jsx:900 ~ .then ~ response:", response)
         let responseOK = response && response.status === 200;
         if (responseOK) {
           //console.log(`Recived response from ${searchUrl} got data:`, response.data);
@@ -971,70 +988,75 @@ export default function Search(props) {
           let processResults = {};
           processResults = buildData(_data);
           _data = processResults;
-          setSearchState(
-            {
+          setSearchState((prevState)=>{
+            return {
+            ...prevState,
               ...searchState,
               results: _data,
               resultsText: _data.length + ' Results',
-            },
-            () => {
+          }});
+          console.log('Added _data to state',_data);
               filterResultsBy(searchState);
               //console.log('Mapped data', _data);
               countTypes();
-            },
-          );
         } else {
           //console.log('No results');
-          setSearchState({
-            ...searchState,
+          setSearchState((prevState)=>{
+            return {
+            ...prevState,
             searching: false,
             resultsText:
               'No results found for ' +
               _searchTerms +
               ' (try adding OR between words for less strict results?)',
-          });
+          }}
+          );
         }
       })
       .catch((error) => {
         // Server down or 408 (timeout)
         if (error.response && error.response.status === 408) {
-          setSearchState(
-            {
-              ...searchState,
+          setSearchState((prevState)=>{
+            return {
+            ...prevState,
               resultsText: 'Error: Request timed out',
-            },
-            () => {
-              //console.log('set State call back from error', searchState);
-            },
+            }}
           );
         } else if (error.response && error.response.status === 403) {
           // token expired?
-          setSearchState({
-            ...searchState,
+          setSearchState((prevState)=>{
+            return {
+            ...prevState,
             resultsText: 'Error: Please login again (session expired)',
+            }
           });
           Globals.emitEvent('refresh', {
             loggedIn: false,
           });
         } else if (error.response && error.response.status === 400) {
           // bad request
-          setSearchState({
-            ...searchState,
+          setSearchState((prevState)=>{
+            return {
+            ...prevState,
             networkError: Globals.errorMessage.default,
             resultsText: "Couldn't parse terms, please try removing any special characters",
+            }
           });
         } else {
-          setSearchState({
-            ...searchState,
+          setSearchState((prevState)=>{
+            return {
+            ...prevState,
             networkError: Globals.errorMessage.default,
             resultsText: "Error: Couldn't get results from server",
+            }
           });
         }
-        setSearchState({
-          ...searchState,
-          searching: false,
-        });
+          setSearchState((prevState)=>{
+            return {
+            ...prevState,
+            }
       });
+    });
   };
   const debountedInitialSearch = _.debounce(initialSearch,500);
   const debouncedSearch = _.debounce(startNewSearch, 500);
@@ -1051,25 +1073,29 @@ export default function Search(props) {
       }).then((response) => {
         //console.log('Suggester response', response);
 
-        setSearchState({
-          ...searchState,
-          // lookupResult: response.data
+        setSearchState((prevState)=>{
+        return {
+          ...prevState,
           lookupResult: response.data,
-        });
+        }});
       });
     } else {
-      setSearchState({
-        ...searchState,
+          setSearchState((prevState)=> {      
+      return {
+      ...prevState,
         lookupResult: null,
+      }
       });
     }
   };
 
   const onSnippetsToggle = () => {
-    setSearchState({
-      ...searchState,
+        setSearchState((prevState)=>{
+        return {
+          ...prevState,
       snippetsDisabled: !searchState.snippetsDisabled,
-    });
+    }
+  });
   };
   /** Gathers all highlights for a single record, if we don't have them already. Invoked by "show more text snippets"
    * button click, inside SearchProcessResult (this button appears for every record with multiple files,
@@ -1219,6 +1245,7 @@ export default function Search(props) {
   // };
 
       const gatherPageHighlights = (searchId, _inputs, currentResults) => {
+        console.log("🚀 ~ file: Search.jsx:1227 ~ gatherPageHighlights ~ currentResults:", currentResults)
         // if(!_inputs) {
         //     if(searchState.searcherInputs) {
         //         _inputs = searchState.searcherInputs;
@@ -1354,26 +1381,25 @@ export default function Search(props) {
                     // Verify one last time we want this before we actually commit to these results,
                     // otherwise it could be jarring UX to setState here
                     if(searchId < this._searchId) {
-                        // console.log("There's another search call happening");
+                        console.log("Cancle Search There's another search call happening");
                         return;
                     } else {
                         // Fin
                         // let resultsText = currentResults.length + " Results";
-                        setSearchState({
-                            ...searchState,
+                        setSearchState((prevState)=>{
+                          return {
+                            ...prevState,
                             searchResults: allResults,
                             outputResults: currentResults,
                             // count: updatedResults.length,
                             searching: false, 
                             // resultsText: resultsText, 
                             shouldUpdate: true
-                        }, () => {
-                            // console.log("All done with page highlights: all results, displayed results", 
-                            //     allResults, currentResults);
-                        });
+                        }});
                     }
                 }
             }).catch(error => { 
+                console.error("🚀 ~ file: Search.jsx:1402 ~ gatherPageHighlights ~ error:", error)
                 if(error.name === 'TypeError') {
                     console.error(error);
                 } else { // Server down or 408 (timeout)
@@ -1399,13 +1425,15 @@ export default function Search(props) {
 
 
   const gatherFirstPageHighlightsThenFinishSearch = (searchId, _inputs, currentResults) => {
+    console.log("🚀 ~ file: Search.jsx:1430 ~ gatherFirstPageHighlightsThenFinishSearch ~ currentResults:", currentResults)
     if (!_inputs) {
       if (searchState.searcherInputs) {
         _inputs = searchState.searcherInputs;
         console.log("🚀 ~ file: Search.jsx:1407 ~ gatherFirstPageHighlightsThenFinishSearch ~ _inputs:", _inputs)
-      } else if (Globals.getParameterByName('q')) {
-        _inputs = { titleRaw: Globals.getParameterByName('q') };
-      }
+      } 
+      //else if (Globals.getParameterByName('q')) {
+      //  _inputs = { titleRaw: Globals.getParameterByName('q') };
+      //}
     }
     //console.log('Gathering page highlights', searchId, _page, _pageSize);
     // if (!_mounted) { // User navigated away or reloaded
@@ -1413,7 +1441,7 @@ export default function Search(props) {
     // }
     if (searchId < _searchId) {
       // Search interrupted
-      onsole.log(`Search Interupted searchId ${searchId} _searchId: ${_searchId}`);
+      console.log(`Search Interupted searchId ${searchId} _searchId: ${_searchId}`);
       return; // cancel search
     }
     if (typeof currentResults === 'undefined') {
@@ -1460,6 +1488,7 @@ export default function Search(props) {
                 filename: firstFilename,
               });
           } else {
+            console.log("🚀 ~ file: Search.jsx:1492 ~ gatherFirstPageHighlightsThenFinishSearch ~ currentResults[i].records[j].id:", currentResults[i].records[j].id)
             mustSkip[currentResults[i].records[j].id] = true;
           }
         }
@@ -1468,7 +1497,7 @@ export default function Search(props) {
 
     // If nothing to highlight, nothing to do on this page
     if (_unhighlighted.length === 0 || searchId < _searchId) {
-      console.log('nothing to highlight: finish search');
+      console.log(`nothing to highlight: finish search searchId: ${searchId} vs _searchId: ${_searchId}`);
       debountedInitialSearch(_inputs);
       return;
     }
@@ -1503,6 +1532,7 @@ export default function Search(props) {
           //console.log('Adding highlights', parsedJson);
 
           let allResults = searchState.results;
+          console.log("🚀 ~ file: Search.jsx:1535 ~ .then ~ allResults:", allResults)
           let x = 0;
           for (let i = startPoint; i < Math.min(currentResults.length, endPoint); i++) {
             for (let j = 0; j < currentResults[i].records.length; j++) {
@@ -1784,26 +1814,30 @@ export default function Search(props) {
         console.error(`Error calling the check endpoint`, err);
         if (!err.response) {
           // server isn't responding
-          setSearchState({
-            ...searchState,
+          setSearchState((prevState)=>{
+            return{
+            ...prevState,
             networkError: Globals.errorMessage.default,
             shouldUpdate: true,
             down: true,
+            }
           });
         } else if (err.response && err.response.status === 403) {
           //console.log('CHECK ERROR ERR', err);
-          setSearchState({
-            ...searchState,
+          setSearchState((prevState)=>{
+            return{
+            ...prevState,
             verified: false,
             shouldUpdate: true,
-          });
+          }});
         }
       })
       .finally(() => {
-        setSearchState({
-          ...searchState,
+                 setSearchState((prevState)=>{
+            return{
+            ...prevState,
           loaded: true,
-        });
+      }});
         //console.log('Finally SearchState loaded... ' + searchState);
       });
   };
@@ -1811,13 +1845,13 @@ export default function Search(props) {
   /** Scroll to bottom on page change and populate full table with latest results */
   const scrollToBottom = (_rows) => {
     try {
-      setSearchState(
-        {
-          ...searchState,
+          setSearchState((prevState)=>{
+            return{
+            ...prevState,
           results: searchState.results,
           displayRows: _rows,
           shouldUpdate: true,
-        },
+        }},
         () => {
           setTimeout(() => {
             endRef.current.scrollIntoView({ behavior: 'smooth' });
@@ -1853,7 +1887,8 @@ export default function Search(props) {
   /** Flattens results to relevant fields for basic users */
   const exportToCSV = () => {
     if (searchState.results && searchState.results.length > 0) {
-      const resultsForDownload = searchState.results.map((process, idx) => {
+      const resultsForDownload = 
+      searchState.results.map((process, idx) => {
         let newResult = process.records.map((result, idx) => {
           let newRecord = {
             title: result.title,
@@ -1988,30 +2023,38 @@ export default function Search(props) {
   };
 
   const onIconClick = (evt) => {
-    //console.log('onIconClick clicked', evt.target.name);
-    setSearchState({
-      ...searchState,
-      titleRaw: evt.target.name,
-      searchWord: evt.target.name
-    });
+    console.log("🚀 ~ file: Search.jsx:2026 ~ onIconClick ~ evt:", evt)
+    console.log('onIconClick clicked', evt.target.name, 'prevState');
+      
+    setSearchState((prevState) => {
+      console.log("🚀 ~ file: Search.jsx:2029 ~ setSearchState ~ prevState:", prevState)
+       	return{
+            	...prevState,
+        	titleRaw: evt.target.name,
+        	searchWord: evt.target.name
+  	}});
+  
+  console.log(`new state`,searchState)
     debouncedDoSearch(searchState.titleRaw);
   };
   /** clears and disables proximity search option as well as clearing text */
   const onClearClick = (evt) => {
-    setSearchState({
-      ...searchState,
+    setSearchState((prevState)=>{
+      return {
+      ...prevState,
       titleRaw: '',
       proximityDisabledSet: true,
       proximityOption: null,
       inputMessage: '',
-    });
+    }});
     inputSearch.focus();
-    // debouncedSuggest();
+    debouncedSuggest();
   };
 
   const onClearFiltersClick = () => {
-    setSearchState({
-      ...searchState,
+          setSearchState((prevState)=>{
+            return{
+            ...prevState,
       titleRaw: '',
       startPublish: null,
       endPublish: null,
@@ -2043,12 +2086,17 @@ export default function Search(props) {
       needsDocument: false,
       optionsChecked: true,
       countyOptions: Globals.counties,
-    });
-  };
+    }})}
 
   const onRadioChange = (evt) => {
-    setSearchState({ ...searchState, [evt.target.name]: evt.target.value });
-  };
+ 
+    setSearchState((prevState)=>{
+      return { 
+        ...prevState, 
+        [evt.target.name]: evt.target.value 
+      }
+  });
+};
 
   const onKeyUp = (evt) => {
     if (evt.keyCode === 13) {
@@ -2093,13 +2141,16 @@ export default function Search(props) {
   };
   const toggleSearchTipDialogClose = (isOpen) => {
     isOpen == true
-      ? setSearchState({
-          ...searchState, // keep all other key-value pairs
+      ? setSearchState((prevState)=>{
+          return {
+            ...prevState, // keep all other key-value pairs
           isSearchTipsDialogIsOpen: false, // update the value of specific key
-        })
-      : setSearchState({
+  }})
+      : setSearchState((prevState)=>{
+        return {
           ...prevState, // keep all other key-value pairs
           isSearchTipsDialogIsOpen: true, // update the value of specific key
+        }
         });
   };
   const onDialogOpen = () => {
@@ -2157,22 +2208,24 @@ export default function Search(props) {
     for (var i = 0; i < evt.length; i++) {
       actionLabels.push(evt[i].label.replace(/ \([A-Z]*\)/gi, ''));
     }
-    setSearchState({
-      ...searchState,
+    setSearchState((prevState) =>{
+      return {
+      ...prevState,
       action: actionLabels,
       actionRaw: evt,
-    });
+  }});
   };
   const onDecisionChange = (evt) => {
     var decisionLabels = [];
     for (var i = 0; i < evt.length; i++) {
       decisionLabels.push(evt[i].label.replace(/ \([A-Z]*\)/gi, ''));
     }
-    setSearchState({
-      ...searchState,
+    setSearchState((prevState) =>{
+      return {
+      ...prevState,
       decision: decisionLabels,
       decisionRaw: evt,
-    });
+    }});
   };
   /** Helper method for onLocationChange limits county options to selected states in filter,
    * or resets to all counties if no states selected */
@@ -2674,36 +2727,47 @@ export default function Search(props) {
   //run only at startup
   useEffect(() => {
     _mounted.current = true;
+      console.log(`Mounted `, _mounted);
     () => {
-      //console.log('cleaning up mounted check after useEffect');
+      console.log('cleaning up mounted check after useEffect');
       _mounted.current = false;
     };
-  });
+  },[]);
   
+  const getQueryParams = () =>{
+      const q = Globals.getParameterByName('q');
+      console.log("🚀 ~ file: Search.jsx:2725 ~ useEffect ~ query String:", q)
+      if (q && q.length > 0) {
+        return q;
+      }
+      else{
+        return ""
+      }
+    }
+    
   //if a query string is present but searchTerms is empty, there might be a bug when the user delete input
   useEffect(()=>{
     if(_mounted.current === false){
       console.log('queryParams effect not mounted exit');
       return;
     }
-    const _queryParams = Globals.getParameterByName('q');
-    console.log(`_queryParams? ${_queryParams}`);
-    if(_queryParams && _queryParams.length > 0 && searchState.titleRaw == '');
-      setSearchState({
-          //...prevState,
-          "queryParams" : _queryParams
-      })
-  });
+      doSearchFromParams();
+      //console.log("🚀 ~ file: Search.jsx:2710 ~ useEffect ~ queryParams:", queryParams)
+      // setSearchState((prevState)=>{
+      //   return {
+      //   ...prevState,
+      //     titleRaw: parseTerms(queryParams)
+      //   }
+      // })   
+  }
+,[]);
 
-  React.useDebugValue(
-    searchState.queryParams ? `found query Params ${searchState.queryParams}` : `no query Params?`
-  );
-//  React.useDebugValue()
+useEffect(()=>{
+  console.log('USE EFFECT ON RESULTS');
+},[searchState.results])
 
-  // React.useDebugValue(searchState.titleRaw, searchState.titleRaw =>
-  //   searchState.titleRaw ? searchState.titleRaw : ""
-  // );
 
+//useDebugValue('searchState',JSON.stringify(searchState));
   const hideText = (_offsetY, _index, record) => {
     offsetY = _offsetY;
 
@@ -2712,10 +2776,33 @@ export default function Search(props) {
       setSearchState({ ...searchState, hidden: hidden });
     } else {
       hidden.add(record.id);
-      setSearchState({ ...searchState, hidden: hidden });
+      setSearchState({ ...searchState, hidden: hidden }, () => {
         gatherSpecificHighlights(_index, record);
+      });
     }
   };
+
+
+  //check to see if there a query param on first render then set titleRaw to that untill it changes 
+  // useEffect(()=>{
+  //   if(_mounted.current == false){
+  //     console.log(`halt effect search is not mounted`);
+  //     return;
+  //   }
+  //   const q = Globals.getParameterByName('q');
+  //   console.log("🚀 ~ file: Search.jsx:2708 ~ useEffect ~ query String:", q)
+  //   if (q && q.length > 0) {
+  //     //console.log(`Query Params found wiht No Search Term found setting to q: ${q}`);
+  //     setSearchState({
+  //       ...searchState,
+  //       titleRaw: q,
+  //     });
+  //     // if there is a search term in the query params and the current term is empty set the search term to query params
+     
+  //   }
+  // });
+
+
   const value = {
     searchState,
     hideText,
