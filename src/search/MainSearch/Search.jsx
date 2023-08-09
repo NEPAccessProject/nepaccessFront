@@ -605,9 +605,9 @@ export default function Search(props) {
     console.log("🚀 ~ file: Search.jsx:605 ~ startSearch ~ _searchTerms:", _searchTerms)
     // Update query params
     // We could also probably clear them on reload (component will unmount) if anyone wants
-    let currentUrlParams = new URLSearchParams(window.location.search);
-    currentUrlParams.set('q', _searchTerms);
-    props.history.push(window.location.pathname + '?' + currentUrlParams.toString());
+    // let currentUrlParams = new URLSearchParams(window.location.search);
+    // currentUrlParams.set('q', _searchTerms);
+    // props.history.push(window.location.pathname + '?' + currentUrlParams.toString());
 
     let dataToPass = {
       title: _searchTerms,
@@ -755,7 +755,7 @@ export default function Search(props) {
           // });
           //[TODO] no callback with setSearchState would have to useEffect
 
-          //console.log('All results', _data);
+          console.log('Results in state', searchState.outputResults);
 
           // title-only (or blank search===no text search at all): return
           if (
@@ -1333,6 +1333,7 @@ export default function Search(props) {
                     return null;
                 }
             }).then(parsedJson => {
+                console.log("🚀 ~ file: Search.jsx:1336 ~ gatherPageHighlights ~ parsedJson:", parsedJson)
                 if(parsedJson){
                     console.log("Adding highlights", parsedJson);
 
@@ -1367,7 +1368,8 @@ export default function Search(props) {
                     } else {
                         // Fin
                         // let resultsText = currentResults.length + " Results";
-                        setSearchState({
+                        setSearchState((prevState)=>{
+                          return {
                             ...searchState,
                             searchResults: allResults,
                             outputResults: currentResults,
@@ -1375,10 +1377,8 @@ export default function Search(props) {
                             searching: false, 
                             // resultsText: resultsText, 
                             shouldUpdate: true
-                        }, () => {
-                            // console.log("All done with page highlights: all results, displayed results", 
-                            //     allResults, currentResults);
-                        });
+                          }
+                        })
                     }
                 }
             }).catch(error => { 
@@ -1401,6 +1401,7 @@ export default function Search(props) {
                         searching: false,
                         shouldUpdate: true
                     }});
+                    console.log('Error Highlights error! State:',searchState);
                 }
             });
     }
@@ -2255,6 +2256,7 @@ export default function Search(props) {
       inputMessage: proximityValues._inputMessage,
       searchIng: true,
     });
+    console.log(`onInput Title Raw from ${evt.target.name} - userInput ${userInput}?` );
   };
 
   // suppress warning that there's no onChange event, handler (despite onChange rarely being the best event to take advantage of)
@@ -2862,17 +2864,20 @@ export default function Search(props) {
     const queryParam = Globals.getParameterByName('q');
     console.log("🚀 ~ file: Search.jsx:2701 ~ useEffect ~ queryParams:", queryParam)
     if(queryParam){
+      const terms = parseTerms(queryParam)
       console.log("🚀 ~ file: Search.jsx:2701 ~ useEffect ~ queryParam:", queryParam)
       //could be just doSearch(queryParam);
       setSearchState((prevState)=> {
+        console.log('QueryParams prevState',prevState);
         return{
           ...prevState,
-          titleRaw: queryParam
-        }
+          titleRaw: terms
+        } 
       })
-      doSearchFromParams();
+      console.log(`Received term ${terms}, start Search state:`,searchState);
+      doSearch(terms);
     }
-    console.log('no query params found');
+    console.log('no query params found ?',queryParam);
     // console.log(`halt queryParams effect search is not mounted`);
     // if(_queryParams && _queryParams.length > 0 && searchState.titleRaw == ''){
     //   setSearchState((prevState)=>{
@@ -2882,6 +2887,7 @@ export default function Search(props) {
     //     }
     //   })   
 },[]);
+
 
   
 //   useEffect(()=>{

@@ -76,26 +76,22 @@ Accept: application/json
 ###
 GET {{host}}test/get_process_full?processId=1000331 HTTP/1.1
 ###
+
 POST {{host}}text/get_highlightsFVH HTTP/1.1
 authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJnbXMiLCJleHAiOjE2ODk0Njg2MTIsImp0aSI6IjY0NSJ9.xeq97UA4CxkHukarpVBYH8iy6NoPMsGx_NOK7kEra3Y_C7UO9xz9zA5SsmVQCJ6U1D4cVwSf6-k3afs0fK0tAA
 key: test_key_only
 Content-Type: application/json
 Accept: application/json
 
-
 {
-  "unhighlighted": [
+  "unhighlighted":[
     {
-      "luceneIds": [
-        6148
-      ],
-      "filename": "01-17-aprcs-feis-record-of-decision.pdf"
-    }
-  ],
-  "terms": "2003",
-  "markup": true,
-  "fragmentSizeValue": 2
-}  
+      "luceneIds":[45606],
+      "filename":"040460/040460_0003-cprs.pdf"
+      },
+  ]
+}
+
 ###
 GET {{host}}text/test_terms?terms=2020 HTTP/1.1
 authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJnbXMiLCJleHAiOjE2ODk0Njg2MTIsImp0aSI6IjY0NSJ9.xeq97UA4CxkHukarpVBYH8iy6NoPMsGx_NOK7kEra3Y_C7UO9xz9zA5SsmVQCJ6U1D4cVwSf6-k3afs0fK0tAA
