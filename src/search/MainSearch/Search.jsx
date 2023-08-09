@@ -85,14 +85,12 @@ export default function Search(props) {
   const myRef = React.createRef();
   let _mounted = React.createRef(false);
   //let searchTerm = React.createRef('');
-  const _queryParams = Globals.getParameterByName('q');
-  console.log("🚀 ~ file: Search.jsx:90 ~ Search ~ qry:", _queryParams)
 
 //  const searchTerm = useRef("")
   // Necessary for on-demand highlighting per page
 
   const doSearch = (terms) => {
-    //console.log('doSearch terms', terms);
+    console.log('doSearch terms', terms);
     const searchTerm = parseTerms(terms);
     setSearchState({
       ...searchState,
@@ -105,9 +103,9 @@ export default function Search(props) {
       surveyDone: false,
       isDirty: true,
     });
-    debouncedSearch(searchState);
+//    debouncedSearch(searchState);
 
-    //startNewSearch(searchState);
+    startNewSearch(searchState);
     //debouncedSearch(searchState);
     //    startNewSearch(searchState);
     //    initialSearch(searchState);
@@ -491,6 +489,12 @@ export default function Search(props) {
         return a.relevance - b.relevance;
       }),
     );
+    if(highlights && highlights.length){
+      setSearchState({
+      ...searchState,
+        highlights: highlights,
+      });
+    }
     return highlights;
   };
 
@@ -544,8 +548,8 @@ export default function Search(props) {
     // 1: Collect contextless results
     //        - Consolidate all of the filenames by metadata record into singular results
     //          (maintaining original order by first appearance)
-    //startSearch(searchState);
- debouncedSearch(searchState);
+    startSearch(searchState);
+// debouncedSearch(searchState);
     // 2: Begin collecting text fragments 10-100 at a time or all for current page,
     //          assign accordingly, in a cancelable recursive function
     //          IF TITLE ONLY SEARCH: We can stop here.
@@ -566,7 +570,7 @@ export default function Search(props) {
     //     return;
     // }
 
-    setSearchState = (prevState)=>{
+    setSearchState((prevState)=>{
       return {
       ...prevState,
 
@@ -582,7 +586,7 @@ export default function Search(props) {
       shouldUpdate: true,
       lastSearchedTerm: searchState.titleRaw,
     }
-  };
+  });
 
     // title-only
     let searchUrl = new URL('text/search', Globals.currentHost);
@@ -598,6 +602,7 @@ export default function Search(props) {
     }
 
     _searchTerms = searchState.titleRaw;
+    console.log("🚀 ~ file: Search.jsx:605 ~ startSearch ~ _searchTerms:", _searchTerms)
     // Update query params
     // We could also probably clear them on reload (component will unmount) if anyone wants
     let currentUrlParams = new URLSearchParams(window.location.search);
@@ -652,6 +657,7 @@ export default function Search(props) {
       data: dataToPass,
     })
       .then((response) => {
+        console.log("🚀 ~ file: Search.jsx:660 ~ .then ~ response:", response)
         
         let responseOK = response && response.status === 200;
         if (responseOK) {
@@ -1221,19 +1227,19 @@ export default function Search(props) {
   // };
 
       const gatherPageHighlights = (searchId, _inputs, currentResults) => {
-        // if(!_inputs) {
-        //     if(searchState.searcherInputs) {
-        //         _inputs = searchState.searcherInputs;
-        //     } else if(Globals.getParameterByName("q")) {
-        //         _inputs = {titleRaw: Globals.getParameterByName("q")};
-        //     }
-        // }
-        // console.log("Gathering page highlights", searchId, this._page, this._pageSize);
+        if(!_inputs) {
+            if(searchState.searcherInputs) {
+                _inputs = searchState.searcherInputs;
+            } else if(Globals.getParameterByName("q")) {
+                _inputs = {titleRaw: Globals.getParameterByName("q")};
+            }
+        }
+        // console.log("Gathering page highlights", searchId, _page, _pageSize);
         if(_mounted.current == false){ // User navigated away or reloaded
           console.log('component is not mounted?',_mounted);
             return; // cancel search
         }
-        if(searchId < this._searchId) { // Search interrupted
+        if(searchId < _searchId) { // Search interrupted
             return; // cancel search
         }
         if (typeof currentResults === 'undefined') {
@@ -1248,8 +1254,8 @@ export default function Search(props) {
 
         let mustSkip = {};
         let _unhighlighted = [];
-        let startPoint = (this._page * this._pageSize) - this._pageSize;
-        let endPoint = (this._page * this._pageSize);
+        let startPoint = (_page * _pageSize) - _pageSize;
+        let endPoint = (_page * _pageSize);
 
         // Assuming filenames come in the correct order, we can ask for the first one only, and then
         // additional logic elsewhere could ask for all of the highlights.
@@ -1328,7 +1334,7 @@ export default function Search(props) {
                 }
             }).then(parsedJson => {
                 if(parsedJson){
-                    // console.log("Adding highlights", parsedJson);
+                    console.log("Adding highlights", parsedJson);
 
                     // TODO: If we want to avoid checking every ID until we run out of highlights,
                     // data structures and a lot more must be changed
@@ -1355,8 +1361,8 @@ export default function Search(props) {
                     
                     // Verify one last time we want this before we actually commit to these results,
                     // otherwise it could be jarring UX to setState here
-                    if(searchId < this._searchId) {
-                        // console.log("There's another search call happening");
+                    if(searchId < _searchId) {
+                        console.log("There's another search call happening");
                         return;
                     } else {
                         // Fin
@@ -1398,174 +1404,339 @@ export default function Search(props) {
                 }
             });
     }
-
-
   const gatherFirstPageHighlightsThenFinishSearch = (searchId, _inputs, currentResults) => {
-    if (!_inputs) {
-      if (searchState.searcherInputs) {
-        _inputs = searchState.searcherInputs;
-        console.log("🚀 ~ file: Search.jsx:1407 ~ gatherFirstPageHighlightsThenFinishSearch ~ _inputs:", _inputs)
-      } else if (Globals.getParameterByName('q')) {
-        _inputs = { titleRaw: Globals.getParameterByName('q') };
-      }
-    }
-    //console.log('Gathering page highlights', searchId, _page, _pageSize);
-    // if (!_mounted) { // User navigated away or reloaded
-    //     return; // cancel search
-    // }
-    if (searchId < _searchId) {
-      // Search interrupted
-      onsole.log(`Search Interupted searchId ${searchId} _searchId: ${_searchId}`);
-      return; // cancel search
-    }
-    if (typeof currentResults === 'undefined') {
-      currentResults = [];
-    }
-
-    // setSearchState({
-    //   ...searchState,
-    //   snippetsDisabled: false,
-    //   searching: true,
-    //   networkError: '', // Clear network error
-    // });
-
-    let searchUrl = new URL('text/get_highlightsFVH', Globals.currentHost);
-
-    let mustSkip = {};
-    let _unhighlighted = []; // List of records to request a text highlight for
-    let startPoint = _page * _pageSize - _pageSize;
-    let endPoint = _page * _pageSize;
-
-    // Assuming filenames come in the correct order, we can ask for the first one only, and then
-    // additional logic elsewhere could ask for all of the highlights.
-    // Then we would never get any "hidden" highlights, resulting in more responsive UX
-
-    for (let i = startPoint; i < Math.min(currentResults.length, endPoint); i++) {
-      // For each result card on current page
-      for (let j = 0; j < currentResults[i].records.length; j++) {
-        // For each record in result card
-        // Push first lucene ID and filename
-        if (!Globals.isEmptyOrSpaces(currentResults[i].records[j].name)) {
-          //console.log('Pushing', i, j, currentResults[i].records[j].id);
-
-          // Need to skip this entry on both sides if it already has plaintext.
-          // If it has any, then skip here - we can get more on demand elsewhere, in separate logic.
-          if (
-            !currentResults[i].records[j].plaintext ||
-            !currentResults[i].records[j].plaintext[0]
-          ) {
-            // Filenames delimited by > (impossible filename character)
-            let firstFilename = currentResults[i].records[j].name.split('>')[0];
-            let firstLuceneId = [currentResults[i].records[j].luceneIds[0]];
-              _unhighlighted.push({
-                luceneIds: firstLuceneId,
-                filename: firstFilename,
-              });
-          } else {
-            mustSkip[currentResults[i].records[j].id] = true;
-          }
-        }
-      }
-    }
-
-    // If nothing to highlight, nothing to do on this page
-    if (_unhighlighted.length === 0 || searchId < _searchId) {
-      console.log('nothing to highlight: finish search');
-      debountedInitialSearch(_inputs);
-      return;
-    }
-
-    const terms = postProcessTerms(_inputs.titleRaw);
-    let dataToPass = {
-      unhighlighted: _unhighlighted,
-      terms: 'Nuclear Weapon Complex',
-      markup: _inputs.markup,
-      fragmentSizeValue: _inputs.fragmentSizeValue,
-    };
-
-    //console.log('For backend', dataToPass);
-
-    //Send the AJAX call to the server
-    axios({
-      method: 'POST', // or 'PUT'
-      url: searchUrl,
-      data: dataToPass,
-    })
-      .then((response) => {
-        console.log("🚀 ~ file: Search.jsx:1305 ~ .then ~ response:", response.data)
-        let responseOK = response && response.status === 200;
-        if (responseOK) {
-          return response.data;
-        } else {
-          return null;
-        }
-      })
-      .then((parsedJson) => {
-        if (parsedJson) {
-          //console.log('Adding highlights', parsedJson);
-
-          let allResults = searchState.results;
-          let x = 0;
-          for (let i = startPoint; i < Math.min(currentResults.length, endPoint); i++) {
-            for (let j = 0; j < currentResults[i].records.length; j++) {
-              // If search is interrupted, updatedResults[i] may be undefined (TypeError)
-              if (!Globals.isEmptyOrSpaces(currentResults[i].records[j].name)) {
-                //console.log('Assigning', i, j, currentResults[i].records[j].name);
-
-                if (mustSkip[currentResults[i].records[j].id]) {
-                  // do nothing; skip
-                  //console.log('Skipping ID ' + [currentResults[i].records[j].id]);
-                } else {
-                  // Instead of currentResults[i].records[j].id, use the stored index
-                  //     currentResults[i].originalIndex for record j);
-                  currentResults[i].records[j].plaintext = parsedJson[x];
-                  allResults[currentResults[i].originalIndex].records[j].plaintext = parsedJson[x];
-                  x++;
-                }
-              }
+        console.log("gatherFirstPageHighlightsThenFinishSearch")
+        if(!_inputs) {
+            if(state.searcherInputs) {
+                _inputs = state.searcherInputs;
+            } else if(Globals.getParameterByName("q")) {
+                _inputs = {titleRaw: Globals.getParameterByName("q")};
             }
-          }
-          //console.log('Setting currentResults line 1312', currentResults);
-          //console.log('Setting allResults line 1312', allResults);
-          setSearchState((prevState)=>{
-            return{
-            ...prevState,
-            searchResults: allResults,
-            outputResults: currentResults,
-            output: allResults,
-            shouldUpdate: true,
-          }});
-          //console.log('Got highlights, finish search');
-          debountedInitialSearch(_inputs);
         }
-      })
-      .catch((error) => {
-        console.error('error calling service',error);
-              if (error.name === 'TypeError') {
-          console.error(`gatherFirstPageHighlightsThenFinishSearch error ${error.name} is a TypeError`);
-        } else {
-          // Server down or 408 (timeout)
-          let _networkError = 'Server is down or you may need to login again.';
-          let _resultsText = Globals.errorMessage.default;
-
-          if (error.response && error.response.status === 408) {
-            _networkError = 'Request has timed out.';
-            _resultsText = 'Timed out';
-          }
-
-          setSearchState((prevState)=>{
-            return{
-            ...prevState,
-
-            networkError: _networkError,
-            resultsText: _resultsText,
-            shouldUpdate: true,
-        }});
-          //console.log('Error, finish search, doing initalSearch with _inputs', _inputs);
-          debountedInitialSearch(_inputs);
+        // console.log("Gathering page highlights", searchId, _page, _pageSize);
+        if(!_mounted){ // User navigated away or reloaded
+            return; // cancel search
         }
-      });
-  };
+        if(searchId < _searchId) { // Search interrupted
+            return; // cancel search
+        }
+        if (typeof currentResults === 'undefined') {
+            currentResults = [];
+        }
+
+        setSearchState((prevState)=>{
+          return {
+            snippetsDisabled: false,
+            searching: true,
+            networkError: "", // Clear network error
+          }
+		}); 
+            
+            let searchUrl = new URL('text/get_highlightsFVH', Globals.currentHost);
+
+            let mustSkip = {};
+            let _unhighlighted = []; // List of records to request a text highlight for
+            let startPoint = (_page * _pageSize) - _pageSize;
+            let endPoint = (_page * _pageSize);
+
+            // Assuming filenames come in the correct order, we can ask for the first one only, and then
+            // additional logic elsewhere could ask for all of the highlights.
+            // Then we would never get any "hidden" highlights, resulting in more responsive UX
+
+            for(let i = startPoint; i < Math.min(currentResults.length, endPoint); i++) { // For each result card on current page
+                for(let j = 0; j < currentResults[i].records.length; j++) { // For each record in result card
+                    // Push first lucene ID and filename
+                    if(!Globals.isEmptyOrSpaces(currentResults[i].records[j].name)) {
+
+                        // console.log("Pushing",i,j,currentResults[i].records[j].id);
+
+                        // Need to skip this entry on both sides if it already has plaintext.
+                        // If it has any, then skip here - we can get more on demand elsewhere, in separate logic.
+                        if(!currentResults[i].records[j].plaintext || !currentResults[i].records[j].plaintext[0]) {
+
+                            // Filenames delimited by > (impossible filename character)
+                            let firstFilename = currentResults[i].records[j].name.split(">")[0];
+                            let firstLuceneId = [currentResults[i].records[j].luceneIds[0]];
+
+                            // console.log("First filename, record ID and lucene ID", 
+                            //     firstFilename, currentResults[i].records[j].id, firstLuceneId);
+
+                            _unhighlighted.push(
+                                {
+                                    luceneIds: firstLuceneId, 
+                                    filename: firstFilename
+                                }
+                            );
+                        } else {
+                            // console.log("Adding skip ID " + [currentResults[i].records[j].id]);
+                            mustSkip[currentResults[i].records[j].id] = true;
+                        }
+                    }
+                }
+            }
+
+
+            // If nothing to highlight, nothing to do on this page
+            if(_unhighlighted.length === 0 || searchId < _searchId) {
+                console.log("nothing to highlight: finish search");
+                initialSearch(_inputs);
+                return;
+            }
+
+			let dataToPass = 
+            { 
+				unhighlighted: _unhighlighted,
+                terms: postProcessTerms(_inputs.titleRaw),
+                markup: _inputs.markup,
+                fragmentSizeValue: _inputs.fragmentSizeValue
+            };
+
+            // console.log("For backend",dataToPass);
+            
+            //Send the AJAX call to the server
+            axios({
+                method: 'POST', // or 'PUT'
+                url: searchUrl,
+                data: (dataToPass)
+            }).then(response => {
+                let responseOK = response && response.status === 200;
+                if (responseOK) {
+                    return response.data;
+                } else {
+                    return null;
+                }
+            }).then(parsedJson => {
+                if(parsedJson){
+
+                    // console.log("Adding highlights", parsedJson);
+
+                    let allResults = state.searchResults;
+
+                    let x = 0;
+                    for(let i = startPoint; i < Math.min(currentResults.length, endPoint); i++) {
+                        for(let j = 0; j < currentResults[i].records.length; j++) {
+                            // If search is interrupted, updatedResults[i] may be undefined (TypeError)
+                            if(!Globals.isEmptyOrSpaces(currentResults[i].records[j].name)){
+                                // console.log("Assigning",i,j,currentResults[i].records[j].name);
+
+                                if(mustSkip[currentResults[i].records[j].id]) {
+                                    // do nothing; skip
+                                    // console.log("Skipping ID " + [currentResults[i].records[j].id]);
+                                } else {
+                                    // Instead of currentResults[i].records[j].id, use the stored index 
+                                    //     currentResults[i].originalIndex for record j);
+                                    currentResults[i].records[j].plaintext = parsedJson[x];
+                                    allResults[currentResults[i].originalIndex].records[j].plaintext = parsedJson[x];
+                                    x++;
+                                }
+                            }
+                        }
+                    }
+
+                    setSearchState({
+                        searchResults: allResults,
+                        outputResults: currentResults,
+                        shouldUpdate: true
+                    }, () => {
+                        console.log("Got highlights, finish search");
+                        initialSearch(_inputs);
+                    });
+                    
+                }
+            }).catch(error => { 
+                if(error.name === 'TypeError') {
+                    console.error(error);
+                } else { // Server down or 408 (timeout)
+                    let _networkError = 'Server is down or you may need to login again.';
+                    let _resultsText = Globals.errorMessage.default;
+
+                    if(error.response && error.response.status === 408) {
+                        _networkError= 'Request has timed out.';
+                        _resultsText = 'Timed out';
+                    }
+
+                    setSearchState({
+                        networkError: _networkError,
+                        resultsText: _resultsText,
+                        shouldUpdate: true
+                    }, () => {
+                        console.log("Error, finish search");
+                        initialSearch(_inputs);
+                    });
+                }
+            });
+    }
+
+
+  // const gatherFirstPageHighlightsThenFinishSearch = (searchId, _inputs, currentResults) => {
+  //   if (!_inputs) {
+  //     if (searchState.searcherInputs) {
+  //       _inputs = searchState.searcherInputs;
+  //       console.log("🚀 ~ file: Search.jsx:1407 ~ gatherFirstPageHighlightsThenFinishSearch ~ _inputs:", _inputs)
+  //     } else if (Globals.getParameterByName('q')) {
+  //       _inputs = { titleRaw: Globals.getParameterByName('q') };
+  //     }
+  //   }
+  //   //console.log('Gathering page highlights', searchId, _page, _pageSize);
+  //   // if (!_mounted) { // User navigated away or reloaded
+  //   //     return; // cancel search
+  //   // }
+  //   if (searchId < _searchId) {
+  //     // Search interrupted
+  //     onsole.log(`Search Interupted searchId ${searchId} _searchId: ${_searchId}`);
+  //     return; // cancel search
+  //   }
+  //   if (typeof currentResults === 'undefined') {
+  //     currentResults = [];
+  //   }
+
+  //   setSearchState((prevState)=> {
+  //     return {
+  //     ...searchState,
+  //     snippetsDisabled: false,
+  //     searching: true,
+  //     networkError: '', // Clear network error
+  //   }});
+
+  //   let searchUrl = new URL('text/get_highlightsFVH', Globals.currentHost);
+  //   console.log("🚀 ~ file: Search.jsx:1440 ~ gatherFirstPageHighlightsThenFinishSearch ~ searchUrl:", searchUrl)
+
+  //   let mustSkip = {};
+  //   let _unhighlighted = []; // List of records to request a text highlight for
+  //   let startPoint = _page * _pageSize - _pageSize;
+  //   let endPoint = _page * _pageSize;
+
+  //   // Assuming filenames come in the correct order, we can ask for the first one only, and then
+  //   // additional logic elsewhere could ask for all of the highlights.
+  //   // Then we would never get any "hidden" highlights, resulting in more responsive UX
+
+  //   for (let i = startPoint; i < Math.min(currentResults.length, endPoint); i++) {
+  //     // For each result card on current page
+  //     for (let j = 0; j < currentResults[i].records.length; j++) {
+  //       // For each record in result card
+  //       // Push first lucene ID and filename
+  //       if (!Globals.isEmptyOrSpaces(currentResults[i].records[j].name)) {
+  //         //console.log('Pushing', i, j, currentResults[i].records[j].id);
+
+  //         // Need to skip this entry on both sides if it already has plaintext.
+  //         // If it has any, then skip here - we can get more on demand elsewhere, in separate logic.
+  //         if (
+  //           !currentResults[i].records[j].plaintext ||
+  //           !currentResults[i].records[j].plaintext[0]
+  //         ) {
+  //           // Filenames delimited by > (impossible filename character)
+  //           let firstFilename = currentResults[i].records[j].name.split('>')[0];
+  //           let firstLuceneId = [currentResults[i].records[j].luceneIds[0]];
+  //             _unhighlighted.push({
+  //               luceneIds: firstLuceneId,
+  //               filename: firstFilename,
+  //             });
+  //         } else {
+  //           mustSkip[currentResults[i].records[j].id] = true;
+  //         }
+  //       }
+  //     }
+  //   }
+
+  //   // If nothing to highlight, nothing to do on this page
+  //   if (_unhighlighted.length === 0 || searchId < _searchId) {
+  //     console.log('nothing to highlight: finish search');
+  //     debountedInitialSearch(_inputs);
+  //     return;
+  //   }
+
+  //   const terms = postProcessTerms(_inputs.titleRaw);
+  //   let dataToPass = {
+  //     unhighlighted: _unhighlighted,
+  //     terms: 'Nuclear Weapon Complex',
+  //     markup: _inputs.markup,
+  //     fragmentSizeValue: _inputs.fragmentSizeValue,
+  //   };
+
+  //   //console.log('For backend', dataToPass);
+
+  //   //Send the AJAX call to the server
+  //   axios({
+  //     method: 'POST', // or 'PUT'
+  //     url: searchUrl,
+  //     data: dataToPass,
+  //   })
+  //     .then((response) => {
+  //       console.log("🚀 ~ file: Search.jsx:1305 ~ .then ~ response:", response.data);
+  //       let responseOK = response && response.status === 200;
+  //       if (responseOK) {
+  //         return response.data;
+  //       } else {
+  //         return null;
+  //       }
+  //     })
+  //     .then((parsedJson) => {
+  //       console.log("🚀 ~ file: Search.jsx:1512 ~ .then ~ parsedJson:", parsedJson)
+  //       if (parsedJson) {
+  //         //console.log('Adding highlights', parsedJson);
+
+  //         let allResults = searchState.results;
+  //         let x = 0;
+  //         for (let i = startPoint; i < Math.min(currentResults.length, endPoint); i++) {
+  //           for (let j = 0; j < currentResults[i].records.length; j++) {
+  //             // If search is interrupted, updatedResults[i] may be undefined (TypeError)
+  //             if (!Globals.isEmptyOrSpaces(currentResults[i].records[j].name)) {
+  //               //console.log('Assigning', i, j, currentResults[i].records[j].name);
+
+  //               if (mustSkip[currentResults[i].records[j].id]) {
+  //                 // do nothing; skip
+  //                 //console.log('Skipping ID ' + [currentResults[i].records[j].id]);
+  //               } else {
+  //                 // Instead of currentResults[i].records[j].id, use the stored index
+  //                 //     currentResults[i].originalIndex for record j);
+  //                 currentResults[i].records[j].plaintext = parsedJson[x];
+  //                 allResults[currentResults[i].originalIndex].records[j].plaintext = parsedJson[x];
+  //                 x++;
+  //               }
+  //             }
+  //           }
+  //         }
+  //         //console.log('Setting currentResults line 1312', currentResults);
+  //         //console.log('Setting allResults line 1312', allResults);
+  //         setSearchState((prevState)=>{
+  //           return{
+  //           ...prevState,
+  //           searchResults: allResults,
+  //           outputResults: currentResults,
+  //           output: allResults,
+  //           shouldUpdate: true,
+  //         }});
+  //         console.log('Got highlights, finish search');
+  //         debountedInitialSearch(_inputs);
+  //       }
+  //     })
+  //     .catch((error) => {
+  //       console.error('error calling service',error);
+  //             if (error.name === 'TypeError') {
+  //         console.error(`gatherFirstPageHighlightsThenFinishSearch error ${error.name} is a TypeError`);
+  //       } else {
+  //         // Server down or 408 (timeout)
+  //         let _networkError = 'Server is down or you may need to login again.';
+  //         let _resultsText = Globals.errorMessage.default;
+
+  //         if (error.response && error.response.status === 408) {
+  //           _networkError = 'Request has timed out.';
+  //           _resultsText = 'Timed out';
+  //         }
+
+  //         setSearchState((prevState)=>{
+  //           return{
+  //           ...prevState,
+
+  //           networkError: _networkError,
+  //           resultsText: _resultsText,
+  //           shouldUpdate: true,
+  //       }});
+  //         //console.log('Error, finish search, doing initalSearch with _inputs', _inputs);
+  //         debountedInitialSearch(_inputs);
+  //       }
+  //     });
+  // };
 
   // const gatherPageHighlights = (searchId, _inputs, currentResults) => {
   //   //console.log('Gathering page highlights', searchId, _page, _pageSize);
@@ -1990,13 +2161,8 @@ export default function Search(props) {
   };
 
   const onIconClick = (evt) => {
-    //console.log('onIconClick clicked', evt.target.name);
-    setSearchState({
-      ...searchState,
-      titleRaw: evt.target.name,
-      searchWord: evt.target.name
-    });
-    debouncedDoSearch(searchState.titleRaw);
+    console.log(`onIconClick clicked for control ${evt.target.name} value: ${evt.target.value}`);
+    doSearch(searchState.titleRaw);
   };
   /** clears and disables proximity search option as well as clearing text */
   const onClearClick = (evt) => {
@@ -2072,6 +2238,7 @@ export default function Search(props) {
   };
 
   const onInput = (evt) => {
+    console.log("🚀 ~ file: Search.jsx:2079 ~ onInput ~ evt:", evt)
     let userInput = evt.target.value;
     // if(!userInput || userInput.length <= 3){
     //     //console.log(`${userInput} is not long enught`)
@@ -2080,11 +2247,13 @@ export default function Search(props) {
 
     //get the evt.target.name (defined by name= in input)
     //and use it to target the key on our `state` object with the same name, using bracket syntax
+      console.log(`setting state to ${evt.target.name} - value: ${evt.target.value}`);
     setSearchState({
       ...searchState,
       [evt.target.name]: userInput,
       proximityDisabled: proximityValues.disableValue,
       inputMessage: proximityValues._inputMessage,
+      searchIng: true,
     });
   };
 
@@ -2540,6 +2709,7 @@ export default function Search(props) {
     hideOrganization: true,
     hideText: false, //for testing should be true
     hidden: false, //same as above
+    highlights: true,
     iconClassName: 'icon icon--effect',
     isAvailableFiltersDialogOpen: false,
     isDirty: false,
@@ -2588,6 +2758,7 @@ export default function Search(props) {
     surveyChecked: true,
     surveyDone: true,
     surveyResult: "Haven't searched yet",
+    results: [],
     test: Globals.anEnum.options,
     titleRaw: '',
     tooltipOpen: undefined,
@@ -2629,15 +2800,15 @@ export default function Search(props) {
   let _rodCount = '';
   let _scopingCount = '';
 
-  const doSearchFromParams = useCallback(() => {
+  const doSearchFromParams = () => {
     // //console.log("Stored terms", _lastSearchTerms);
     // //console.log("State.", state);
 
     var queryString = Globals.getParameterByName('q');
-    //console.log('queryString params', queryString);
+    console.log('queryString params', queryString);
     if (queryString === null || queryString === '') {
       // No query param/blank terms: Launch no-term search - Only if we have no results saved here already
-      // //console.log("No query parameters, doing blank search.", props.count);
+      console.log("No query parameters, doing blank search.");
       //[TODO] I don't think we should return all records on the first load
       //doSearch("");
     } else if (queryString && queryString.length && queryString !== 'undefined') {
@@ -2645,6 +2816,7 @@ export default function Search(props) {
       let proximityValues = handleProximityValues(queryString);
 
       let terms = parseTerms(queryString);
+      console.log("🚀 ~ file: Search.jsx:2653 ~ doSearchFromParams ~ terms:", terms)
 
       const _lastSearchTerms = queryString;
       setSearchState({
@@ -2657,9 +2829,9 @@ export default function Search(props) {
         inputMessage: proximityValues._inputMessage,
         hasSearched: true
       });
-      debouncedDoSearch(terms);
+      doSearch(terms);
     }
-  });
+  };
 
   const getEISDocCounts = useCallback(() => {
     const count = get('stats/eis_count', 'EISCount');
@@ -2675,33 +2847,41 @@ export default function Search(props) {
   //#endregion
   //run only at startup
   useEffect(() => {
-    if (_mounted.value === false) {
-      console.log(`component not mounted it is :  ${_mounted.current}`)
-      return; //do nothing till cleanup
-    }
     _mounted.current = true;
-      console.log(`Mounted `, _mounted);
     () => {
       //console.log('cleaning up mounted check after useEffect');
       _mounted.current = false;
     };
-  });
+  },[]);
   
   //if a query string is present but searchTerms is empty, there might be a bug when the user delete input
   useEffect(()=>{
     if(_mounted.current === false){
-      console.log('queryParams effect not mounted exit');
       return;
     }
-    console.log(`halt queryParams effect search is not mounted`);
-    if(_queryParams && _queryParams.length > 0 && searchState.titleRaw == '');
-      setSearchState((prevState)=>{
-        return {
-        ...prevState,
-          titleRaw: parseTerms(_queryParams)
+    const queryParam = Globals.getParameterByName('q');
+    console.log("🚀 ~ file: Search.jsx:2701 ~ useEffect ~ queryParams:", queryParam)
+    if(queryParam){
+      console.log("🚀 ~ file: Search.jsx:2701 ~ useEffect ~ queryParam:", queryParam)
+      //could be just doSearch(queryParam);
+      setSearchState((prevState)=> {
+        return{
+          ...prevState,
+          titleRaw: queryParam
         }
-      })   
-  },[_queryParams]);
+      })
+      doSearchFromParams();
+    }
+    console.log('no query params found');
+    // console.log(`halt queryParams effect search is not mounted`);
+    // if(_queryParams && _queryParams.length > 0 && searchState.titleRaw == ''){
+    //   setSearchState((prevState)=>{
+    //     return {
+    //     ...prevState,
+    //       titleRaw: parseTerms(_queryParams)
+    //     }
+    //   })   
+},[]);
 
   
 //   useEffect(()=>{
@@ -2831,17 +3011,23 @@ export default function Search(props) {
                     height: '100%',
                   }}
                 >
-                  <Box>
+                  {JSON.stringify(searchState.searchResults)}
+                  <Divider/>
+                  {JSON.stringify(searchState.outputResults)}
+                  <Divider/>
+                  {JSON.stringify(searchState.results)}
+
+                  {/* <Box>
                     <b> State Debug Box</b>
                     <b>results</b>  {JSON.stringify(searchState.results)}
+                    
+                    <Divider/>
                     <b>outputResults Results</b> {JSON.stringify(searchState.outputResults)}
+                    <Divider/>
                     <b>Searcher State</b> {JSON.stringify(searchState.searchResults)}
-                    <Divider>
-                      <h2>State</h2>
-                      {JSON.stringify(searchState)}
-                    </Divider>
+                    <Divider/>
                   </Box>
-                  <Divider />
+                  <Divider /> */}
 
                   <Grid padding={2} container flex={1} flexGrow={1} minHeight={'100vh'}>
                     <Grid item xs={12} width={'100%'}>
@@ -2854,12 +3040,12 @@ export default function Search(props) {
                             </>
                           ) : (
                             <>
-                              {(searchState.titleRaw && searchState.results.length === 0)
+                              {(searchState.titleRaw && searchState.results && searchState.results.length === 0)
                                 ? 
                                 <>
                                   <SearchTips label={<Typography>No Results found for {searchState.titleRaw}</Typography>}/>
                                 
-                                  {/* <Typography>No Results found for {searchState.titleRaw}</Typography> */}
+                                  <Typography>No Results found for {searchState.titleRaw}</Typography>
                                  </>
                                 : <>
                                 
@@ -2868,7 +3054,7 @@ export default function Search(props) {
                           )
                         ) : (
                           <>
-                            <SearchTips/>
+                            {/* <SearchTips/> */}
                           </>
                         )}
                       </>

@@ -86,7 +86,8 @@ const SearchResults = (props) => {
 
   const sortResults = (results)=> {
     results.map((result,idx)=>{
-      if(result.records){
+      console.log('sorting results',results);
+      if(result.records && result.records.length){
         console.log('pre stored records',result.records);
         result.records.sort((a,b) => {
           const sortedRecords =  Date.parse(a.commentDate) > Date.parse(b.commentDate);
@@ -105,18 +106,18 @@ const SearchResults = (props) => {
 
   };
 
-  useEffect(()=>{
-    if(_mounted.current === false){
-      console.log('Component not mounted, exit sort results effect');
-      return;
-    }
+  // useEffect(()=>{
+  //   if(_mounted.current === false){
+  //     console.log('Component not mounted, exit sort results effect');
+  //     return;
+  //   }
 
-    console.log('Search Results useEffect',props.results);
-    const sorted = sortResults(props.results);
-    console.log("🚀 ~ file: SearchResults.jsx:116 ~ useEffect ~ sorted:", sorted);
-     console.log("🚀 ~ file: SearchResults.jsx:107 ~ useEffect ~ sortResults:", sortResults);
+  //   console.log('Search Results useEffect',props.results);
+  //   const sorted = sortResults(props.results);
+  //   console.log("🚀 ~ file: SearchResults.jsx:116 ~ useEffect ~ sorted:", sorted);
+  //    console.log("🚀 ~ file: SearchResults.jsx:107 ~ useEffect ~ sortResults:", sortResults);
   
-  },[props.results]);
+  // },[props.results]);
 
  
   // const sortedResults = results && results.length ? results.sort(sortByRelevance) : [];

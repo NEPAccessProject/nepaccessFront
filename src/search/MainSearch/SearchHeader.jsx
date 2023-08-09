@@ -11,8 +11,8 @@ import React, { useContext } from 'react';
 import AvailableFilesDialog from './AvailableFilesDialog';
 import QuickStartDialog from './QuickStartDialog';
 import SearchContext from './SearchContext';
-import SearchTipsDialog from './SearchTipDialog';
 import SearchResultOptions from './SearchResultOptions';
+import SearchTipsDialog from './SearchTipDialog';
 
 import theme from '../../styles/theme';
 const useStyles = (theme) => ({
@@ -123,7 +123,7 @@ export default function SearchHeader(props) {
                 autoFocus
                 InputProps={{
                   endAdornment: (
-                    <IconButton onClick={(evt) => onIconClick(evt)}>
+                    <IconButton name="titleRaw" value={titleRaw ? titleRaw : ""} onClick={onIconClick}>
                       <SearchOutlined />
                     </IconButton>
                   ),

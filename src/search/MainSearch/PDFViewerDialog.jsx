@@ -16,7 +16,7 @@ import React, { useState } from 'react';
 //https://codesandbox.io/s/pdf-view-l3i46?file=/src/Components/DrawArea.js
 //https://react-pdf-viewer.dev/examples/
 import axios from 'axios';
-import { useCallback, useEffect, useRef } from 'react';
+import { useEffect, useRef } from 'react';
 import Globals from '../../globals';
 import PDFViewer from './PDFViewer';
 // pdfjs.GlobalWorkerOptions.workerSrc = new URL(
@@ -45,12 +45,11 @@ export default function PDFViewerDialog(props) {
 
   useEffect(() => {
     _mounted.current = true;
-    console.log(`Mounted `, _mounted);
     () => {
       console.log('cleaning up mounted check after useEffect');
       _mounted.current = false;
     };
-  }, [_mounted]);
+  }, []);
 
   const handleMaxWidthChange = (event) => {
     setMaxWidth(
@@ -70,7 +69,14 @@ export default function PDFViewerDialog(props) {
   //    setFiles(files);
   // },[id])
 
-const getFilesById = useCallback((processId) => {
+const getFilesById = (processId) => {
+  if(_mounted.current !== true){
+    return;
+  }
+  if(!processId){
+    //console.log(`No processId recived ${processId}`);
+    return;
+  }
    console.log("🚀 ~ file: PDFViewerDialog.jsx:72 ~ getFilesById ~ id:", processId)
    let url = Globals.currentHost + `file/nepafiles?processId=${processId}`;   
    
@@ -85,14 +91,14 @@ const getFilesById = useCallback((processId) => {
         console.error(`Failed to get a list of files for id ${id}.With an Exception`,e)
         return [];
     })
-  },[files]);
+  };
 
-  useEffect(() => {
-    console.log('useEffect',id);
-    const files = getFilesById(id);
-    console.log("🚀 ~ file: PDFViewerDialog.jsx:90 ~ useEffect ~ files:", files)
-    setFiles(files);
-  },[getFilesById])
+  // useEffect(() => {
+  //   console.log('useEffect',id);
+  //   const files = getFilesById(id);
+  //   console.log("🚀 ~ file: PDFViewerDialog.jsx:90 ~ useEffect ~ files:", files)
+  //   setFiles(files);
+  // },[getFilesById])
 
   //const {searchState,setSearchState} = useContext(SearchContext);
   const { isOpen, onDialogClose, docId, docTitle,processId } = props;

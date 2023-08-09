@@ -74,7 +74,9 @@ export default function SearchResultItems(props) {
               <>
                 {/* <Typography variant="searchResultSubTitle" padding={2}>{record.title}</Typography> */}
                 <Item key={idx} className="search-result-item-container">
-                  <SearchResultItem record={record} />
+                  {JSON.stringify(record)}
+                  <Divider/>
+                  {/* <SearchResultItem record={record} /> */}
                   <Divider />
                 </Item>
               </>
@@ -107,8 +109,10 @@ export function SearchResultItem(props) {
       showContext: evt.target.checked,
     });
   };
+  console.log("🚀 ~ file: SearchResultsItems.jsx:129 ~ SearchResultItem ~ propss / record:", props)
 
   const { record } = props;
+
   const {
     agency,
     commentDate,
@@ -126,17 +130,16 @@ export function SearchResultItem(props) {
     title,
     processId,
   } = record;
-  console.log("🚀 ~ file: SearchResultsItems.jsx:129 ~ SearchResultItem ~ record:", record)
 
   function onDocumentLoadSuccess({ numPages }) {
     setSearchState({ ...searchState, numPages: numPages });
     setNumPages(numPages);
   }
-  function openPDFPreview(evt, processId) {
-    console.log(`Open PDF for ID: ${id} evt: `, evt);
-    setIsPDFViewOpen(true);
-    evt.preventDefault();
-  }
+  // function openPDFPreview(evt, processId) {
+  //   console.log(`Open PDF for ID: ${id} evt: `, evt);
+  //   setIsPDFViewOpen(true);
+  //   evt.preventDefault();
+  // }
   function closePDFPreview(evt, processId) {
     setIsPDFViewOpen(false);
   }
@@ -151,27 +154,6 @@ export function SearchResultItem(props) {
   const text = record.plaintext || '';
   return (
     <>
-      <Grid container display={'flex'} border={1} borderColor={"#ddd"} flex={1}>
-        <Grid item xs={2}>
-          Year
-        </Grid>
-        <Grid item xs={2}>
-          Status
-        </Grid>
-        <Grid item xs={5}>
-            Spacer
-        </Grid>
-        <Grid item xs={2}>
-            Button
-        </Grid>
-
-        </Grid>
-                
-      <Grid container display={'flex'} xs={12} border={1} borderTop={0} borderColor={"#ddd"}>
-        <Grid item xs={12}>
-          <RenderSnippets record={record} />
-        </Grid>
-      </Grid>
       <Grid
         container
         id="search-result-item-root-item"
@@ -243,7 +225,7 @@ export function SearchResultItem(props) {
           borderColor={'#ccc'}
           className={classes.centeredContent}
         >
-          <RenderSnippets record={record} />
+          {/* <RenderSnippets record={record} /> */}
         </Grid>
         <Grid
           display={'flex'}
@@ -263,12 +245,12 @@ export function SearchResultItem(props) {
             justifyContent="center"
             alignItems={'center'}
           >
-            <PDFViewerDialog
+            {/* <PDFViewerDialog
               id="preview-button-grid-item"
               record={record}
               isOpen={isPDFViewOpen}
               onDialogClose={(evt) => closePDFPreview(evt, processId)}
-            />
+            /> */}
             <Button
               onClick={(evt) => openPDFPreview(evt, processId)}
               color={'secondary'}
@@ -302,6 +284,7 @@ export function SearchResultItem(props) {
             </Button>
           </Grid>
         </Grid>
+        <Grid item > <RenderSnippets/> </Grid>
       </Grid>
     </>
   );
@@ -359,13 +342,22 @@ export function DisplayGrid() {
 }
 
 export function RenderSnippets(props) {
-  const { record } = props;
+  console.log("🚀 ~ file: SearchResultsItems.jsx:345 ~ RenderSnippets ~ props:", props)
+  const { 
+    record
+   } = props;
+
+  console.log("🚀 ~ file: SearchResultsItems.jsx:343 ~ RenderSnippets ~ record:", record)
   const [isPDFViewOpen, setIsPDFViewOpen] = useState(false);
   const [isContentExpanded, setIsContentExpanded] = useState(false);
   const { searchState, setSearchState, showContext } = useContext(SearchContext);
   const { hideText, hidden } = searchState;
 
-  console.log(`${record.title} plaintext`, record.plaintext)
+   if(!record){
+    console.warn('render Snippets did not receive a record from returning, props:',props);
+    return;
+   }
+  //console.log(`${record.title} plaintext`, record.plaintext)
   function convertToHTML(content) {
     return { __html: content };
   }
@@ -383,17 +375,27 @@ export function RenderSnippets(props) {
       <>
 
         <Box className={'search-result-item-container'}>
-          <Box padding={1}>
-            {isContentExpanded && record.plaintext[0] && record.plaintext[0].length >= 100 ? (
+          {/* {JSON.stringify(props)} */}
+          <b>FUCCCCKKKKK</b>
+          {/* <Box>              
+            {(record.plaintext && record.plaintext.length > 0)
+            &&
+            <div dangerouslySetInnerHTML={convertToHTML(record.plaintext[0])} />
+  }
+</Box> */}
+          {/* <Box padding={1}>
+            {isContentExpanded && record && record.plaintext[0] && record.plaintext[0].length >= 100 
+            ? (
               <div dangerouslySetInnerHTML={convertToHTML(record.plaintext[0])} />
-            ) : record.plaintext[0] && record.plaintext[0].length >= 100 ? (
-              <div dangerouslySetInnerHTML={convertToHTML(record.plaintext[0].substring(0, 100) + '...')} />
+            ) : record && record.plaintext[0] && record.plaintext[0].length >= 100
+              ? (
+                <div dangerouslySetInnerHTML={convertToHTML(record.plaintext[0].substring(0, 100) + '...')} />
             ) : (
               <div></div>
             )}
-          </Box>
+          </Box> */}
         </Box>
-        {!hidden && record.plaintext[0] && record.plaintext[0].length ? (
+        {!hidden && record && record.plaintext && record.plaintext[0].length ? (
           <Box
             id="click-to-see-more-box"
             width={'100%'}
@@ -416,13 +418,13 @@ export function RenderSnippets(props) {
         ) : (
           <>
             <Typography align='center'>This document's content is not available</Typography>
-            {record.plaintext[0]}
+            
           </>
         )}
       </>
     );
   }
   else {
-    return (<></>)
+    return (<>Nothing</>)
   }
 }
