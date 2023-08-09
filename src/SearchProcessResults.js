@@ -1,5 +1,5 @@
+import { Grid } from '@mui/material';
 import React from 'react';
-
 import ResultsHeader from './ResultsHeader.js';
 import SearchProcessResult from './SearchProcessResult.js';
 
@@ -7,10 +7,9 @@ import SearchResultsMap from './SearchResultsMap.js';
 
 import Globals from './globals.js';
 
-import { ReactTabulator } from 'react-tabulator';
-import { reactFormatter } from "react-tabulator";
-import 'react-tabulator/lib/styles.css'; // required styles
+import { reactFormatter } from 'react-tabulator';
 import 'react-tabulator/lib/css/tabulator_site.min.css'; // theme
+import 'react-tabulator/lib/styles.css'; // required styles
 
 import Tippy from '@tippyjs/react';
 
@@ -38,6 +37,7 @@ export default class SearchProcessResults extends React.Component {
 
     constructor(props) {
         super(props);
+        console.log("🚀 ~ file: SearchProcessResults.js:41 ~ SearchProcessResults ~ constructor ~ props:", props)
         this.state = {
             showContext: true,
             size: 0,
@@ -223,15 +223,15 @@ export default class SearchProcessResults extends React.Component {
              */
             if(this.props.resultsText && this.props.resultsText!=="Results") {
                 return (
-                    <div className="sidebar-results">
-                        <div id="process-results">
-                            <div className="tabulator-holder">
+                    <Grid className="sidebar-results">
+                        <Grid id="process-results">
+                            <Grid className="tabulator-holder">
                                 <h2 id="results-label">
                                     {this.props.resultsText}
                                 </h2>
-                            </div>
-                        </div>
-                    </div>
+                            </Grid>
+                        </Grid>
+                    </Grid>
                 );
             } else {
                 return (
@@ -276,6 +276,7 @@ export default class SearchProcessResults extends React.Component {
                                         </Tippy>
                                 </h2>
                             </div>
+                            <h2>Results Map</h2>
                             <SearchResultsMap 
                                 toggleMapHide={this.props.toggleMapHide}
                                 isHidden={this.props.isMapHidden}
@@ -283,8 +284,10 @@ export default class SearchProcessResults extends React.Component {
                                 results={this.props.results}
                                 // searcherState={this.props.searcherState}
                             />
-
-                            <ResultsHeader 
+                            <h2>Results Header</h2>
+                            <ResultsHeader
+                                results = {this.props.results}
+                                state = {this.state}
                                 sort={this.props.sort}
                                 searching={this.props.searching}
                                 snippetsDisabled={this.props.snippetsDisabled} 
@@ -294,9 +297,9 @@ export default class SearchProcessResults extends React.Component {
                                 exportToSpreadsheet={this.props.exportToSpreadsheet}
                             />
                             
-                            {/* {this.props.searching ? <>Please wait...</> : <></>} */}
+                            {this.props.searching ? <>Please wait...</> : <></>}
 
-                            <ReactTabulator
+                            {/* <ReactTabulator
                                 ref={ref => (this.ref = ref)}
                                 data={this.props.results}
                                 columns={this._columns}
@@ -304,7 +307,7 @@ export default class SearchProcessResults extends React.Component {
                                 pageLoaded={this.onPageLoaded}
                                 renderComplete={this.doneRenderDebounced}
                                 paginationError={this.handlePaginationError}
-                            />
+                            /> */}
                         </div>
                     </div>
                 </div>

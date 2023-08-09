@@ -1,15 +1,16 @@
-import React from 'react';
 import axios from 'axios';
+import React from 'react';
+import CardDetailsLink from './CardDetailsLink.js';
+import DownloadFiles from './DownloadFile.js';
 import './User/login.css';
 import Globals from './globals.js';
-import DownloadFiles from './DownloadFile.js';
-import CardDetailsLink from './CardDetailsLink.js';
 
 class SearchResult extends React.Component {
 
 	// Receives needed props from React-Tabular instance in SearchResults.js
 	constructor(props) {
 		super(props);
+		console.log("🚀 ~ file: SearchResult.js:13 ~ SearchResult ~ constructor ~ props:", props)
 		this.state = { 
             fileProgressValue: null,
 			downloadText: 'Download',

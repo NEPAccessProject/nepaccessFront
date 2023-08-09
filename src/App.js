@@ -1,11 +1,11 @@
 import React from 'react';
 // import { Link } from 'react-router-dom';
-import {Helmet} from 'react-helmet';
+import { Helmet } from 'react-helmet';
 
 import axios from 'axios';
 
-import SearchProcessResults from './SearchProcessResults.js';
 import Search from './Search.js';
+import SearchProcessResults from './SearchProcessResults.js';
 
 import Footer from './Footer.js';
 
@@ -53,6 +53,7 @@ export default class App extends React.Component {
     
     constructor(props){
         super(props);
+        console.log("🚀 ~ file: App.js:56 ~ App ~ constructor ~ props:", props)
         this.endRef = React.createRef();
         // this.getGeoDebounced = _.debounce(this.getGeoData,1000);
         this.getGeoDebounced = _.debounce(this.getAllGeoData,1000);
@@ -287,25 +288,27 @@ export default class App extends React.Component {
 
     /** Assign any existing highlights from the first-page highlight pass, which is now done before full record population */
     mergeHighlights = (data) => {
+        console.log("🚀 ~ file: App.js:291 ~ App ~ data:", data)
         // console.log("Merge highlights",data, this.state.searchResults);
         if(!this.state.searchResults || !this.state.searchResults[0]) {
-            // console.log("Nothing here yet");
+            console.log("Nothing here yet");
             return data;
         }
 
         for(let i = 0; i < this.state.searchResults.length; i++) {
             if(data[i]) {
                 for(let j = 0; j < this.state.searchResults[i].records.length; j++) {
+                    console.log("🚀 ~ file: App.js:301 ~ App ~ this.state.searchResults[i]:", this.state.searchResults[i])
                     if(data[i].records[j] 
                         && this.state.searchResults[i].records[j] 
                         && this.state.searchResults[i].records[j].plaintext 
                         && this.state.searchResults[i].records[j].plaintext[0]
                     ) {
                         let same = data[i].records[j].id === this.state.searchResults[i].records[j].id;
-                        // console.log("Same?", same, data[i].records[j].id, this.state.searchResults[i].records[j].id);
+                        console.log("Same?", same, data[i].records[j].id, this.state.searchResults[i].records[j].id);
                         if(same) {
                             data[i].records[j].plaintext = this.state.searchResults[i].records[j].plaintext;
-                            // console.log("Assigned plaintext", this.state.searchResults[i].records[j].plaintext);
+                            console.log("Assigned plaintext", this.state.searchResults[i].records[j].plaintext);
                         }
                     } else {
                         // console.log("Doesn't exist");
@@ -313,7 +316,8 @@ export default class App extends React.Component {
                 }
             }
         }
-
+        
+        console.log("🚀 ~ file: App.js:320 ~ Merge Highlights ~ data:", data)
         return data;
     }
 
@@ -562,6 +566,7 @@ export default class App extends React.Component {
                 url: searchUrl,
                 data: dataToPass
             }).then(response => {
+                console.log("🚀 ~ file: App.js:566 ~ App ~ response:", response)
                 let responseOK = response && response.status === 200;
                 if (responseOK) {
                     // console.log("Initial search results returned");
@@ -584,6 +589,7 @@ export default class App extends React.Component {
                     return null;
                 }
             }).then(currentResults => {
+                console.log("🚀 ~ file: App.js:588 ~ App ~ currentResults:", currentResults)
                 let _data = [];
                 if(currentResults && currentResults[0] && currentResults[0].doc) {
                     // console.log("Raw results",currentResults);
@@ -783,6 +789,7 @@ export default class App extends React.Component {
                 return null;
             }
         }).then(currentResults => {
+            console.log("🚀 ~ file: App.js:788 ~ App ~ currentResults:", currentResults)
             let _data = [];
             if(currentResults && currentResults[0] && currentResults[0].doc) {
                 
@@ -908,7 +915,7 @@ export default class App extends React.Component {
      * which we can use to skip having to loop through everything.
      */
     gatherSpecificHighlights = (_index, record) => {
-        console.log("gatherSpecificHighlights")
+        console.log(`gatherSpecificHighlights index: ${_index}`,record);
         if(!this._mounted){ // User navigated away or reloaded
             console.log("Cancel specific highlighting")
             return; // cancel search
@@ -932,6 +939,7 @@ export default class App extends React.Component {
             let searchUrl = new URL('text/get_highlightsFVH', Globals.currentHost);
             // Need to skip this entry on both sides if it already has full plaintext (has been toggled at least once
             // before and therefore has at least 2 highlights)
+            
             if(!record.plaintext 
                 || record.plaintext[0]
                 || record.plaintext[1]) {
@@ -987,6 +995,7 @@ export default class App extends React.Component {
                 if(parsedJson){
                     // console.log("Adding highlights", parsedJson);
                     let allResults = this.state.searchResults;
+                    console.log("🚀 ~ file: App.js:994 ~ App ~ allResults:", allResults)
 
                     // Iterate through records until we find the correct one (sort/filter could change index within card)
                     for(let j = 0; j < allResults[_index].records.length; j++) {
@@ -1005,7 +1014,7 @@ export default class App extends React.Component {
                     // Fin
                     this.setState({
                         searchResults: allResults,
-                        // outputResults: currentResults,
+                        outputResults: allResults,
                         searching: false, 
                         shouldUpdate: true
                     }, () => {
@@ -1048,7 +1057,7 @@ export default class App extends React.Component {
                 _inputs = {titleRaw: Globals.getParameterByName("q")};
             }
         }
-        // console.log("Gathering page highlights", searchId, this._page, this._pageSize);
+        console.log("Gathering page highlights", searchId, this._page, this._pageSize);
         if(!this._mounted){ // User navigated away or reloaded
             return; // cancel search
         }
@@ -1166,9 +1175,12 @@ export default class App extends React.Component {
                         }
                     }
 
+                    console.log("🚀 ~ file: App.js:1173 ~ App ~ allResults:", allResults)
+                    console.log("🚀 ~ file: App.js:1175 ~ App ~ currentResults:", currentResults)
                     this.setState({
-                        searchResults: allResults,
-                        outputResults: currentResults,
+                  searchResults: allResults,
+                  outputResults: currentResults,
+                  output: allResults,
                         shouldUpdate: true
                     }, () => {
                         console.log("Got highlights, finish search");
@@ -1177,6 +1189,7 @@ export default class App extends React.Component {
                     
                 }
             }).catch(error => { 
+                console.log("🚀 ~ file: App.js:1187 ~ App ~ error:", error)
                 if(error.name === 'TypeError') {
                     console.error(error);
                 } else { // Server down or 408 (timeout)
@@ -1202,6 +1215,7 @@ export default class App extends React.Component {
     }
 
     gatherPageHighlights = (searchId, _inputs, currentResults) => {
+        console.log("🚀 ~ file: App.js:1209 ~ App ~ searchId, _inputs, currentResults:", searchId, _inputs, currentResults)
         if(!_inputs) {
             if(this.state.searcherInputs) {
                 _inputs = this.state.searcherInputs;

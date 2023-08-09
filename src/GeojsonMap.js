@@ -1,7 +1,7 @@
 import React, { useEffect, useRef } from "react";
 import { Helmet } from "react-helmet";
 //https://react-leaflet.js.org/docs/example-react-control/
-import { MapContainer, TileLayer, GeoJSON, Tooltip, ZoomControl } from "react-leaflet";
+import { GeoJSON, MapContainer, TileLayer, Tooltip, ZoomControl } from "react-leaflet";
 
 // import 'node_modules/leaflet-geosearch/dist/geosearch.css';
 import CustomSearchControl from "./CustomSearchControl.js";
@@ -9,8 +9,8 @@ import CustomSearchControl from "./CustomSearchControl.js";
 import axios from "axios";
 import Globals from './globals.js';
 
-import './leaflet.css';
 import { LatLngBounds } from "leaflet";
+import './leaflet.css';
 
 // basic colorblind palette
 // #000000

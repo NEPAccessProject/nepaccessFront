@@ -4,10 +4,9 @@ import ResultsHeader from './ResultsHeader.js';
 
 import SearchResult from './SearchResult.js';
 
-import { ReactTabulator } from 'react-tabulator';
-import { reactFormatter } from "react-tabulator";
-import 'react-tabulator/lib/styles.css'; // required styles
+import { ReactTabulator, reactFormatter } from 'react-tabulator';
 import 'react-tabulator/lib/css/tabulator_site.min.css'; // theme
+import 'react-tabulator/lib/styles.css'; // required styles
 
 import './card.css';
 
@@ -41,6 +40,7 @@ class SearchResults extends React.Component {
 
     constructor(props) {
         super(props);
+        console.log("🚀 ~ file: SearchResults.js:44 ~ SearchResults ~ constructor ~ props:", props)
         this.state = {
             showContext: true,
             hidden: new Set()
