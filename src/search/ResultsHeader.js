@@ -1,7 +1,7 @@
 import { SearchOutlined } from '@material-ui/icons';
 import { Box, Grid, Hidden, IconButton, ListItem, TextField } from '@mui/material';
 import React from 'react';
-import Globals from './globals';
+import Globals from '../globals';
 
 
 

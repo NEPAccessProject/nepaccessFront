@@ -1,11 +1,11 @@
 import React from 'react';
 
-import {Helmet} from 'react-helmet';
+import { Helmet } from 'react-helmet';
 
 import './index.css';
 import './landing.css';
 
-import SearcherLanding from './SearcherLanding.js';
+import SearcherLanding from './search/SearcherLanding.js';
 import './User/login.css';
 
 import IframeResizer from 'iframe-resizer-react';

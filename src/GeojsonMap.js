@@ -4,7 +4,7 @@ import { Helmet } from "react-helmet";
 import { GeoJSON, MapContainer, TileLayer, Tooltip, ZoomControl } from "react-leaflet";
 
 // import 'node_modules/leaflet-geosearch/dist/geosearch.css';
-import CustomSearchControl from "./CustomSearchControl.js";
+import CustomSearchControl from "./search/CustomSearchControl.js";
 
 import axios from "axios";
 import Globals from './globals.js';

@@ -1,17 +1,16 @@
 import React from 'react';
 
-import 'react-tabulator/lib/styles.css'; // required styles
 import 'react-tabulator/lib/css/tabulator_site.min.css'; // theme
+import 'react-tabulator/lib/styles.css'; // required styles
 
 import '../card.css';
-import '../sidebar.css';
 import '../css/tabulator.css';
+import '../sidebar.css';
 
-import { ReactTabulator } from 'react-tabulator';
-import { reactFormatter } from "react-tabulator";
+import { ReactTabulator, reactFormatter } from 'react-tabulator';
 
 // import DownloadFile from '../DownloadFile.js';
-import SearchResult from '../SearchResult.js';
+import SearchResult from '../search/SearchResult.js';
 
 // import RecordDetailsLink from './RecordDetailsLink.js';
 

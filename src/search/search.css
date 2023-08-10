@@ -707,9 +707,9 @@ a.link {
     height: 1140px;
     width: 66%;
     max-width: 1200px;
-    /* background-image: url("assets/organization_4-13-21.svg"); */
-    /* background-image: url("assets/Federal agency organization 2-col.numbers.svg"); */
-    background-image: url("assets/federal-organization-chart-01.svg");
+    /* background-image: url("../assets/organization_4-13-21.svg"); */
+    /* background-image: url("../assets/Federal agency organization 2-col.numbers.svg"); */
+    background-image: url("../assets/federal-organization-chart-01.svg");
     background-repeat: no-repeat;
 }
 #agency-svg-holder>button {

@@ -6,9 +6,9 @@ import CustomSearchControl from './CustomSearchControl';
 
 // import { LatLngBounds } from "leaflet";
 
-import Globals from './globals.js';
+import Globals from '../globals.js';
 
-import './leaflet.css';
+import '../leaflet.css';
 
 /** geoStatePair[geo_id] = "state abbreviation" */
 let geoStatePair = {};

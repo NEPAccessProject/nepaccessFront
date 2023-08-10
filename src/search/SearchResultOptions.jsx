@@ -10,6 +10,10 @@ import {
 	Select,
 	Typography,
 } from '@mui/material';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+
 import Grid from '@mui/material/Unstable_Grid2'; // Grid version
 import { styled } from '@mui/material/styles';
 import React, { useContext } from 'react';
@@ -55,9 +59,9 @@ export default function SearchResultOptions() {
 	}
 
 	const onCheckboxChange = (evt) => {
-		setState({
+		this.setState({
 			...state,
-			hidden: !state.hidden,
+			hidden: !this.state.hidden,
 			showContext: evt.target.checked,
 		});
 	};

@@ -1,7 +1,7 @@
 import axios from 'axios';
 import React from 'react';
 
-import Globals from './globals.js';
+import Globals from '../globals.js';
 
 // import FlipNumbers from 'react-flip-numbers';
 

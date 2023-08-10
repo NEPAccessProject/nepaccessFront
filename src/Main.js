@@ -1,59 +1,59 @@
-import React from 'react';
-import {Helmet} from 'react-helmet';
 import axios from 'axios';
+import React from 'react';
+import { Helmet } from 'react-helmet';
 
 import './index.css';
 
-import Landing from './Landing.js';
 import App from './App';
+import Landing from './Landing.js';
 
 import ProcessDetailsTab from './Details/ProcessDetailsTab.js';
 import RecordDetailsTab from './Details/RecordDetailsTab.js';
 
 // import OptOut from './User/OptOut';
 
+import ForgotPassword from './User/ForgotPassword.js';
 import Login from './User/Login.js';
 import Logout from './User/Logout.js';
-import Reset from './User/Reset.js';
-import UserDetails from './User/Profile.js';
-import ForgotPassword from './User/ForgotPassword.js';
-import Register from './User/Register.js';
 import PreRegister from './User/PreRegister.js';
+import UserDetails from './User/Profile.js';
+import Register from './User/Register.js';
+import Reset from './User/Reset.js';
 import Verify from './User/Verify.js';
 
 
 import AboutNepa from './iframes/AboutNepa.js';
 import AboutNepaccess from './iframes/AboutNepaccess.js';
-import People from './iframes/People.js';
-import SearchTips from './iframes/SearchTips.js';
 import AvailableDocuments from './iframes/AvailableDocuments.js';
-import Media from './iframes/Media.js';
-import PrivacyPolicy from './iframes/PrivacyPolicy.js';
 import DisclaimerTermsOfUse from './iframes/DisclaimerTermsOfUse.js';
+import Media from './iframes/Media.js';
+import People from './iframes/People.js';
+import PrivacyPolicy from './iframes/PrivacyPolicy.js';
+import SearchTips from './iframes/SearchTips.js';
 
 import Contact from './Contact.js';
 import Future from './iframes/Future.js';
 
 import AboutHelpContents from './AboutHelpContents.js';
 import AboutStats from './AboutStats.js';
-import StatCounts from './StatCounts.js';
 import InteractionLogs from './InteractionLogs.js';
+import StatCounts from './StatCounts.js';
 
 import Iframes from './iframes/Iframes.js';
 
 import Approve from './Approve.js';
 
-import Importer from './Importer.js';
-import Admin from './AdminPanel.js';
 import AdminFiles from './AdminFiles.js';
+import Admin from './AdminPanel.js';
+import Importer from './Importer.js';
 
-import Test from './Test.js';
 import SearchTest from './AppTest';
 import Pairs from './Pairs.js';
 import Pairs2 from './Pairs2';
 import Pairs3 from './Pairs3';
+import Test from './Test.js';
 
-import SearchLogs from './SearchLogs.js';
+import SearchLogs from './search/SearchLogs.js';
 import Surveys from './Surveys.js';
 
 import Excel from './Excel.js';
@@ -62,7 +62,7 @@ import ImporterGeoLinks from './ImporterGeoLinks.js';
 
 import Globals from './globals.js';
 
-import { Link, Switch, Route, withRouter } from 'react-router-dom';
+import { Link, Route, Switch, withRouter } from 'react-router-dom';
 
 import PropTypes from "prop-types";
 
