@@ -29,8 +29,11 @@ export default function SearchDatePickers(props){
     console.log("🚀 ~ file: SearchDatePickers.jsx:29 ~ SearchDatePickers ~ state:", state)
     return(
         <>
+        
             <LocalizationProvider dateAdapter={AdapterDayjs}>
-            <Box item marginBottom={2} components={['DatePicker']} padding={0} width="100%">
+            <Box item marginBottom={2} components={['DatePicker']}
+             padding={0} 
+             width="100%">
               <DatePicker
 //               ref={(ref) => (state.datePickerStart = ref)}
                   selected={state.startPublish}

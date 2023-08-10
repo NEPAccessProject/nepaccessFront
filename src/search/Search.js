@@ -16,35 +16,32 @@ import Globals from "../globals.js";
 import persist from "../persist.js";
 import { SearchOutlined } from "@mui/icons-material";
 import {
-    Autocomplete,
   Box,
   Divider,
   Grid,
-  Hidden,
   IconButton,
   ListItem,
   Paper,
   Select,
   TextField,
   Typography,
-  Input
+  Input,
+  FormControl,
+  FormControlLabel,
 } from "@mui/material";
 import { withRouter } from "react-router";
 import SearchContext from "./SearchContext.js";
 import SearchResultOptions from "./SearchResultOptions.jsx";
-import Checkbox from '@mui/material/Checkbox';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import { styled } from '@mui/material/styles';
-import theme from '../styles/theme';
+import { styled } from "@mui/material/styles";
+import theme from "../styles/theme";
 //import Grid from '@mui/material/Grid'; // Grid version 1
-import { makeStyles } from '@mui/styles';
+import { makeStyles } from "@mui/styles";
 
-import { agencyOptions, proximityOptions,actionOptions,decisionOptions,countyOptions } from './options';
-
+import SideBarFilters from "./SideBarFilters.jsx";
 const useStyles = makeStyles((theme) => ({
-    formControl: {},
-  }));
-  const counties = Globals.counties;
+  formControl: {},
+}));
+const counties = Globals.counties;
 
 // import PropTypes from "prop-types";
 
@@ -61,27 +58,27 @@ const FULLSTYLE = {
   background: "rgba(240, 239, 237, 1)",
 };
 const Item = styled(Box)(({ theme }) => ({
-    backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
-    ...theme.typography.body2,
-    padding: theme.spacing(1),
-    // textAlign: 'center',
-    color: theme.palette.text.secondary,
-    elevation: 0,
-    border: 0,
-    borderRadius: 0,
-    mt: 2,
-    mb: 2,
-    pl: 0,
-    pr: 0,
-    '&:hover': {
-      //           backgroundColor: //theme.palette.grey[200],
-      boxShadow: '0px 4px 8px rgba(0.5, 0.5, 0.5, 0.15)',
-      cursor: 'pointer',
-      '& .addIcon': {
-        color: 'purple',
-      },
+  backgroundColor: theme.palette.mode === "dark" ? "#1A2027" : "#fff",
+  ...theme.typography.body2,
+  padding: theme.spacing(1),
+  // textAlign: 'center',
+  color: theme.palette.text.secondary,
+  elevation: 0,
+  border: 0,
+  borderRadius: 0,
+  mt: 2,
+  mb: 2,
+  pl: 0,
+  pr: 0,
+  "&:hover": {
+    //           backgroundColor: //theme.palette.grey[200],
+    boxShadow: "0px 4px 8px rgba(0.5, 0.5, 0.5, 0.15)",
+    cursor: "pointer",
+    "& .addIcon": {
+      color: "purple",
     },
-  }));
+  },
+}));
 
 class Search extends React.Component {
   static contextType = SearchContext;
@@ -821,7 +818,7 @@ class Search extends React.Component {
 
     // original data has some abbreviation-only/incorrect/missing entries (ARD, FirstNet, NGB, URC?)
     // { value: 'ARD', label: 'ARD' }
-    const stateOptions = Globals.locations;    
+    const stateOptions = Globals.locations;
     //        const {state} = this.context
     const value = {
       state: this.state,
@@ -829,8 +826,25 @@ class Search extends React.Component {
     };
     return (
       <SearchContext.Provider value={value}>
-        <Paper marginTop={"150px"} border={1}>
-          <h2>Start Search.js Header</h2>
+     
+        <Paper
+          marginTop={"150px"}
+          border={1}
+          borderStyle={"dotted"}
+          borderColor={"green"}
+        >
+         
+        {/*
+          <h2>Responsive Grid</h2>
+          <Grid container={true} spacing={1} border={1} borderColor="darkgray">
+            <Grid container xs={12} md={3} border={1}>
+              Side Bar
+            </Grid>
+            <Grid container xs={12} md={9} border={1}>
+              Search Results
+            </Grid>
+          </Grid>
+
           <Grid
             id="search-text-grid-container"
             display={"flex-root"}
@@ -841,7 +855,7 @@ class Search extends React.Component {
             border={0}
             borderColor="darkgray"
           >
-            <Hidden mdDown>
+            {/* <Hidden mdDown>
               <Grid item xs={12} md={2}>
                 <Box
                   id="search-text-grid-item"
@@ -862,7 +876,7 @@ class Search extends React.Component {
                   </ListItem>
                 </Box>
               </Grid>
-            </Hidden>
+            </Hidden> */}
 
             <Grid container flex={1}>
               <Grid
@@ -932,7 +946,26 @@ class Search extends React.Component {
                 <SearchResultOptions />
               </Grid>
             </Grid>
-          </Grid>
+            <Box border={1} borderColor={'red'}>
+              <SideBarFilters 
+              onActionChange={this.onActionChange}
+              onAgencyChange={this.onAgencyChange}
+              onCountyChange={this.onCountyChange}
+              onDecisionChange={this.onDecisionChange}
+              onTypeChecked={this.onTypeChecked} 
+              filtersHidden={this.state.filtersHidden} 
+              orgClick={this.orgClick}
+              onUseOptionsChecked={this.onUseOptionsChecked}
+              onCooperatingAgencyChange={this.onCooperatingAgencyChange}
+              onStartDateChange={this.onStartDateChange}
+              onEndDateChange = {this.onEndDateChange}
+              toggleFiltersHidden={this.toggleFiltersHidden}
+              onNeedsDocumentChecked={this.onNeedsDocumentChecked}
+              renderClearFiltersButton={this.renderClearFiltersButton}
+      
+              />
+            </Box>
+          {/* </Grid> */}
           {/* Old Header Content */}
           {/* <div className="content" onSubmit={this.submitHandler}>
                     {this.props.parseError}              
@@ -1056,394 +1089,7 @@ class Search extends React.Component {
             </div>
           </div>
 
-          <div
-            className="sidebar-filters"
-            hidden={!this.state.filtersHidden}
-            style={FULLSTYLE}
-          >
-            <span className="sidebar-header">
-              Narrow your results
-              <span
-                className="filters-toggle"
-                onClick={() => this.toggleFiltersHidden()}
-              >
-                +
-              </span>
-              {this.renderClearFiltersButton()}
-            </span>
-          </div>
-          <div
-            className="sidebar-filters"
-            hidden={this.state.filtersHidden}
-            // this would launch a new search on enter key, in some child inputs
-            // onKeyUp={this.onKeyUp}
-          >
-            <b>Start Filters</b>
-            <span className="sidebar-header">
-              Narrow your results
-              <span
-                className="filters-toggle"
-                onClick={() => this.toggleFiltersHidden()}
-              >
-                -
-              </span>
-            </span>
 
-            <Divider />
-
-            <div className="filter flex-1">
-              <div className="checkbox-container-flex">
-                <Input
-                  type="checkbox"
-                  name="needsDocument"
-                  id="needsDocument"
-                  className="sidebar-checkbox"
-                  tabIndex="2"
-                  checked={this.state.needsDocument}
-                  onChange={this.onNeedsDocumentChecked}
-                />
-                <label
-                  className="checkbox-text no-select cursor-pointer"
-                  htmlFor="needsDocument"
-                >
-                  Has downloadable files
-                </label>
-              </div>
-
-              {this.renderClearFiltersButton()}
-            </div>
-
-            <Divider />
-
-            <div className="filter">
-              <label className="sidebar-label" htmlFor="searchAgency">
-                Lead agency or{" "}
-                <span className="link" onClick={this.orgClick}>
-                  agencies
-                </span>
-              </label>
-              <Select
-                id="searchAgency"
-                className="multi"
-                classNamePrefix="react-select"
-                isMulti
-                name="agency"
-                isSearchable
-                isClearable
-                styles={customStyles}
-                tabIndex="3"
-                options={agencyOptions}
-                onChange={this.onAgencyChange}
-                value={this.state.agencyRaw}
-                placeholder="Type or select agencies"
-                // (temporarily) specify menuIsOpen={true} parameter to keep menu open to inspect elements.
-                // menuIsOpen={true}
-              />
-            </div>
-            <div className="filter">
-              <label className="sidebar-label" htmlFor="searchAgency">
-                Cooperating agencies
-              </label>
-              <Select
-                id="searchAgency"
-                className="multi"
-                classNamePrefix="react-select"
-                isMulti
-                name="cooperatingAgency"
-                isSearchable
-                isClearable
-                styles={customStyles}
-                tabIndex="4"
-                options={agencyOptions}
-                onChange={this.onCooperatingAgencyChange}
-                value={this.state.cooperatingAgencyRaw}
-                placeholder="Type or select agencies"
-                // (temporarily) specify menuIsOpen={true} parameter to keep menu open to inspect elements.
-                // menuIsOpen={true}
-              />
-            </div>
-
-            <div className="dropdown-group-end"></div>
-
-            <div className="filter">
-              <label className="sidebar-label" htmlFor="searchState">
-                State(s) or location(s)
-              </label>
-              <Select
-                id="searchState"
-                className="multi"
-                classNamePrefix="react-select"
-                isMulti
-                name="state"
-                isSearchable
-                isClearable
-                styles={customStyles}
-                tabIndex="5"
-                options={stateOptions}
-                onChange={this.onLocationChange}
-                /** This filter logic is needed to work properly with interactive map */
-                value={stateOptions.filter((stateObj) =>
-                  this.state.state.includes(stateObj.value)
-                )}
-                placeholder="Type or select states"
-              />
-            </div>
-            <div className="filter">
-              <label className="sidebar-label" htmlFor="searchCounty">
-                County/counties
-              </label>
-              <Select
-                id="searchCounty"
-                className="multi"
-                classNamePrefix="react-select"
-                isMulti
-                name="county"
-                isSearchable
-                isClearable
-                styles={customStyles}
-                tabIndex="6"
-                options={this.state.countyOptions}
-                onChange={this.onCountyChange}
-                /** This filter logic is needed to work properly with interactive map */
-                value={this.state.countyOptions.filter((countyObj) =>
-                  this.state.county.includes(countyObj.value)
-                )}
-                // value={this.state.countyRaw}
-                placeholder="Type or select a county"
-              />
-            </div>
-
-            <div hidden={!Globals.authorized()}>
-              <div
-                className="dropdown-group-end"
-                hidden={!Globals.curatorOrHigher()}
-              ></div>
-
-              <div className="filter" hidden={!Globals.authorized()}>
-                <label className="sidebar-label" htmlFor="searchAction">
-                  Action Type
-                  {/* <span className="new">New</span> */}
-                </label>
-                <Select
-                  id="searchAction"
-                  className="multi"
-                  classNamePrefix="react-select"
-                  isMulti
-                  name="action"
-                  isSearchable
-                  isClearable
-                  styles={customStyles}
-                  tabIndex="7"
-                  options={actionOptions}
-                  onChange={this.onActionChange}
-                  value={this.state.actionRaw}
-                  placeholder="Type or select action type"
-                />
-              </div>
-              <div className="filter" hidden={!Globals.authorized()}>
-                <label className="sidebar-label" htmlFor="searchDecision">
-                  Decision Type
-                  {/* <span className="new">New</span> */}
-                </label>
-                <Select
-                  id="searchDecision"
-                  className="multi"
-                  classNamePrefix="react-select"
-                  isMulti
-                  name="decision"
-                  isSearchable
-                  isClearable
-                  styles={customStyles}
-                  tabIndex="8"
-                  options={decisionOptions}
-                  onChange={this.onDecisionChange}
-                  value={this.state.decisionRaw}
-                  placeholder="Type or select decision"
-                />
-              </div>
-            </div>
-
-            <Divider />
-            <Item>
-        <Typography pb={1} variant="filterLabel">
-          Date Range:
-        </Typography>
-        <Box
-          display={'flex'}
-          xs={12}
-          flexDirection={'column'}
-          border={0}
-          padding={0}
-          margin={0}
-          width={'100%'}
-          alignContent={'center'}
-          justifyItems={'center'}
-        >
-          <SearchDatePickers onStartDateChange={this.onStartDateChange} onEndDateChange={this.onEndDateChange} startDate={this.state} endDate={Date.now - 1} />
-        </Box>
-      </Item>
-            {/* <div className="filter">
-              <label className="sidebar-label-date" htmlFor="dates">
-                Date Range:
-              </label>
-              <div className="sidebar-dates">
-                <span className="sidebar-date-text">From</span>
-                <DatePicker
-                  ref={(ref) => (this.datePickerStart = ref)}
-                  selected={this.state.startPublish}
-                  onChange={this.onStartDateChange}
-                  onKeyDown={this.onKeyDown}
-                  dateFormat="yyyy-MM-dd"
-                  placeholderText="YYYY-MM-DD"
-                  className="sidebar-date"
-                  showMonthDropdown={true}
-                  showYearDropdown={true}
-                  adjustDateOnChange
-                  tabIndex="9"
-                  popperPlacement="right"
-                  isClearable
-                  // preventOpenOnFocus={true}
-                />
-                <span className="sidebar-date-text">To</span>
-                <DatePicker
-                  ref={(ref) => (this.datePickerEnd = ref)}
-                  selected={this.state.endPublish}
-                  onChange={this.onEndDateChange}
-                  onKeyDown={this.onKeyDown}
-                  dateFormat="yyyy-MM-dd"
-                  placeholderText="YYYY-MM-DD"
-                  className="sidebar-date"
-                  showMonthDropdown={true}
-                  showYearDropdown={true}
-                  adjustDateOnChange
-                  tabIndex="10"
-                  popperPlacement="right"
-                  isClearable
-                  // preventOpenOnFocus={true}
-                  // openToDate={new Date('12 31 2021')}
-                />
-              </div>
-            </div> */}
-
-            <Divider />
-
-            <div className="filter">
-              <label className="sidebar-label-date">Document Type</label>
-              <div className="sidebar-checkboxes">
-                <div className="checkbox-container">
-                  <label className="clickable checkbox-text">
-                    <Input
-                      type="checkbox"
-                      name="typeDraft"
-                      className="sidebar-checkbox"
-                      tabIndex="11"
-                      checked={this.state.typeDraft}
-                      onChange={this.onTypeChecked}
-                    />
-                    <span className="checkbox-text">
-                      Draft EIS <i>{this.props.draftCount}</i>
-                    </span>
-                  </label>
-                </div>
-                <div className="checkbox-container">
-                  <label className="clickable checkbox-text">
-                    <Input
-                      type="checkbox"
-                      name="typeFinal"
-                      className="sidebar-checkbox"
-                      tabIndex="12"
-                      checked={this.state.typeFinal}
-                      onChange={this.onTypeChecked}
-                    />
-                    <span className="checkbox-text">
-                      Final EIS <i>{this.props.finalCount}</i>
-                    </span>
-                  </label>
-                </div>
-                <div className="checkbox-container">
-                  <label className="clickable checkbox-text">
-                    <Input
-                      type="checkbox"
-                      name="typeEA"
-                      className="sidebar-checkbox"
-                      tabIndex="13"
-                      checked={this.state.typeEA}
-                      onChange={this.onTypeChecked}
-                    />
-                    <span className="checkbox-text">
-                      EA <i>{this.props.eaCount}</i>
-                    </span>
-                  </label>
-                </div>
-                <div className="checkbox-container">
-                  <label className="clickable checkbox-text">
-                    <Input
-                      type="checkbox"
-                      name="typeNOI"
-                      className="sidebar-checkbox"
-                      tabIndex="14"
-                      checked={this.state.typeNOI}
-                      onChange={this.onTypeChecked}
-                    />
-                    <span className="checkbox-text">
-                      NOI <i>{this.props.noiCount}</i>
-                    </span>
-                  </label>
-                </div>
-                <div className="checkbox-container">
-                  <label className="clickable checkbox-text">
-                    <Input
-                      type="checkbox"
-                      name="typeROD"
-                      className="sidebar-checkbox"
-                      tabIndex="15"
-                      checked={this.state.typeROD}
-                      onChange={this.onTypeChecked}
-                    />
-                    <span className="checkbox-text">
-                      ROD <i>{this.props.rodCount}</i>
-                    </span>
-                  </label>
-                </div>
-                <div className="checkbox-container">
-                  <label className="clickable checkbox-text">
-                    <Input
-                      type="checkbox"
-                      name="typeScoping"
-                      className="sidebar-checkbox"
-                      tabIndex="16"
-                      checked={this.state.typeScoping}
-                      onChange={this.onTypeChecked}
-                    />
-                    <span className="checkbox-text">
-                      Scoping Report <i>{this.props.scopingCount}</i>
-                    </span>
-                  </label>
-                </div>
-              </div>
-            </div>
-
-            <div className="filter" hidden={!Globals.curatorOrHigher()}>
-              <Divider />
-
-              <label className="sidebar-label-date">Advanced</label>
-              <div className="sidebar-checkboxes">
-                <Input
-                  type="checkbox"
-                  name="typeFinal"
-                  className="sidebar-checkbox"
-                  checked={this.props.useOptions}
-                  onChange={this.onUseOptionsChecked}
-                />
-                <label className="checkbox-text" htmlFor="typeFinal">
-                  Apply filters to search query
-                </label>
-              </div>
-            </div>
-          </div>
-          <div hidden={this.state.hideOrganization} id="agency-svg-holder">
-            <button onClick={this.orgClick}>x</button>
-          </div>
         </Paper>
       </SearchContext.Provider>
     );
