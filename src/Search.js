@@ -687,9 +687,6 @@ class Search extends React.Component {
     render () {
         // const { history } = this.props;
         const {state} = this.state;
-        const value = {
-            state
-        }
         const customStyles = {
             option: (styles, state) => ({
                  ...styles,
@@ -751,8 +748,12 @@ class Search extends React.Component {
         ];
         console.log('Search Render State: ',this.state)
 //        const {state} = this.context
+        const value = {
+                "state": this.state,
+                "setState": this.setState,
+            }
         return (
-
+           
             
     <SearchContext.Provider value={value}>
                 <Paper marginTop={'150px'} border={1}>
@@ -848,7 +849,7 @@ class Search extends React.Component {
                   </Grid>
                   <Grid item xs={12} md={12} borderLeft={0} id="search-box-result-options-container">
                     <h2>Options Goes Here</h2>
-                    <SearchResultOptions />
+                        <SearchResultOptions />
                   </Grid>
                 </Grid>
               </Grid>

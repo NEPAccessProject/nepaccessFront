@@ -284,6 +284,7 @@ export default class SearchProcessResults extends React.Component {
                                 results={this.props.results}
                                 // searcherState={this.props.searcherState}
                             />
+                            <h2>End Map</h2>
                             <h2>Results Header</h2>
                             <ResultsHeader
                                 results = {this.props.results}
@@ -296,7 +297,7 @@ export default class SearchProcessResults extends React.Component {
                                 download={this.props.download}
                                 exportToSpreadsheet={this.props.exportToSpreadsheet}
                             />
-                            
+                            <h2>End Results Header</h2>
                             {this.props.searching ? <>Please wait...</> : <></>}
 
                             {/* <ReactTabulator

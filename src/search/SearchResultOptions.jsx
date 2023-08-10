@@ -1,7 +1,6 @@
 import { SortOutlined } from '@mui/icons-material';
 import CloudDownloadIcon from '@mui/icons-material/CloudDownload';
 import FavoriteIcon from '@mui/icons-material/Favorite';
-
 import {
 	Checkbox,
 	FormControl,
@@ -30,22 +29,35 @@ const Item = styled(Paper)(({ theme }) => ({
 
 export default function SearchResultOptions() {
 	const {
-		searchState,
-		setSearchState,
-		onSortByChangeHandler,
-		onLimitChangeHandler,
-		onSortDirectionChangeHandler,
-		onDownloadClick,
-		onSaveSearchResultsClick,
+		state,
+		setState,
+		// onSortByChangeHandler,
+		// onLimitChangeHandler,
+		// onSortDirectionChangeHandler,
+		// onDownloadClick,
+		// onSaveSearchResultsClick,
 	} = useContext(SearchContext);
-	const { sortBy, sortDirection, limit, showContext, snippetsDisabled } =
-		searchState;
+	console.log(
+		'🚀 ~ file: SearchResultOptions.jsx:40 ~ SearchResultOptions ~ SearchContext:',
+		SearchContext,
+	);
+	// Debug vars
+	//const { sortBy, sortDirection, limit, showContext, snippetsDisabled } = state;
+	//set static values while props / context is debuged
+	const sortBy = 'relevance';
+	const sortDirection = 'ASC';
+	const limit = 50;
+	const showContext = true;
+	const snippetsDisabled = false;
+
+	const onSortDirectionChangeHandler = (evt) => {
+		console.log('Dummy Sort Change Dir Function',evt);
+	}
 
 	const onCheckboxChange = (evt) => {
-		console.log('Checkbox changed, setting content to  ', !searchState.hidden);
-		setSearchState({
-			...searchState,
-			hidden: !searchState.hidden,
+		setState({
+			...state,
+			hidden: !state.hidden,
 			showContext: evt.target.checked,
 		});
 	};
@@ -155,7 +167,7 @@ export default function SearchResultOptions() {
 								control={
 									<Select
 										id='search-result-options-sort-by-select'
-										value={searchState.limit}
+										value={state.limit}
 										defaultValue={25}
 										onChange={onSortDirectionChangeHandler}
 										label='Page Size'
