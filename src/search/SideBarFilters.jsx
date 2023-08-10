@@ -48,12 +48,9 @@ const Item = styled(Box)(({ theme }) => ({
   },
 }));
 export default function SideBarFilters(props) {
-  console.log(
-    "🚀 ~ file: SideBarFilters.jsx:51 ~ SideBarFilters ~ props:",
-    props
-  );
+//  console.log("🚀 ~ file: SideBarFilters.jsx:51 ~ SideBarFilters ~ props:", props)
   const { state, setState } = useContext(SearchContext);
-  const {
+  const { 
     filtersHidden,
     onCountyChange,
     onAgencyChange,
@@ -70,14 +67,15 @@ export default function SideBarFilters(props) {
     orgClick,
     renderClearFiltersButton,
     toggleFiltersHidden,
-    onNeedsDocumentChecked,
-  } = props;
+    onNeedsDocumentChecked } = props;
+  
 
+    
   return (
     <>
       <h2>Search Filter Component</h2>
       <Box borderColor={"red"} border={2}>
-        <Item
+        {/* <Item
           border={1}
           className="sidebar-filters"
           hidden={!state.filtersHidden}
@@ -92,18 +90,18 @@ export default function SideBarFilters(props) {
             </span>
             {renderClearFiltersButton()}
           </span>
-        </Item>
+        </Item> */}
         <Item
-          className="sidebar-filters"
+          //className="sidebar-filters"
           hidden={state.filtersHidden}
           // this would launch a new search on enter key, in some child inputs
           // onKeyUp={onKeyUp}
         >
           <b>Start Filters</b>
-          <span className="sidebar-header">
+          <span>
             Narrow your results
             <span
-              className="filters-toggle"
+              //className="filters-toggle"
               onClick={() => toggleFiltersHidden()}
             >
               -
@@ -159,7 +157,7 @@ export default function SideBarFilters(props) {
                 variant="standard"
                 // menuIsOpen={true}
                 onChange={onAgencyChange}
-                getOptionLabel={(agencyOptions) => agencyOptions.label}
+                getOptionLabel={(agencyOptions) => 'agencyOptions.label'}
                 renderInput={(params) => (
                   <TextField
                     {...params}
@@ -199,7 +197,7 @@ export default function SideBarFilters(props) {
                 name="cooperatingAgency"
                 isSearchable
                 isClearable
-                //                styles={customStyles}
+//                styles={customStyles}
                 tabIndex="4"
                 options={agencyOptions}
                 onChange={onCooperatingAgencyChange}
@@ -214,7 +212,7 @@ export default function SideBarFilters(props) {
                 variant="standard"
                 // menuIsOpen={true}
 
-                getOptionLabel={(agencyOptions) => agencyOptions.label}
+                getOptionLabel={(agencyOptions) => 'agencyOptions.label'}
                 renderInput={(params) => (
                   <TextField
                     {...params}
@@ -230,7 +228,7 @@ export default function SideBarFilters(props) {
               />
             </FormControl>
           </Item>
-          <Divider />
+                  <Divider />
           <Item>
             <Typography pb={1} variant="filterLabel">
               State(s) or location(s):
@@ -241,7 +239,7 @@ export default function SideBarFilters(props) {
               fullWidth
               autoComplete={true}
               // autoHighlight={true}
-              //              styles={customStyles}
+//              styles={customStyles}
               tabIndex="5"
               options={stateOptions}
               //className={classes.autocomplete}
@@ -251,7 +249,7 @@ export default function SideBarFilters(props) {
               // menuIsOpen={true}
               onChange={onLocationChange}
               placeholder={`Type or Select a State`}
-              getOptionLabel={(stateOptions) => `${stateOptions.label}`}
+              //getOptionLabel={(stateOptions) => `${stateOptions.label}`}
               value={stateOptions.filter((stateObj) =>
                 state.state.includes(stateObj.value)
               )}
@@ -396,11 +394,12 @@ export default function SideBarFilters(props) {
               />
             </Box>
           </Item>
-
+          
           <Divider />
           <Item>
             {/* <Typography var="filterLabel">Document Type</Typography>              */}
-            <Box>
+            <Box
+            >
               <Item>
                 <Typography var="filterLabel">Document Type</Typography>
                 <FormControlLabel

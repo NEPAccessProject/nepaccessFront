@@ -12,6 +12,7 @@ import "./search.css";
 import "react-datepicker/dist/react-datepicker.css";
 import "tippy.js/dist/tippy.css"; // optional
 import SearchDatePickers from "./SearchDatePickers";
+import SearchProcessResults from "./SearchProcessResults";
 import Globals from "../globals.js";
 import persist from "../persist.js";
 import { SearchOutlined } from "@mui/icons-material";
@@ -28,6 +29,7 @@ import {
   Input,
   FormControl,
   FormControlLabel,
+  Container,
 } from "@mui/material";
 import { withRouter } from "react-router";
 import SearchContext from "./SearchContext.js";
@@ -825,60 +827,73 @@ class Search extends React.Component {
       setState: this.setState,
     };
     return (
-      <SearchContext.Provider value={value}>
-     
-        <Paper
-          marginTop={"150px"}
-          border={1}
-          borderStyle={"dotted"}
-          borderColor={"green"}
-        >
-         
-        {/*
-          <h2>Responsive Grid</h2>
-          <Grid container={true} spacing={1} border={1} borderColor="darkgray">
-            <Grid container xs={12} md={3} border={1}>
-              Side Bar
-            </Grid>
-            <Grid container xs={12} md={9} border={1}>
-              Search Results
-            </Grid>
-          </Grid>
-
-          <Grid
-            id="search-text-grid-container"
-            display={"flex-root"}
-            alignItems={"center"}
-            container={true}
-            layout={"row"}
-            spacing={1}
-            border={0}
-            borderColor="darkgray"
+      <Container
+        sx={{
+          marginTop: 20,
+        }}
+      >
+        <SearchContext.Provider value={value}>
+          <Paper
+            marginTop={200}
+            border={1}
+            borderStyle={"dotted"}
+            borderColor={"green"}
           >
-            {/* <Hidden mdDown>
-              <Grid item xs={12} md={2}>
-                <Box
-                  id="search-text-grid-item"
-                  // backgroundColor="transparent"
-                  height={115}
-                  borderRadius={0}
-                  borderRight={0}
-                  borderColor={"#CCC"}
-                >
-                  <ListItem onClick={this.toggleSearchTipsDialog}>
-                    <a href="#">Search Tips</a>
-                  </ListItem>
-                  <ListItem onClick={this.toggleAvailableFilesDialog}>
-                    <a href="#">Available Files</a>
-                  </ListItem>
-                  <ListItem onClick={this.toggleQuickStartDialog}>
-                    <a href="#">Quick-start guide</a>
-                  </ListItem>
+            <Grid container border={1} flex={1}>
+              <Grid item md={3} xs={12}>
+                {/* SEARCH FILTERS */}
+                <Box border={1} borderColor={"red"}>
+                  <b>SideBar Filters Start</b>
+                  <SideBarFilters
+                    onActionChange={this.onActionChange}
+                    onAgencyChange={this.onAgencyChange}
+                    onCountyChange={this.onCountyChange}
+                    onDecisionChange={this.onDecisionChange}
+                    onTypeChecked={this.onTypeChecked}
+                    filtersHidden={this.state.filtersHidden}
+                    orgClick={this.orgClick}
+                    onUseOptionsChecked={this.onUseOptionsChecked}
+                    onCooperatingAgencyChange={this.onCooperatingAgencyChange}
+                    onStartDateChange={this.onStartDateChange}
+                    onEndDateChange={this.onEndDateChange}
+                    toggleFiltersHidden={this.toggleFiltersHidden}
+                    onNeedsDocumentChecked={this.onNeedsDocumentChecked}
+                    renderClearFiltersButton={this.renderClearFiltersButton}
+                  />
                 </Box>
               </Grid>
-            </Hidden> */}
+              <Grid container md={9} xs={12}>
+                <Grid item md={12} xs={12}>
+                  Map Goes Here
+                </Grid>
+                <h4>What about the children!!!?</h4>
+                {this.props.children}
+                <Grid item md={12} xs={12}>
+                    {/* <SearchProcessResults 
+                      sort={this.sort}
+                      informAppPage={this.setPageInfo}
+                      gatherSpecificHighlights={this.gatherSpecificHighlights}
+                      results={this.state.outputResults} 
+                      geoResults={this.state.geoResults}
+                      filtersHidden={this.state.filtersHidden}
+                      // searcherState={this._searcherState}
+                      geoLoading={this.state.geoLoading}
+                      resultsText={this.state.resultsText} 
+                      searching={this.state.searching}
+                      snippetsDisabled={this.state.snippetsDisabled} 
+                      scrollToBottom={this.scrollToBottom}
+                      scrollToTop={this.scrollToTop}
+                      shouldUpdate={this.state.shouldUpdate}
+                      download={this.downloadCurrentAsTSV}
+                      exportToSpreadsheet={this.exportToCSV}
+                      isMapHidden={this.state.isMapHidden}
+                      toggleMapHide={this.toggleMapHide}
+                  />  */}
+                </Grid>
+              </Grid>
+            </Grid>
 
-            <Grid container flex={1}>
+            <Grid container border={1} flex={1}>
               <Grid
                 item
                 xs={12}
@@ -946,152 +961,24 @@ class Search extends React.Component {
                 <SearchResultOptions />
               </Grid>
             </Grid>
-            <Box border={1} borderColor={'red'}>
-              <SideBarFilters 
-              onActionChange={this.onActionChange}
-              onAgencyChange={this.onAgencyChange}
-              onCountyChange={this.onCountyChange}
-              onDecisionChange={this.onDecisionChange}
-              onTypeChecked={this.onTypeChecked} 
-              filtersHidden={this.state.filtersHidden} 
-              orgClick={this.orgClick}
-              onUseOptionsChecked={this.onUseOptionsChecked}
-              onCooperatingAgencyChange={this.onCooperatingAgencyChange}
-              onStartDateChange={this.onStartDateChange}
-              onEndDateChange = {this.onEndDateChange}
-              toggleFiltersHidden={this.toggleFiltersHidden}
-              onNeedsDocumentChecked={this.onNeedsDocumentChecked}
-              renderClearFiltersButton={this.renderClearFiltersButton}
-      
-              />
-            </Box>
-          {/* </Grid> */}
-          {/* Old Header Content */}
-          {/* <div className="content" onSubmit={this.submitHandler}>
-                    {this.props.parseError}              
-                    <div className="search-holder" >
-                        
-                        <div className="search-bar-holder">
-                            <h1 className="search-header-2">{this.getSearchBarText()}</h1>
-    
-                            <div className="pre-Input-bar">
-                                <div id="tooltip4Container">
-                                    <div>
-                                        Search Tips
-                                        <TippySearchTips />
-                                    </div>
-                                    <div>
-                                        <Tippy className="tippy-tooltip--small searchTips" trigger='manual click' 
-                                            hideOnClick={true}
-                                            interactive={true}
-                                            placement="bottom"
-                                            content={
-                                                <div>
-                                                    <b>Totals</b>
-                                                    Currently the site contains <b>{this.state.EISCount}</b> Draft or Final Environmental Impact Statements 
-                                                    from: <b>{this.state.firstYear}-{this.state.lastYear}</b>. 
-                                                    More files are being added continuously.
-                                                    <div className="text-center margin-top">
-                                                        <a href="available-documents" target="_blank" rel="noopener noreferrer">Available files</a>
-                                                    </div>
-                                                </div>}
-                                            >
-                                            {<span className={"side-link inline"}>
-                                                Available files
-                                            </span>}
-                                        </Tippy>
-                                    </div>
-                                    
-                                    <SlidesIframe />
-                                </div>
-                            </div>
-    
-                            <span id="search-proximity">
-                                <Select 
-                                    id="proximity-select"
-                                    className={this.state.proximityDisabled ? " disabled" : ""}
-                                    classNamePrefix="react-select control"
-                                    placeholder="Find within..."
-                                    options={proximityOptions} 
-                                    value={this.state.proximityOption}
-                                    // menuIsOpen={true}
-                                    onChange={this.onProximityChange} 
-                                    isMulti={false} />
-                            </span>
-                            <Input id="main-search-bar"
-                                ref={(Input) => { this.inputSearch = Input; }}
-                                className="search-bar" 
-                                name="titleRaw" 
-                                placeholder="Enter search terms (or leave blank to get all results)" 
-                                tabIndex="1"
-                                value={this.state.titleRaw}
-                                autoFocus 
-                                onChange={this.onChangeHandler}
-                                onInput={this.onInput} onKeyUp={this.onKeyUp}
-                            />
-                            <svg id="main-search-icon"  onClick={this.onIconClick} className="search-icon" width="39" height="38" viewBox="0 0 39 38" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path fillRule="evenodd" clipRule="evenodd" d="M26.4582 24.1397H28.2356L37.7751 33.3063C38.6976 34.1886 38.6976 35.6303 37.7751 36.5125C36.8526 37.3947 35.3452 37.3947 34.4228 36.5125L24.8607 27.3674V25.6675L24.2533 25.065C21.1034 27.6471 16.8061 28.9813 12.2388 28.2496C5.98416 27.2383 0.989399 22.2462 0.224437 16.2212C-0.945506 7.11911 7.0641 -0.541243 16.5811 0.577685C22.8808 1.30929 28.1006 6.08626 29.158 12.0682C29.923 16.4363 28.5281 20.5463 25.8282 23.5588L26.4582 24.1397ZM4.61171 14.4567C4.61171 19.8146 9.13399 24.1397 14.7362 24.1397C20.3384 24.1397 24.8607 19.8146 24.8607 14.4567C24.8607 9.09875 20.3384 4.77366 14.7362 4.77366C9.13399 4.77366 4.61171 9.09875 4.61171 14.4567Z" fill="black" fillOpacity="0.54"/>
-                            </svg>
-                            <svg id="main-search-clear" onClick={this.onClearClick} className="cancel-icon" width="24" height="24" viewBox="0 0 24 26" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path className="circle" d="M12.2689 1.92334C5.63289 1.92334 0.26889 7.28734 0.26889 13.9233C0.26889 20.5593 5.63289 25.9233 12.2689 25.9233C18.9049 25.9233 24.2689 20.5593 24.2689 13.9233C24.2689 7.28734 18.9049 1.92334 12.2689 1.92334Z" fill="#DADADA"
-                                />
-                                <path d="M17.4289 19.0834C16.9609 19.5514 16.2049 19.5514 15.7369 19.0834L12.2689 15.6154L8.80089 19.0834C8.33289 19.5514 7.57689 19.5514 7.10889 19.0834C6.88418 18.8592 6.7579 18.5548 6.7579 18.2374C6.7579 17.9199 6.88418 17.6155 7.10889 17.3914L10.5769 13.9234L7.10889 10.4554C6.88418 10.2312 6.7579 9.92677 6.7579 9.60935C6.7579 9.29193 6.88418 8.98755 7.10889 8.76335C7.57689 8.29535 8.33289 8.29535 8.80089 8.76335L12.2689 12.2314L15.7369 8.76335C16.2049 8.29535 16.9609 8.29535 17.4289 8.76335C17.8969 9.23135 17.8969 9.98735 17.4289 10.4554L13.9609 13.9234L17.4289 17.3914C17.8849 17.8474 17.8849 18.6154 17.4289 19.0834Z" fill="#737272"/>
-                            </svg>
-                            <div className="Input-bar-2">
-                                <div className="Input-bar-left">
-                                    <Input id="check1" className="pre-search-Input" type="checkbox" 
-                                            checked={this.state.searchOption==="C"}
-                                            onChange={this.onTitleOnlyChecked}
-                                    />
-                                    <label className="sidebar-check-label no-select" htmlFor="check1">
-                                        Search only within titles
-                                    </label>
-                                </div>
-                                <div className="surveyHolder" hidden={this.state.surveyChecked}>
-                                    Did you find what you were looking for?
-                                    <div className="radio-holder">
-                                        <label className="surveyRadio" ><Input type="radio" value="Yes" checked={false} onChange={this.surveyClick} />
-                                            Yes
-                                        </label>
-                                        <label className="surveyRadio" ><Input type="radio" value="Partially" checked={false} onChange={this.surveyClick} />
-                                            Partially
-                                        </label>
-                                        <label className="surveyRadio" ><Input type="radio" value="No" checked={false} onChange={this.surveyClick} />
-                                            No
-                                        </label>
-                                    </div>
-                                </div>
-                                <div className="surveyHolder" hidden={!this.state.surveyChecked || this.state.surveyDone}>
-                                    <label className="surveyResult">You chose: <span>{this.state.surveyResult}</span></label>
-                                    <button className="surveyButton" onClick={this.revert}>Show me the options again</button>
-                                    <button className="surveyButton" onClick={this.surveySubmit}>Submit</button>
-                                </div>
-                                <div hidden={!this.state.surveyDone || !this.state.isDirty}>
-                                    <div>Thank you for your feedback.</div>
-                                </div>
-                            </div>
-                        </div>       
-                    </div>
-                </div> */}
 
-          {this.getSuggestions()}
-          <div className="loader-holder">
-            {/* <div hidden={!this.props.networkError}>&nbsp;<span className="errorLabel">{this.props.networkError}</span></div> */}
-            <div className="center" hidden={this.props.searching}>
-              <span id="inputMessage">{this.state.inputMessage}</span>
+            {this.getSuggestions()}
+            <div className="loader-holder">
+              {/* <div hidden={!this.props.networkError}>&nbsp;<span className="errorLabel">{this.props.networkError}</span></div> */}
+              <div className="center" hidden={this.props.searching}>
+                <span id="inputMessage">{this.state.inputMessage}</span>
+              </div>
+              {/* <div className="center" hidden={!this.props.searching}>Loaded text snippets for {this.props.count} results...</div> */}
+              <div className="lds-ellipsis" hidden={!this.props.searching}>
+                <div></div>
+                <div></div>
+                <div></div>
+                <div></div>
+              </div>
             </div>
-            {/* <div className="center" hidden={!this.props.searching}>Loaded text snippets for {this.props.count} results...</div> */}
-            <div className="lds-ellipsis" hidden={!this.props.searching}>
-              <div></div>
-              <div></div>
-              <div></div>
-              <div></div>
-            </div>
-          </div>
-
-
-        </Paper>
-      </SearchContext.Provider>
+          </Paper>
+        </SearchContext.Provider>
+      </Container>
     );
   }
 
