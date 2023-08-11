@@ -73,7 +73,6 @@ export default function SideBarFilters(props) {
     
   return (
     <>
-      <h2>Search Filter Component</h2>
       <Box borderColor={"red"} border={2}>
         {/* <Item
           border={1}

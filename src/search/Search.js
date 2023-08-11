@@ -841,10 +841,18 @@ class Search extends React.Component {
           >
           {/* Start New Layout  */}
             <Grid container border={1} flex={1}>
+            <Grid container>
+                <Grid item xs={2}>
+                    Side Bar 
+                </Grid>
+                <Grid item xs={10}>
+                  Main Search Header
+                </Grid>
+            </Grid>
+
+            </Grid>
               <Grid item md={3} xs={12}>
-                {/* SEARCH FILTERS */}
                 <Box border={1} borderColor={"red"}>
-                  <b>SideBar Filters Start</b>
                   <SideBarFilters
                     onActionChange={this.onActionChange}
                     onAgencyChange={this.onAgencyChange}
@@ -866,9 +874,7 @@ class Search extends React.Component {
               <Grid container md={9} xs={12}>
                  {this.props.children}
               </Grid>
-            </Grid>
             {/* End New Layout  */}
-
             <Grid container border={1} flex={1}>
               <Grid
                 item
