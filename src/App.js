@@ -26,8 +26,8 @@ export default class App extends React.Component {
 			agency: [],
 			state: [],
 			needsComments: false,
-			needsDocument: false,
-            limit: 1000000
+			needsDocument: true,
+            limit: 100
 		},
         searchResults: [],
         outputResults: [],
@@ -53,7 +53,7 @@ export default class App extends React.Component {
     
     constructor(props){
         super(props);
-        console.log("🚀 ~ file: App.js:56 ~ App ~ constructor ~ props:", props)
+//        console.log("🚀 ~ file: App.js:56 ~ App ~ constructor ~ props:", props)
         this.endRef = React.createRef();
         // this.getGeoDebounced = _.debounce(this.getGeoData,1000);
         this.getGeoDebounced = _.debounce(this.getAllGeoData,1000);
@@ -317,7 +317,7 @@ export default class App extends React.Component {
             }
         }
         
-        console.log("🚀 ~ file: App.js:320 ~ Merge Highlights ~ data:", data)
+        console.log("🚀 ~ file: App.js:320 ~ Merge Highlights ~ returning data:", data);
         return data;
     }
 
@@ -412,9 +412,11 @@ export default class App extends React.Component {
         });
         
         // Have to "flatten" and also sort that by relevance, then merge any existing highlights
-        return this.mergeHighlights(
+        const highlights =  this.mergeHighlights(
                 Object.values(processResults).sort(function(a,b){return a.relevance - b.relevance;})
             );
+        console.log('Build data highlights', highlights);
+        return highlights;
     }
 
     // Start a brand new search.
@@ -565,7 +567,8 @@ export default class App extends React.Component {
                 method: 'POST', // or 'PUT'
                 url: searchUrl,
                 data: dataToPass
-            }).then(response => {
+            })
+            .then(response => {
                 console.log("🚀 ~ file: App.js:566 ~ App ~ response:", response)
                 let responseOK = response && response.status === 200;
                 if (responseOK) {
@@ -671,7 +674,7 @@ export default class App extends React.Component {
                         }
                     });
                 } else {
-                    // console.log("No results");
+                    console.log("No results,reseting results");
                     this.setState({
                         searching: false,
                         searchResults: [],
@@ -728,6 +731,7 @@ export default class App extends React.Component {
         };
 
         // OPTION: If we restore a way to use search options for faster searches, we'll assign here
+        console.log("useSearchOptions???", this.state.useSearchOptions)
         if(this.state.useSearchOptions) {
             dataToPass = { 
                 title: this.state.searcherInputs.titleRaw, 
@@ -832,6 +836,7 @@ export default class App extends React.Component {
                 let processResults = {};
                 processResults = this.buildData(_data);
                 _data = processResults;
+                console.log("🚀 ~ file: App.js:838 ~ App ~ _data:", _data)
 
                 this.setState({
                     searchResults: _data,
@@ -1175,14 +1180,15 @@ export default class App extends React.Component {
                         }
                     }
 
-                    console.log("🚀 ~ file: App.js:1173 ~ App ~ allResults:", allResults)
-                    console.log("🚀 ~ file: App.js:1175 ~ App ~ currentResults:", currentResults)
+                    // console.log("🚀 ~ file: App.js:1173 ~ App ~ allResults:", allResults)
+                    // console.log("🚀 ~ file: App.js:1175 ~ App ~ currentResults:", currentResults)
                     this.setState({
                   searchResults: allResults,
                   outputResults: currentResults,
                   output: allResults,
                         shouldUpdate: true
                     }, () => {
+                        console.log("Got highlights, finished search state",this.state);
                         console.log("Got highlights, finish search");
                         this.initialSearch(_inputs);
                     });
@@ -1585,6 +1591,9 @@ export default class App extends React.Component {
                         <link rel="canonical" href="https://www.nepaccess.org/search" />
                     </Helmet>
                     <Search 
+                        results={this.state.outputResults}
+                        searchResults={this.state.searchResults}
+                        outputResults={this.state.outputResults}
                         search={this.startNewSearch} 
                         suggest={this.suggestFromTerms}
                         lookupResult={this.state.lookupResult}
@@ -1607,7 +1616,9 @@ export default class App extends React.Component {
                         sort={this.sort}
                         informAppPage={this.setPageInfo}
                         gatherSpecificHighlights={this.gatherSpecificHighlights}
-                        results={this.state.outputResults} 
+                        results={this.state.outputResults}
+                        searchResults={this.state.searchResults}
+                        outputResults={this.state.outputResults} 
                         geoResults={this.state.geoResults}
                         filtersHidden={this.state.filtersHidden}
                         // searcherState={this._searcherState}

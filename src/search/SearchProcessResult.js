@@ -14,6 +14,7 @@ export default class SearchProcessResult extends React.Component {
 
 	constructor(props) {
 		super(props);
+		console.log("🚀 ~ file: SearchProcessResult.js:17 ~ SearchProcessResult ~ constructor ~ props:", props)
 		this.state = { 
             fileProgressValue: null,
             downloadText: 'Download',

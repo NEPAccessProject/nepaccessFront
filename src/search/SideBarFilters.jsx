@@ -73,9 +73,9 @@ export default function SideBarFilters(props) {
     
   return (
     <>
-      <Box borderColor={"red"} border={2}>
+      <Box borderColor={"red"} border={0}>
         {/* <Item
-          border={1}
+          border={0}
           className="sidebar-filters"
           hidden={!state.filtersHidden}
         >
@@ -299,9 +299,9 @@ export default function SideBarFilters(props) {
           </Item>
           <div hidden={!Globals.authorized()}>
             <div
-              className="dropdown-group-end"
               hidden={!Globals.curatorOrHigher()}
             ></div>
+            <Divider />
 
             <div hidden={!Globals.authorized()}>
               <Item>

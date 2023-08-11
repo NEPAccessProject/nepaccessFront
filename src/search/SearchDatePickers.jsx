@@ -26,7 +26,6 @@ const onKeyUp = (evt) => {
 export default function SearchDatePickers(props){
     const {startDate, endDate,onEndDateChange,onStartDateChange} = props;
     const {state, setState} = useContext(SearchContext);
-    console.log("🚀 ~ file: SearchDatePickers.jsx:29 ~ SearchDatePickers ~ state:", state)
     return(
         <>
         

@@ -41,10 +41,6 @@ export default function SearchResultOptions() {
 		// onDownloadClick,
 		// onSaveSearchResultsClick,
 	} = useContext(SearchContext);
-	console.log(
-		'🚀 ~ file: SearchResultOptions.jsx:40 ~ SearchResultOptions ~ SearchContext:',
-		SearchContext,
-	);
 	// Debug vars
 	//const { sortBy, sortDirection, limit, showContext, snippetsDisabled } = state;
 	//set static values while props / context is debuged
