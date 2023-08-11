@@ -1602,7 +1602,7 @@ export default class App extends React.Component {
                         noiCount={this._noiCount}
                         rodCount={this._rodCount}
                         scopingCount={this._scopingCount}
-                    />
+                    >
                     <SearchProcessResults 
                         sort={this.sort}
                         informAppPage={this.setPageInfo}
@@ -1622,7 +1622,9 @@ export default class App extends React.Component {
                         exportToSpreadsheet={this.exportToCSV}
                         isMapHidden={this.state.isMapHidden}
                         toggleMapHide={this.toggleMapHide}
-                    />
+                            
+                        />
+                </Search>
 				</div>
                 <div ref={this.endRef} />
                 <Footer id="footer"></Footer>

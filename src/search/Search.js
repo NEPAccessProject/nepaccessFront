@@ -839,6 +839,7 @@ class Search extends React.Component {
             borderStyle={"dotted"}
             borderColor={"green"}
           >
+          {/* Start New Layout  */}
             <Grid container border={1} flex={1}>
               <Grid item md={3} xs={12}>
                 {/* SEARCH FILTERS */}
@@ -863,35 +864,10 @@ class Search extends React.Component {
                 </Box>
               </Grid>
               <Grid container md={9} xs={12}>
-                <Grid item md={12} xs={12}>
-                  Map Goes Here
-                </Grid>
-                <h4>What about the children!!!?</h4>
-                {this.props.children}
-                <Grid item md={12} xs={12}>
-                    {/* <SearchProcessResults 
-                      sort={this.sort}
-                      informAppPage={this.setPageInfo}
-                      gatherSpecificHighlights={this.gatherSpecificHighlights}
-                      results={this.state.outputResults} 
-                      geoResults={this.state.geoResults}
-                      filtersHidden={this.state.filtersHidden}
-                      // searcherState={this._searcherState}
-                      geoLoading={this.state.geoLoading}
-                      resultsText={this.state.resultsText} 
-                      searching={this.state.searching}
-                      snippetsDisabled={this.state.snippetsDisabled} 
-                      scrollToBottom={this.scrollToBottom}
-                      scrollToTop={this.scrollToTop}
-                      shouldUpdate={this.state.shouldUpdate}
-                      download={this.downloadCurrentAsTSV}
-                      exportToSpreadsheet={this.exportToCSV}
-                      isMapHidden={this.state.isMapHidden}
-                      toggleMapHide={this.toggleMapHide}
-                  />  */}
-                </Grid>
+                 {this.props.children}
               </Grid>
             </Grid>
+            {/* End New Layout  */}
 
             <Grid container border={1} flex={1}>
               <Grid

@@ -244,7 +244,7 @@ export default class SearchProcessResults extends React.Component {
 
             return (
                 <div className="sidebar-results" style={this.getCorrectResultsStyle()}>
-
+                    <h3>Search Process Results</h3>
                     <div id="process-results">
 
                         <div className="tabulator-holder">
