@@ -1,24 +1,18 @@
-import React from "react";
-import ResultsHeader from "./ResultsHeader.js";
-import SearchProcessResult from "./SearchProcessResult.js";
-
-import SearchResultsMap from "./SearchResultsMap.js";
-
-import Globals from "../globals.js";
-
+import { Paper, Typography } from "@mui/material";
+import Grid from '@mui/material/Grid'; // Grid version 1
+import { makeStyles, styled } from "@mui/styles";
+import Tippy from "@tippyjs/react";
+import React, { lazy } from "react";
 import { reactFormatter } from "react-tabulator";
 import "react-tabulator/lib/css/tabulator_site.min.css"; // theme
 import "react-tabulator/lib/styles.css"; // required styles
-import { styled } from "@mui/material/styles";
-import theme from "../styles/theme";
-import Grid from '@mui/material/Grid'; // Grid version 1
-import { makeStyles } from "@mui/styles";
-import Tippy from "@tippyjs/react";
-import {Divider,Typography,Box,Button,IconButton,Tooltip,TextField,Select,MenuItem,InputLabel,List,ListItem,FormControl,FormHelperText,} from "@mui/material";
-import SearchResultItems from "./SearchResultsItems.jsx";
-import "../loader.css";
-
 import "../cardProcess.css";
+import Globals from "../globals.js";
+import "../loader.css";
+//import SearchProcessResult from "./SearchProcessResult.js";
+const SearchProcessResult = lazy(() => import("./SearchProcessResult"));
+const SearchResultItems = lazy(()=> import('./SearchResultsItems.jsx'));
+//import SearchResultItems from "./SearchResultsItems.jsx";
 
 const _ = require("lodash");
 
@@ -27,13 +21,15 @@ const FULLSTYLE = {
   minWidth: "20%",
   maxWidth: "100%",
 };
-const Item = styled(Box)(({ theme }) => ({
-  backgroundColor: theme.palette.mode === "dark" ? "#1A2027" : "#fff",
-  ...theme.typography.body2,
-  padding: theme.spacing(1),
+const Item = styled(Paper)(({ theme }) => ({
+  ...theme,
+  //backgroundColor: theme.palette.mode === "dark" ? "#1A2027" : "#fff",
+  //backgroundColor:"#ccc",
+  //...theme.typography.body2,
+  padding: 2,//theme.spacing(1),
   // textAlign: 'center',
-  color: theme.palette.text.secondary,
-  elevation: 0,
+  color: "#222", //theme.palette.text.secondary,
+  elevation: 1,
   border: 0,
   borderRadius: 0,
   mt: 2,
@@ -50,6 +46,45 @@ const Item = styled(Box)(({ theme }) => ({
   },
 }));
 
+
+
+const CardItem = styled(Paper)(({ theme }) => ({
+  //backgroundColor: theme.palette.mode === "dark" ? "#1A2027" : "#fff",
+  //...theme.typography.body2,
+  ...theme,
+  padding: 2,//theme.spacing(1),
+  // textAlign: 'center',
+  color: "#111", //theme.palette.text.secondary,
+  elevation: 1,
+  border: 0,
+  borderRadius: 0,
+  // mt: 2,
+  // mb: 2,
+  margin: 2,
+  padding: 2,
+  "&:hover": {
+    //           backgroundColor: //theme.palette.grey[200],
+    boxShadow: "0px 4px 8px rgba(0.5, 0.5, 0.5, 0.15)",
+    cursor: "pointer",
+    "& .addIcon": {
+      color: "purple",
+    },
+  },
+}));
+
+// const CardItem = styled(Paper)(({ theme }) => ({
+//   backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
+//   ...theme.typography.body2,
+//   padding: theme.spacing(1),
+//   // textAlign: 'center',
+//   color: theme.palette.text.secondary,
+//   elevation: 1,
+//   margin: 0.5,
+//   padding: 1,
+//   elevation: 1,
+//   border:1,
+// }));
+
 export default class SearchProcessResults extends React.Component {
   _size = 0;
   _columns = [];
@@ -61,11 +96,10 @@ export default class SearchProcessResults extends React.Component {
 
   constructor(props) {
     super(props);
-    console.log(
-      "🚀 ~ file: SearchProcessResults.js:41 ~ SearchProcessResults ~ constructor ~ props:",
-      props
-    );
-    console.log(`SearchProcessResults received ${props.results.length} results`);
+    // console.log(
+    //   "🚀 ~ file: SearchProcessResults.js:41 ~ SearchProcessResults ~ constructor ~ props:",
+    //   props
+    // );
     this.state = {
       showContext: true,
       size: 0,
@@ -128,7 +162,7 @@ export default class SearchProcessResults extends React.Component {
     }
   };
 
-  handleResize = () => {};
+  handleResize = () => { };
   /** TODO:  The problem is that we don't always want to scroll when the page has to
    * redraw.  Examples would be showing/hiding text snippets or changing the page.  Page tends to redraw
    * several times, so we can't just immediately set offsetY to null, and it's slightly laborious to clear
@@ -259,17 +293,17 @@ export default class SearchProcessResults extends React.Component {
        */
       if (this.props.resultsText && this.props.resultsText !== "Results") {
         return (
-<>
-                <h3>No Results</h3>
-              <Grid className="sidebar-results">
-                <Grid id="process-results">
-                  <Grid className="tabulator-holder">
-                    <h2 id="results-label">Results Text Prop = {this.props.resultsText}</h2>
-                  </Grid>
+          <>
+            <h3>No Results</h3>
+            <Grid className="sidebar-results">
+              <Grid id="process-results">
+                <Grid className="tabulator-holder">
+                  <h2 id="results-label">Results Text Prop = {this.props.resultsText}</h2>
                 </Grid>
               </Grid>
-    
-</>        );
+            </Grid>
+
+          </>);
       } else {
         return <></>;
       }
@@ -277,78 +311,68 @@ export default class SearchProcessResults extends React.Component {
 
     try {
       return (
-<>
-<h2>Start Search results </h2>
+        <>
+          <Typography variant="h3">Search results </Typography>
           <Grid container display={'flex'} sx={9} flex={1} border={0}>
-                  {this.props.resultsText}&nbsp;
-                  <h4># of Search Process Results ???? {this.props.results.length}</h4>
-                  <Tippy
-                    className="tippy-tooltip--small searchTips"
-                    trigger="manual click"
-                    hideOnClick={true}
-                    interactive={true}
-                    placement="right"
-                    content={
-                      <div>
-                        The map view is a{" "}
-                        <span className="bold">visual representation</span> of all
-                        states and counties found in the current results table.
-                        <div>
-                          • If you hover over a polygon, a tooltip will also show
-                          how many of the current results are linked to it.
-                        </div>
-                        <div>
-                          • You can toggle the state and/or county layer by
-                          clicking on the checkboxes in the upper left corner.
-                        </div>
-                      </div>
-                    }
+            {this.props.resultsText}&nbsp;
+            <Tippy
+              className="tippy-tooltip--small searchTips"
+              trigger="manual click"
+              hideOnClick={true}
+              interactive={true}
+              placement="right"
+              content={
+                <div>
+                  The map view is a{" "}
+                  <span className="bold">visual representation</span> of all
+                  states and counties found in the current results table.
+                  <div>
+                    • If you hover over a polygon, a tooltip will also show
+                    how many of the current results are linked to it.
+                  </div>
+                  <div>
+                    • You can toggle the state and/or county layer by
+                    clicking on the checkboxes in the upper left corner.
+                  </div>
+                </div>
+              }
+            >
+              {
+                <span className={"side-link inline"}>
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="16px"
+                    height="16px"
+                    viewBox="0 0 100 100"
                   >
-                    {
-                      <span className={"side-link inline"}>
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          width="16px"
-                          height="16px"
-                          viewBox="0 0 100 100"
-                        >
-                          <path
-                            className="info-svg"
-                            d="M50.433,0.892c-27.119,0-49.102,21.983-49.102,49.102s21.983,49.103,49.102,49.103s49.101-21.984,49.101-49.103S77.552,0.892,50.433,0.892z M59,79.031C59,83.433,55.194,87,50.5,87S42,83.433,42,79.031V42.469c0-4.401,3.806-7.969,8.5-7.969s8.5,3.568,8.5,7.969V79.031z M50.433,31.214c-5.048,0-9.141-4.092-9.141-9.142c0-5.049,4.092-9.141,9.141-9.141c5.05,0,9.142,4.092,9.142,9.141C59.574,27.122,55.482,31.214,50.433,31.214z"
-                          />
-                        </svg>
-                      </span>
-                    }
-                  </Tippy>
-          {this.props.searching ? <>Please wait...</> : <></>}
-          <Typography variant="h1"># of Results: {this.props.results.length}</Typography>
-          {this.props.results.map((result, index) => {
-              return(
-              <Item>
-  <>
-  <Divider/>
-  {JSON.stringify(result)}
-  <Divider/>
-  <b>Index: {index}</b>
-                    <Typography variant="h5">Second ResultsItems # of Result Records {result.records.length} </Typography>                
-                       {this.props.results.map((result, index) => {
-                            return (
-                                <>
-                                    <h4>{index}</h4>
-                                    <SearchResultItems result={result} />
-                                </>
-                            )
-                       })}
-                    <Divider />
-    
-  </>
-                      </Item>
-              )})}
-          </Grid> 
-</>              
+                    <path
+                      className="info-svg"
+                      d="M50.433,0.892c-27.119,0-49.102,21.983-49.102,49.102s21.983,49.103,49.102,49.103s49.101-21.984,49.101-49.103S77.552,0.892,50.433,0.892z M59,79.031C59,83.433,55.194,87,50.5,87S42,83.433,42,79.031V42.469c0-4.401,3.806-7.969,8.5-7.969s8.5,3.568,8.5,7.969V79.031z M50.433,31.214c-5.048,0-9.141-4.092-9.141-9.142c0-5.049,4.092-9.141,9.141-9.141c5.05,0,9.142,4.092,9.142,9.141C59.574,27.122,55.482,31.214,50.433,31.214z"
+                    />
+                  </svg>
+                </span>
+              }
+            </Tippy>
+            {this.props.searching ? <>Please wait...</> : <></>}
+            {/* <Typography variant="h5"># of Results: {this.props.results.length}</Typography> */}
+            {this.props.results.map((result, index) => {
+
+              return (
+ 
+                  <Item>
+                    <>
+                    <Typography variant="searchResultsTitle">{result.title}</Typography>
+                      <SearchResultCards result={result} />
+                      <SearchResultItems result={result} />
+                    </>
+                  </Item>
+              )
+            })}
+          </Grid>
+        </>
 
       );
-      
+
     } catch (e) {
       if (e instanceof TypeError) {
         // Tabulator trying to render new results before it switches to new column definitions
@@ -360,13 +384,13 @@ export default class SearchProcessResults extends React.Component {
         <div className="sidebar-results">
           <h2 id="results-label">First Search Result Items with # of results {this.props.results.length}  ResultsText= {this.props.resultsText}</h2>
           {this.props.results.map((result, index) => {
-                            return (
-                                <>
-                                    <b>{index}</b>
-                                    {/* <SearchResultItems result={result} /> */}
-                                </>
-                            )
-                       })}
+            return (
+              <>
+                <b>{index}</b>
+                {/* <SearchResultItems result={result} /> */}
+              </>
+            )
+          })}
         </div>
       );
     }
@@ -393,131 +417,215 @@ export default class SearchProcessResults extends React.Component {
   }
 }
 
+const useStyles = makeStyles(theme => (
+  {
+    centeredContent: {
+      verticalAlign: 'center',
+      textAlign: 'center',
+      alignContent: 'center',
+      justifyContent: 'center',
+      justifyItems: 'center',
+      borderColor: '#ccc',
+      border: 1,
+
+    },
+    item: {
+      margin: 1,
+      padding: 1,
+      border: 1,
+      borderColor: "#ccc"
+    },
+
+  }
+));
+
 export function SearchResultCards(props) {
-  
+
   const { result } = props;
-  console.log('Search Result Card Props',props);
+  const classes = useStyles()
   return (
-    <Grid padding={2} container xs={12} flexDirection={'row'} flex={1}>
-      <Item
-        // className={classes.itemHeader}
-        sx={{
-          margin: 0.5,
-          padding: 1,
-          elevation: 1,
+    <div className={classes.root}>
+      <h4>Start </h4>
+      <Grid container className={classes.root} padding={2} xs={12} flexDirection={'row'} flex={1}>
+        <Paper
+          sx={{
+            margin: 0.25,
+            padding: 1.5,
+            border: 1,
+            borderColor: "#ccc",
+            minHeight: 2,
+            lineHeight: 1,
+            justifyContent: 'center',
+            justifyItems: 'center',
+          }}
+          className={classes.Item}
+        >
+
+          Status: <b>{result.decision ? result.decision : 'N/A'}</b>
+        </Paper>
+        <Paper
+          className={classes.Item}
+          sx={{
+            margin: 0.25,
+            padding: 1.5,
+            border: 1,
+            borderColor: "#ccc",
+            minHeight: 2,
+            lineHeight: 1,
+            justifyContent: 'center',
+            justifyItems: 'center',
+
+          }}
+        >
+          Date: <b>{result.commentDate ? result.commentDate : 'N/A'}</b>
+        </Paper>
+        <Paper
+          sx={{
+            margin: 0.25,
+            padding: 1.5,
+            border: 1,
+            borderColor: "#ccc",
+            minHeight: 2,
+            lineHeight: 1,
+            justifyContent: 'center',
+            justifyItems: 'center',
+
+          }}
+          className={classes.Item}
+        >
+          State: <b>{result.state ? result.state : 'N/A'}</b>
+        </Paper>
+        <Paper
+          sx={{
+            margin: 0.25,
+            padding: 1.5,
+            border: 1,
+            borderColor: "#ccc",
+            minHeight: 2,
+            lineHeight: 1,
+            justifyContent: 'center',
+            justifyItems: 'center',
+
+          }}
+          className={classes.Item}
+        >
+          County: <b>{result.county ? result.county : 'N/A'}</b>
+        </Paper>
+        <Paper
+          sx={{
+            margin: 0.25,
+            padding: 1.5,
+            border: 1,
+            borderColor: "#ccc",
+            minHeight: 2,
+            lineHeight: 1,
+            justifyContent: 'center',
+            justifyItems: 'center',
+
+          }}
+          className={classes.Item}
+        >
+          Action: <b>{result.action ? result.action : 'N/A'}</b>
+        </Paper>
+        <Paper
+          sx={{
+            margin: 0.25,
+            padding: 1.5,
+            border: 1,
+            borderColor: "#ccc",
+            minHeight: 2,
+            lineHeight: 1,
+            justifyContent: 'center',
+            justifyItems: 'center',
+
+          }}
+          className={classes.Item}
+        >
+          Decision <b>{result.decision ? result.decision : 'N/A'}</b>
+        </Paper>
+        {/* {(result.commentDate) 
+                ? ( */}
+        <Paper
+          sx={{
+            margin: 0.25,
+            padding: 1.5,
+            border: 1,
+            borderColor: "#ccc",
+            minHeight: 2,
+            lineHeight: 1,
+            justifyContent: 'center',
+            justifyItems: 'center',
+
+          }}
+          className={classes.Item}
+        >
+          Project Start Date: <b>{result.registerDate ? result.registerDate : 'N/A'}</b>
+        </Paper>
+        <Paper
+          sx={{
+            margin: 0.25,
+            padding: 1.5,
+            border: 1,
+            borderColor: "#ccc",
+            minHeight: 2,
+            lineHeight: 1,
+            justifyContent: 'center',
+            justifyItems: 'center',
+
+          }}
+          className={classes.Item}
+        >
+          Project Endate Date: <b>{result.commentDate ? result.commentDate : 'N/A'}</b>
+        </Paper>
+        <Paper
+          className={classes.Item}
+          sx={{
+            margin: 0.25,
+            padding: 1.5,
+            border: 1,
+            borderColor: "#ccc",
+            minHeight: 2,
+            lineHeight: 1,
+            justifyContent: 'center',
+            justifyItems: 'center',
+
+          }}
+        >
+          Final NOA: <b>{result.finalNoa ? result.finalNoa : 'N/A'}</b>
+        </Paper>
+        <Paper sx={{
+          margin: 0.25,
+          padding: 1.5,
+          border: 1,
+          borderColor: "#ccc",
+          minHeight: 2,
+          lineHeight: 1,
+          justifyContent: 'center',
+          justifyItems: 'center',
+
         }}
-      >
-        
-        Status: <b>{result.decision ? result.decision : 'N/A'}</b>
-      </Item>
-      <Item
-        // className={classes.itemHeader}
-        sx={{
-          margin: 0.5,
-          padding: 1,
-          elevation: 1,
-        }}
-      >
-        Date: <b>{result.commentDate ? result.commentDate : 'N/A'}</b>
-      </Item>
-      <Item
-        // className={classes.itemHeader}
-        sx={{
-          margin: 0.5,
-          padding: 1,
-          elevation: 1,
-        }}
-      >
-        State: <b>{result.state ? result.state : 'N/A'}</b>
-      </Item>
-      <Item
-        // className={classes.itemHeader}
-        sx={{
-          margin: 0.5,
-          padding: 1,
-          elevation: 1,
-        }}
-      >
-        County: <b>{result.county ? result.county : 'N/A'}</b>
-      </Item>
-      <Item
-        //className={classes.itemHeader}
-        sx={{
-          margin: 0.5,
-          padding: 1,
-          elevation: 1,
-        }}
-      >
-        Action: <b>{result.action ? result.action : 'N/A'}</b>
-      </Item>
-      <Item
-        //className={classes.itemHeader}
-        sx={{
-          margin: 0.5,
-          padding: 1,
-          elevation: 1,
-        }}
-      >
-        Decision <b>{result.decision ? result.decision : 'N/A'}</b>
-      </Item>
-      {/* {(result.commentDate) 
-            ? ( */}
-      <Item
-        //className={classes.itemHeader}
-        sx={{
-          margin: 0.5,
-          padding: 1,
-          elevation: 1,
-        }}
-      >
-        Project Start Date: <b>{result.registerDate ? result.registerDate : 'N/A'}</b>
-      </Item>
-      <Item
-        //className={classes.itemHeader}
-        sx={{
-          margin: 0.5,
-          padding: 1,
-          elevation: 1,
-        }}
-      >
-        Project Endate Date: <b>{result.commentDate ? result.commentDate : 'N/A'}</b>
-      </Item>
-      <Item
-        //className={classes.itemHeader}
-        sx={{
-          margin: 0.5,
-          padding: 1,
-          elevation: 1,
-        }}
-      >
-        Final NOA: <b>{result.finalNoa ? result.finalNoa : 'N/A'}</b>
-      </Item>
-      <Item
-        //className={classes.itemHeader}
-        sx={{
-          margin: 0.5,
-          padding: 1,
-          elevation: 1,
-        }}
-      >
-        Draft NOA: <b>{result.draftNoa ? result.draftNoa : 'N/A'}</b>
-      </Item>
-      <Item
-        //className={classes.itemHeader}
-        sx={{
-          margin: 0.5,
-          padding: 1,
-          elevation: 1,
-        }}
-      >
-        Process ID: <b>{result.processId ? result.processId : 'N/A'}</b>
-      </Item>
-          
-      
-      {/* ) : (
-        <></>
-      )} */}
-    </Grid>
+          className={classes.Item}
+        >
+          Draft NOA: <b>{result.draftNoa ? result.draftNoa : 'N/A'}</b>
+        </Paper>
+        <Paper
+          sx={{
+            margin: 0.25,
+            padding: 1.5,
+            border: 1,
+            borderColor: "#ccc",
+            minHeight: 2,
+            lineHeight: 1,
+            justifyContent: 'center',
+            justifyItems: 'center',
+
+          }}
+          className={classes.Item}
+        >
+          Process ID: <b>{result.processId ? result.processId : 'N/A'}</b>
+        </Paper>
+      </Grid>
+    </div>
   );
 }
 

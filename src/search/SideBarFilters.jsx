@@ -1,26 +1,23 @@
-import React, { useContext } from "react";
-import SearchContext from "./SearchContext";
 import {
   Autocomplete,
   Box,
-  FormControl,
-  FormControlLabel,
   Checkbox,
   Divider,
+  FormControl,
+  FormControlLabel,
   TextField,
   Typography,
 } from "@mui/material";
 import { styled } from "@mui/material/styles";
-import theme from "../styles/theme";
+import React, { useContext } from "react";
+import SearchContext from "./SearchContext";
 //import Grid from '@mui/material/Grid'; // Grid version 1
-import { makeStyles } from "@mui/styles";
-import SearchDatePickers from "./SearchDatePickers";
 import Globals from "../globals";
+import SearchDatePickers from "./SearchDatePickers";
 import {
-  agencyOptions,
-  proximityOptions,
   actionOptions,
-  decisionOptions,
+  agencyOptions,
+  decisionOptions
 } from "./options";
 const stateOptions = Globals.locations;
 const countyOptions = Globals.counties;
@@ -249,9 +246,9 @@ export default function SideBarFilters(props) {
               onChange={onLocationChange}
               placeholder={`Type or Select a State`}
               //getOptionLabel={(stateOptions) => `${stateOptions.label}`}
-              value={stateOptions.filter((stateObj) =>
-                state.state.includes(stateObj.value)
-              )}
+              // value={stateOptions.filter((stateObj) =>
+              //   state.state.includes(stateObj.value)
+              // )}
               renderInput={(params) => (
                 <TextField
                   {...params}
@@ -282,7 +279,7 @@ export default function SideBarFilters(props) {
               variant="standard"
               // menuIsOpen={true}
               onChange={onCountyChange}
-              getOptionLabel={(countyOptions) => `${countyOptions.label}`}
+              // getOptionLabel={(countyOptions) => `${countyOptions.label}`}
               renderInput={(params) => (
                 <TextField
                   {...params}
@@ -356,7 +353,7 @@ export default function SideBarFilters(props) {
                 onChange={onDecisionChange}
                 value={state.decisionRaw}
                 placeholder="Type or select decision"
-                getOptionLabel={(stateOptions) => `${stateOptions.label}`}
+                // getOptionLabel={(stateOptions) => `${stateOptions.label}`}
                 renderInput={(params) => (
                   <TextField
                     {...params}

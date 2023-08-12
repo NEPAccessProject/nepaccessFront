@@ -1,6 +1,6 @@
+import CircularProgress from '@mui/material/CircularProgress';
 import axios from "axios";
-import React from "react";
-
+import React, { Suspense } from "react";
 //import DatePicker from "react-datepicker";
 //import Select from 'react-select';
 
@@ -9,37 +9,22 @@ import "../sidebar.css";
 import "../survey.css";
 import "./search.css";
 
-import "react-datepicker/dist/react-datepicker.css";
-import "tippy.js/dist/tippy.css"; // optional
-import SearchDatePickers from "./SearchDatePickers";
-import SearchProcessResults from "./SearchProcessResults";
-import Globals from "../globals.js";
-import persist from "../persist.js";
-import { SearchOutlined } from "@mui/icons-material";
 import {
 	Box,
-	Divider,
-	Grid,
-	IconButton,
-	ListItem,
-	Paper,
-	Select,
-	TextField,
-	Typography,
-	Input,
-	FormControl,
-	FormControlLabel,
 	Container,
+	Grid,
+	Paper
 } from "@mui/material";
-import { withRouter } from "react-router";
-import SearchContext from "./SearchContext.js";
-import SearchResultOptions from "./SearchResultOptions.jsx";
 import { styled } from "@mui/material/styles";
-import theme from "../styles/theme";
+import "react-datepicker/dist/react-datepicker.css";
+import { withRouter } from "react-router";
+import "tippy.js/dist/tippy.css"; // optional
+import Globals from "../globals.js";
+import persist from "../persist.js";
+import SearchContext from "./SearchContext.js";
 //import Grid from '@mui/material/Grid'; // Grid version 1
 import { makeStyles } from "@mui/styles";
 
-import SideBarFilters from "./SideBarFilters.jsx";
 import ResultsHeader from "./ResultsHeader";
 const useStyles = makeStyles((theme) => ({
 	formControl: {},
@@ -849,7 +834,7 @@ class Search extends React.Component {
 							</Grid>
 							<Grid container xs={12} flex={1} border={0}>
 								<Grid item xs={3} border={0}>
-									<SideBarFilters
+									{/* <SideBarFilters
 											onActionChange={this.onActionChange}
 											onAgencyChange={this.onAgencyChange}
 											onCountyChange={this.onCountyChange}
@@ -864,12 +849,14 @@ class Search extends React.Component {
 											toggleFiltersHidden={this.toggleFiltersHidden}
 											onNeedsDocumentChecked={this.onNeedsDocumentChecked}
 											renderClearFiltersButton={this.renderClearFiltersButton}
-										/>
+										/> */}
+										<b>Filters Place Holder</b>
 								</Grid>
 								<Grid item xs={9} border={0}>
-									<Typography variant="searchResultsHeader">Search Results # {this.props.results.length}</Typography>
-									<h3>SearchProcessResults</h3>
-									{this.props.children}
+									{/* <Typography variant="searchResultsHeader">Search Results # {this.props.results.length}</Typography> */}
+									<Suspense fallback={<CircularProgress/>}>
+										{this.props.children}
+									</Suspense>
 							 </Grid>
 						 </Grid>
 							{/* End Header*/}
