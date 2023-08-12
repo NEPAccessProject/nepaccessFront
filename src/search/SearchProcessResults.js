@@ -65,6 +65,7 @@ export default class SearchProcessResults extends React.Component {
       "🚀 ~ file: SearchProcessResults.js:41 ~ SearchProcessResults ~ constructor ~ props:",
       props
     );
+    console.log(`SearchProcessResults received ${props.results.length} results`);
     this.state = {
       showContext: true,
       size: 0,
@@ -263,7 +264,7 @@ export default class SearchProcessResults extends React.Component {
               <Grid className="sidebar-results">
                 <Grid id="process-results">
                   <Grid className="tabulator-holder">
-                    <h2 id="results-label">{this.props.resultsText}</h2>
+                    <h2 id="results-label">Results Text Prop = {this.props.resultsText}</h2>
                   </Grid>
                 </Grid>
               </Grid>
@@ -275,93 +276,76 @@ export default class SearchProcessResults extends React.Component {
     }
 
     try {
-        const results = this.props.results;
       return (
-        <Grid container display={'flex'} sx={9} flex={1} border={0}>
-                {this.props.resultsText}&nbsp;
-
-                <Typography variant="h6" component="h6">Tippy</Typography>
-                <Tippy
-                  className="tippy-tooltip--small searchTips"
-                  trigger="manual click"
-                  hideOnClick={true}
-                  interactive={true}
-                  placement="right"
-                  content={
-                    <div>
-                      The map view is a{" "}
-                      <span className="bold">visual representation</span> of all
-                      states and counties found in the current results table.
+<>
+<h2>Start Search results </h2>
+          <Grid container display={'flex'} sx={9} flex={1} border={0}>
+                  {this.props.resultsText}&nbsp;
+                  <h4># of Search Process Results ???? {this.props.results.length}</h4>
+                  <Tippy
+                    className="tippy-tooltip--small searchTips"
+                    trigger="manual click"
+                    hideOnClick={true}
+                    interactive={true}
+                    placement="right"
+                    content={
                       <div>
-                        • If you hover over a polygon, a tooltip will also show
-                        how many of the current results are linked to it.
+                        The map view is a{" "}
+                        <span className="bold">visual representation</span> of all
+                        states and counties found in the current results table.
+                        <div>
+                          • If you hover over a polygon, a tooltip will also show
+                          how many of the current results are linked to it.
+                        </div>
+                        <div>
+                          • You can toggle the state and/or county layer by
+                          clicking on the checkboxes in the upper left corner.
+                        </div>
                       </div>
-                      <div>
-                        • You can toggle the state and/or county layer by
-                        clicking on the checkboxes in the upper left corner.
-                      </div>
-                    </div>
-                  }
-                >
-                  {
-                    <span className={"side-link inline"}>
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="16px"
-                        height="16px"
-                        viewBox="0 0 100 100"
-                      >
-                        <path
-                          className="info-svg"
-                          d="M50.433,0.892c-27.119,0-49.102,21.983-49.102,49.102s21.983,49.103,49.102,49.103s49.101-21.984,49.101-49.103S77.552,0.892,50.433,0.892z M59,79.031C59,83.433,55.194,87,50.5,87S42,83.433,42,79.031V42.469c0-4.401,3.806-7.969,8.5-7.969s8.5,3.568,8.5,7.969V79.031z M50.433,31.214c-5.048,0-9.141-4.092-9.141-9.142c0-5.049,4.092-9.141,9.141-9.141c5.05,0,9.142,4.092,9.142,9.141C59.574,27.122,55.482,31.214,50.433,31.214z"
-                        />
-                      </svg>
-                    </span>
-                  }
-                </Tippy>
-        {this.props.searching ? <>Please wait...</> : <></>}
-        {results.map((result, index) => {
-            return(
-            <Item>
-            <Typography variant="searchResultsSubTitle">{result.title}</Typography>
-                        <Item>title: {result['title']}  </Item>
-                        <Item>agency: {result['agency']} </Item> 
-                        <Item>cooperatingAgency: {result['cooperatingAgency']}</Item>
-                        <Item>commentDate: {result['commentDate']}   </Item>
-                        <Item>registerDate: {result['registerDate']} </Item>
-                        <Item>state: {result['state']}    </Item>
-                        <Item>documentType: {result['documentType']}  </Item>
-                        <Item>filename: {result['filename']}  </Item>
-                        <Item>commentsFilename: {result['commentsFilename']} </Item>
-                        <Item>size: {result['size']}  </Item>
-                        <Item>id: {result['id']}  </Item>
-                        <Item>luceneIds: {result['luceneIds']}  </Item>
-                        <Item>folder: {result['folder']} </Item>
-                        <Item>plaintext: {result['plaintext']} </Item>
-                        <Item>name: {result['name']} </Item>
-                        <Item>link: {result['link']} </Item>
-                        <Item>firstRodDate: {result['firstRodDate']} </Item>
-                        <Item>processId: : {result['processId']} </Item>
-                        <Item>notes: {result['notes']}</Item>
-                        <Item>status: {result['status']} </Item>
-                        <Item>subtype: {result['subtype']} </Item>
-                        <Item>county: {result['county']} </Item>
-                        <Item>action : {result['action']} </Item>
-                        <Item>decision: {result['decision']} </Item>
-                        <Item>relevance:{result['relevance']}  </Item>                        
-                   {result.map((result, index) => {
-                        return (
-                            <>
-                                <b>{index}</b>
-                                <SearchResultItems records={result.records} />
-                            </>
-                        )
-                   })}
-                <Divider />
-
-                    </Item>
-            )})}
-        </Grid>               
+                    }
+                  >
+                    {
+                      <span className={"side-link inline"}>
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          width="16px"
+                          height="16px"
+                          viewBox="0 0 100 100"
+                        >
+                          <path
+                            className="info-svg"
+                            d="M50.433,0.892c-27.119,0-49.102,21.983-49.102,49.102s21.983,49.103,49.102,49.103s49.101-21.984,49.101-49.103S77.552,0.892,50.433,0.892z M59,79.031C59,83.433,55.194,87,50.5,87S42,83.433,42,79.031V42.469c0-4.401,3.806-7.969,8.5-7.969s8.5,3.568,8.5,7.969V79.031z M50.433,31.214c-5.048,0-9.141-4.092-9.141-9.142c0-5.049,4.092-9.141,9.141-9.141c5.05,0,9.142,4.092,9.142,9.141C59.574,27.122,55.482,31.214,50.433,31.214z"
+                          />
+                        </svg>
+                      </span>
+                    }
+                  </Tippy>
+          {this.props.searching ? <>Please wait...</> : <></>}
+          <Typography variant="h1"># of Results: {this.props.results.length}</Typography>
+          {this.props.results.map((result, index) => {
+              return(
+              <Item>
+  <>
+  <Divider/>
+  {JSON.stringify(result)}
+  <Divider/>
+  <b>Index: {index}</b>
+                    <Typography variant="h5">Second ResultsItems # of Result Records {result.records.length} </Typography>                
+                       {this.props.results.map((result, index) => {
+                            return (
+                                <>
+                                    <h4>{index}</h4>
+                                    <SearchResultItems result={result} />
+                                </>
+                            )
+                       })}
+                    <Divider />
+    
+  </>
+                      </Item>
+              )})}
+          </Grid> 
+</>              
 
       );
       
@@ -374,7 +358,15 @@ export default class SearchProcessResults extends React.Component {
       }
       return (
         <div className="sidebar-results">
-          <h2 id="results-label">{this.props.resultsText}</h2>
+          <h2 id="results-label">First Search Result Items with # of results {this.props.results.length}  ResultsText= {this.props.resultsText}</h2>
+          {this.props.results.map((result, index) => {
+                            return (
+                                <>
+                                    <b>{index}</b>
+                                    {/* <SearchResultItems result={result} /> */}
+                                </>
+                            )
+                       })}
         </div>
       );
     }

@@ -42,16 +42,16 @@ const useStyles = (theme) => ({
 
 
 export default function SearchResultItems(props) {
-  console.log("🚀 ~ file: SearchResultsItems.jsx:45 ~ SearchResultItems ~ props:", props)
+//  console.log("🚀 ~ file: SearchResultsItems.jsx:45 ~ SearchResultItems ~ props:", props);
+  const {result,record} = props;
+  //console.log("🚀 ~ file: SearchResultsItems.jsx:47 ~ SearchResultItems ~ record:", record);
+  //console.log("🚀 ~ file: SearchResultsItems.jsx:47 ~ SearchResultItems ~ result:", result);
   const context = useContext(SearchContext);
   const classes = useStyles(theme);
 
 
   //console.log('SearchResultItems vprops', props);
-  let result = props.result || [];
-  console.log("🚀 ~ file: SearchResultsItems.jsx:51 ~ SearchResultItems ~ result:", result)
-  const records = (props.result && props.result.records) ? props.result.records : [];
-  console.log("🚀 ~ file: SearchResultsItems.jsx:54 ~ SearchResultItems ~ records:", records)
+//  const records = (props.result && props.result.records) ? props.result.records : [];
 
   //  console.log('search result records?', records);
   let sortedRecords = [];
@@ -62,7 +62,7 @@ export default function SearchResultItems(props) {
 
   //  sortedRecords = result.records.sort(sortByDate);
   sortedRecords = result.records.sort(sortByDate);
-  console.log("🚀 ~ file: SearchResultsItems.jsx:63 ~ SearchResultItems ~ sortedRecords:", sortedRecords)
+  //console.log("🚀 ~ file: SearchResultsItems.jsx:63 ~ SearchResultItems ~ sortedRecords:", sortedRecords)
 
   //console.log("🚀 ~ file: SearchResultsItems.jsx:59 ~ SearchResultItems ~ sortedRecords:", sortedRecords)
   // const initialSearch = (records.length) ? records.sort(sortByDate): [];
@@ -72,15 +72,17 @@ export default function SearchResultItems(props) {
       {/* <h2>Search Result Items Result?</h2>
     {JSON.stringify(result)} */}
       <Box marginTop={1} marginBottom={1} id="search-results-container-box">
+      # of sorted records # {sortedRecords.length}
         {sortedRecords && sortedRecords.length ? (
           sortedRecords.map((record, idx) => {
             return (
               <>
                 {/* <Typography variant="searchResultSubTitle" padding={2}>{record.title}</Typography> */}
                 <Item key={idx} className="search-result-item-container">
-                  {JSON.stringify(record)}
+                <h4>Record JSON</h4>
+                  {/* {JSON.stringify(record)} */}
                   <Divider/>
-                  {/* <SearchResultItem record={record} /> */}
+                  <SearchResultItem record={record} />
                   <Divider />
                 </Item>
               </>
@@ -101,6 +103,7 @@ export default function SearchResultItems(props) {
 }
 
 export function SearchResultItem(props) {
+  console.log("🚀 ~ file: SearchResultsItems.jsx:106 ~ SearchResultItem ~ props:", props)
   const [isPDFViewOpen, setIsPDFViewOpen] = useState(false);
   const [isContentExpanded, setIsContentExpanded] = useState(false);
 //  const { seachState, setState, showContext } = useContext(SearchContext);
@@ -292,13 +295,14 @@ export function SearchResultItem(props) {
             </Button>
           </Grid>
         </Grid>
-        <Grid item > <RenderSnippets/> </Grid>
+        <Grid item > 
+        <h4>Render Snippets Here</h4>
+          {/* <RenderSnippets/>  */}
+        </Grid>
       </Grid>
     </>
   );
 }
-
-
 
 
 

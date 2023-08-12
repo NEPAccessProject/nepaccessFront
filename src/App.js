@@ -288,7 +288,7 @@ export default class App extends React.Component {
 
     /** Assign any existing highlights from the first-page highlight pass, which is now done before full record population */
     mergeHighlights = (data) => {
-        console.log("🚀 ~ file: App.js:291 ~ App ~ data:", data)
+        //console.log("🚀 ~ file: App.js:291 ~ App ~ data:", data)
         // console.log("Merge highlights",data, this.state.searchResults);
         if(!this.state.searchResults || !this.state.searchResults[0]) {
             console.log("Nothing here yet");
@@ -298,17 +298,15 @@ export default class App extends React.Component {
         for(let i = 0; i < this.state.searchResults.length; i++) {
             if(data[i]) {
                 for(let j = 0; j < this.state.searchResults[i].records.length; j++) {
-                    console.log("🚀 ~ file: App.js:301 ~ App ~ this.state.searchResults[i]:", this.state.searchResults[i])
                     if(data[i].records[j] 
                         && this.state.searchResults[i].records[j] 
                         && this.state.searchResults[i].records[j].plaintext 
                         && this.state.searchResults[i].records[j].plaintext[0]
                     ) {
                         let same = data[i].records[j].id === this.state.searchResults[i].records[j].id;
-                        console.log("Same?", same, data[i].records[j].id, this.state.searchResults[i].records[j].id);
                         if(same) {
                             data[i].records[j].plaintext = this.state.searchResults[i].records[j].plaintext;
-                            console.log("Assigned plaintext", this.state.searchResults[i].records[j].plaintext);
+                            //console.log("Assigned plaintext", this.state.searchResults[i].records[j].plaintext);
                         }
                     } else {
                         // console.log("Doesn't exist");
@@ -317,7 +315,7 @@ export default class App extends React.Component {
             }
         }
         
-        console.log("🚀 ~ file: App.js:320 ~ Merge Highlights ~ returning data:", data);
+        //console.log("🚀 ~ file: App.js:320 ~ Merge Highlights ~ returning data:", data);
         return data;
     }
 
@@ -415,7 +413,7 @@ export default class App extends React.Component {
         const highlights =  this.mergeHighlights(
                 Object.values(processResults).sort(function(a,b){return a.relevance - b.relevance;})
             );
-        console.log('Build data highlights', highlights);
+        //console.log('Build data highlights', highlights);
         return highlights;
     }
 
@@ -793,7 +791,7 @@ export default class App extends React.Component {
                 return null;
             }
         }).then(currentResults => {
-            console.log("🚀 ~ file: App.js:788 ~ App ~ currentResults:", currentResults)
+            //console.log("🚀 ~ file: App.js:788 ~ App ~ currentResults:", currentResults)
             let _data = [];
             if(currentResults && currentResults[0] && currentResults[0].doc) {
                 
@@ -836,7 +834,6 @@ export default class App extends React.Component {
                 let processResults = {};
                 processResults = this.buildData(_data);
                 _data = processResults;
-                console.log("🚀 ~ file: App.js:838 ~ App ~ _data:", _data)
 
                 this.setState({
                     searchResults: _data,
@@ -1221,7 +1218,7 @@ export default class App extends React.Component {
     }
 
     gatherPageHighlights = (searchId, _inputs, currentResults) => {
-        console.log("🚀 ~ file: App.js:1209 ~ App ~ searchId, _inputs, currentResults:", searchId, _inputs, currentResults)
+//        console.log("🚀 ~ file: App.js:1209 ~ App ~ searchId, _inputs, currentResults:", searchId, _inputs, currentResults)
         if(!_inputs) {
             if(this.state.searcherInputs) {
                 _inputs = this.state.searcherInputs;
@@ -1617,7 +1614,7 @@ export default class App extends React.Component {
                         informAppPage={this.setPageInfo}
                         gatherSpecificHighlights={this.gatherSpecificHighlights}
                         results={this.state.outputResults}
-                        searchResults={this.state.searchResults}
+//                        searchResults={this.state.searchResults}
                         outputResults={this.state.outputResults} 
                         geoResults={this.state.geoResults}
                         filtersHidden={this.state.filtersHidden}
@@ -1635,7 +1632,7 @@ export default class App extends React.Component {
                         toggleMapHide={this.toggleMapHide}
                             
                         />
-                </Search>
+                        </Search>
 				</div>
                 <div ref={this.endRef} />
                 <Footer id="footer"></Footer>

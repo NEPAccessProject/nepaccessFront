@@ -867,7 +867,8 @@ class Search extends React.Component {
 										/>
 								</Grid>
 								<Grid item xs={9} border={0}>
-									<Typography variant="searchResultsHeader">Search Results</Typography>
+									<Typography variant="searchResultsHeader">Search Results # {this.props.results.length}</Typography>
+									<h3>SearchProcessResults child</h3>
 									{this.props.children}
 							 </Grid>
 						 </Grid>
