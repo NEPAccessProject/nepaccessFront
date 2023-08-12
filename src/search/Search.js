@@ -847,7 +847,7 @@ class Search extends React.Component {
 											total={this.state.total}
 										/>
 							</Grid>
-						 <Grid container xs={12} flex={1} border={0}>
+							<Grid container xs={12} flex={1} border={0}>
 								<Grid item xs={3} border={0}>
 									<SideBarFilters
 											onActionChange={this.onActionChange}
@@ -868,7 +868,7 @@ class Search extends React.Component {
 								</Grid>
 								<Grid item xs={9} border={0}>
 									<Typography variant="searchResultsHeader">Search Results # {this.props.results.length}</Typography>
-									<h3>SearchProcessResults child</h3>
+									<h3>SearchProcessResults</h3>
 									{this.props.children}
 							 </Grid>
 						 </Grid>

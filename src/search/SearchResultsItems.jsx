@@ -296,13 +296,14 @@ export function SearchResultItem(props) {
           </Grid>
         </Grid>
         <Grid item > 
-        <h4>Render Snippets Here</h4>
           {/* <RenderSnippets/>  */}
         </Grid>
       </Grid>
     </>
   );
 }
+
+
 
 
 

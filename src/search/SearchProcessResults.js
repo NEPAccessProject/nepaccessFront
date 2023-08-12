@@ -393,6 +393,134 @@ export default class SearchProcessResults extends React.Component {
   }
 }
 
+export function SearchResultCards(props) {
+  
+  const { result } = props;
+  console.log('Search Result Card Props',props);
+  return (
+    <Grid padding={2} container xs={12} flexDirection={'row'} flex={1}>
+      <Item
+        // className={classes.itemHeader}
+        sx={{
+          margin: 0.5,
+          padding: 1,
+          elevation: 1,
+        }}
+      >
+        
+        Status: <b>{result.decision ? result.decision : 'N/A'}</b>
+      </Item>
+      <Item
+        // className={classes.itemHeader}
+        sx={{
+          margin: 0.5,
+          padding: 1,
+          elevation: 1,
+        }}
+      >
+        Date: <b>{result.commentDate ? result.commentDate : 'N/A'}</b>
+      </Item>
+      <Item
+        // className={classes.itemHeader}
+        sx={{
+          margin: 0.5,
+          padding: 1,
+          elevation: 1,
+        }}
+      >
+        State: <b>{result.state ? result.state : 'N/A'}</b>
+      </Item>
+      <Item
+        // className={classes.itemHeader}
+        sx={{
+          margin: 0.5,
+          padding: 1,
+          elevation: 1,
+        }}
+      >
+        County: <b>{result.county ? result.county : 'N/A'}</b>
+      </Item>
+      <Item
+        //className={classes.itemHeader}
+        sx={{
+          margin: 0.5,
+          padding: 1,
+          elevation: 1,
+        }}
+      >
+        Action: <b>{result.action ? result.action : 'N/A'}</b>
+      </Item>
+      <Item
+        //className={classes.itemHeader}
+        sx={{
+          margin: 0.5,
+          padding: 1,
+          elevation: 1,
+        }}
+      >
+        Decision <b>{result.decision ? result.decision : 'N/A'}</b>
+      </Item>
+      {/* {(result.commentDate) 
+            ? ( */}
+      <Item
+        //className={classes.itemHeader}
+        sx={{
+          margin: 0.5,
+          padding: 1,
+          elevation: 1,
+        }}
+      >
+        Project Start Date: <b>{result.registerDate ? result.registerDate : 'N/A'}</b>
+      </Item>
+      <Item
+        //className={classes.itemHeader}
+        sx={{
+          margin: 0.5,
+          padding: 1,
+          elevation: 1,
+        }}
+      >
+        Project Endate Date: <b>{result.commentDate ? result.commentDate : 'N/A'}</b>
+      </Item>
+      <Item
+        //className={classes.itemHeader}
+        sx={{
+          margin: 0.5,
+          padding: 1,
+          elevation: 1,
+        }}
+      >
+        Final NOA: <b>{result.finalNoa ? result.finalNoa : 'N/A'}</b>
+      </Item>
+      <Item
+        //className={classes.itemHeader}
+        sx={{
+          margin: 0.5,
+          padding: 1,
+          elevation: 1,
+        }}
+      >
+        Draft NOA: <b>{result.draftNoa ? result.draftNoa : 'N/A'}</b>
+      </Item>
+      <Item
+        //className={classes.itemHeader}
+        sx={{
+          margin: 0.5,
+          padding: 1,
+          elevation: 1,
+        }}
+      >
+        Process ID: <b>{result.processId ? result.processId : 'N/A'}</b>
+      </Item>
+          
+      
+      {/* ) : (
+        <></>
+      )} */}
+    </Grid>
+  );
+}
+
 // function uuidv4() {
 //     let returnVal = ([1e7]+-1e3+-4e3+-8e3+-1e11).replace(/[018]/g, c =>
 //         (c ^ crypto.getRandomValues(new Uint8Array(1))[0] & 15 >> c / 4).toString(16)
