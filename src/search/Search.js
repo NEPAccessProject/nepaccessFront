@@ -13,9 +13,11 @@ import {
 	Box,
 	Container,
 	Grid,
-	Paper
+	Paper,
+	Typography
 } from "@mui/material";
 import { styled } from "@mui/material/styles";
+import { withStyles } from "@mui/styles";
 import "react-datepicker/dist/react-datepicker.css";
 import { withRouter } from "react-router";
 import "tippy.js/dist/tippy.css"; // optional
@@ -853,7 +855,14 @@ class Search extends React.Component {
 										<b>Filters Place Holder</b>
 								</Grid>
 								<Grid item xs={9} border={0}>
-									{/* <Typography variant="searchResultsHeader">Search Results # {this.props.results.length}</Typography> */}
+									{/* <Typography fontSize={34}  variant='h1'>Header 1 </Typography>
+									<Typography fontSize={30}  variant='h2'>Header 2 </Typography>
+									<Typography fontSize={28} variant='h3'>Header 3 </Typography>
+									<Typography fontSize={26} variant='h4'>Header 4 </Typography>
+									<Typography fontSize={22} variant='h5'>Header 5 </Typography>
+									<Typography fontSize={14} variant='p'>phagraph one </Typography> */}
+									
+									<Typography variant="h4" fontSize={22}>Search Results # {this.props.results.length}</Typography>
 									<Suspense fallback={<CircularProgress/>}>
 										{this.props.children}
 									</Suspense>
@@ -1002,9 +1011,13 @@ class Search extends React.Component {
 			}
 		);
 	};
-}
+};
 
-export default withRouter(Search);
+const styles = theme => ({
+	...theme,
+})
+
+export default withRouter(withStyles(styles)(Search));
 
 /** Does a .replace with regex for these rules:
  * For the opening ', it could have either no characters before it, or whitespace.

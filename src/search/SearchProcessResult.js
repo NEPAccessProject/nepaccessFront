@@ -1,14 +1,69 @@
 import React from 'react';
 
-import '../User/login.css';
-import Globals from '../globals.js';
-
+import { useStyles } from '@mui/styles';
 import DownloadFile from '../DownloadFile.js';
 import DownloadFiles from '../DownloadFiles';
+import '../User/login.css';
+import Globals from '../globals.js';
 
 import Tippy from '@tippyjs/react';
 
 // TODO: Filtering results etc. rerenders and loses track of downloads
+
+const useStyles = makeStyles((theme) => ({
+    centeredContent: {
+        verticalAlign: 'center',
+        textAlign: 'center',
+        alignContent: 'center',
+        justifyContent: 'center',
+        justifyItems: 'center',
+        borderColor: '#ccc',
+        border: 0,
+        fontFamily: 'open sans',
+    },
+    autocomplete: {},
+    resultsHeader: {
+        fontFamily: 'open sans',
+        fontSize: 50,
+        fontWeight: 'bolder',
+        padding: 4,
+        margin: 2,
+        fontColor: '#000',
+    },
+    resultItemHeader: {
+        fontSize: 25,
+        fontWeight: 'bold',
+        margin: 0.5,
+        padding: 1,
+        elevation: 1,
+        fontColor: '#000',
+    },
+    itemHeader: {
+        fontFamily: 'open sans',
+        fontSize: 40,
+        fontWeight: 'bold',
+        margin: 0.5,
+        padding: 1,
+        fontColor: '#000',
+        elevation: 1,
+        p: 1,
+        '&:hover': {
+            backgroundColor: '#ccc', //theme.palette.grey[200],
+            boxShadow: '0px 4px 8px rgba(0.5, 0.5, 0.5, 0.25)',
+            cursor: 'pointer',
+            '& .addIcon': {
+                color: 'darkgrey',
+            },
+        },
+        infoCard: {
+            padding: 1,
+            margin: 1,
+            border: 1,
+            borderColor: '#ddd',
+        },
+    },
+}));
+
 
 export default class SearchProcessResult extends React.Component {
 

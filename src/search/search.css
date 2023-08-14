@@ -1,5 +1,25 @@
-/* Non landing search styling */
+Non landing search styling
 
+h1 {
+  font-size: "1em";
+  font-color: "#000"
+}
+h2 {
+  font-size: "1em";
+  font-color: "#000"
+}
+h3 {
+  font-size: "1em";
+  font-color: "#000"
+}
+h4 {
+  font-size: "1em";
+  font-color: "#000"
+}
+h5 {
+  font-size: "1em";
+  font-color: "#000"
+}
 .search-label {
   display: inline-flex;
   align-items: center;
