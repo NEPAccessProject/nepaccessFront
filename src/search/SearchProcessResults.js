@@ -477,12 +477,10 @@ export function SearchResultCards(props) {
             padding: 0.5,
             border: 0,
             borderColor: "#ccc",
-            minHeight: 2,
-            lineHeight: 1,
+//            lineHeight: 1,
             justifyContent: 'center',
             justifyItems: 'center',
-            fontSize: 12
-
+            fontSize: 16
           }}
         >
           Date: <b>{result.commentDate ? result.commentDate : 'N/A'}</b>

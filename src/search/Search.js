@@ -1,6 +1,5 @@
-import CircularProgress from '@mui/material/CircularProgress';
 import axios from "axios";
-import React, { Suspense } from "react";
+import React from "react";
 //import DatePicker from "react-datepicker";
 //import Select from 'react-select';
 
@@ -13,8 +12,7 @@ import {
 	Box,
 	Container,
 	Grid,
-	Paper,
-	Typography
+	Paper
 } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { withStyles } from "@mui/styles";
@@ -861,11 +859,10 @@ class Search extends React.Component {
 									<Typography fontSize={26} variant='h4'>Header 4 </Typography>
 									<Typography fontSize={22} variant='h5'>Header 5 </Typography>
 									<Typography fontSize={14} variant='p'>phagraph one </Typography> */}
-									
-									<Typography variant="h4" fontSize={22}>Search Results # {this.props.results.length}</Typography>
-									<Suspense fallback={<CircularProgress/>}>
+	
+									{/* <Suspense fallback={<CircularProgress/>}> */}
 										{this.props.children}
-									</Suspense>
+									{/* </Suspense> */}
 							 </Grid>
 						 </Grid>
 							{/* End Header*/}
