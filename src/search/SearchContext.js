@@ -1,4 +1,8 @@
 import { createContext } from "react";
-const SearchContext = createContext({})
+const SearchContext = createContext({
+    state: {},
+    setState: () => {},
+    results: [],
+})
 
 export default SearchContext;

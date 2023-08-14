@@ -6,6 +6,7 @@ import theme from '../styles/theme';
 import SearchTips from './Dialogs/SearchTips';
 import SearchContext from './SearchContext';
 
+
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
   ...theme.typography.body2,
@@ -70,7 +71,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function SearchResultItems(props) {
-  //  console.log("🚀 ~ file: SearchResultsItems.jsx:45 ~ SearchResultItems ~ props:", props);
+  console.log("🚀 ~ file: SearchResultsItems.jsx:45 ~ SearchResultItems ~ props:", props);
   const { result, record } = props;
   //console.log("🚀 ~ file: SearchResultsItems.jsx:47 ~ SearchResultItems ~ record:", record);
   //console.log("🚀 ~ file: SearchResultsItems.jsx:47 ~ SearchResultItems ~ result:", result);
@@ -137,7 +138,6 @@ export function SearchResultItem(props) {
   const context = useContext(SearchContext);
   const { state, setState } = context;
   const { record } = props;
-  console.log("🚀 ~ file: SearchResultsItems.jsx:140 ~ SearchResultItem ~ record:", record)
   const onCheckboxChange = (evt) => {
     //console.log('Checkbox changed, setting showContext to ', evt.target.checked);
     setState({
@@ -205,7 +205,7 @@ export function SearchResultItem(props) {
         id="search-result-item-root-item"
         flex={1}
         flexGrow={1}
-        border={0}
+        border={1}
         borderColor={'#ccc'}
         className={classes.centeredContent}
         xs={12}
@@ -221,7 +221,14 @@ export function SearchResultItem(props) {
             {documentType} - {title}
           </Typography> */}
         </>
-        <Grid item id="year-box" borderRight={1} borderColor={"#bbb"} display={'flex'} xs={1} alignContent={'center'} justifyContent="center" alignItems={'center'} borderRight={0} classes={classes.centeredContent}
+        <Grid item id="year-box" borderRight={1} 
+          borderColor={"#bbb"} 
+          display={'flex'} 
+          xs={1} 
+          alignContent={'center'} 
+          justifyContent="center" 
+          alignItems={'center'} 
+          classes={classes.centeredContent}
         >
           <Typography
             id="year-typography"
@@ -241,10 +248,11 @@ export function SearchResultItem(props) {
           id="status-box"
           display={'flex'}
           xs={2}
-          alignContent={'center'} justifyContent="center" alignItems={'center'}
-          borderRight={1}
-          borderLeft={1}
-          borderColor={'#ccc'}
+          alignContent={'center'} 
+          justifyContent="center" 
+          alignItems={'center'}          
+          border={1}
+          borderColor={'#111'}
           className={classes.centeredContent}
         >
           <Typography
@@ -277,6 +285,7 @@ export function SearchResultItem(props) {
         <Grid
           display={'flex'}
           container
+          border={1}
           id="button-grid-container"
           xs={3}
           flex={1}
@@ -291,6 +300,7 @@ export function SearchResultItem(props) {
             alignContent={'center'}
             justifyContent="center"
             alignItems={'center'}
+            borderRight={1}
           >
             {/* <PDFViewerDialog
               id="preview-button-grid-item"
@@ -332,7 +342,7 @@ export function SearchResultItem(props) {
             </Button>
           </Grid>
         </Grid>
-        <Grid item >
+        <Grid item xs={12} border={1}>
           <b>Snippets go here</b>
             {/* <h4>Snippets??? {JSON.stringify(record.plaintext)}</h4>
           <RenderSnippets record={record} /> */}
@@ -408,7 +418,6 @@ export function DisplayGrid(props) {
 }
 
 export function RenderSnippets(props) {
-  //console.log("🚀 ~ file: SearchResultsItems.jsx:345 ~ RenderSnippets ~ props:", props)
   const {
     record
   } = props;
@@ -420,8 +429,6 @@ export function RenderSnippets(props) {
   const [isContentExpanded, setIsContentExpanded] = useState(false);
   const { hideText, hidden } = state;
 
-
-  //console.log(`${record.title} plaintext`, record.plaintext)
   function convertToHTML(content) {
     return { __html: content };
   }
@@ -453,10 +460,11 @@ export function RenderSnippets(props) {
   }
 </Box> */}
           <Box padding={1}>
-            {isContentExpanded && text && text.length >= 100 
-            ? (
+            {isContentExpanded && text && text.length <= 100 
+            &&
               <div dangerouslySetInnerHTML={convertToHTML(text)} />
-            ) : text && text.length >= 100
+            }
+            {!isContentExpanded && text && text.length >= 100
               ? (
                   <div dangerouslySetInnerHTML={convertToHTML(text.substring(0, 100) + '...')} />
             ) : (
@@ -466,7 +474,7 @@ export function RenderSnippets(props) {
         </Box>
 
           {
-            !hidden && record && record.plaintext && record.plaintext[0].length ? (
+            !hidden && text && text.length ? (
               <Box
                 id="click-to-see-more-box"
                 width={'100%'}
@@ -478,7 +486,8 @@ export function RenderSnippets(props) {
                 paddingTop={1}
                 paddingBottom={1}
               >
-                {isContentExpanded && record.plaintext[0] && record.plaintext[0].length >= 100 ? (
+                {isContentExpanded && text.length >= 100 
+                ? (
                   <Typography variant="expanderButton">
                     Click to See less
                   </Typography>
