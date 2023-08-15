@@ -186,7 +186,6 @@ export function SearchResultItem(props) {
     //console.log('Download ID Value and filename', id, filename);
   };
 
-  const classes = useStyles(theme);
 
   const year = commentDate && commentDate.length > 0 ? new Date(commentDate).getFullYear() : 'N/A';
   //console.log('SEARCH STATE SearchResultComponent');
