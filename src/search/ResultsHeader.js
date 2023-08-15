@@ -1,4 +1,3 @@
-import React from "react";
 import { SearchOutlined } from "@material-ui/icons";
 import {
   Box,
@@ -8,8 +7,9 @@ import {
   ListItem,
   TextField,
 } from "@mui/material";
-import SearchContext from "./SearchContext";
+import React from "react";
 import Globals from "../globals";
+import SearchContext from "./SearchContext";
 import SearchResultOptions from "./SearchResultOptions";
 
 const sortOptions = [
@@ -128,7 +128,8 @@ export default class ResultsHeader extends React.Component {
           layout={"row"}
           spacing={1}
           border={0}
-          borderColor="darkgray"
+          borderBottom={1}
+          borderColor="#ccc"
         >
           <Hidden mdDown>
             <Grid item xs={0} md={2}>

@@ -934,6 +934,8 @@ class Search extends React.Component {
 			rehydrate.surveyDone = true;
 			this.setState(rehydrate);
 		} catch (e) {
+			console.error('Error in Search.js componentDidMount(): ', e);
+			
 			// do nothing
 		}
 

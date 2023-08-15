@@ -63,7 +63,7 @@ export default class App extends React.Component {
     // Necessary for on-demand highlighting per page
     _page = 1;
     _pageSize = 10;
-    
+
     // For canceling a search when component unloads
     _mounted = false;
 
@@ -639,6 +639,8 @@ export default class App extends React.Component {
                     this.setState({
                         searchResults: _data,
                         outputResults: _data,
+                        processResults: processResults,
+                        results: _data,
                     }, () => {
                         // console.log("All results", _data);
 

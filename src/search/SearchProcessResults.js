@@ -302,9 +302,9 @@ export default class SearchProcessResults extends React.Component {
           <Box border={1}>
             
               <Typography variant='h3' fontSize={20} >{this.state.searching}</Typography>
-              <Grid className="sidebar-results">
-                <Grid id="process-results">
-                  <Grid className="tabulator-holder">
+              <Grid container border={1} borderColor={'blue'}>
+                <Grid item id="process-results">
+                  <Grid paddingLeft={3} paddingRight={3} item xs={12} justifyContent={'center'} alignContent={'center'} borde={1} borderColor='red'  > 
                     <Typography variant="h4" fontSize={16} id="results-label">results text: {this.props.resultsText}</Typography>
                     <Typography variant="h4" fontSize={16} id="results-label">results length: {this.props.results.length}</Typography>                 <divider>
                         <SearchTips/>
@@ -323,7 +323,7 @@ export default class SearchProcessResults extends React.Component {
     try {
       return (
 				<>
-					<Typography fontSize={26} variant='h3'>
+					<Typography fontSize={26} variant='h4'>
 						Search results
 					</Typography>
 					<Grid container display={'flex'} sx={9} flex={1} border={0}>
@@ -369,13 +369,13 @@ export default class SearchProcessResults extends React.Component {
 						{this.props.searching ? <>Please wait...</> : <></>}
 						{this.props.results.map((result, index) => {
 							return (
-								<Item>
+								<Grid item>
 									<>
-										<Typography variant='h3' fontColor={'black'} fontSize={18} paddingLeft={2} paddingRight={2}  >{result.title}</Typography>
+										<Typography variant='h5' id="result-title-text" fontSize={20}  >{result.title}</Typography>
 										<SearchResultCards result={result} />
 										<SearchResultItems result={result} />
 									</>
-								</Item>
+								</Grid>
 							);
 						})}
 					</Grid>

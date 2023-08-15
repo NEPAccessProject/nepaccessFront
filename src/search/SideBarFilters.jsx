@@ -93,18 +93,20 @@ export default function SideBarFilters(props) {
           // this would launch a new search on enter key, in some child inputs
           // onKeyUp={onKeyUp}
         >
-          <b>Start Filters</b>
-          <span>
+          <Box sx={{
+            textAlign: "center",
+            alignItems: "center",
+            fontWeight: "bold"
+          }}>
             Narrow your results
-            <span
+          <span
               //className="filters-toggle"
               onClick={() => toggleFiltersHidden()}
             >
-              -
             </span>
-          </span>
+          </Box>
 
-          <Divider />
+
 
           <Item alignItems={"center"}>
             <FormControlLabel

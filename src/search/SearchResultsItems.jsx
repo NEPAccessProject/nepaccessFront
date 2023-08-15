@@ -214,9 +214,10 @@ export function SearchResultItem(props) {
       >
 
         <>
-          <Typography variant="h5" fontSize={14} padding={2}>
+        
+          {/* <Typography variant="h5" fontColor="#000" fontSize={18} padding={2}>
            {title} {' '}
-          </Typography>
+          </Typography> */}
         </>
         <Grid item id="year-box" 
           borderRight={1}
@@ -267,14 +268,15 @@ export function SearchResultItem(props) {
           display={'flex'}
           container
           borderRight={1}
+          borderLeft={1}
           borderColor={'#ccc'}
           //className={classes.centeredContent}
-          id="button-grid-container"
+          id="snippets-grid-container"
           xs={6}
           padding={1}
           flex={1}
           >
-          <Typography fontSize={16} variant='h5'>{title}</Typography>
+          <Typography fontColor='black' fontSize={18} variant='h5'>{(title) ? title : ''}</Typography>
           {/* <RenderSnippets record={record} /> */}
         </Grid>
         <Grid
