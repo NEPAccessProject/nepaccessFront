@@ -13,7 +13,7 @@ import './User/login.css';
 
 import Globals from './globals.js';
 import persist from './persist.js';
-
+import SearchContext from './search/SearchContext.js';
 const _ = require('lodash');
 
 /** For testing redesigned, consolidated search which is in progress */
@@ -1560,9 +1560,13 @@ export default class App extends React.Component {
 
 	render() {
 		if(this.state.verified){
-
+            const value = {
+                state: this.state,
+                setState: this.setState,
+            };
 			return (
                 <>
+                    <SearchContext.Provider value={value}>
 				<div id="app-content" className="footer-content">
                     <Helmet>
                         <meta charSet="utf-8" />
@@ -1618,6 +1622,7 @@ export default class App extends React.Component {
 				</div>
                 <div ref={this.endRef} />
                 <Footer id="footer"></Footer>
+                    </SearchContext.Provider>
                 </>
 			)
 
