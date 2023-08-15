@@ -3,7 +3,6 @@ import { styled } from '@mui/material/styles';
 import { makeStyles } from '@mui/styles';
 import React, { useContext, useState } from 'react';
 import theme from '../styles/theme';
-import SearchTips from './Dialogs/SearchTips';
 import SearchContext from './SearchContext';
 
 
@@ -99,29 +98,15 @@ export default function SearchResultItems(props) {
       {/* <h2>Search Result Items Result?</h2>
     {JSON.stringify(result)} */}
       <Box marginTop={1} marginBottom={1} id="search-results-container-box">
-        {sortedRecords && sortedRecords.length ? (
-          sortedRecords.map((record, idx) => {
-            return (
-              <>
+          {sortedRecords.map((record, idx) => {
                 {/* <Typography variant="searchResultSubTitle" padding={2}>{record.title}</Typography> */}
                 <Item key={idx} className="search-result-item-container">
                   {/* {JSON.stringify(record)} */}
                   <Divider />
-                  <SearchResultItem record={record} />
+                  {/* <SearchResultItem record={record} /> */}
                   <Divider />
                 </Item>
-              </>
-            );
-          })
-        ) : (
-          <div>
-            <Typography>
-              No results Found
-            </Typography>
-            <SearchTips />
-
-          </div>
-        )}
+          })};
       </Box>
     </>
   );
@@ -193,10 +178,10 @@ export function SearchResultItem(props) {
   };
 
   const classes = useStyles(theme);
-  
+
   const year = commentDate && commentDate.length > 0 ? new Date(commentDate).getFullYear() : 'N/A';
   //console.log('SEARCH STATE SearchResultComponent');
-//  { Object.keys(record) }
+  //  { Object.keys(record) }
   const text = record.plaintext || '';
   return (
     <>
@@ -221,13 +206,13 @@ export function SearchResultItem(props) {
             {documentType} - {title}
           </Typography> */}
         </>
-        <Grid item id="year-box" borderRight={1} 
-          borderColor={"#bbb"} 
-          display={'flex'} 
-          xs={1} 
-          alignContent={'center'} 
-          justifyContent="center" 
-          alignItems={'center'} 
+        <Grid item id="year-box" borderRight={1}
+          borderColor={"#bbb"}
+          display={'flex'}
+          xs={1}
+          alignContent={'center'}
+          justifyContent="center"
+          alignItems={'center'}
           classes={classes.centeredContent}
         >
           <Typography
@@ -248,9 +233,9 @@ export function SearchResultItem(props) {
           id="status-box"
           display={'flex'}
           xs={2}
-          alignContent={'center'} 
-          justifyContent="center" 
-          alignItems={'center'}          
+          alignContent={'center'}
+          justifyContent="center"
+          alignItems={'center'}
           border={1}
           borderColor={'#111'}
           className={classes.centeredContent}
@@ -333,7 +318,7 @@ export function SearchResultItem(props) {
               //   isOpen={isPDFViewOpen}
               //   onDialogClose={(evt) => closePDFPreview(evt, processId)}
               // />
-              }
+            }
             <Button
               onClick={(evt) => openPDFPreview(evt, processId)}
               color={'secondary'}
@@ -344,8 +329,8 @@ export function SearchResultItem(props) {
         </Grid>
         <Grid item xs={12} border={1}>
           <b>Snippets go here</b>
-            {/* <h4>Snippets??? {JSON.stringify(record.plaintext)}</h4>
-          <RenderSnippets record={record} /> */}
+          {/* <h4>Snippets??? {JSON.stringify(record.plaintext)}</h4>*/}
+          <RenderSnippets record={record} />
         </Grid>
       </Grid>
     </>
@@ -438,75 +423,75 @@ export function RenderSnippets(props) {
     setIsContentExpanded(!isContentExpanded);
     evt.preventDefault();
   }
-  // useEffect(() => {
-  //   console.log('useEffect for content expanded');
-  // },[isContentExpanded]);
-  if (!record) {
-    return (
-      <b>No Record to create snippet content</b>
-    )
+  return (
+    // useEffect(() => {
+    //   console.log('useEffect for content expanded');
+    // },[isContentExpanded]);
+    record.plaintext.map((text, idx) => {
+      return (
+        <b>record.processId - record.id - recorc.</b>
+      )
+    }))
+}
+
+export function Snippets(props) {
+  const { text, hidden, isContentExpanded, id, processId } = props;
+  function convertToHTML(content) {
+    return { __html: content };
   }
-  if (!hidden) {
-    return (
-      <>
-        {record.plaintext.map((text, idx) => {
-        <Box className={'content-snippets--result-item-container'}>
-          <b>{idx}</b>
-          {/* {JSON.stringify(props)} */}
-          {/* <Box>              
-            {(record.plaintext && record.plaintext.length > 0)
-            &&
-            <div dangerouslySetInnerHTML={convertToHTML(record.plaintext[0])} />
+  function toggleContentExpansion(evt, id) {
+    console.log(`Content Expansion Called for id ${id} evt:`, evt);
   }
-</Box> */}
-          <Box padding={1}>
-            {isContentExpanded && text && text.length <= 100 
+  return (
+    <>
+      <Box className={'content-snippets--result-item-container'}>
+        <Divider />
+        <b>{text}</b>
+        <Divider />
+        {/* {JSON.stringify(props)} */}
+        <Box>
+          {(text.length > 0)
             &&
-              <div dangerouslySetInnerHTML={convertToHTML(text)} />
-            }
-            {!isContentExpanded && text && text.length >= 100
-              ? (
-                  <div dangerouslySetInnerHTML={convertToHTML(text.substring(0, 100) + '...')} />
+            <div dangerouslySetInnerHTML={convertToHTML(text)} />
+          }
+        </Box>
+        <Box padding={1}>
+          {isContentExpanded && text && text.length <= 100
+            &&
+            <div dangerouslySetInnerHTML={convertToHTML(text)} />
+          }
+          {!isContentExpanded && text && text.length >= 100
+            ? (
+              <div dangerouslySetInnerHTML={convertToHTML(text.substring(0, 100) + '...')} />
             ) : (
               <div></div>
             )}
-          </Box>
         </Box>
+      </Box>
+      <Box
+        id="click-to-see-more-box"
+        width={'100%'}
+        alignContent={'center'}
+        textAlign={'center'}
+        justifyContent={'center'}
+        onClick={(evt) => toggleContentExpansion(evt,)}
+        bgcolor="#A2A5A6"
+        paddingTop={1}
+        paddingBottom={1}
+      >
+        {isContentExpanded && text.length >= 100
+          ? (
+            <Typography variant="expanderButton">
+              Click to See less
+            </Typography>
+          ) : (
+            <Typography variant="expanderButton">Click to to See More...</Typography>
+          )}
+      </Box>
+      : (
+        <Typography align='center'>This document's content is not available</Typography>
 
-          {
-            !hidden && text && text.length ? (
-              <Box
-                id="click-to-see-more-box"
-                width={'100%'}
-                alignContent={'center'}
-                textAlign={'center'}
-                justifyContent={'center'}
-                onClick={(evt) => toggleContentExpansion(evt, record.id)}
-                bgcolor="#A2A5A6"
-                paddingTop={1}
-                paddingBottom={1}
-              >
-                {isContentExpanded && text.length >= 100 
-                ? (
-                  <Typography variant="expanderButton">
-                    Click to See less
-                  </Typography>
-                ) : (
-                  <Typography variant="expanderButton">Click to to See More...</Typography>
-                )}
-              </Box>
-            ) : (
-            <>
-              <Typography align='center'>This document's content is not available</Typography>
-
-            </>
-          )
-          }
-        })}
-      </>
-    );
-  }
-  else {
-    return (<>Nothing</>)
-  }
+      )
+    </>
+  )
 }
