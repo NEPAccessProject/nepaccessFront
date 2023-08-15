@@ -2,16 +2,18 @@ import { Paper, Typography } from "@mui/material";
 import Grid from '@mui/material/Grid'; // Grid version 1
 import { makeStyles, styled } from "@mui/styles";
 import Tippy from "@tippyjs/react";
-import React, { lazy } from "react";
+import React from "react";
 import { reactFormatter } from "react-tabulator";
 import "react-tabulator/lib/css/tabulator_site.min.css"; // theme
 import "react-tabulator/lib/styles.css"; // required styles
 import "../cardProcess.css";
 import Globals from "../globals.js";
 import "../loader.css";
+import theme from "../styles/theme.js";
+import "./search.css";
 //import SearchProcessResult from "./SearchProcessResult.js";
-const SearchProcessResult = lazy(() => import("./SearchProcessResult"));
-const SearchResultItems = lazy(()=> import('./SearchResultsItems.jsx'));
+import SearchProcessResult from "./SearchProcessResult";
+import SearchResultItems from './SearchResultsItems.jsx';
 //import SearchResultItems from "./SearchResultsItems.jsx";
 
 const _ = require("lodash");
@@ -28,7 +30,7 @@ const Item = styled(Paper)(({ theme }) => ({
   //...theme.typography.body2,
   padding: 2,//theme.spacing(1),
   // textAlign: 'center',
-  color: "#222", //theme.palette.text.secondary,
+  color: "#ccc", //theme.palette.text.secondary,
   elevation: 1,
   border: 0,
   borderRadius: 0,
@@ -36,6 +38,7 @@ const Item = styled(Paper)(({ theme }) => ({
   mb: 2,
   pl: 0,
   pr: 0,
+  fontColor: '#000',
   "&:hover": {
     //           backgroundColor: //theme.palette.grey[200],
     boxShadow: "0px 4px 8px rgba(0.5, 0.5, 0.5, 0.15)",
@@ -43,6 +46,7 @@ const Item = styled(Paper)(({ theme }) => ({
     "& .addIcon": {
       color: "purple",
     },
+    fontFamily:"open sans"
   },
 }));
 
@@ -51,10 +55,10 @@ const Item = styled(Paper)(({ theme }) => ({
 const CardItem = styled(Paper)(({ theme }) => ({
   //backgroundColor: theme.palette.mode === "dark" ? "#1A2027" : "#fff",
   //...theme.typography.body2,
-  ...theme,
+  //...theme,
   padding: 2,//theme.spacing(1),
   // textAlign: 'center',
-  color: "#111", //theme.palette.text.secondary,
+  fontColor: "#000", //theme.palette.text.secondary,
   elevation: 1,
   border: 0,
   borderRadius: 0,
@@ -298,7 +302,7 @@ export default class SearchProcessResults extends React.Component {
             <Grid className="sidebar-results">
               <Grid id="process-results">
                 <Grid className="tabulator-holder">
-                  <h2 id="results-label">Results Text Prop = {this.props.resultsText}</h2>
+                  <Typography variant="h4" id="results-label">Results Text Prop = {this.props.resultsText}</Typography>
                 </Grid>
               </Grid>
             </Grid>
@@ -311,67 +315,65 @@ export default class SearchProcessResults extends React.Component {
 
     try {
       return (
-        <>
-          <Typography variant="h3">Search results </Typography>
-          <Grid container display={'flex'} sx={9} flex={1} border={0}>
-            {this.props.resultsText}&nbsp;
-            <Tippy
-              className="tippy-tooltip--small searchTips"
-              trigger="manual click"
-              hideOnClick={true}
-              interactive={true}
-              placement="right"
-              content={
-                <div>
-                  The map view is a{" "}
-                  <span className="bold">visual representation</span> of all
-                  states and counties found in the current results table.
-                  <div>
-                    • If you hover over a polygon, a tooltip will also show
-                    how many of the current results are linked to it.
-                  </div>
-                  <div>
-                    • You can toggle the state and/or county layer by
-                    clicking on the checkboxes in the upper left corner.
-                  </div>
-                </div>
-              }
-            >
-              {
-                <span className={"side-link inline"}>
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="16px"
-                    height="16px"
-                    viewBox="0 0 100 100"
-                  >
-                    <path
-                      className="info-svg"
-                      d="M50.433,0.892c-27.119,0-49.102,21.983-49.102,49.102s21.983,49.103,49.102,49.103s49.101-21.984,49.101-49.103S77.552,0.892,50.433,0.892z M59,79.031C59,83.433,55.194,87,50.5,87S42,83.433,42,79.031V42.469c0-4.401,3.806-7.969,8.5-7.969s8.5,3.568,8.5,7.969V79.031z M50.433,31.214c-5.048,0-9.141-4.092-9.141-9.142c0-5.049,4.092-9.141,9.141-9.141c5.05,0,9.142,4.092,9.142,9.141C59.574,27.122,55.482,31.214,50.433,31.214z"
-                    />
-                  </svg>
-                </span>
-              }
-            </Tippy>
-            {this.props.searching ? <>Please wait...</> : <></>}
-            {/* <Typography variant="h5"># of Results: {this.props.results.length}</Typography> */}
-            {this.props.results.map((result, index) => {
-
-              return (
- 
-                  <Item>
-                    <>
-                    <Typography variant="searchResultsTitle">{result.title}</Typography>
-                      <SearchResultCards result={result} />
-                      <SearchResultItems result={result} />
-                    </>
-                  </Item>
-              )
-            })}
-          </Grid>
-        </>
-
-      );
+				<>
+					<Typography fontSize={26} variant='h3'>
+						Search results
+					</Typography>
+					<Grid container display={'flex'} sx={9} flex={1} border={0}>
+						{this.props.resultsText}&nbsp;
+						<Tippy
+							className='tippy-tooltip--small searchTips'
+							trigger='manual click'
+							hideOnClick={true}
+							interactive={true}
+							placement='right'
+							content={
+								<div>
+									The map view is a{' '}
+									<span className='bold'>visual representation</span> of all
+									states and counties found in the current results table.
+									<div>
+										• If you hover over a polygon, a tooltip will also show how
+										many of the current results are linked to it.
+									</div>
+									<div>
+										• You can toggle the state and/or county layer by clicking
+										on the checkboxes in the upper left corner.
+									</div>
+								</div>
+							}
+						>
+							{
+								<span className={'side-link inline'}>
+									<svg
+										xmlns='http://www.w3.org/2000/svg'
+										width='16px'
+										height='16px'
+										viewBox='0 0 100 100'
+									>
+										<path
+											className='info-svg'
+											d='M50.433,0.892c-27.119,0-49.102,21.983-49.102,49.102s21.983,49.103,49.102,49.103s49.101-21.984,49.101-49.103S77.552,0.892,50.433,0.892z M59,79.031C59,83.433,55.194,87,50.5,87S42,83.433,42,79.031V42.469c0-4.401,3.806-7.969,8.5-7.969s8.5,3.568,8.5,7.969V79.031z M50.433,31.214c-5.048,0-9.141-4.092-9.141-9.142c0-5.049,4.092-9.141,9.141-9.141c5.05,0,9.142,4.092,9.142,9.141C59.574,27.122,55.482,31.214,50.433,31.214z'
+										/>
+									</svg>
+								</span>
+							}
+						</Tippy>
+						{this.props.searching ? <>Please wait...</> : <></>}
+						{this.props.results.map((result, index) => {
+							return (
+								<Item>
+									<>
+										<Typography variant='h3' fontSize={18} paddingLeft={2} paddingRight={2}  >{result.title}</Typography>
+										<SearchResultCards result={result} />
+										<SearchResultItems result={result} />
+									</>
+								</Item>
+							);
+						})}
+					</Grid>
+				</>
+			);
 
     } catch (e) {
       if (e instanceof TypeError) {
@@ -382,7 +384,8 @@ export default class SearchProcessResults extends React.Component {
       }
       return (
         <div className="sidebar-results">
-          <h2 id="results-label">First Search Result Items with # of results {this.props.results.length}  ResultsText= {this.props.resultsText}</h2>
+          <Typography variant="h4" id="results-label">First Search Result Items with # of results {this.props.results.length}
+            ResultsText= {this.props.resultsText}</Typography>
           {this.props.results.map((result, index) => {
             return (
               <>
@@ -425,8 +428,7 @@ const useStyles = makeStyles(theme => (
       alignContent: 'center',
       justifyContent: 'center',
       justifyItems: 'center',
-      borderColor: '#ccc',
-      border: 1,
+      fontColor: '#000'
 
     },
     item: {
@@ -442,17 +444,22 @@ const useStyles = makeStyles(theme => (
 export function SearchResultCards(props) {
 
   const { result } = props;
-  const classes = useStyles()
+  const classes = useStyles(theme);
   return (
-    <div className={classes.root}>
-      <h4>Start </h4>
-      <Grid container className={classes.root} padding={2} xs={12} flexDirection={'row'} flex={1}>
+    <div 
+      //className={classes.root}
+    >
+
+      <Grid container
+        //className={classes.root}
+        padding={2} xs={12} flexDirection={'row'} flex={1}>
         <Paper
           sx={{
             margin: 0.25,
             padding: 1.5,
-            border: 1,
+            border: 0,
             borderColor: "#ccc",
+            //fontColor: "#222",
             minHeight: 2,
             lineHeight: 1,
             justifyContent: 'center',
@@ -467,14 +474,13 @@ export function SearchResultCards(props) {
           className={classes.Item}
           sx={{
             margin: 0.25,
-            padding: 1.5,
-            border: 1,
+            padding: 0.5,
+            border: 0,
             borderColor: "#ccc",
-            minHeight: 2,
-            lineHeight: 1,
+//            lineHeight: 1,
             justifyContent: 'center',
             justifyItems: 'center',
-
+            fontSize: 16
           }}
         >
           Date: <b>{result.commentDate ? result.commentDate : 'N/A'}</b>

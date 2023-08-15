@@ -1,6 +1,5 @@
-import CircularProgress from '@mui/material/CircularProgress';
 import axios from "axios";
-import React, { Suspense } from "react";
+import React from "react";
 //import DatePicker from "react-datepicker";
 //import Select from 'react-select';
 
@@ -16,6 +15,7 @@ import {
 	Paper
 } from "@mui/material";
 import { styled } from "@mui/material/styles";
+import { withStyles } from "@mui/styles";
 import "react-datepicker/dist/react-datepicker.css";
 import { withRouter } from "react-router";
 import "tippy.js/dist/tippy.css"; // optional
@@ -853,10 +853,16 @@ class Search extends React.Component {
 										<b>Filters Place Holder</b>
 								</Grid>
 								<Grid item xs={9} border={0}>
-									{/* <Typography variant="searchResultsHeader">Search Results # {this.props.results.length}</Typography> */}
-									<Suspense fallback={<CircularProgress/>}>
+									{/* <Typography fontSize={34}  variant='h1'>Header 1 </Typography>
+									<Typography fontSize={30}  variant='h2'>Header 2 </Typography>
+									<Typography fontSize={28} variant='h3'>Header 3 </Typography>
+									<Typography fontSize={26} variant='h4'>Header 4 </Typography>
+									<Typography fontSize={22} variant='h5'>Header 5 </Typography>
+									<Typography fontSize={14} variant='p'>phagraph one </Typography> */}
+	
+									{/* <Suspense fallback={<CircularProgress/>}> */}
 										{this.props.children}
-									</Suspense>
+									{/* </Suspense> */}
 							 </Grid>
 						 </Grid>
 							{/* End Header*/}
@@ -1002,9 +1008,13 @@ class Search extends React.Component {
 			}
 		);
 	};
-}
+};
 
-export default withRouter(Search);
+const styles = theme => ({
+	...theme,
+})
+
+export default withRouter(withStyles(styles)(Search));
 
 /** Does a .replace with regex for these rules:
  * For the opening ', it could have either no characters before it, or whitespace.

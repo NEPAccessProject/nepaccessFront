@@ -583,7 +583,7 @@ export default class App extends React.Component {
                         loggedIn: false
                     });
                 } else if(response.status === 202) {
-                    shouldContinue = false; // found all results already
+                    shouldContinue = true; // found all results already
                     return response.data;
                 } else {
                     console.log(response.status);
@@ -1180,9 +1180,8 @@ export default class App extends React.Component {
                     // console.log("🚀 ~ file: App.js:1173 ~ App ~ allResults:", allResults)
                     // console.log("🚀 ~ file: App.js:1175 ~ App ~ currentResults:", currentResults)
                     this.setState({
-                  searchResults: allResults,
-                  outputResults: currentResults,
-                  output: allResults,
+                        searchResults: _data,
+                        outputResults: _data,
                         shouldUpdate: true
                     }, () => {
                         console.log("Got highlights, finished search state",this.state);
@@ -1613,9 +1612,8 @@ export default class App extends React.Component {
                         sort={this.sort}
                         informAppPage={this.setPageInfo}
                         gatherSpecificHighlights={this.gatherSpecificHighlights}
-                        results={this.state.outputResults}
+                                results={this.state.outputResults} 
 //                        searchResults={this.state.searchResults}
-                        outputResults={this.state.outputResults} 
                         geoResults={this.state.geoResults}
                         filtersHidden={this.state.filtersHidden}
                         // searcherState={this._searcherState}

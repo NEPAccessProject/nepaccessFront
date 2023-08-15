@@ -4,6 +4,8 @@ import { makeStyles } from '@mui/styles';
 import React, { useContext, useState } from 'react';
 import theme from '../styles/theme';
 import SearchContext from './SearchContext';
+//import './search.css';
+
 
 
 const Item = styled(Paper)(({ theme }) => ({
@@ -15,66 +17,73 @@ const Item = styled(Paper)(({ theme }) => ({
   elevation: 1,
   border: 0,
   borderRadius: 1,
+  fontColor: "#000",
+  fontFamily: 'open sans'
 }));
 
 
 const useStyles = makeStyles((theme) => ({
-  centeredContent: {
-    verticalAlign: 'center',
-    textAlign: 'center',
-    alignContent: 'center',
-    justifyContent: 'center',
-    justifyItems: 'center',
-    borderColor: '#ccc',
-    border: 1,
-
-  },
-  autocomplete: {},
-  resultsHeader: {
-    fontFamily: 'open sans',
-    fontSize: 50,
-    fontWeight: 'bolder',
-    padding: 4,
-    margin: 2,
-  },
-  resultItemHeader: {
-    fontSize: 25,
-    fontWeight: 'bold',
-    margin: 0.5,
-    padding: 1,
-    elevation: 1,
-  },
-  itemHeader: {
-    fontFamily: 'open sans',
-    fontSize: 40,
-    fontWeight: 'bold',
-    margin: 0.5,
-    padding: 1,
-    elevation: 1,
-    p: 1,
-    '&:hover': {
-      backgroundColor: "#ccc", //theme.palette.grey[200],
-      boxShadow: '0px 4px 8px rgba(0.5, 0.5, 0.5, 0.25)',
-      cursor: 'pointer',
-      '& .addIcon': {
-        color: 'darkgrey',
-      },
-    },
-    infoCard: {
-      padding: 1,
-      margin: 1,
-      border: 1,
-      borderColor: "#ddd"
-    },
-  },
+	centeredContent: {
+		verticalAlign: 'center',
+		textAlign: 'center',
+		alignContent: 'center',
+		justifyContent: 'center',
+		justifyItems: 'center',
+		borderColor: '#ccc',
+		border: 0,
+		fontFamily: 'open sans',
+	},
+	autocomplete: {},
+	resultsHeader: {
+		fontFamily: 'open sans',
+		fontSize: 50,
+		fontWeight: 'bolder',
+		padding: 4,
+		margin: 2,
+		fontColor: '#000',
+	},
+	resultItemHeader: {
+		fontSize: 25,
+		fontWeight: 'bold',
+		margin: 0.5,
+		padding: 1,
+		elevation: 1,
+		fontColor: '#000',
+	},
+	itemHeader: {
+		fontFamily: 'open sans',
+		fontSize: 40,
+		fontWeight: 'bold',
+		margin: 0.5,
+		padding: 1,
+		fontColor: '#000',
+		elevation: 1,
+		p: 1,
+		'&:hover': {
+			backgroundColor: '#ccc', //theme.palette.grey[200],
+			boxShadow: '0px 4px 8px rgba(0.5, 0.5, 0.5, 0.25)',
+			cursor: 'pointer',
+			'& .addIcon': {
+				color: 'darkgrey',
+			},
+		},
+		infoCard: {
+			padding: 1,
+			margin: 1,
+			border: 1,
+			borderColor: '#ddd',
+		},
+	},
 }));
 
 export default function SearchResultItems(props) {
   console.log("🚀 ~ file: SearchResultsItems.jsx:45 ~ SearchResultItems ~ props:", props);
   const { result, record } = props;
-  //console.log("🚀 ~ file: SearchResultsItems.jsx:47 ~ SearchResultItems ~ record:", record);
   //console.log("🚀 ~ file: SearchResultsItems.jsx:47 ~ SearchResultItems ~ result:", result);
+  //console.log("🚀 ~ file: SearchResultsItems.jsx:47 ~ SearchResultItems ~ record:", record);
   const context = useContext(SearchContext);
+  const {state} = context;
+  console.log('searchResult Items state', state);
 
 
   //console.log('SearchResultItems vprops', props);
@@ -119,7 +128,7 @@ export function SearchResultItem(props) {
   const [isPDFViewOpen, setIsPDFViewOpen] = useState(false);
   const [isContentExpanded, setIsContentExpanded] = useState(false);
   //  const { seachState, setState, showContext } = useContext(SearchContext);
-  //  const classes = makeStyles(theme);
+  const classes = useStyles(theme);
   const context = useContext(SearchContext);
   const { state, setState } = context;
   const { record } = props;
@@ -190,7 +199,7 @@ export function SearchResultItem(props) {
         id="search-result-item-root-item"
         flex={1}
         flexGrow={1}
-        border={1}
+        border={0}
         borderColor={'#ccc'}
         className={classes.centeredContent}
         xs={12}
@@ -201,10 +210,11 @@ export function SearchResultItem(props) {
           elevation: 0,
         }}
       >
+
         <>
-          {/* <Typography variant="searchResultSubTitle" padding={2}>
-            {documentType} - {title}
-          </Typography> */}
+          <Typography fontSize={20} variant="h4" padding={2}>
+            {title}
+          </Typography>
         </>
         <Grid item id="year-box" borderRight={1}
           borderColor={"#bbb"}
@@ -260,8 +270,8 @@ export function SearchResultItem(props) {
           borderLeft={0}
           borderTop={0}
           borderBottom={0}
-          borderRight={1}
-          borderColor={'#ccc'}
+//          borderRight={1}
+          borderColor={'#bbb'}
           className={classes.centeredContent}
         >
           {title}
@@ -270,7 +280,8 @@ export function SearchResultItem(props) {
         <Grid
           display={'flex'}
           container
-          border={1}
+          borderColor={'#bbb'}
+          borderLeft={0}
           id="button-grid-container"
           xs={3}
           flex={1}
@@ -285,7 +296,8 @@ export function SearchResultItem(props) {
             alignContent={'center'}
             justifyContent="center"
             alignItems={'center'}
-            borderRight={1}
+            borderRight={0}
+            borderColor={'#bbb'}
           >
             {/* <PDFViewerDialog
               id="preview-button-grid-item"
@@ -295,7 +307,8 @@ export function SearchResultItem(props) {
             /> */}
             <Button
               onClick={(evt) => openPDFPreview(evt, processId)}
-              color={'secondary'}
+              //color={'secondary'}
+              variant="outlined"
             >
               Preview
             </Button>
@@ -322,12 +335,15 @@ export function SearchResultItem(props) {
             <Button
               onClick={(evt) => openPDFPreview(evt, processId)}
               color={'secondary'}
-              display={'flex'}>
+              display={'flex'}
+              variant={'outlined'}
+            >
+              
               Download
             </Button>
           </Grid>
         </Grid>
-        <Grid item xs={12} border={1}>
+        <Grid item xs={12} border={0}>
           <b>Snippets go here</b>
           {/* <h4>Snippets??? {JSON.stringify(record.plaintext)}</h4>*/}
           <RenderSnippets record={record} />
@@ -357,15 +373,19 @@ export function DisplayGrid(props) {
       <Grid item xs={1} className={classes.centeredContent} borderRight={1} borderColor={"#ddd"}>
         2022
       </Grid>
-      <Grid xs={2} borderRight={1} borderColor={"#ddd"}>           <Typography
+      <Grid xs={2}
+        borderRight={1}
+        borderLeft={1}
+        borderColor={"#ddd"}>
+        <Typography
         textAlign={'center'}
         justifySelf={'center'}
         id="status-typography"
         fontWeight={'bold'}
       >
-        {documentType}
+        {documentType} ?????
       </Typography> </Grid>
-      <Grid item xs={6} className={classes.centeredContent} borderRight={1} borderColor={"#ddd"}>Space</Grid>
+      <Grid item xs={6} className={classes.centeredContent} border={1} borderColor={"red"}>Space</Grid>
       <Grid container display={'flex'} xs={3} className={classes.centeredContent} border={0}>
         <Grid item xs={6}
           border={0}
@@ -392,8 +412,9 @@ export function DisplayGrid(props) {
           <Button
             onClick={(evt) => openPDFPreview(evt, processId)}
             color={'secondary'}
+            variant="outlined"
             display={'flex'}>
-            Download
+            Download PDFs
           </Button>
         </Grid>
 
@@ -406,6 +427,7 @@ export function RenderSnippets(props) {
   const {
     record
   } = props;
+    console.log('RenderSnippets props', props);
   const { state, setState } = useContext(SearchContext);
 
 
