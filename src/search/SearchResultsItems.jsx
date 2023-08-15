@@ -1,7 +1,7 @@
 import { Box, Button, Divider, Grid, Paper, Typography } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import { makeStyles } from '@mui/styles';
-import React, { useContext, useState } from 'react';
+import React, { useContext, useEffect, useRef, useState } from 'react';
 import theme from '../styles/theme';
 import SearchContext from './SearchContext';
 //import './search.css';
@@ -77,20 +77,12 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function SearchResultItems(props) {
-  console.log("🚀 ~ file: SearchResultsItems.jsx:45 ~ SearchResultItems ~ props:", props);
+  //console.log("🚀 ~ file: SearchResultsItems.jsx:45 ~ SearchResultItems ~ props:", props);
   const { result, record } = props;
   //console.log("🚀 ~ file: SearchResultsItems.jsx:47 ~ SearchResultItems ~ result:", result);
   //console.log("🚀 ~ file: SearchResultsItems.jsx:47 ~ SearchResultItems ~ record:", record);
   const context = useContext(SearchContext);
   const {state} = context;
-  console.log('searchResult Items state', state);
-
-
-  //console.log('SearchResultItems vprops', props);
-  //  const records = (props.result && props.result.records) ? props.result.records : [];
-
-  //  console.log('search result records?', records);
-
   const sortByDate = (a, b) => {
     return a.commentDate > b.commentDate;
   }
@@ -107,6 +99,7 @@ export default function SearchResultItems(props) {
       {/* <h2>Search Result Items Result?</h2>
     {JSON.stringify(result)} */}
       <Box marginTop={1} marginBottom={1} id="search-results-container-box">
+        <h5># of Sorted Records {sortedRecords.length}</h5>
           {sortedRecords.map((record, idx) => {
                 {/* <Typography variant="searchResultSubTitle" padding={2}>{record.title}</Typography> */}
                 <Item key={idx} className="search-result-item-container">
@@ -122,8 +115,9 @@ export default function SearchResultItems(props) {
 }
 
 export function SearchResultItem(props) {
+  console.log("🚀 ~ file: 126 ~ SearchResultItem ~ props:", props)
   if (!props.record) {
-    console.warn('No record received exiting, got props:', props);
+    console.warn('No record received for SearchResultItem exiting, got props:', props);
   }
   const [isPDFViewOpen, setIsPDFViewOpen] = useState(false);
   const [isContentExpanded, setIsContentExpanded] = useState(false);
@@ -140,7 +134,16 @@ export function SearchResultItem(props) {
     });
   };
   // console.log("🚀 ~ file: SearchResultsItems.jsx:129 ~ SearchResultItem ~ propss / record:", props)
+  const _mounted = useRef(false);
 
+  useEffect(()=>{
+    console.log('SearchResultItem is being mounted');
+    _mounted.current = true;
+    return (()=> {
+      console.log('UnMounted SearchResyltItem');
+      _mounted.current = false
+    })
+  },[])
 
   const {
     action,
@@ -212,7 +215,7 @@ export function SearchResultItem(props) {
 
         <>
           <Typography fontSize={20} variant="h4" padding={2}>
-            Results title ? {title}
+           {title}
           </Typography>
         </>
         <Grid item id="year-box" borderRight={1}
