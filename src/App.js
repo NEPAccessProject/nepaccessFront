@@ -1052,18 +1052,18 @@ export default class App extends React.Component {
 
     gatherFirstPageHighlightsThenFinishSearch = (searchId, _inputs, currentResults) => {
         console.log("gatherFirstPageHighlightsThenFinishSearch")
-        if(!_inputs) {
-            if(this.state.searcherInputs) {
+        if (!_inputs) {
+            if (this.state.searcherInputs) {
                 _inputs = this.state.searcherInputs;
-            } else if(Globals.getParameterByName("q")) {
-                _inputs = {titleRaw: Globals.getParameterByName("q")};
+            } else if (Globals.getParameterByName("q")) {
+                _inputs = { titleRaw: Globals.getParameterByName("q") };
             }
         }
-        console.log("Gathering page highlights", searchId, this._page, this._pageSize);
-        if(!this._mounted){ // User navigated away or reloaded
+        // console.log("Gathering page highlights", searchId, this._page, this._pageSize);
+        if (!this._mounted) { // User navigated away or reloaded
             return; // cancel search
         }
-        if(searchId < this._searchId) { // Search interrupted
+        if (searchId < this._searchId) { // Search interrupted
             return; // cancel search
         }
         if (typeof currentResults === 'undefined') {
@@ -1074,8 +1074,8 @@ export default class App extends React.Component {
             snippetsDisabled: false,
             searching: true,
             networkError: "", // Clear network error
-		}, () => {
-            
+        }, () => {
+
             let searchUrl = new URL('text/get_highlightsFVH', Globals.currentHost);
 
             let mustSkip = {};
@@ -1087,16 +1087,16 @@ export default class App extends React.Component {
             // additional logic elsewhere could ask for all of the highlights.
             // Then we would never get any "hidden" highlights, resulting in more responsive UX
 
-            for(let i = startPoint; i < Math.min(currentResults.length, endPoint); i++) { // For each result card on current page
-                for(let j = 0; j < currentResults[i].records.length; j++) { // For each record in result card
+            for (let i = startPoint; i < Math.min(currentResults.length, endPoint); i++) { // For each result card on current page
+                for (let j = 0; j < currentResults[i].records.length; j++) { // For each record in result card
                     // Push first lucene ID and filename
-                    if(!Globals.isEmptyOrSpaces(currentResults[i].records[j].name)) {
+                    if (!Globals.isEmptyOrSpaces(currentResults[i].records[j].name)) {
 
                         // console.log("Pushing",i,j,currentResults[i].records[j].id);
 
                         // Need to skip this entry on both sides if it already has plaintext.
                         // If it has any, then skip here - we can get more on demand elsewhere, in separate logic.
-                        if(!currentResults[i].records[j].plaintext || !currentResults[i].records[j].plaintext[0]) {
+                        if (!currentResults[i].records[j].plaintext || !currentResults[i].records[j].plaintext[0]) {
 
                             // Filenames delimited by > (impossible filename character)
                             let firstFilename = currentResults[i].records[j].name.split(">")[0];
@@ -1107,7 +1107,7 @@ export default class App extends React.Component {
 
                             _unhighlighted.push(
                                 {
-                                    luceneIds: firstLuceneId, 
+                                    luceneIds: firstLuceneId,
                                     filename: firstFilename
                                 }
                             );
@@ -1121,22 +1121,22 @@ export default class App extends React.Component {
 
 
             // If nothing to highlight, nothing to do on this page
-            if(_unhighlighted.length === 0 || searchId < this._searchId) {
+            if (_unhighlighted.length === 0 || searchId < this._searchId) {
                 console.log("nothing to highlight: finish search");
                 this.initialSearch(_inputs);
                 return;
             }
 
-			let dataToPass = 
-            { 
-				unhighlighted: _unhighlighted,
+            let dataToPass =
+            {
+                unhighlighted: _unhighlighted,
                 terms: postProcessTerms(_inputs.titleRaw),
                 markup: _inputs.markup,
                 fragmentSizeValue: _inputs.fragmentSizeValue
             };
 
             // console.log("For backend",dataToPass);
-            
+
             //Send the AJAX call to the server
             axios({
                 method: 'POST', // or 'PUT'
@@ -1150,20 +1150,20 @@ export default class App extends React.Component {
                     return null;
                 }
             }).then(parsedJson => {
-                if(parsedJson){
+                if (parsedJson) {
 
                     // console.log("Adding highlights", parsedJson);
 
                     let allResults = this.state.searchResults;
 
                     let x = 0;
-                    for(let i = startPoint; i < Math.min(currentResults.length, endPoint); i++) {
-                        for(let j = 0; j < currentResults[i].records.length; j++) {
+                    for (let i = startPoint; i < Math.min(currentResults.length, endPoint); i++) {
+                        for (let j = 0; j < currentResults[i].records.length; j++) {
                             // If search is interrupted, updatedResults[i] may be undefined (TypeError)
-                            if(!Globals.isEmptyOrSpaces(currentResults[i].records[j].name)){
+                            if (!Globals.isEmptyOrSpaces(currentResults[i].records[j].name)) {
                                 // console.log("Assigning",i,j,currentResults[i].records[j].name);
 
-                                if(mustSkip[currentResults[i].records[j].id]) {
+                                if (mustSkip[currentResults[i].records[j].id]) {
                                     // do nothing; skip
                                     // console.log("Skipping ID " + [currentResults[i].records[j].id]);
                                 } else {
@@ -1177,29 +1177,25 @@ export default class App extends React.Component {
                         }
                     }
 
-                    // console.log("🚀 ~ file: App.js:1173 ~ App ~ allResults:", allResults)
-                    // console.log("🚀 ~ file: App.js:1175 ~ App ~ currentResults:", currentResults)
                     this.setState({
-                        searchResults: _data,
-                        outputResults: _data,
+                        searchResults: allResults,
+                        outputResults: currentResults,
                         shouldUpdate: true
                     }, () => {
-                        console.log("Got highlights, finished search state",this.state);
                         console.log("Got highlights, finish search");
                         this.initialSearch(_inputs);
                     });
-                    
+
                 }
-            }).catch(error => { 
-                console.log("🚀 ~ file: App.js:1187 ~ App ~ error:", error)
-                if(error.name === 'TypeError') {
+            }).catch(error => {
+                if (error.name === 'TypeError') {
                     console.error(error);
                 } else { // Server down or 408 (timeout)
                     let _networkError = 'Server is down or you may need to login again.';
                     let _resultsText = Globals.errorMessage.default;
 
-                    if(error.response && error.response.status === 408) {
-                        _networkError= 'Request has timed out.';
+                    if (error.response && error.response.status === 408) {
+                        _networkError = 'Request has timed out.';
                         _resultsText = 'Timed out';
                     }
 
@@ -1286,7 +1282,8 @@ export default class App extends React.Component {
 
         // If nothing to highlight, nothing to do on this page
         if(_unhighlighted.length === 0 || searchId < this._searchId) {
-            this.endEarly();
+            this.initialSearch(_inputs);
+            //this.endEarly();
             return;
         }
         

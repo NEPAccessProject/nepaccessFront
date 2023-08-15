@@ -112,7 +112,7 @@ export default function SearchResultItems(props) {
                 <Item key={idx} className="search-result-item-container">
                   {/* {JSON.stringify(record)} */}
                   <Divider />
-                  {/* <SearchResultItem record={record} /> */}
+                  <SearchResultItem record={record} />
                   <Divider />
                 </Item>
           })};
@@ -212,7 +212,7 @@ export function SearchResultItem(props) {
 
         <>
           <Typography fontSize={20} variant="h4" padding={2}>
-            {title}
+            Results title ? {title}
           </Typography>
         </>
         <Grid item id="year-box" borderRight={1}
