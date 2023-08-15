@@ -251,7 +251,7 @@ export function SearchResultItem(props) {
           justifyContent="center"
           alignItems={'center'}
           borderRight={1}
-          borderColor={'#bbb'}
+          borderColor={'#ccc'}
           className={classes.centeredContent}
         >
           <Typography
@@ -267,8 +267,7 @@ export function SearchResultItem(props) {
           display={'flex'}
           container
           borderRight={1}
-          borderLeft={1}
-          borderColor={'#bbb'}
+          borderColor={'#ccc'}
           //className={classes.centeredContent}
           id="button-grid-container"
           xs={6}
@@ -281,7 +280,7 @@ export function SearchResultItem(props) {
         <Grid
           display={'flex'}
           container
-          borderColor={'#bbb'}
+          borderColor={'#ccc'}
           borderLeft={0}
           id="button-grid-container"
           xs={3}
@@ -350,6 +349,7 @@ export function SearchResultItem(props) {
              }
           )
           )}
+          {JSON.stringify(record.plaintext)}
           <RenderSnippets record={record} />
         </Grid>
       </Grid>

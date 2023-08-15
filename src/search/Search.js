@@ -22,6 +22,8 @@ import "tippy.js/dist/tippy.css"; // optional
 import Globals from "../globals.js";
 import persist from "../persist.js";
 import SearchContext from "./SearchContext.js";
+import SideBarFilters from './SideBarFilters';
+
 //import Grid from '@mui/material/Grid'; // Grid version 1
 import { makeStyles } from "@mui/styles";
 
@@ -834,7 +836,7 @@ class Search extends React.Component {
 							</Grid>
 							<Grid container xs={12} flex={1} border={0}>
 								<Grid item xs={3} border={0}>
-								{this.state.filtersHidden &&	
+								{!this.state.filtersHidden &&	
 									<SideBarFilters
 											onActionChange={this.onActionChange}
 											onAgencyChange={this.onAgencyChange}
@@ -866,21 +868,16 @@ class Search extends React.Component {
 									{/* </Suspense> */}
 							 </Grid>
 						 </Grid>
-							{/* End Header*/}
-								{/* <Item xs={2} id="filter-container-items" border={0}>
+							
+						</Grid>
+						{/* End Header*/}
+						<Item xs={2} id="filter-container-items" border={0}>
 									<h4>Filters</h4>
 								</Item>
 								<Item display={'flex'} xs={9} border={0} id="results-container-items">
 									<h4>Results</h4>
-								</Item> */}
-
-						</Grid>
-
-						{/* Start New Layout  */}
-
-						{/* End Filters and Results */}
-
-						{/* {this.getSuggestions()}
+								</Item> 
+						{this.getSuggestions()}
 						<div className="loader-holder">
 							<div className="center" hidden={this.props.searching}>
 								<span id="inputMessage">{this.state.inputMessage}</span>
@@ -891,7 +888,7 @@ class Search extends React.Component {
 								<div></div>
 								<div></div>
 							</div>
-						</div> */}
+						</div>
 					</Paper>
 				</SearchContext.Provider>
 			</Container>
