@@ -487,7 +487,7 @@ export default class App extends React.Component {
             // Fresh search, fresh results
             searchResults: [],
             outputResults: [],
-            // geoResults: null,
+            geoResults: null,
             count: 0,
             searcherInputs: searcherState,
             snippetsDisabled: searcherState.searchOption==="C",
@@ -567,7 +567,7 @@ export default class App extends React.Component {
                 data: dataToPass
             })
             .then(response => {
-                console.log("🚀 ~ file: App.js:566 ~ App ~ response:", response)
+                console.log("🚀 ~ file: App.js:570 ~ App ~ response:", response)
                 let responseOK = response && response.status === 200;
                 if (responseOK) {
                     // console.log("Initial search results returned");
@@ -583,7 +583,7 @@ export default class App extends React.Component {
                         loggedIn: false
                     });
                 } else if(response.status === 202) {
-                    shouldContinue = true; // found all results already
+                    shouldContinue = false; // found all results already
                     return response.data;
                 } else {
                     console.log(response.status);
@@ -661,18 +661,18 @@ export default class App extends React.Component {
                                 shouldUpdate: true
                             });
                         } else if(!shouldContinue) {
-                            console.log("First pass got everything");
+                            console.log("First pass got everything filtering results by", this.state.searcherInputs);
                             // got all results already, so stop searching and start highlighting.
                             this.filterResultsBy(this.state.searcherInputs);
                             this.countTypes();
                         } else {
                             // Highlight first page using function which then gets the rest of the metadata
-                            console.log("Gather first page highlights");
+                            console.log("Gather first page highlights for", this.state.searchResults);
                             this.gatherFirstPageHighlightsThenFinishSearch(this._searchId, this.state.searcherInputs, this.state.searchResults);
                         }
                     });
                 } else {
-                    console.log("No results,reseting results");
+                    console.warn("No results,reseting results");
                     this.setState({
                         searching: false,
                         searchResults: [],
@@ -1122,8 +1122,8 @@ export default class App extends React.Component {
 
             // If nothing to highlight, nothing to do on this page
             if (_unhighlighted.length === 0 || searchId < this._searchId) {
-                console.log("nothing to highlight: finish search");
-                this.initialSearch(_inputs);
+                console.warm("nothing to highlight: finish search");
+                //this.initialSearch(_inputs);
                 return;
             }
 
@@ -1282,8 +1282,9 @@ export default class App extends React.Component {
 
         // If nothing to highlight, nothing to do on this page
         if(_unhighlighted.length === 0 || searchId < this._searchId) {
+            console.warn('There is nothing to highlights, calling inital search');
             this.initialSearch(_inputs);
-            //this.endEarly();
+            this.endEarly();
             return;
         }
         
@@ -1322,7 +1323,7 @@ export default class App extends React.Component {
 
                     // TODO: If we want to avoid checking every ID until we run out of highlights,
                     // data structures and a lot more must be changed
-
+                    console.log(' App.js 1326 state.searchResults;',state.searchResults);
                     let allResults = this.state.searchResults;
 
                     let x = 0;
@@ -1366,7 +1367,7 @@ export default class App extends React.Component {
                 }
             }).catch(error => { 
                 if(error.name === 'TypeError') {
-                    console.error(error);
+                    console.error('TypeError occured will searching ~1370',error);
                 } else { // Server down or 408 (timeout)
                     let _networkError = 'Server is down or you may need to login again.';
                     let _resultsText = Globals.errorMessage.default;

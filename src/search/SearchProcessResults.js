@@ -1,4 +1,4 @@
-import { Paper, Typography } from "@mui/material";
+import { Box, Paper, Typography } from "@mui/material";
 import Grid from '@mui/material/Grid'; // Grid version 1
 import { makeStyles, styled } from "@mui/styles";
 import Tippy from "@tippyjs/react";
@@ -14,6 +14,7 @@ import "./search.css";
 //import SearchProcessResult from "./SearchProcessResult.js";
 import SearchProcessResult from "./SearchProcessResult";
 import SearchResultItems from './SearchResultsItems.jsx';
+import SearchTips from './SearchTips.jsx';
 //import SearchResultItems from "./SearchResultsItems.jsx";
 
 const _ = require("lodash");
@@ -298,14 +299,20 @@ export default class SearchProcessResults extends React.Component {
       if (this.props.resultsText && this.props.resultsText !== "Results") {
         return (
           <>
-            <h3>No Results</h3>
-            <Grid className="sidebar-results">
-              <Grid id="process-results">
-                <Grid className="tabulator-holder">
-                  <Typography variant="h4" id="results-label">Results Text Prop = {this.props.resultsText}</Typography>
+          <Box border={1}>
+            
+              <Typography variant='h3' fontSize={20} >{this.state.searching}</Typography>
+              <Grid className="sidebar-results">
+                <Grid id="process-results">
+                  <Grid className="tabulator-holder">
+                    <Typography variant="h4" fontSize={16} id="results-label">results text: {this.props.resultsText}</Typography>
+                    <Typography variant="h4" fontSize={16} id="results-label">results length: {this.props.results.length}</Typography>                 <divider>
+                        <SearchTips/>
+                    </divider>
+                  </Grid>
                 </Grid>
               </Grid>
-            </Grid>
+          </Box>
 
           </>);
       } else {
@@ -364,7 +371,7 @@ export default class SearchProcessResults extends React.Component {
 							return (
 								<Item>
 									<>
-										<Typography variant='h3' fontSize={18} paddingLeft={2} paddingRight={2}  >{result.title}</Typography>
+										<Typography variant='h3' fontColor={'black'} fontSize={18} paddingLeft={2} paddingRight={2}  >{result.title}</Typography>
 										<SearchResultCards result={result} />
 										<SearchResultItems result={result} />
 									</>

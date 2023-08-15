@@ -3,6 +3,7 @@ import { styled } from '@mui/material/styles';
 import { makeStyles } from '@mui/styles';
 import React, { useContext, useEffect, useRef, useState } from 'react';
 import theme from '../styles/theme';
+import PDFViewerDialog from './Dialogs/PDFViewerDialog';
 import SearchContext from './SearchContext';
 //import './search.css';
 
@@ -99,15 +100,14 @@ export default function SearchResultItems(props) {
       {/* <h2>Search Result Items Result?</h2>
     {JSON.stringify(result)} */}
       <Box marginTop={1} marginBottom={1} id="search-results-container-box">
-        <h5># of Sorted Records {sortedRecords.length}</h5>
           {sortedRecords.map((record, idx) => {
                 {/* <Typography variant="searchResultSubTitle" padding={2}>{record.title}</Typography> */}
-                <Item key={idx} className="search-result-item-container">
+                return(<Item key={idx} className="search-result-item-container">
                   {/* {JSON.stringify(record)} */}
                   <Divider />
                   <SearchResultItem record={record} />
                   <Divider />
-                </Item>
+                </Item>)
           })};
       </Box>
     </>
@@ -214,17 +214,19 @@ export function SearchResultItem(props) {
       >
 
         <>
-          <Typography fontSize={20} variant="h4" padding={2}>
-           {title}
+          <Typography variant="h5" fontSize={14} padding={2}>
+           {title} {' '}
           </Typography>
         </>
-        <Grid item id="year-box" borderRight={1}
-          borderColor={"#bbb"}
+        <Grid item id="year-box" 
+          borderRight={1}
+          borderColor={"#ccc"}
           display={'flex'}
           xs={1}
           alignContent={'center'}
           justifyContent="center"
           alignItems={'center'}
+
           classes={classes.centeredContent}
         >
           <Typography
@@ -248,8 +250,8 @@ export function SearchResultItem(props) {
           alignContent={'center'}
           justifyContent="center"
           alignItems={'center'}
-          border={1}
-          borderColor={'#111'}
+          borderRight={1}
+          borderColor={'#bbb'}
           className={classes.centeredContent}
         >
           <Typography
@@ -264,19 +266,16 @@ export function SearchResultItem(props) {
         <Grid
           display={'flex'}
           container
+          borderRight={1}
+          borderLeft={1}
+          borderColor={'#bbb'}
+          //className={classes.centeredContent}
           id="button-grid-container"
           xs={6}
+          padding={1}
           flex={1}
-          // borderColor={'#ccc'}
-          // border={0}
-          borderLeft={0}
-          borderTop={0}
-          borderBottom={0}
-//          borderRight={1}
-          borderColor={'#bbb'}
-          className={classes.centeredContent}
-        >
-          {title}
+          >
+          <Typography fontSize={16} variant='h5'>{title}</Typography>
           {/* <RenderSnippets record={record} /> */}
         </Grid>
         <Grid
@@ -298,7 +297,6 @@ export function SearchResultItem(props) {
             alignContent={'center'}
             justifyContent="center"
             alignItems={'center'}
-            borderRight={0}
             borderColor={'#bbb'}
           >
             {/* <PDFViewerDialog
@@ -326,13 +324,13 @@ export function SearchResultItem(props) {
             alignItems={'center'}
             display={'flex'}
           >
-            {(processId)
-              // <PDFViewerDialog
-              //   processId={processId}
-              //   record={record}
-              //   isOpen={isPDFViewOpen}
-              //   onDialogClose={(evt) => closePDFPreview(evt, processId)}
-              // />
+            { processId &&
+              <PDFViewerDialog
+                processId={processId}
+                record={record}
+                isOpen={isPDFViewOpen}
+                onDialogClose={(evt) => closePDFPreview(evt, processId)}
+              />
             }
             <Button
               onClick={(evt) => openPDFPreview(evt, processId)}
@@ -346,8 +344,12 @@ export function SearchResultItem(props) {
           </Grid>
         </Grid>
         <Grid item xs={12} border={0}>
-          <b>Snippets go here</b>
-          {/* <h4>Snippets??? {JSON.stringify(record.plaintext)}</h4>*/}
+          {(record.plaintext.length > 0) && (
+             record.plaintext.map((rec,i) => {
+                return(<b>{rec}</b>)
+             }
+          )
+          )}
           <RenderSnippets record={record} />
         </Grid>
       </Grid>
@@ -387,7 +389,7 @@ export function DisplayGrid(props) {
       >
         {documentType} ?????
       </Typography> </Grid>
-      <Grid item xs={6} className={classes.centeredContent} border={1} borderColor={"red"}>Space</Grid>
+      <Grid item xs={6} className={classes.centeredContent} border={0} borderColor={"red"}>Space</Grid>
       <Grid container display={'flex'} xs={3} className={classes.centeredContent} border={0}>
         <Grid item xs={6}
           border={0}
@@ -429,7 +431,7 @@ export function RenderSnippets(props) {
   const {
     record
   } = props;
-    console.log('RenderSnippets props', props);
+    console.log('RenderSnippets props.record', record);
   const { state, setState } = useContext(SearchContext);
 
 
@@ -453,7 +455,10 @@ export function RenderSnippets(props) {
     // },[isContentExpanded]);
     record.plaintext.map((text, idx) => {
       return (
-        <b>record.processId - record.id - recorc.</b>
+        <>
+          <h5>plaintext idx: {idx} text: {text} </h5>
+          <p>{text}</p>
+        </>
       )
     }))
 }

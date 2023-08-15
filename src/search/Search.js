@@ -834,7 +834,8 @@ class Search extends React.Component {
 							</Grid>
 							<Grid container xs={12} flex={1} border={0}>
 								<Grid item xs={3} border={0}>
-									{/* <SideBarFilters
+								{this.state.filtersHidden &&	
+									<SideBarFilters
 											onActionChange={this.onActionChange}
 											onAgencyChange={this.onAgencyChange}
 											onCountyChange={this.onCountyChange}
@@ -849,8 +850,8 @@ class Search extends React.Component {
 											toggleFiltersHidden={this.toggleFiltersHidden}
 											onNeedsDocumentChecked={this.onNeedsDocumentChecked}
 											renderClearFiltersButton={this.renderClearFiltersButton}
-										/> */}
-										<b>Filters Place Holder</b>
+										/>
+								}
 								</Grid>
 								<Grid item xs={9} border={0}>
 									{/* <Typography fontSize={34}  variant='h1'>Header 1 </Typography>
