@@ -11,10 +11,9 @@ import "./search.css";
 import {
 	Box,
 	Container,
-	Grid,
 	Paper
 } from "@mui/material";
-import { styled } from "@mui/material/styles";
+import { ThemeProvider, styled } from "@mui/material/styles";
 import { withStyles } from "@mui/styles";
 import "react-datepicker/dist/react-datepicker.css";
 import { withRouter } from "react-router";
@@ -23,8 +22,9 @@ import Globals from "../globals.js";
 import persist from "../persist.js";
 import SearchContext from "./SearchContext.js";
 import SideBarFilters from './SideBarFilters';
+import theme from "../styles/theme.js";
+import Grid from '@mui/material/Grid'; // Grid version 1
 
-//import Grid from '@mui/material/Grid'; // Grid version 1
 import { makeStyles } from "@mui/styles";
 
 import ResultsHeader from "./ResultsHeader";
@@ -824,73 +824,75 @@ class Search extends React.Component {
 					marginTop: 15,
 				}}
 			>
-				<SearchContext.Provider value={value}>
-					<Paper border={0}>
-						<Grid container>
-							{/* Start Header */}
-							<Grid container xs={12} flex={1} flexGrow={1}>
-										<ResultsHeader 
-											results={this.state.results}
-											total={this.state.total}
-										/>
-							</Grid>
-							<Grid container xs={12} flex={1} border={0}>
-								<Grid item xs={3} border={0}>
-								{!this.state.filtersHidden &&	
-									<SideBarFilters
-											onActionChange={this.onActionChange}
-											onAgencyChange={this.onAgencyChange}
-											onCountyChange={this.onCountyChange}
-											onDecisionChange={this.onDecisionChange}
-											onTypeChecked={this.onTypeChecked}
-											filtersHidden={this.state.filtersHidden}
-											orgClick={this.orgClick}
-											onUseOptionsChecked={this.onUseOptionsChecked}
-											onCooperatingAgencyChange={this.onCooperatingAgencyChange}
-											onStartDateChange={this.onStartDateChange}
-											onEndDateChange={this.onEndDateChange}
-											toggleFiltersHidden={this.toggleFiltersHidden}
-											onNeedsDocumentChecked={this.onNeedsDocumentChecked}
-											renderClearFiltersButton={this.renderClearFiltersButton}
-										/>
-								}
+<ThemeProvider theme={theme}>
+					<SearchContext.Provider value={value}>
+						<Paper border={0}>
+							<Grid container>
+								{/* Start Header */}
+								<Grid container xs={12} flex={1} flexGrow={1}>
+											<ResultsHeader 
+												results={this.state.results}
+												total={this.state.total}
+											/>
 								</Grid>
-								<Grid item xs={9} border={0}>
-									{/* <Typography fontSize={34}  variant='h1'>Header 1 </Typography>
-									<Typography fontSize={30}  variant='h2'>Header 2 </Typography>
-									<Typography fontSize={28} variant='h3'>Header 3 </Typography>
-									<Typography fontSize={26} variant='h4'>Header 4 </Typography>
-									<Typography fontSize={22} variant='h5'>Header 5 </Typography>
-									<Typography fontSize={14} variant='p'>phagraph one </Typography> */}
-	
-									{/* <Suspense fallback={<CircularProgress/>}> */}
-										{this.props.children}
-									{/* </Suspense> */}
+								<Grid container xs={12} flex={1} border={0}>
+									<Grid item xs={3} border={0}>
+									{!this.state.filtersHidden &&	
+										<SideBarFilters
+												onActionChange={this.onActionChange}
+												onAgencyChange={this.onAgencyChange}
+												onCountyChange={this.onCountyChange}
+												onDecisionChange={this.onDecisionChange}
+												onTypeChecked={this.onTypeChecked}
+												filtersHidden={this.state.filtersHidden}
+												orgClick={this.orgClick}
+												onUseOptionsChecked={this.onUseOptionsChecked}
+												onCooperatingAgencyChange={this.onCooperatingAgencyChange}
+												onStartDateChange={this.onStartDateChange}
+												onEndDateChange={this.onEndDateChange}
+												toggleFiltersHidden={this.toggleFiltersHidden}
+												onNeedsDocumentChecked={this.onNeedsDocumentChecked}
+												renderClearFiltersButton={this.renderClearFiltersButton}
+											/>
+									}
+									</Grid>
+									<Grid item xs={9} border={0}>
+										{/* <Typography fontSize={34}  variant='h1'>Header 1 </Typography>
+										<Typography fontSize={30}  variant='h2'>Header 2 </Typography>
+										<Typography fontSize={28} variant='h3'>Header 3 </Typography>
+										<Typography fontSize={26} variant='h4'>Header 4 </Typography>
+										<Typography fontSize={22} variant='h5'>Header 5 </Typography>
+										<Typography fontSize={14} variant='p'>phagraph one </Typography> */}
+		
+										{/* <Suspense fallback={<CircularProgress/>}> */}
+											{this.props.children}
+										{/* </Suspense> */}
+								 </Grid>
 							 </Grid>
-						 </Grid>
-							
-						</Grid>
-						{/* End Header*/}
-						<Item xs={2} id="filter-container-items" border={0}>
-									<h4>Filters</h4>
-								</Item>
-								<Item display={'flex'} xs={9} border={0} id="results-container-items">
-									<h4>Results</h4>
-								</Item> 
-						{this.getSuggestions()}
-						<div className="loader-holder">
-							<div className="center" hidden={this.props.searching}>
-								<span id="inputMessage">{this.state.inputMessage}</span>
+								
+							</Grid>
+							{/* End Header*/}
+							<Item xs={2} id="filter-container-items" border={0}>
+										<h4>Filters</h4>
+									</Item>
+									<Item display={'flex'} xs={9} border={0} id="results-container-items">
+										<h4>Results</h4>
+									</Item> 
+							{this.getSuggestions()}
+							<div className="loader-holder">
+								<div className="center" hidden={this.props.searching}>
+									<span id="inputMessage">{this.state.inputMessage}</span>
+								</div>
+								<div className="lds-ellipsis" hidden={!this.props.searching}>
+									<div></div>
+									<div></div>
+									<div></div>
+									<div></div>
+								</div>
 							</div>
-							<div className="lds-ellipsis" hidden={!this.props.searching}>
-								<div></div>
-								<div></div>
-								<div></div>
-								<div></div>
-							</div>
-						</div>
-					</Paper>
-				</SearchContext.Provider>
+						</Paper>
+					</SearchContext.Provider>
+</ThemeProvider>
 			</Container>
 		);
 	}

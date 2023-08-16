@@ -1,8 +1,8 @@
 import React from "react";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { Typography } from "@mui/material";
-
-const theme = createTheme({
+import { createMuiTheme } from "@material-ui/core";
+const theme = createMuiTheme({
   palette: {
     mode: "light",
     primary: {
@@ -18,14 +18,25 @@ const theme = createTheme({
     //   main: "#80a9ff",
     // },
   },
+
   typography: {
+    formControlLabel: {
+        fontSize: 1.1,
+        color: 'red',
+      },
+
+    // formLabel: {
+    //     fontSize: '2.9rem',
+    //     fontColor: 'red'
+    // },
     expanderButton: {
       fontSize: "1.1rem",
       fontColor: "#fff",
       textAlign: "center",
     },
     filterLabel: {
-      fontSize: "1.1rem",
+      fontSize: "0.9rem",
+      fontColor: "red"
     },
     resultsTitle: {
       fontSize: "1.8rem",
@@ -60,6 +71,14 @@ const theme = createTheme({
     MuiTooltip: {
       arrow: true,
     },
+    MUIFormLabel:{
+        fontSize: 30,
+    },
+    MuiFormControlLabel: {
+        fontColor: 'red',
+        fontSize: 50,
+
+    },
   },
   shape: {
     borderRadius: 4,
@@ -78,11 +97,17 @@ const theme = createTheme({
           subtitle2: "h2",
           body1: "span",
           body2: "span",
+          MuiFormControlLabel: "span",
+          MUIFormLabel: "span",
         },
       },
     },
   },
   overrides: {
+    MuiFormLabel: {
+        fontSize: 30,
+        
+    },
     MuiAppBar: {
       root: {
         fontColor: "#fff",
