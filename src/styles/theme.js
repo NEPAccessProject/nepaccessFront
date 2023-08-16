@@ -1,191 +1,107 @@
-import { createTheme } from '@mui/material/styles';
-//import configs from '../project.config.json';
+import React from "react";
+import { createTheme, ThemeProvider } from "@mui/material/styles";
+import { Typography } from "@mui/material";
 
 const theme = createTheme({
-	palette: {
-		mode: 'light',
-		primary: {
-			main: '#9CAEB3',
-			//main: '#000', //configs.PRIMARY_COLOR,
-		},
-		secondary: {
-			main: '#e1e7e8',
-		},
-	},
-	FormLabel: {
-		color: '#000',
-		fontWeight: 600,
-		mt: 1,
-		fontFamily: 'open sans',
-	},
-	typography: {
-		fontFamily: 'open sans',
-		fontColor: '#000',
-		body1: {},
-		poster: {
-			fontSize: 20,
-			color: 'red',
-			fontFamily: 'open sans',
-		},
-		h1: {
-			paddingLeft: 2,
-			paddingRight: 2,
-			fontSize: 34,
-			fontColor: '#000',
-			fontFamily: 'open sans',
-		},
-		h2: {
-			paddingLeft: 2,
-			paddingRight: 2,
-			fontSize: 30,
-			fontColor: '#000',
-			fontFamily: 'open sans',
-		},
-		h3: {
-			paddingLeft: 2,
-			paddingRight: 2,
-			fontColor: '#000',
-			fontSize: 28,
-			fontColor: 'green',
-			fontFamily: 'open sans',
-		},
-		h4: {
-			paddingLeft: 2,
-			paddingRight: 2,
-			fontColor: '#000',
-			fontSize: 26,
-			fontColor: 'blue',
-			fontFamily: 'open sans',
-		},
-		h5: {
-			paddingLeft: 2,
-			paddingRight: 2,
-			fontColor: '#000',
-			fontSize: 16,
-			fontColor: 'blue',
-			fontFamily: 'open sans',
-		},
-		title: {
-			fontSize: 18,
-			fontColor: '#000',
-			fontFamily: 'open sans',
-		},
-		subtitle1: {
-			fontSize: '1.5rem',
-			fontColor: '#000',
-			fontFamily: 'open sans',
-		},
-		subtitle2: {
-			fontSize: 16,
-			fontFamily: 'open sans',
-			fontColor: '#000',
-		},
-		searchResultsTitle: {
-			fontSize: '1.6rem',
-			lineHeight: '2rem',
-			padding: 2,
-			fontFamily: 'open sans',
-			fontColor: '#000',
-		},
-		searchResultSubTitle: {
-			fontColor: '#000',
-			fontFamily: 'open sans',
-			fontSize: '1.10rem',
-			border: 1,
-			//      color: 'rgb(64,7,162)',
-			p: 2,
-			'&:hover': {
-				textDecoration: 'underline',
-				cursor: 'pointer',
-			},
-		},
-		expanderButton: {
-			fontSize: '1.0rem',
-			fontFamily: 'open sans',
-			p: 4,
-			color: '#fff',
-			'&:hover': {
-				textDecoration: 'underline',
-				cursor: 'pointer',
-			},
-		},
-		filterLabel: {
-			fontSize: '0.9rem',
-			color: '#000',
-			fontFamily: 'open sans',
-			display: 'block',
-			fontWeight: 600,
-			marginTop: 1,
-			marginBottom: 1,
-		},
-	},
-	components: {
-		MuiButton: {
-			defaultProps: {
-				variant: 'contained',
-				disableRipple: false,
-			},
-		},
-
-		MuiInputLabel: {
-			defaultProps: {
-				shrink: true,
-			},
-			styleOverrides: {
-				root: {
-					position: 'relative',
-					transform: 'translate(0px, 0px) scale(0.75)',
-				},
-			},
-		},
-		MuiTypography: {
-			defaultProps: {
-				variantMapping: {
-					// Map the new variant to render a <h1> by default
-					poster: 'h1',
-					h2: 'h2',
-					h3: 'h3',
-					subtitle1: 'h4',
-					subtitle2: 'h5',
-				},
-			},
-		},
-		MuiAutocomplete: {
-			defaultProps: {
-				p: 0,
-				m: 0,
-			},
-		},
-		MuiFormControl: {
-			styleOverrides: {
-				root: {
-					position: 'static',
-					my: 1,
-				},
-			},
-		},
-		MuiFormHelperText: {
-			styleOverrides: {
-				root: {
-					marginLeft: 0,
-				},
-			},
-		},
-		MuiOutlinedInput: {
-			defaultProps: {
-				size: 'small',
-			},
-			styleOverrides: {
-				root: {
-					'legend > span': {
-						display: 'none',
-					},
-					backgroundColor: '#fff',
-					pr: 0.5,
-				},
-			},
-		},
-	},
+  palette: {
+    mode: "light",
+    primary: {
+        main: '#1976d2',
+      },
+      secondary: {
+        main: '#9c27b0',
+      },
+    // primary: {
+    //   main: "#9eabae",
+    // },
+    // secondary: {
+    //   main: "#80a9ff",
+    // },
+  },
+  typography: {
+    expanderButton: {
+      fontSize: "1.1rem",
+      fontColor: "#fff",
+      textAlign: "center",
+    },
+    filterLabel: {
+      fontSize: "1.1rem",
+    },
+    resultsTitle: {
+      fontSize: "1.8rem",
+      fontColor: "#80a9ff",
+    },
+    resultsSubtitle: {
+        fontSize: "1.4rem",
+        fontColor: "#80a9ff",
+    },
+    h1: {
+      fontSize: "2.5rem",
+    },
+    h2: {
+      fontSize: "2.6rem",
+    },
+    h3: {
+      fontSize: "2.3rem",
+    },
+    h4: {
+      fontFamily: "Open Sans",
+      fontSize: "2rem",
+    },
+    h5: {
+      fontFamily: "Open Sans",
+    },
+    fontFamily: "Open Sans",
+  },
+  props: {
+    MuiAppBar: {
+      color: "secondary",
+    },
+    MuiTooltip: {
+      arrow: true,
+    },
+  },
+  shape: {
+    borderRadius: 4,
+  },
+  components: {
+    MuiTypography: {
+      defaultProps: {
+        variantMapping: {
+          h1: "h2",
+          h2: "h2",
+          h3: "h2",
+          h4: "h2",
+          h5: "h2",
+          h6: "h2",
+          subtitle1: "h2",
+          subtitle2: "h2",
+          body1: "span",
+          body2: "span",
+        },
+      },
+    },
+  },
+  overrides: {
+    MuiAppBar: {
+      root: {
+        fontColor: "#fff",
+      },
+    },
+    MuiButton: {
+      root: {
+        background: "linear-gradient(45deg, #FE6B8B 30%, #FF8E53 90%)",
+        fontColor: "#fff",
+        border: 0,
+        padding: 30,
+        margin: 5,
+        borderRadius: 3,
+        boxShadow: "0 3px 5px 2px rgba(255, 105, 135, .3)",
+        color: "white",
+        height: 48,
+      },
+    },
+  },
+  spacing: 8,
 });
-
 export default theme;
