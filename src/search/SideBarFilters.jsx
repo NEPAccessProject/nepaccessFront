@@ -51,26 +51,30 @@ const Item = styled(Box)(({ theme }) => ({
     },
   },
 }));
-const styles = theme => ({
+const styles = ({
   paper: {
-    minWidth: 300,
-    padding: theme.spacing(2),
-    margin: theme.spacing(3)
+    // minWidth: 300,
+    // padding: theme.spacing(2),
+    // margin: theme.spacing(3)
   },
-  fixedHeight: { height: 100 },
-  responsive: {
-    [theme.breakpoints.down('xs')]: {
-      overflow: 'hidden',
-      textOverflow: 'ellipsis',
-      whiteSpace: 'nowrap'
-    }
+  // fixedHeight: { height: 100 },
+  // responsive: {
+  //   [theme.breakpoints.down('xs')]: {
+  //     overflow: 'hidden',
+  //     textOverflow: 'ellipsis',
+  //     whiteSpace: 'nowrap'
+  //   },
+  // },
+  formControlLabel: {
+    fontSize: 1.1,
+    fontWeight: 'bold',
   }
 });
 
 const SideBarFilters = (props) => {
   console.log("🚀 ~ file: SideBarFilters.jsx:51 ~ SideBarFilters ~ props:", props)
   const { state, setState } = useContext(SearchContext);
-  const classes = props.styles;
+  const classes = props.classes;
   console.log("🚀 ~ file: SideBarFilters.jsx:67 ~ SideBarFilters ~ _theme:", classes)
   //const classes = useStyles(theme);
   console.log("🚀 ~ file: SideBarFilters.jsx:69 ~ SideBarFilters ~ classes:", classes)
@@ -124,7 +128,7 @@ const SideBarFilters = (props) => {
                 <Item alignItems={"center"}>
      
                   <FormLabel>
-                  Search Only Within titles
+                 <Typography className={classes.formControlLabel} variant="filterLabel"> Search Only Within titles</Typography>
                   </FormLabel>
      
                   {renderClearFiltersButton()}

@@ -1016,7 +1016,7 @@ const styles = theme => ({
 	...theme,
 })
 
-export default withRouter(withStyles(styles)(Search));
+export default withRouter(Search);
 
 /** Does a .replace with regex for these rules:
  * For the opening ', it could have either no characters before it, or whitespace.

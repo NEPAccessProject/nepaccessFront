@@ -43,7 +43,7 @@ const theme = createMuiTheme({
       fontColor: "#80a9ff",
     },
     resultsSubtitle: {
-        fontSize: "1.4rem",
+        fontSize: "1.1rem",
         fontColor: "#80a9ff",
     },
     h1: {

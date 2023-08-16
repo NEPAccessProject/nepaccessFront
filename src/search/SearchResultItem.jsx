@@ -6,8 +6,27 @@ import SearchContext from './SearchContext';
 import PDFViewerDialog from './Dialogs/PDFViewerDialog';
 import RenderSnippets from './SearchResultSnippets.jsx';
 
+
 const useStyles = makeStyles((theme) => ({
-    //placeholder
+  subTitle: {
+    fontSize: '0.9rem',
+    textAlign : 'center',
+    padding:10,
+    margin:10,
+    fontColor: 'red',
+    border: 5,
+
+  },
+  centeredContent: {
+    alignContent: 'center',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  cardGridItem: {
+    color: 'green',
+    fontSize: "1rem",
+    fontWeight: 'bold',
+  }
 }));
 
 export default function SearchResultItem(props) {
@@ -18,6 +37,7 @@ export default function SearchResultItem(props) {
     const [isPDFViewOpen, setIsPDFViewOpen] = useState(false);
     //  const { seachState, setState, showContext } = useContext(SearchContext);
     const classes = useStyles(theme);
+    console.log("🚀 ~ file: SearchResultItem.jsx:34 ~ SearchResultItem ~ classes:", classes)
     const context = useContext(SearchContext);
     const { state, setState } = context;
     const { record } = props;
@@ -88,7 +108,8 @@ export default function SearchResultItem(props) {
     console.log("🚀 ~ file: SearchResultsItems.jsx:193 ~ onDetailLink ~ evt,processId:", evt,processId)
   
     }
-  
+
+
   
     const year = commentDate && commentDate.length > 0 ? new Date(commentDate).getFullYear() : 'N/A';
     //console.log('SEARCH STATE SearchResultComponent');
@@ -168,7 +189,7 @@ export default function SearchResultItem(props) {
             padding={1}
             flex={1}
             >
-            <Typography variant='resultsSubtitle'>{(title) ? title  : ''}</Typography>
+            <Typography className={classes.subTitle} >{(title) ? title  : ''}</Typography>
             {/* <RenderSnippets record={record} /> */}
           </Grid>
           <Grid

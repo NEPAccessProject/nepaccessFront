@@ -3,9 +3,11 @@ import React, { useContext,useState } from 'react';
 import SearchContext from './SearchContext';
 import { Grid, Typography, Button } from '@mui/material';
 import { makeStyles } from '@mui/styles';
+import { withStyles } from '@mui/styles';
+
 import theme from '../styles/theme';
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = withStyles((theme) => ({
 	centeredContent: {
 		verticalAlign: 'center',
 		textAlign: 'center',
@@ -74,8 +76,8 @@ const useStyles = makeStyles((theme) => ({
 	},
 }));
 
-export default function SearchResultsGrid(props) {
-    //    console.log("🚀 ~ file: SearchResultsItems.jsx:303 ~ DisplayGrid ~ props:", props)
+function SearchResultsGrid(props) {
+   console.log("🚀 ~ file: SearchResultsItems.jsx:303 ~ DisplayGrid ~ props:", props)
     const { state, setState } = useContext(SearchContext);
     const [isPDFViewOpen, setIsPDFViewOpen] = useState(false);
     const [isContentExpanded, setIsContentExpanded] = useState(false);
@@ -90,6 +92,7 @@ export default function SearchResultsGrid(props) {
       evt.preventDefault();
     };
     const classes = useStyles(theme);
+    console.log("🚀 ~ file: SearchResultsGrid.jsx:95 ~ SearchResultsGrid ~ classes:", classes)
   
     return (
       <>
@@ -146,3 +149,5 @@ export default function SearchResultsGrid(props) {
       </>
     )
   }
+//  export default withStyles(useStyles)(SearchResultsGrid);
+export default SearchResultsGrid;
