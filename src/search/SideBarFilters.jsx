@@ -155,7 +155,7 @@ export default function SideBarFilters(props) {
                 variant="standard"
                 // menuIsOpen={true}
                 onChange={onAgencyChange}
-                getOptionLabel={(agencyOptions) => 'agencyOptions.label'}
+                //getOptionLabel={(agencyOptions) => 'agencyOptions.label'}
                 renderInput={(params) => (
                   <TextField
                     {...params}
@@ -210,7 +210,7 @@ export default function SideBarFilters(props) {
                 variant="standard"
                 // menuIsOpen={true}
 
-                getOptionLabel={(agencyOptions) => 'agencyOptions.label'}
+                getOptionLabel={(agencyOptions) => agencyOptions.label}
                 renderInput={(params) => (
                   <TextField
                     {...params}

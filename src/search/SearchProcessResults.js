@@ -66,7 +66,6 @@ const CardItem = styled(Paper)(({ theme }) => ({
   // mt: 2,
   // mb: 2,
   margin: 2,
-  padding: 2,
   "&:hover": {
     //           backgroundColor: //theme.palette.grey[200],
     boxShadow: "0px 4px 8px rgba(0.5, 0.5, 0.5, 0.15)",
@@ -289,6 +288,10 @@ export default class SearchProcessResults extends React.Component {
       return null;
     }
   };
+  onDetailLink = (processId) => {
+    console.log('onDetailLink',processId);
+    //this.props.onDetailLink(processId);
+  }
 
   render() {
     if (!this.props.results || !(this.props.results.length > 0)) {
@@ -299,14 +302,12 @@ export default class SearchProcessResults extends React.Component {
       if (this.props.resultsText && this.props.resultsText !== "Results") {
         return (
           <>
-          <Box border={1}>
+          <Box  padding={1} paddingLeft={3} paddingRight={3}>
             
               <Typography variant='h3' fontSize={20} >{this.state.searching}</Typography>
-              <Grid container border={1} borderColor={'blue'}>
+              <Grid container >
                 <Grid item id="process-results">
-                  <Grid paddingLeft={3} paddingRight={3} item xs={12} justifyContent={'center'} alignContent={'center'} borde={1} borderColor='red'  > 
-                    {/* <Typography variant="h4" fontSize={16} id="results-label">results text: {this.props.resultsText}</Typography>
-                    <Typography variant="h4" fontSize={16} id="results-label">results length: {this.props.results.length}</Typography>                  */}
+                  <Grid paddingLeft={3} paddingRight={3} item xs={12} justifyContent={'center'} alignContent={'center'} > 
                     <divider>
                         <SearchTips/>
                     </divider>
@@ -327,7 +328,7 @@ export default class SearchProcessResults extends React.Component {
 					<Typography fontSize={26} variant='h4'>
 						Search results
 					</Typography>
-					<Grid container display={'flex'} sx={9} flex={1} border={0}>
+					<Grid container display={'flex'} sx={9} flex={1} >
 						{this.props.resultsText}&nbsp;
 						<Tippy
 							className='tippy-tooltip--small searchTips'
@@ -372,7 +373,9 @@ export default class SearchProcessResults extends React.Component {
 							return (
 								<Grid item>
 									<>
-										<Typography variant='h5' id="result-title-text" fontSize={20}  >{result.title}</Typography>
+                  <Typography fontColor='black' fontSize={18} variant='h5'>{(result.title) 
+                    ? <a onClick={this.onDetailLink(result.processId)} href="#">{result.title}</a>
+                    : ''}</Typography>
 										<SearchResultCards result={result} />
 										<SearchResultItems result={result} />
 									</>

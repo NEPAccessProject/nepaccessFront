@@ -89,12 +89,6 @@ export default function SearchResultItems(props) {
   }
 
   let sortedRecords = result.records.sort(sortByDate);
-  //sortedRecords = result.records //result.records.sort(sortByDate);
-  //console.log("🚀 ~ file: SearchResultsItems.jsx:63 ~ SearchResultItems ~ sortedRecords:", sortedRecords)
-
-  //console.log("🚀 ~ file: SearchResultsItems.jsx:59 ~ SearchResultItems ~ sortedRecords:", sortedRecords)
-  // const initialSearch = (records.length) ? records.sort(sortByDate): [];
-  /* Merge doc and records */
   return (
     <>
       {/* <h2>Search Result Items Result?</h2>
@@ -189,6 +183,11 @@ export function SearchResultItem(props) {
     //console.log('Download ID Value and filename', id, filename);
   };
 
+  const onDetailLink = (evt,processId) => {
+  console.log("🚀 ~ file: SearchResultsItems.jsx:193 ~ onDetailLink ~ evt,processId:", evt,processId)
+
+  }
+
 
   const year = commentDate && commentDate.length > 0 ? new Date(commentDate).getFullYear() : 'N/A';
   //console.log('SEARCH STATE SearchResultComponent');
@@ -276,7 +275,7 @@ export function SearchResultItem(props) {
           padding={1}
           flex={1}
           >
-          <Typography fontColor='black' fontSize={18} variant='h5'>{(title) ? title : ''}</Typography>
+          <Typography fontColor='black' fontSize={18} variant='h5'>{(title) ? title  : ''}</Typography>
           {/* <RenderSnippets record={record} /> */}
         </Grid>
         <Grid
@@ -451,8 +450,7 @@ export function RenderSnippets(props) {
     record.plaintext.map((text, idx) => {
       return (
         <>
-        <h5>{idx} -  Snippets here</h5>
-          <Snippets text={text} />
+         <Box key={record.id}> <Snippets text={text} /></Box>
         </>
       )
     }))
@@ -472,26 +470,38 @@ export function Snippets(props) {
       <Box backgroudCcolor="#A2A5A6">
       {text.length > 99
         ? 
-          <Box border={1} backgroudColor="#A2A5A6">
+          <Box border={0} borderColor={"#ccc"} backgroudColor="#A2A5A6">
             <div dangerouslySetInnerHTML={convertToHTML(text.slice(0,255))} />
-            <Box width={'100%'} backgroudColor={'#000'}>
-              <Typography variant="expanderButton">
-                <Button>Click to See More</Button>
+            <Box
+            id="click-to-see-more-box"
+            width={'100%'}
+            alignContent={'center'}
+            textAlign={'center'}
+            justifyContent={'center'}
+            onClick={(evt) => toggleContentExpansion(evt, id)}
+            bgcolor="#A2A5A6"
+            paddingTop={0}
+            paddingBottom={0}>
+              <Typography color="white" variant="expanderButton">
+                <Button Button sx={{
+                fontColor: 'white',
+                color: 'white',
+              }}>Click to See More</Button>
               </Typography>
             </Box>
         </Box>
           : 
           <Box width={'100%'}
-            backgroudColor="#A2A5A6"
+            backgroundColor="#A2A5A6"
             alignContent={'center'}
             textAlign={'center'}
             justifyContent={'center'}
-            onClick={(evt) => toggleContentExpansion(evt,)}
+            onClick={(evt) => toggleContentExpansion(evt,id)}
 
-            paddingTop={1}
-            paddingBottom={1}>
-            <Typography variant="expanderButton">
-              <Button>Click to See more</Button>
+            paddingTop={0}
+            paddingBottom={0}>
+            <Typography color="white" variant="expanderButton">
+              <Button>Click to See Less</Button>
             </Typography>
           </Box>
       }

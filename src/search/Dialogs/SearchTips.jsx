@@ -6,15 +6,15 @@ export default function SearchTips(props){
     return(
         <>
         <div id="search-tips-root">
-            <Grid container spacing={1}  borderBottom={1} borderColor={'#ccc'}>
+            <Grid container spacing={1}  borderBottom={0} borderColor={'#ccc'}>
               <Grid item xs={12}>
                     <Typography variant='h4'>Search Tips</Typography>
                 </Grid>
                 <Grid item xs={12} marginBottom={2}>
-                <Typography variant='p'>You can improve your search results, by using the various operators below as part of your search. For example a search such as "Tucson AND Water NOT Sahuaro" will return results that have both Tucson and Water in the title and or content. Excluding documents that have Sahuro as part of the title and or content even if there is a match for Tucson and Water. </Typography>
+                <Typography variant='p'>You can improve your search results, by using the various operators below as part of your search. For example a search such as "Tucson AND Water NOT Sahuaro" will return results that have both Tucson and Water in the title and or content. Excluding documents that have Sahuaro as part of the title and or content even if there is a match for Tucson and Water. </Typography>
                 </Grid>
             </Grid>
-          <Grid container id="search-tips-grid-container" justifyContent={'center'} justifyItems={'center'} borderBottom={1} borderColor={'#ccc'}>
+          <Grid container id="search-tips-grid-container" justifyContent={'center'} justifyItems={'center'} borderBottom={0} borderColor={'#ccc'}>
                    <Grid container spacing={1}>
               <Grid item xs={2}>
                 <b>AND</b>

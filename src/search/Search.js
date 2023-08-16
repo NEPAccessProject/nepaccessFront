@@ -821,7 +821,7 @@ class Search extends React.Component {
 			<Container
 				disableGutters={true}
 				sx={{
-					marginTop: 20,
+					marginTop: 15,
 				}}
 			>
 				<SearchContext.Provider value={value}>

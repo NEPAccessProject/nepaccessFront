@@ -10,12 +10,14 @@ import {
 	Select,
 	Typography,
 } from '@mui/material';
+import { makeStyles } from '@mui/styles';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 
 import Grid from '@mui/material/Unstable_Grid2'; // Grid version
 import { styled } from '@mui/material/styles';
+import theme from '../styles/theme';
 import React, { useContext } from 'react';
 import SearchContext from './SearchContext';
 const Item = styled(Paper)(({ theme }) => ({
@@ -30,8 +32,18 @@ const Item = styled(Paper)(({ theme }) => ({
 	borderColor: theme.palette.divider,
 }));
 // height: 75,
-
-export default function SearchResultOptions() {
+const useStyles = makeStyles(theme => (
+	{ 
+        root: {
+            flexGrow: 1,
+			backgroundColor:"#000",
+        },
+        paper: {
+            padding:1, //theme.spacing(2),
+            textAlign: 'center',
+            color: 'black' //theme.palette.text.secondary,
+        }}));
+function SearchResultOptions() {
 	const {
 		state,
 		setState,
@@ -49,6 +61,7 @@ export default function SearchResultOptions() {
 	const limit = 50;
 	const showContext = true;
 	const snippetsDisabled = false;
+	const classes = useStyles(theme);
 
 	const onSortDirectionChangeHandler = (evt) => {
 		console.log('Dummy Sort Change Dir Function',evt);
@@ -261,3 +274,4 @@ export default function SearchResultOptions() {
 		</>
 	);
 }
+export default SearchResultOptions;
