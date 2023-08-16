@@ -345,14 +345,7 @@ export function SearchResultItem(props) {
           </Grid>
         </Grid>
         <Grid item xs={12} border={0}>
-          {(record.plaintext.length > 0) && (
-             record.plaintext.map((rec,i) => {
-                return(<b>{rec}</b>)
-             }
-          )
-          )}
-          {JSON.stringify(record.plaintext)}
-          <RenderSnippets record={record} />
+            <RenderSnippets record={record} />
         </Grid>
       </Grid>
     </>
@@ -458,8 +451,8 @@ export function RenderSnippets(props) {
     record.plaintext.map((text, idx) => {
       return (
         <>
-          <h5>plaintext idx: {idx} text: {text} </h5>
-          <p>{text}</p>
+        <h5>{idx} -  Snippets here</h5>
+          <Snippets text={text} />
         </>
       )
     }))
@@ -467,6 +460,7 @@ export function RenderSnippets(props) {
 
 export function Snippets(props) {
   const { text, hidden, isContentExpanded, id, processId } = props;
+  console.log("🚀 ~ file: SearchResultsItems.jsx:462 ~ Snippets ~ props:", props, `Snipets length is ${text.length}`)
   function convertToHTML(content) {
     return { __html: content };
   }
@@ -475,15 +469,40 @@ export function Snippets(props) {
   }
   return (
     <>
-      <Box className={'content-snippets--result-item-container'}>
+      <Box backgroudCcolor="#A2A5A6">
+      {text.length > 99
+        ? 
+          <Box border={1} backgroudColor="#A2A5A6">
+            <div dangerouslySetInnerHTML={convertToHTML(text.slice(0,255))} />
+            <Box width={'100%'} backgroudColor={'#000'}>
+              <Typography variant="expanderButton">
+                <Button>Click to See More</Button>
+              </Typography>
+            </Box>
+        </Box>
+          : 
+          <Box width={'100%'}
+            backgroudColor="#A2A5A6"
+            alignContent={'center'}
+            textAlign={'center'}
+            justifyContent={'center'}
+            onClick={(evt) => toggleContentExpansion(evt,)}
+
+            paddingTop={1}
+            paddingBottom={1}>
+            <Typography variant="expanderButton">
+              <Button>Click to See more</Button>
+            </Typography>
+          </Box>
+      }
+        </Box>
+
+      {/* <Box className={'content-snippets--result-item-container'}>
         <Divider />
-        <b>{text}</b>
-        <Divider />
-        {/* {JSON.stringify(props)} */}
         <Box>
           {(text.length > 0)
             &&
-            <div dangerouslySetInnerHTML={convertToHTML(text)} />
+            <Box border={1}><div dangerouslySetInnerHTML={convertToHTML(text)} /></Box>
           }
         </Box>
         <Box padding={1}>
@@ -492,11 +511,10 @@ export function Snippets(props) {
             <div dangerouslySetInnerHTML={convertToHTML(text)} />
           }
           {!isContentExpanded && text && text.length >= 100
-            ? (
+            && (
               <div dangerouslySetInnerHTML={convertToHTML(text.substring(0, 100) + '...')} />
-            ) : (
-              <div></div>
-            )}
+            ) 
+            }
         </Box>
       </Box>
       <Box
@@ -511,18 +529,16 @@ export function Snippets(props) {
         paddingBottom={1}
       >
         {isContentExpanded && text.length >= 100
-          ? (
+          ? 
             <Typography variant="expanderButton">
               Click to See less
             </Typography>
-          ) : (
-            <Typography variant="expanderButton">Click to to See More...</Typography>
-          )}
+          : 
+            <Typography color={'#fff'} variant="expanderButton">Click to to See More...</Typography>
+        }
       </Box>
-      : (
-        <Typography align='center'>This document's content is not available</Typography>
+        <Typography align='center'>This document's content is not available - {text.length} </Typography> */}
 
-      )
     </>
   )
 }

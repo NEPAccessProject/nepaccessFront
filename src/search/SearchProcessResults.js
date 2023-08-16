@@ -305,8 +305,9 @@ export default class SearchProcessResults extends React.Component {
               <Grid container border={1} borderColor={'blue'}>
                 <Grid item id="process-results">
                   <Grid paddingLeft={3} paddingRight={3} item xs={12} justifyContent={'center'} alignContent={'center'} borde={1} borderColor='red'  > 
-                    <Typography variant="h4" fontSize={16} id="results-label">results text: {this.props.resultsText}</Typography>
-                    <Typography variant="h4" fontSize={16} id="results-label">results length: {this.props.results.length}</Typography>                 <divider>
+                    {/* <Typography variant="h4" fontSize={16} id="results-label">results text: {this.props.resultsText}</Typography>
+                    <Typography variant="h4" fontSize={16} id="results-label">results length: {this.props.results.length}</Typography>                  */}
+                    <divider>
                         <SearchTips/>
                     </divider>
                   </Grid>
@@ -391,8 +392,8 @@ export default class SearchProcessResults extends React.Component {
       }
       return (
         <div className="sidebar-results">
-          <Typography variant="h4" id="results-label">First Search Result Items with # of results {this.props.results.length}
-            ResultsText= {this.props.resultsText}</Typography>
+          {/* <Typography variant="h4" id="results-label">First Search Result Items with # of results {this.props.results.length}
+            ResultsText= {this.props.resultsText}</Typography> */}
           {this.props.results.map((result, index) => {
             return (
               <>
