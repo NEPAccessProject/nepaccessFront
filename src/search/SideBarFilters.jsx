@@ -1,4 +1,3 @@
-import React, { useContext } from "react";
 import {
   Autocomplete,
   Box,
@@ -7,25 +6,23 @@ import {
   FormControl,
   FormControlLabel,
   FormLabel,
+  Paper,
   TextField,
   Typography,
 } from "@mui/material";
-import { ThemeProvider, styled,useTheme } from "@mui/material/styles";
-import { makeStyles,withStyles,withTheme} from "@mui/styles";
-import {createTheme,} from "@mui/material/styles";
-
+import { styled } from "@mui/styles";
+import React, { useContext } from "react";
+import { ThemeProvider, createUseStyles } from "react-jss";
 import SearchContext from "./SearchContext";
 //import Grid from '@mui/material/Grid'; // Grid version 1
 import Globals from "../globals";
-import SearchDatePickers from "./SearchDatePickers";
 import theme from "../styles/theme";
+import SearchDatePickers from "./SearchDatePickers";
 import {
   actionOptions,
   agencyOptions,
   decisionOptions
 } from "./options";
-import { red } from "@mui/material/colors";
-import { components } from "react-select";
 const stateOptions = Globals.locations;
 const countyOptions = Globals.counties;
 
@@ -51,34 +48,34 @@ const Item = styled(Box)(({ theme }) => ({
     },
   },
 }));
-const styles = ({
-  paper: {
-    // minWidth: 300,
-    // padding: theme.spacing(2),
-    // margin: theme.spacing(3)
+
+const useStyles = createUseStyles({
+  wrapper: {
+    padding: 40,
+    background: ({ theme }) => theme.background,
+    textAlign: "left"
   },
-  // fixedHeight: { height: 100 },
-  // responsive: {
-  //   [theme.breakpoints.down('xs')]: {
-  //     overflow: 'hidden',
-  //     textOverflow: 'ellipsis',
-  //     whiteSpace: 'nowrap'
-  //   },
-  // },
-  formControlLabel: {
-    fontSize: 1.1,
-    fontWeight: 'bold',
+  title: {
+    font: {
+      size: 40,
+      weight: 900
+    },
+    color: ({ theme }) => theme.color
+  },
+  link: {
+    color: ({ theme }) => theme.color,
+    "&:hover": {
+      opacity: 0.5
+    }
   }
 });
 
+
 const SideBarFilters = (props) => {
-  console.log("🚀 ~ file: SideBarFilters.jsx:51 ~ SideBarFilters ~ props:", props)
+  console.log("🚀 ~ file: SideBarFilters.jsx:74 ~ SideBarFilters ~ props:", props)
   const { state, setState } = useContext(SearchContext);
-  const classes = props.classes;
-  console.log("🚀 ~ file: SideBarFilters.jsx:67 ~ SideBarFilters ~ _theme:", classes)
-  //const classes = useStyles(theme);
-  console.log("🚀 ~ file: SideBarFilters.jsx:69 ~ SideBarFilters ~ classes:", classes)
-  const { 
+  const classes = useStyles(theme);
+  const {
     filtersHidden,
     onCountyChange,
     onAgencyChange,
@@ -96,368 +93,366 @@ const SideBarFilters = (props) => {
     renderClearFiltersButton,
     toggleFiltersHidden,
     onNeedsDocumentChecked } = props;
-  
 
-    
   return (
     <>
 
-<ThemeProvider theme={theme}>
-            <Box>
-              <Item
-                //className="sidebar-filters"
-                hidden={state.filtersHidden}
-                // this would launch a new search on enter key, in some child inputs
-                // onKeyUp={onKeyUp}
+      <ThemeProvider theme={theme}>
+        <Paper >
+          <Item borderRight={1} borderColor={'#000'}
+            //className="sidebar-filters"
+            hidden={state.filtersHidden}
+          // this would launch a new search on enter key, in some child inputs
+          // onKeyUp={onKeyUp}
+          >
+            <Box sx={{
+              textAlign: "center",
+              alignItems: "center",
+              fontWeight: "bold"
+            }}>
+              Narrow your results
+              <span
+                //className="filters-toggle"
+                onClick={() => toggleFiltersHidden()}
               >
-                <Box sx={{
-                  textAlign: "center",
-                  alignItems: "center",
-                  fontWeight: "bold"
-                }}>
-                  Narrow your results
-                <span
-                    //className="filters-toggle"
-                    onClick={() => toggleFiltersHidden()}
-                  >
-                  </span>
-                </Box>
-      
-      
-      
-                <Item alignItems={"center"}>
-     
-                  <FormLabel>
-                 <Typography className={classes.formControlLabel} variant="filterLabel"> Search Only Within titles</Typography>
-                  </FormLabel>
-     
-                  {renderClearFiltersButton()}
-                </Item>
-      
-                <Divider />
-                <Item>
-                  {/* #region Lead Agencies Filter */}
-                  <FormControl
-                    fullWidth                
-                  >
-                    <FormLabel>
-                      Lead Agencies:
-                    </FormLabel>
-                    <Autocomplete
-                      id="searchAgency"
-                      name="agency"
-                      fullWidth
-                      autoComplete={true}
-                      // autoHighlight={true}
-                      tabIndex={11}
-                      className={"classes.autocomplete"}
-                      options={agencyOptions}
-                      disablePortal={true}
-                      // value={searchState.agencyRaw}
-                      variant="standard"
-                      // menuIsOpen={true}
-                      onChange={onAgencyChange}
-                      //getOptionLabel={(agencyOptions) => 'agencyOptions.label'}
-                      renderInput={(params) => (
-                        <TextField
-                          {...params}
-                          value={state.agencyRaw}
-                          variant="outlined"
-                          sx={{
-                            width: "100%",
-                            p: 0,
-                          }}
-                          placeholder="Type or Select Lead Agencies"
-                        />
-                      )}
+              </span>
+            </Box>
+
+
+
+            <Item alignItems={"center"}>
+
+              <FormLabel>
+                <Typography className={classes.formControlLabel} variant="filterLabel"> Search Only Within titles</Typography>
+              </FormLabel>
+
+              {renderClearFiltersButton()}
+            </Item>
+
+            <Divider />
+            <Item>
+              {/* #region Lead Agencies Filter */}
+              <FormControl
+                fullWidth
+              >
+                <FormLabel>
+                  Lead Agencies:
+                </FormLabel>
+                <Autocomplete
+                  id="searchAgency"
+                  name="agency"
+                  fullWidth
+                  autoComplete={true}
+                  // autoHighlight={true}
+                  tabIndex={11}
+                  className={"classes.autocomplete"}
+                  options={agencyOptions}
+                  disablePortal={true}
+                  // value={searchState.agencyRaw}
+                  variant="standard"
+                  // menuIsOpen={true}
+                  onChange={onAgencyChange}
+                  //getOptionLabel={(agencyOptions) => 'agencyOptions.label'}
+                  renderInput={(params) => (
+                    <TextField
+                      {...params}
+                      value={state.agencyRaw}
+                      variant="outlined"
+                      sx={{
+                        width: "100%",
+                        p: 0,
+                      }}
+                      placeholder="Type or Select Lead Agencies"
                     />
-                  </FormControl>
-                  {/* #endregion */}
-                </Item>
-                <Item>
-                  <FormControl
-                    fullWidth
-                    xs={{
-                      p: 1,
-                      border: 0,
-                      borderColor: "grey.500",
-                      borderRadius: 1,
-                      mb: 1,
-                      mt: 1,
+                  )}
+                />
+              </FormControl>
+              {/* #endregion */}
+            </Item>
+            <Item>
+              <FormControl
+                fullWidth
+                xs={{
+                  p: 1,
+                  border: 0,
+                  borderColor: "grey.500",
+                  borderRadius: 1,
+                  mb: 1,
+                  mt: 1,
+                }}
+              >
+                <FormLabel>
+                  Cooperating Agencies:
+                </FormLabel>
+                <Autocomplete
+                  id="searchAgency"
+                  // className="multi"
+                  // classNamePrefix="react-select"
+                  isMulti
+                  name="cooperatingAgency"
+                  isSearchable
+                  isClearable
+                  //                styles={customStyles}
+                  tabIndex="4"
+                  options={agencyOptions}
+                  onChange={onCooperatingAgencyChange}
+                  value={state.cooperatingAgencyRaw}
+                  placeholder="Type or select agencies"
+                  fullWidth
+                  autoComplete={true}
+                  // autoHighlight={true}
+                  //className={classes.autocomplete}
+                  disablePortal={true}
+                  // value={searchState.agencyRaw}
+                  variant="standard"
+                  // menuIsOpen={true}
+
+                  getOptionLabel={(agencyOptions) => agencyOptions.label}
+                  renderInput={(params) => (
+                    <TextField
+                      {...params}
+                      value={state.agencyRaw}
+                      variant="outlined"
+                      sx={{
+                        width: "100%",
+                        p: 0,
+                      }}
+                      placeholder="Type or Select Cooperating Agencies"
+                    />
+                  )}
+                />
+              </FormControl>
+            </Item>
+            <Divider />
+            <Item>
+              <FormLabel>
+                State(s) or location(s):
+              </FormLabel>
+              <Autocomplete
+                id="state-select"
+                name="state"
+                fullWidth
+                autoComplete={true}
+                // autoHighlight={true}
+                //              styles={customStyles}
+                tabIndex="5"
+                options={stateOptions}
+                //className={classes.autocomplete}
+                disablePortal={true}
+                //                value={state.agencyRaw}
+                variant="standard"
+                // menuIsOpen={true}
+                onChange={onLocationChange}
+                placeholder={`Type or Select a State`}
+                //getOptionLabel={(stateOptions) => `${stateOptions.label}`}
+                // value={stateOptions.filter((stateObj) =>
+                //   state.state.includes(stateObj.value)
+                // )}
+                renderInput={(params) => (
+                  <TextField
+                    {...params}
+                    variant="outlined"
+                    sx={{
+                      width: "100%",
+                      p: 0,
                     }}
-                  >
-                    <FormLabel>
-                      Cooperating Agencies:
-                    </FormLabel>
-                    <Autocomplete
-                      id="searchAgency"
-                      // className="multi"
-                      // classNamePrefix="react-select"
-                      isMulti
-                      name="cooperatingAgency"
-                      isSearchable
-                      isClearable
-      //                styles={customStyles}
-                      tabIndex="4"
-                      options={agencyOptions}
-                      onChange={onCooperatingAgencyChange}
-                      value={state.cooperatingAgencyRaw}
-                      placeholder="Type or select agencies"
-                      fullWidth
-                      autoComplete={true}
-                      // autoHighlight={true}
-                      //className={classes.autocomplete}
-                      disablePortal={true}
-                      // value={searchState.agencyRaw}
-                      variant="standard"
-                      // menuIsOpen={true}
-      
-                      getOptionLabel={(agencyOptions) => agencyOptions.label}
-                      renderInput={(params) => (
-                        <TextField
-                          {...params}
-                          value={state.agencyRaw}
-                          variant="outlined"
-                          sx={{
-                            width: "100%",
-                            p: 0,
-                          }}
-                          placeholder="Type or Select Cooperating Agencies"
-                        />
-                      )}
-                    />
-                  </FormControl>
-                </Item>
-                        <Divider />
-                <Item>
-                  <FormLabel>
-                    State(s) or location(s):
-                  </FormLabel>
-                  <Autocomplete
-                    id="state-select"
-                    name="state"
-                    fullWidth
-                    autoComplete={true}
-                    // autoHighlight={true}
-      //              styles={customStyles}
-                    tabIndex="5"
-                    options={stateOptions}
-                    //className={classes.autocomplete}
-                    disablePortal={true}
-                    //                value={state.agencyRaw}
-                    variant="standard"
-                    // menuIsOpen={true}
-                    onChange={onLocationChange}
                     placeholder={`Type or Select a State`}
-                    //getOptionLabel={(stateOptions) => `${stateOptions.label}`}
-                    // value={stateOptions.filter((stateObj) =>
-                    //   state.state.includes(stateObj.value)
-                    // )}
-                    renderInput={(params) => (
-                      <TextField
-                        {...params}
-                        variant="outlined"
-                        sx={{
-                          width: "100%",
-                          p: 0,
-                        }}
-                        placeholder={`Type or Select a State`}
-                      />
-                    )}
                   />
-                </Item>
+                )}
+              />
+            </Item>
+            <Item>
+              <Typography pb={1} variant="filterLabel">
+                County/counties
+              </Typography>
+              <Autocomplete
+                id="county-select"
+                fullWidth
+                autoComplete={true}
+                // autoHighlight={true}
+                tabIndex={11}
+                //className={classes.autocomplete}
+                options={countyOptions}
+                disablePortal={true}
+                // value={searchState.agencyRaw}
+                variant="standard"
+                // menuIsOpen={true}
+                onChange={onCountyChange}
+                // getOptionLabel={(countyOptions) => `${countyOptions.label}`}
+                renderInput={(params) => (
+                  <TextField
+                    {...params}
+                    // value= {countyOptions.filter = (countyObj) => counties.includes(countyObj.value)}
+                    variant="outlined"
+                    sx={{
+                      width: "100%",
+                      p: 0,
+                    }}
+                    placeholder={`Type or Select a County`}
+                  />
+                )}
+              />
+            </Item>
+            <div hidden={!Globals.authorized()}>
+              <div
+                hidden={!Globals.curatorOrHigher()}
+              ></div>
+              <Divider />
+
+              <div hidden={!Globals.authorized()}>
                 <Item>
-                  <Typography pb={1} variant="filterLabel">
-                    County/counties
-                  </Typography>
+                  <FormLabel>Action Type</FormLabel>
                   <Autocomplete
-                    id="county-select"
-                    fullWidth
-                    autoComplete={true}
-                    // autoHighlight={true}
-                    tabIndex={11}
-                    //className={classes.autocomplete}
-                    options={countyOptions}
-                    disablePortal={true}
-                    // value={searchState.agencyRaw}
-                    variant="standard"
-                    // menuIsOpen={true}
-                    onChange={onCountyChange}
-                    // getOptionLabel={(countyOptions) => `${countyOptions.label}`}
+                    id="searchAction"
+                    className="multi"
+                    classNamePrefix="react-select"
+                    isMulti
+                    name="action"
+                    isSearchable
+                    isClearable
+                    //styles={customStyles}
+                    tabIndex="7"
+                    options={actionOptions}
+                    onChange={onActionChange}
+                    value={state.actionRaw}
+                    placeholder="Type or select action type"
                     renderInput={(params) => (
                       <TextField
                         {...params}
-                        // value= {countyOptions.filter = (countyObj) => counties.includes(countyObj.value)}
+                        value={state.agencyRaw}
                         variant="outlined"
                         sx={{
                           width: "100%",
                           p: 0,
                         }}
-                        placeholder={`Type or Select a County`}
+                        placeholder="Type or Select Cooperating Agencies"
                       />
                     )}
                   />
                 </Item>
-                <div hidden={!Globals.authorized()}>
-                  <div
-                    hidden={!Globals.curatorOrHigher()}
-                  ></div>
-                  <Divider />
-      
-                  <div hidden={!Globals.authorized()}>
-                    <Item>
-                      <FormLabel>Action Type</FormLabel>
-                      <Autocomplete
-                        id="searchAction"
-                        className="multi"
-                        classNamePrefix="react-select"
-                        isMulti
-                        name="action"
-                        isSearchable
-                        isClearable
-                        //styles={customStyles}
-                        tabIndex="7"
-                        options={actionOptions}
-                        onChange={onActionChange}
-                        value={state.actionRaw}
-                        placeholder="Type or select action type"
-                        renderInput={(params) => (
-                          <TextField
-                            {...params}
-                            value={state.agencyRaw}
-                            variant="outlined"
-                            sx={{
-                              width: "100%",
-                              p: 0,
-                            }}
-                            placeholder="Type or Select Cooperating Agencies"
-                          />
-                        )}
-                      />
-                    </Item>
-                  </div>
-                </div>
-                <div hidden={!Globals.authorized()}>
-                  <Item>
-                    <Typography variant="filterLabel">
-                      Decision Type
-                      {/* <span className="new">New</span> */}
-                    </Typography>
-                    <Autocomplete
-                      id="searchDecision"
-                      className="multi"
-                      classNamePrefix="react-select"
-                      isMulti
-                      name="decision"
-                      isSearchable
-                      isClearable
-                      //styles={customStyles}
-                      tabIndex="8"
-                      options={decisionOptions}
-                      onChange={onDecisionChange}
-                      value={state.decisionRaw}
-                      placeholder="Type or select decision"
-                      // getOptionLabel={(stateOptions) => `${stateOptions.label}`}
-                      renderInput={(params) => (
-                        <TextField
-                          {...params}
-                          variant="outlined"
-                          sx={{
-                            width: "100%",
-                            p: 0,
-                          }}
-                          placeholder={`Type or Select a State`}
-                        />
-                      )}
+              </div>
+            </div>
+            <div hidden={!Globals.authorized()}>
+              <Item>
+                <Typography variant="filterLabel">
+                  Decision Type
+                  {/* <span className="new">New</span> */}
+                </Typography>
+                <Autocomplete
+                  id="searchDecision"
+                  className="multi"
+                  classNamePrefix="react-select"
+                  isMulti
+                  name="decision"
+                  isSearchable
+                  isClearable
+                  //styles={customStyles}
+                  tabIndex="8"
+                  options={decisionOptions}
+                  onChange={onDecisionChange}
+                  value={state.decisionRaw}
+                  placeholder="Type or select decision"
+                  // getOptionLabel={(stateOptions) => `${stateOptions.label}`}
+                  renderInput={(params) => (
+                    <TextField
+                      {...params}
+                      variant="outlined"
+                      sx={{
+                        width: "100%",
+                        p: 0,
+                      }}
+                      placeholder={`Type or Select a State`}
                     />
-                  </Item>
-                </div>
-      
-                <Divider />
+                  )}
+                />
+              </Item>
+            </div>
+
+            <Divider />
+            <Item>
+              <Box
+                display={"flex"}
+                xs={12}
+                flexDirection={"column"}
+                border={0}
+                padding={0}
+                margin={0}
+                width={"100%"}
+                alignContent={"center"}
+                justifyItems={"center"}
+              >
+                <SearchDatePickers
+                  onStartDateChange={onStartDateChange}
+                  onEndDateChange={onEndDateChange}
+                  startDate={state.startDate}
+                  endDate={Date.now - 1}
+                />
+              </Box>
+            </Item>
+
+            <Divider />
+            <Item>
+              {/* <Typography var="filterLabel">Document Type</Typography>              */}
+              <Box
+              >
                 <Item>
-                  <Box
-                    display={"flex"}
-                    xs={12}
-                    flexDirection={"column"}
-                    border={0}
-                    padding={0}
-                    margin={0}
-                    width={"100%"}
-                    alignContent={"center"}
-                    justifyItems={"center"}
-                  >
-                    <SearchDatePickers
-                      onStartDateChange={onStartDateChange}
-                      onEndDateChange={onEndDateChange}
-                      startDate={state.startDate}
-                      endDate={Date.now - 1}
-                    />
-                  </Box>
+                  <Typography var="filterLabel">Document Type</Typography>
+                  <FormControlLabel
+                    control={
+                      <Checkbox
+                        name="typeFinal"
+                        id="typeFinal"
+                        tabIndex="12"
+                        checked={state.typeFinal}
+                        onChange={onTypeChecked}
+                      />
+                    }
+                    label={"Draft EIS " + props.draftCount}
+                  />
                 </Item>
-                
-                <Divider />
                 <Item>
-                  {/* <Typography var="filterLabel">Document Type</Typography>              */}
-                  <Box
-                  >
-                    <Item>
-                      <Typography var="filterLabel">Document Type</Typography>
-                      <FormControlLabel
-                        control={
-                          <Checkbox
-                            name="typeFinal"
-                            id="typeFinal"
-                            tabIndex="12"
-                            checked={state.typeFinal}
-                            onChange={onTypeChecked}
-                          />
-                        }
-                        label={"Draft EIS " + props.draftCount}
+                  <FormControlLabel
+                    control={
+                      <Checkbox
+                        name="typeEA"
+                        id="typeEA"
+                        className="sidebar-checkbox"
+                        tabIndex="13"
+                        checked={state.typeEA}
+                        onChange={onTypeChecked}
                       />
-                    </Item>
-                    <Item>
-                      <FormControlLabel
-                        control={
-                          <Checkbox
-                            name="typeEA"
-                            id="typeEA"
-                            className="sidebar-checkbox"
-                            tabIndex="13"
-                            checked={state.typeEA}
-                            onChange={onTypeChecked}
-                          />
-                        }
-                        label={"EA " + props.eaCount}
+                    }
+                    label={"EA " + props.eaCount}
+                  />
+                </Item>
+                <Item>
+                  <FormControlLabel
+                    control={
+                      <Checkbox
+                        name="typeNOI"
+                        tabIndex="14"
+                        checked={state.typeNOI}
+                        onChange={onTypeChecked}
                       />
-                    </Item>
-                    <Item>
-                      <FormControlLabel
-                        control={
-                          <Checkbox
-                            name="typeNOI"
-                            tabIndex="14"
-                            checked={state.typeNOI}
-                            onChange={onTypeChecked}
-                          />
-                        }
-                        label={`NOI ` + props.noiCount}
+                    }
+                    label={`NOI ` + props.noiCount}
+                  />
+                </Item>
+                <Item>
+                  <FormControlLabel
+                    control={
+                      <Checkbox
+                        name="typeROD"
+                        //                      className="sidebar-checkbox"
+                        tabIndex="15"
+                        checked={state.typeROD}
+                        onChange={onTypeChecked}
                       />
-                    </Item>
-                    <Item>
-                      <FormControlLabel
-                        control={
-                          <Checkbox
-                            name="typeROD"
-                            //                      className="sidebar-checkbox"
-                            tabIndex="15"
-                            checked={state.typeROD}
-                            onChange={onTypeChecked}
-                          />
-                        }
-                        label={"ROD " + props.rodCount}
-                      />
-                    </Item>
-                    {/* <div className="checkbox-container">
+                    }
+                    label={"ROD " + props.rodCount}
+                  />
+                </Item>
+                {/* <div className="checkbox-container">
                           <label className="clickable checkbox-text">
                             <Checkbox
                               name="typeROD"
@@ -471,48 +466,48 @@ const SideBarFilters = (props) => {
                             </span>
                           </label>
                         </div> */}
-                    <Item>
-                      <FormControlLabel
-                        control={
-                          <Checkbox
-                            name="typeScoping"
-                            //className="sidebar-checkbox"
-                            tabIndex="16"
-                            checked={state.typeScoping}
-                            onChange={onTypeChecked}
-                          />
-                        }
-                        label={`Scoping Report   ` + props.typeScopingCount}
+                <Item>
+                  <FormControlLabel
+                    control={
+                      <Checkbox
+                        name="typeScoping"
+                        //className="sidebar-checkbox"
+                        tabIndex="16"
+                        checked={state.typeScoping}
+                        onChange={onTypeChecked}
                       />
-                    </Item>
-                  </Box>
+                    }
+                    label={`Scoping Report   ` + props.typeScopingCount}
+                  />
                 </Item>
-      
-                <div className="filter" hidden={!Globals.curatorOrHigher()}>
-                  <Divider />
-      
-                  <label className="sidebar-label-date">Advanced</label>
-                  <div className="sidebar-checkboxes">
-                    <Checkbox
-                      type="checkbox"
-                      name="typeFinal"
-                      //                  className="sidebar-checkbox"
-                      checked={props.useOptions}
-                      onChange={onUseOptionsChecked}
-                    />
-                    <label className="checkbox-text" htmlFor="typeFinal">
-                      Apply filters to search query
-                    </label>
-                  </div>
-                </div>
-              </Item>
-              <Item hidden={state.hideOrganization} id="agency-svg-holder">
-                <button onClick={orgClick}>x</button>
-              </Item>
-            </Box>
-</ThemeProvider>
+              </Box>
+            </Item>
+
+            <div className="filter" hidden={!Globals.curatorOrHigher()}>
+              <Divider />
+
+              <label className="sidebar-label-date">Advanced</label>
+              <div className="sidebar-checkboxes">
+                <Checkbox
+                  type="checkbox"
+                  name="typeFinal"
+                  //                  className="sidebar-checkbox"
+                  checked={props.useOptions}
+                  onChange={onUseOptionsChecked}
+                />
+                <label className="checkbox-text" htmlFor="typeFinal">
+                  Apply filters to search query
+                </label>
+              </div>
+            </div>
+          </Item>
+          <Item hidden={state.hideOrganization} id="agency-svg-holder">
+            <button onClick={orgClick}>x</button>
+          </Item>
+        </Paper>
+      </ThemeProvider>
     </>
   );
 }
 //export default withStyles(useStyles)(SideBarFilters);
-export default withStyles(styles)(SideBarFilters);
+export default SideBarFilters;

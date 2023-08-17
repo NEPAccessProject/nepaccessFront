@@ -1,0 +1,11 @@
+{
+  "trailingComma": "all",
+  "semi": true,
+  "arrowParens": "always",
+  "singleAttributePerLine": false,
+  "singleQuote": true,
+  "endOfLine": "lf",
+  "tabWidth": 2,
+  "printWidth": 100
+  
+}

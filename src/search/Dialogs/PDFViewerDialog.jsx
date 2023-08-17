@@ -26,7 +26,7 @@ import PDFViewer from './PDFViewer';
 
 export default function PDFViewerDialog(props) {
 //  console.log("🚀 ~ file: PDFViewerDialog.jsx ~ line 25 ~ PDFViewerDialog ~ props", JSON.stringify(props))
-  const {id,record} = props
+  const {id,record,processId} = props
   //    pdfjs.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.js`;
   const [numPages, setNumPages] = useState(null);
   const [pageNumber, setPageNumber] = useState(1);
@@ -63,18 +63,21 @@ export default function PDFViewerDialog(props) {
     setFullWidth(event.target.checked);
   };
 
-  // useEffect(()=> {
-  //   `Getting file list for id ${id}`;
-  //    const files = getFilesById(id);
-  //    setFiles(files);
-  // },[id])
+  useEffect(()=> {
+    if(_mounted.current === false){
+      return false;
+    }
+     const files = getFilesById(processId);
+     console.log(`Got files for id ${processId}`,files);
+     setFiles(files);
+  },[processId])
 
 const getFilesById = (processId) => {
   if(_mounted.current !== true){
     return;
   }
   if(!processId){
-    //console.log(`No processId recived ${processId}`);
+    console.log(`No processId recived ${processId}`);
     return;
   }
    console.log("🚀 ~ file: PDFViewerDialog.jsx:72 ~ getFilesById ~ id:", processId)
@@ -101,11 +104,12 @@ const getFilesById = (processId) => {
   // },[getFilesById])
 
   //const {searchState,setSearchState} = useContext(SearchContext);
-  const { isOpen, onDialogClose, docId, docTitle,processId } = props;
+  const { isOpen, onDialogClose, docId, docTitle } = props;
   return (
     <Dialog
       id="pdf-viewer-dialog"
-      open={isOpen}
+      ////open={isOpen}
+      open={true}
       fullWidth={fullWidth}
       maxWidth={maxWidth}
       onClose={onDialogClose}
@@ -113,7 +117,7 @@ const getFilesById = (processId) => {
       <DialogContent>
         <DialogTitle>
           <Grid container>
-            {JSON.stringify(processId)}
+            Process ID: {processId}
             <Grid item xs={10} textAlign={'left'} justifyContent={'flex-start'} justifyItems={'flex-start'}>
               <Typography color={'black'} fontSize={18} fontWeight={'bold'}>
                 {(docTitle) ? docTitle : ''}
@@ -141,7 +145,7 @@ const getFilesById = (processId) => {
               ? files.map((file,idx)=>{
                   return(<span key={idx}>filename : {file}</span>)
               })
-               : <></>
+               : <b>No Files found for processId {processId}</b>
             }
                       {JSON.stringify(files)}
             <PDFViewer processId={processId} />

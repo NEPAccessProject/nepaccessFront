@@ -1,16 +1,18 @@
-import React from "react";
-import { createTheme, ThemeProvider } from "@mui/material/styles";
-import { Typography } from "@mui/material";
-import { createMuiTheme } from "@material-ui/core";
-const theme = createMuiTheme({
+import { orange, red } from '@mui/material/colors';
+
+const theme =
+  {
   palette: {
     mode: "light",
     primary: {
-        main: '#1976d2',
+        main: '#111',
       },
       secondary: {
-        main: '#9c27b0',
+        main: '#1f77b4',
       },
+      error: {
+        main: red.A400
+      }
     // primary: {
     //   main: "#9eabae",
     // },
@@ -20,15 +22,14 @@ const theme = createMuiTheme({
   },
 
   typography: {
+    fontFamily: "Open Sans",
+    fontColor: "#000",
+    fontSize: '1rem',
     formControlLabel: {
         fontSize: 1.1,
         color: 'red',
       },
 
-    // formLabel: {
-    //     fontSize: '2.9rem',
-    //     fontColor: 'red'
-    // },
     expanderButton: {
       fontSize: "1.1rem",
       fontColor: "#fff",
@@ -45,45 +46,60 @@ const theme = createMuiTheme({
     resultsSubtitle: {
         fontSize: "1.1rem",
         fontColor: "#80a9ff",
+        paddingLeft:2,
+        paddingRight: 2,
     },
     h1: {
-      fontSize: "2.5rem",
+      fontSize: "1.8rem",
+      color: '#5373BD',
+      padding:2,
     },
     h2: {
-      fontSize: "2.6rem",
+      fontSize: "1.6rem",
     },
     h3: {
-      fontSize: "2.3rem",
+      fontSize: "1.4rem",
     },
     h4: {
-      fontFamily: "Open Sans",
-      fontSize: "2rem",
+      fontSize: "1.2rem",
     },
     h5: {
-      fontFamily: "Open Sans",
+      fontSize: "1rem"
+    },
+    caption: {
+      fontSize: "0.8rem"
     },
     fontFamily: "Open Sans",
   },
   props: {
     MuiAppBar: {
+      backgroundColor: "#1976d2",
       color: "secondary",
     },
     MuiTooltip: {
       arrow: true,
     },
-    MUIFormLabel:{
-        fontSize: 30,
-    },
     MuiFormControlLabel: {
-        fontColor: 'red',
+        fontColor: "#000",
         fontSize: 50,
-
     },
+    MUIFormLabel: {
+      root: {
+        fontColor: "#000"
+      },
+      fontColor: 'blue'
+    }
   },
   shape: {
     borderRadius: 4,
   },
   components: {
+    // Name of the component
+    MuiButtonBase: {
+      defaultProps: {
+          border: '4px solid red',
+      }
+    },
     MuiTypography: {
       defaultProps: {
         variantMapping: {
@@ -105,15 +121,20 @@ const theme = createMuiTheme({
   },
   overrides: {
     MuiFormLabel: {
+      root: {
         fontSize: 30,
+        fontColor:orange
+      },
         
     },
     MuiAppBar: {
       root: {
+        backgroundColor: "#1976d2",
         fontColor: "#fff",
       },
     },
     MuiButton: {
+      margin: 10,
       root: {
         background: "linear-gradient(45deg, #FE6B8B 30%, #FF8E53 90%)",
         fontColor: "#fff",
@@ -128,5 +149,5 @@ const theme = createMuiTheme({
     },
   },
   spacing: 8,
-});
-export default theme;
+};
+export default theme
