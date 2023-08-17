@@ -325,64 +325,69 @@ export default class SearchProcessResults extends React.Component {
     try {
       return (
 				<>
-					<Typography fontSize={26} variant='h4'>
-						Search results
-					</Typography>
-					<Grid container display={'flex'} sx={9} flex={1} >
-						{this.props.resultsText}&nbsp;
-						<Tippy
-							className='tippy-tooltip--small searchTips'
-							trigger='manual click'
-							hideOnClick={true}
-							interactive={true}
-							placement='right'
-							content={
-								<div>
-									The map view is a{' '}
-									<span className='bold'>visual representation</span> of all
-									states and counties found in the current results table.
-									<div>
-										• If you hover over a polygon, a tooltip will also show how
-										many of the current results are linked to it.
-									</div>
-									<div>
-										• You can toggle the state and/or county layer by clicking
-										on the checkboxes in the upper left corner.
-									</div>
-								</div>
-							}
-						>
-							{
-								<span className={'side-link inline'}>
-									<svg
-										xmlns='http://www.w3.org/2000/svg'
-										width='16px'
-										height='16px'
-										viewBox='0 0 100 100'
-									>
-										<path
-											className='info-svg'
-											d='M50.433,0.892c-27.119,0-49.102,21.983-49.102,49.102s21.983,49.103,49.102,49.103s49.101-21.984,49.101-49.103S77.552,0.892,50.433,0.892z M59,79.031C59,83.433,55.194,87,50.5,87S42,83.433,42,79.031V42.469c0-4.401,3.806-7.969,8.5-7.969s8.5,3.568,8.5,7.969V79.031z M50.433,31.214c-5.048,0-9.141-4.092-9.141-9.142c0-5.049,4.092-9.141,9.141-9.141c5.05,0,9.142,4.092,9.142,9.141C59.574,27.122,55.482,31.214,50.433,31.214z'
-										/>
-									</svg>
-								</span>
-							}
-						</Tippy>
-						{this.props.searching ? <>Please wait...</> : <></>}
-						{this.props.results.map((result, index) => {
-							return (
-								<Grid item>
-									<>
-                  <Typography fontColor='black' fontSize={18} variant='h5'>{(result.title) 
-                    ? <a onClick={this.onDetailLink(result.processId)} href="#">{result.title}</a>
-                    : ''}</Typography>
-										<SearchResultCards result={result} />
-										<SearchResultItems result={result} />
-									</>
-								</Grid>
-							);
-						})}
-					</Grid>
+					<Box sx={{
+            padding:2,
+//            border: 1,
+          }}>
+					  <Typography fontSize={26} variant='h4'>
+  						Search results
+  					</Typography>
+  					<Grid container display={'flex'} sx={9} flex={1} >
+  						{this.props.resultsText}&nbsp;
+  						<Tippy
+  							className='tippy-tooltip--small searchTips'
+  							trigger='manual click'
+  							hideOnClick={true}
+  							interactive={true}
+  							placement='right'
+  							content={
+  								<div>
+  									The map view is a{' '}
+  									<span className='bold'>visual representation</span> of all
+  									states and counties found in the current results table.
+  									<div>
+  										• If you hover over a polygon, a tooltip will also show how
+  										many of the current results are linked to it.
+  									</div>
+  									<div>
+  										• You can toggle the state and/or county layer by clicking
+  										on the checkboxes in the upper left corner.
+  									</div>
+  								</div>
+  							}
+  						>
+  							{
+  								<span className={'side-link inline'}>
+  									<svg
+  										xmlns='http://www.w3.org/2000/svg'
+  										width='16px'
+  										height='16px'
+  										viewBox='0 0 100 100'
+  									>
+  										<path
+  											className='info-svg'
+  											d='M50.433,0.892c-27.119,0-49.102,21.983-49.102,49.102s21.983,49.103,49.102,49.103s49.101-21.984,49.101-49.103S77.552,0.892,50.433,0.892z M59,79.031C59,83.433,55.194,87,50.5,87S42,83.433,42,79.031V42.469c0-4.401,3.806-7.969,8.5-7.969s8.5,3.568,8.5,7.969V79.031z M50.433,31.214c-5.048,0-9.141-4.092-9.141-9.142c0-5.049,4.092-9.141,9.141-9.141c5.05,0,9.142,4.092,9.142,9.141C59.574,27.122,55.482,31.214,50.433,31.214z'
+  										/>
+  									</svg>
+  								</span>
+  							}
+  						</Tippy>
+  						{this.props.searching ? <>Please wait...</> : <></>}
+  						{this.props.results.map((result, index) => {
+  							return (
+  								<Grid item>
+  									<>
+                    <Typography fontColor='black' fontSize={18} variant='h5'>{(result.title) 
+                      ? <a onClick={this.onDetailLink(result.processId)} href="#">{result.title}</a>
+                      : ''}</Typography>
+  										<SearchResultCards result={result} />
+  										<SearchResultItems result={result} />
+  									</>
+  								</Grid>
+  							);
+  						})}
+  					</Grid>
+					</Box>
 				</>
 			);
 

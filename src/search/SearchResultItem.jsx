@@ -141,7 +141,6 @@ export default function SearchResultItem(props) {
             </Typography> */}
           </>
           <Grid item id="year-box" 
-            borderRight={1}
             xs={1}
     
             classes={classes.cardGridItem}
@@ -151,8 +150,9 @@ export default function SearchResultItem(props) {
               sx={{
                 alignContent: 'center',
                 justifyItems: 'center',
-              }}
-              className={classes.centeredContent}
+                borderRight:1,
+              }}   
+            className={classes.centeredContent}
               fontWeight={'bold'}
             >
               {year ? year : 'N/A'}
@@ -168,6 +168,7 @@ export default function SearchResultItem(props) {
             justifyContent="center"
             alignItems={'center'}
             borderRight={1}
+            borderLeft={1}
             borderColor={'#ccc'}
             className={classes.centeredContent}
           >
