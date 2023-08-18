@@ -4,14 +4,17 @@ import { BrowserRouter } from 'react-router-dom';
 
 import './index.css';
 
+import { MuiThemeProvider } from '@material-ui/core';
 import Main from './Main.js';
-
 import * as serviceWorker from './serviceWorker';
-
+import theme from './styles/theme';
 
 ReactDOM.render(
     <BrowserRouter>
-        <Main />
+    <MuiThemeProvider theme={theme}>
+        
+            <Main />
+    </MuiThemeProvider>
     </BrowserRouter>
     , document.getElementById('root')
 );

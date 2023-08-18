@@ -9,13 +9,14 @@ import SearchProcessResults from "./search/SearchProcessResults.js";
 
 import Footer from "./Footer.js";
 
-import "./User/login.css";
+import { CssBaseline } from "@material-ui/core";
+import { Typography } from "@mui/material";
 import { ThemeProvider } from "@mui/material/styles";
-import { createTheme } from "@mui/material/styles";
-import theme from "./styles/theme.js";
+import "./User/login.css";
 import Globals from "./globals.js";
 import persist from "./persist.js";
 import SearchContext from "./search/SearchContext.js";
+import theme from "./styles/theme.js";
 const _ = require("lodash");
 
 /** For testing redesigned, consolidated search which is in progress */
@@ -1725,6 +1726,7 @@ export default class App extends React.Component {
       };
       return (
         <>
+          <CssBaseline />
           <ThemeProvider theme={theme}>
             <SearchContext.Provider value={value}>
               <div id="app-content" className="footer-content">
@@ -1741,6 +1743,7 @@ export default class App extends React.Component {
                     href="https://www.nepaccess.org/search"
                   />
                 </Helmet>
+                <Typography varian='h4'>Themed?</Typography>
                 <Search
                   results={this.state.outputResults}
                   searchResults={this.state.searchResults}

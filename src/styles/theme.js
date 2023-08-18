@@ -1,7 +1,8 @@
+import { createTheme } from '@mui/material';
 import { orange, red } from '@mui/material/colors';
 
-const theme =
-  {
+const theme = 
+  createTheme({
   palette: {
     mode: "light",
     primary: {
@@ -23,7 +24,9 @@ const theme =
 
   typography: {
     fontFamily: "Open Sans",
-    fontColor: "#000",
+    fontColor: "red",
+    padding: 5,
+    margin:5,
     fontSize: '1rem',
     formControlLabel: {
         fontSize: 1.1,
@@ -56,6 +59,7 @@ const theme =
     },
     h2: {
       fontSize: "1.6rem",
+      color: 'red',
     },
     h3: {
       fontSize: "1.4rem",
@@ -78,6 +82,14 @@ const theme =
     },
     MuiTooltip: {
       arrow: true,
+    },
+    MuiPaper: {
+      backgroundColor:'blue',
+      marginTop: 100,
+      root: {
+        backgroundColor:'red',
+        marginTop: 100
+      }
     },
     MuiFormControlLabel: {
         fontColor: "#000",
@@ -149,5 +161,5 @@ const theme =
     },
   },
   spacing: 8,
-};
+});
 export default theme

@@ -2,10 +2,7 @@ import { AppBar, Autocomplete, Button, Divider, FormControl, FormLabel, Grid, Pa
 import React from 'react';
 
 //import theme from '../styles/theme';
-import { CssBaseline } from '@mui/material';
-import { ThemeProvider } from 'react-jss';
-
-import { useTheme } from '@mui/material/styles';
+import { useTheme, withTheme } from '@mui/styles';
 import theme from '../styles/theme';
 
 
@@ -20,13 +17,10 @@ const MUITheme = (props) => {
   console.log("🚀 ~ file: MUITheme.jsx:14 ~ constMUITheme ~ props:", props)
   const classes = useTheme(theme);
   return (
-
 <>
 
 
-<CssBaseline />
-<ThemeProvider theme={theme}>
-          <Paper marginTop={25} border={1} disableGutters={true} sx={{
+          <Paper marginTop={100} border={1} disableGutters sx={{
             alignItems: 'center',
             alignSelf: 'center',
             border: 1
@@ -134,8 +128,7 @@ const MUITheme = (props) => {
               <TextField label="Standard" variant="standard" />
             </Grid>
           </Paper>
-</ThemeProvider>
 </>
   )
 }
-export default MUITheme;
+export default withTheme(MUITheme);

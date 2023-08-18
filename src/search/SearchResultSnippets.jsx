@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useState,useRef } from 'react';
 import {Box,Button, Container, Grid, Typography } from '@mui/material';
 import { makeStyles, withStyles, useStyles } from '@mui/styles';
 import theme from '../styles/theme';
@@ -17,11 +17,12 @@ export default function RenderSnippets(props) {
     const [isPDFViewOpen, setIsPDFViewOpen] = useState(false);
     const [isContentExpanded, setIsContentExpanded] = useState(false);
     const { hideText, hidden } = state;
-  
+    const  _mounted = useRef(false);
     function convertToHTML(content) {
       return { __html: content };
     }
     function toggleContentExpansion(evt, id) {
+      if(_m)
       //console.log(`toggleContentExpansion id: ${id} evt~ evt`, evt);
       //console.log('Setting isContentExpanded to',!isContentExpanded);
       setIsContentExpanded(!isContentExpanded);
