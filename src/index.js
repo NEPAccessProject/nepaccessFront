@@ -8,6 +8,7 @@ import { MuiThemeProvider } from '@material-ui/core';
 import Main from './Main.js';
 import * as serviceWorker from './serviceWorker';
 import theme from './styles/theme';
+console.log("🚀 ~ file: index.js:11 ~ theme:", theme)
 
 ReactDOM.render(
     <BrowserRouter>

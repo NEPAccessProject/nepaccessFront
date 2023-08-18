@@ -1,8 +1,9 @@
 import { AppBar, Autocomplete, Button, Divider, FormControl, FormLabel, Grid, Paper, TextField, Typography } from '@mui/material';
+import { withStyles } from '@mui/styles';
 import React from 'react';
 
 //import theme from '../styles/theme';
-import { useTheme, withTheme } from '@mui/styles';
+import { useTheme } from '@mui/styles';
 import theme from '../styles/theme';
 
 
@@ -12,28 +13,43 @@ const exampleInputLables = {
   "key": 1, "value": "Standard",
   "key": 2, "value": "Standard",
 }
+const styles = {
+  root: {
+    background: "linear-gradient(45deg, green 30%, orange 90%)",
+    border: 0,
+    borderRadius: 3,
+    boxShadow: "0 3px 5px 2px rgba(255, 105, 135, .3)",
+    color: "white",
+    height: 48,
+    padding: "0 30px"
+  }
+};
 
 const MUITheme = (props) => {
   console.log("🚀 ~ file: MUITheme.jsx:14 ~ constMUITheme ~ props:", props)
   const classes = useTheme(theme);
+  console.log("🚀 ~ file: MUITheme.jsx:30 ~ MUITheme ~ classes:", classes)
   return (
 <>
 
 
-          <Paper marginTop={100} border={1} disableGutters sx={{
-            alignItems: 'center',
+          <Paper  elevation={1}  
+            marginTop={200} border={1} disableGutters sx={{
+              display:'block',
+              alignItems: 'center',
             alignSelf: 'center',
-            border: 1
+            border: 1,
+            margin:25
           }}>
             {/* {JSON.stringify(theme)} */}
           <AppBar />
             <Grid container flex={1} border={1}>
               <AppBar />
               <Grid item xs={6} border={1}>
-                <Typography variant="h1" color="primary">H1</Typography>
-                <Typography variant="h1" color="primary">H1</Typography>
-                <Typography variant="h2" color="secondary">H2</Typography>
-                <Typography variant="h2" color="primary">H2</Typography>
+                <Typography variant="h1" color="primary">H1 Primary</Typography>
+                <Typography variant="h1" color="secondary">H1 Secondary</Typography>
+                <Typography variant="h2" color="primary">H2 Primary</Typography>
+                <Typography variant="h2" color="secondary">H2 Secondry</Typography>
                 <Typography variant="h3" color="primary">H3</Typography>
                 <Typography variant="h3" color="secondary">H3</Typography>
               </Grid>
@@ -131,4 +147,4 @@ const MUITheme = (props) => {
 </>
   )
 }
-export default withTheme(MUITheme);
+export default withStyles(styles)(MUITheme);
