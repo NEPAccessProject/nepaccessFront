@@ -121,7 +121,7 @@ export default function SearchResultItems(props) {
                   <Item key={idx} id="search-result-item-container">
                   {/* {JSON.stringify(record)} */}
                   <Divider />
-                  <SearchResultItem record={record} />
+                  {/* <SearchResultItem record={record} /> */}
                   <Divider />
                 </Item>)
           })};

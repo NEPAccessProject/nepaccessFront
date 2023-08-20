@@ -50,24 +50,7 @@ const Item = styled(Box)(({ theme }) => ({
 }));
 
 const useStyles = createUseStyles({
-  wrapper: {
-    padding: 40,
-    background: ({ theme }) => theme.background,
-    textAlign: "left"
-  },
-  title: {
-    font: {
-      size: 40,
-      weight: 900
-    },
-    color: ({ theme }) => theme.color
-  },
-  link: {
-    color: ({ theme }) => theme.color,
-    "&:hover": {
-      opacity: 0.5
-    }
-  }
+
 });
 
 

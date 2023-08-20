@@ -46,46 +46,59 @@ const theme =
         fontColor: "red"
       },
       resultsTitle: {
-        fontSize: "1.8rem",
+        fontSize: "1.6rem",
         fontColor: "#80a9ff",
         display: 'block',
+        paddingLeft: 8,
 
       },
       resultsSubtitle: {
         fontSize: "1.1rem",
         fontColor: "#80a9ff",
-        paddingLeft: 2,
-        paddingRight: 2,
+        paddingLeft: 4,
+        margin: 10,
         display:'Block',
+        fontFamily: 'impact',
       },
       h1: {
-        fontSize: "1.8rem",
+        fontSize: "1.6rem",
         fontColor: '#000',
         padding: 4,
-        margin: 15,
         border: 1,
 
 
       },
       h2: {
-        fontSize: "1.6rem",
+        fontSize: "1.4rem",
         color: Primary,
-        paddingLeft:20,
-        border:1
+        marginLeft: 40,
+        padding: 2,
+        border:1,
+        fontFamily: 'open sans'
       },
       h3: {
-        fontSize: "1.4rem",
+        fontSize: "1.3rem",
+                marginLeft: 40,
+        padding: 2,
       },
       h4: {
-        fontSize: "2.2rem",
+        fontSize: "1.2rem",
+                marginLeft: 40,
+        padding: 2,
       },
       h5: {
-        fontSize: "1rem"
+        fontSize: "1rem",
+                marginLeft: 40,
+        padding: 2,
+      },
+        h6: {
+        fontSize: "1rem",
+                marginLeft: 40,
+        padding: 2,
       },
       caption: {
         fontSize: "0.8rem"
       },
-      fontFamily: "Open Sans",
     },
     props: {
       MuiAppBar: {

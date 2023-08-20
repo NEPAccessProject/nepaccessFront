@@ -38,9 +38,9 @@ export default function SearchResultItem(props) {
     const [isPDFViewOpen, setIsPDFViewOpen] = useState(true);
     //  const { seachState, setState, showContext } = useContext(SearchContext);
     const classes = useStyles(theme);
-    console.log("🚀 ~ file: SearchResultItem.jsx:34 ~ SearchResultItem ~ classes:", classes)
     const context = useContext(SearchContext);
     const { state, setState } = context;
+    const _mounted = useRef(false);
     const { record } = props;
     const onCheckboxChange = (evt) => {
       //console.log('Checkbox changed, setting showContext to ', evt.target.checked);
@@ -50,7 +50,6 @@ export default function SearchResultItem(props) {
       });
     };
     // console.log("🚀 ~ file: SearchResultsItems.jsx:129 ~ SearchResultItem ~ propss / record:", props)
-    const _mounted = useRef(false);
   
     useEffect(()=>{
       console.log('SearchResultItem is being mounted');
@@ -111,6 +110,9 @@ export default function SearchResultItem(props) {
     //console.log('SEARCH STATE SearchResultComponent');
     //  { Object.keys(record) }
     const text = record.plaintext || '';
+    if(_mounted.current == false) {
+      return;
+    }
     return (
       <>
         <Grid container border={1} borderColor={'#ccc'}>

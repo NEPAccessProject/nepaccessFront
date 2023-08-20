@@ -22,7 +22,6 @@ export default function RenderSnippets(props) {
       return { __html: content };
     }
     function toggleContentExpansion(evt, id) {
-      if(_m)
       //console.log(`toggleContentExpansion id: ${id} evt~ evt`, evt);
       //console.log('Setting isContentExpanded to',!isContentExpanded);
       setIsContentExpanded(!isContentExpanded);

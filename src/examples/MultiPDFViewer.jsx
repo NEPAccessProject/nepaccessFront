@@ -1,5 +1,4 @@
 import {
-  Box,
   Button,
   Container,
   Dialog,
@@ -8,7 +7,6 @@ import {
   DialogTitle,
   Grid,
   IconButton,
-  ListItem,
   Typography
 } from '@mui/material';
 import React, { useState } from 'react';
@@ -26,22 +24,25 @@ import PDFViewer from './PDFViewer';
 //   import.meta.url,
 // ).toString();
 
-export default function PDFViewerDialog(props) {
-//  console.log("🚀 ~ file: PDFViewerDialog.jsx ~ line 25 ~ PDFViewerDialog ~ props", JSON.stringify(props))
+export default function MultiPDFViewer(props) {
+  //  console.log("🚀 ~ file: PDFViewerDialog.jsx ~ line 25 ~ PDFViewerDialog ~ props", JSON.stringify(props))
 
-  const id = 17281;
-  const processId = 17281;
-const record = {
-  id: 17281,
-    title: 'Test Record Title'
+  const docTitle = 1004028;
+  const processId = 1004028;
+  const id = 1004028;
+  const record = {
+      id: 1004028,
+      title: 'placeholder title'
   }
+  // const { id, record, processId } = props;
+
   //    pdfjs.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.js`;
   const [numPages, setNumPages] = useState(null);
   const [pageNumber, setPageNumber] = useState(1);
   const [fullWidth, setFullWidth] = React.useState(true);
   const [maxWidth, setMaxWidth] = React.useState('md');
   //  const { isOpen, onDialogClose,fileName } = props;
-  const [files,setFiles] = useState([]);
+  const [files, setFiles] = useState([]);
   let _mounted = useRef(false);
   const [isLoaded, setIsLoaded] = useState(false);
   const samplePDF = 'https://arxiv.org/pdf/quant-ph/0410100.pdf';
@@ -53,22 +54,11 @@ const record = {
 
   useEffect(() => {
     _mounted.current = true
-    return ()=>{
+    return () => {
       console.log('Component unmounted');
       _mounted.current = false;
     }
   }, []);
-
-  useEffect(() => {
-    if(_mounted.current === false){
-      return;
-    }
-//    console.log('useEffect',id);
-    const files = getFilesById(processId);
-    console.log("🚀 ~ file: PDFViewerDialog.jsx:90 ~ useEffect ~ files:", files)
-    setFiles(files);
-  },processId);
-
 
   const handleMaxWidthChange = (event) => {
     setMaxWidth(
@@ -82,39 +72,37 @@ const record = {
     setFullWidth(event.target.checked);
   };
 
-  useEffect(()=> {
-    if(_mounted.current === false){
+  useEffect(() => {
+    if (_mounted.current === false) {
       return false;
     }
-     getFilesById(processId);
-     console.log(`Got files for id ${processId}`,files);
-     setFiles(files);
-  },[processId])
+    const files = getFilesById(processId);
+    console.log(`Got files for id ${processId}`, files);
+    setFiles(files);
+  }, [processId])
 
-const getFilesById = (processId) => {
-  if(_mounted.current !== true){
-    return;
-  }
-  if(!processId){
-    console.log(`No processId recived ${processId}`);
-    return;
-  }
-   console.log("🚀 ~ file: PDFViewerDialog.jsx:72 ~ getFilesById ~ id:", processId)
-   let url = Globals.currentHost + `file/nepafiles?id=${processId}`;   
-   
-   axios
-    .get(url)
-    .then((response)=> {
-      console.log('file response')
-      console.log('getFiles data',response.data);
-      setFiles(response.data);
-      const filtered = response.data.filter((file)=> file.processId === processId )
-      console.log("TLL: getFilesById -> filtered = " + filtered);
-    })
-    .catch((e)=>{
-        console.error(`Failed to get a list of files for id ${id}.With an Exception`,e)
+  const getFilesById = (processId) => {
+    if (_mounted.current !== true) {
+      return;
+    }
+    if (!processId) {
+      console.log(`No processId recived ${processId}`);
+      return;
+    }
+    console.log("🚀 ~ file: PDFViewerDialog.jsx:72 ~ getFilesById ~ id:", processId)
+    let url = Globals.currentHost + `file/nepafiles?processId=${processId}`;
+
+    axios
+      .get(url)
+      .then((response) => {
+        console.log('file response')
+        console.log('getFiles data', response.data);
+        return response.data;
+      })
+      .catch((e) => {
+        console.error(`Failed to get a list of files for id ${id}.With an Exception`, e)
         return [];
-    })
+      })
   };
 
   // useEffect(() => {
@@ -125,7 +113,7 @@ const getFilesById = (processId) => {
   // },[getFilesById])
 
   //const {searchState,setSearchState} = useContext(SearchContext);
-  const { isOpen, onDialogClose, docId, docTitle } = props;
+//  const { isOpen, onDialogClose, docId, docTitle } = props;
   return (
     <Dialog
       id="pdf-viewer-dialog"
@@ -146,7 +134,7 @@ const getFilesById = (processId) => {
             </Grid>
 
             <Grid item xs={2} textAlign={'right'}>
-              <IconButton onClick={onDialogClose}>
+              <IconButton onClick={()=><div>placeholder</div>}>
                 <Typography fontWeight={'bold'} fontSize={'medium'}>X</Typography>
               </IconButton>
             </Grid>
@@ -162,42 +150,32 @@ const getFilesById = (processId) => {
           <Container id="pdf-viewer-document-container">
             {/* <FloatingToolbar/> */}
             <Typography> {record.title} </Typography>
-            {/* {JSON.stringify(files)} */}
-              <Grid container >
-              <Grid id="related-files-grid-item" item xs={3}>
-                  
-              {
-                  (files && files.length) &&
-                    files.splice(0,5).map((file,idx)=> {
-                      return(  
-                    
-                          <Box key={record.id}
-                          sx={{border:1}}>
-                            <ListItem>{idx} of {files.length}</ListItem>
-                              <span key={idx}><b>id</b> : {file.id}</span>
-                            <ListItem>
-    
-                              <span key={idx}><b>filename</b> : {file.filename}</span>
-                            </ListItem>
-                            {/* <ListItem>
-                              <span key={idx}><b>documentType</b> : {file.documentType}</span>
-                            </ListItem>
-                            <ListItem>
-                              <span key={idx}><b>folder</b> : {file.folder}</span>
-                            </ListItem>
-                            <ListItem>
-                              <span key={idx}><b>folder</b> : {file.folder}</span>
-                            </ListItem> */}
-    
-                          </Box>
-                      )
-                    })
-              }
+            {(files && files.length)
+              ? files.map((file, idx) => {
+                return (<span key={idx}>filename : {file}</span>)
+              })
+              : <b>No Files found for processId {processId}</b>
+            }
+            {JSON.stringify(files)}
+            <PDFViewer processId={processId} />
+            <Grid flex={1} container>
+              <Grid item justifyContent={'flex-start'} xs={4}><Button variant='outlined' onClick={() => setPageNumber(pageNumber - 1)}>{'<'} Previous Page</Button></Grid>
+              <Grid item xs={4} justifyContent={'center'}>
+                Page {pageNumber} of {numPages}
               </Grid>
-              <Grid id="pdf-view-grid-item" xs={8} border={1}>
-                <PDFViewer processId={processId} />
-              </Grid>            
-           </Grid>
+              <Grid item justifyContent={'flex-end'} xs={4}><Button variant='outlined' onClick={() => setPageNumber(pageNumber + 1)}>Next Page {'>'}</Button></Grid>
+
+            </Grid>
+            {/*
+            <Document file={samplePDF} onLoadSuccess={onDocumentLoadSuccess}>
+              <Page pageNumber={pageNumber} />
+              {Array.from(new Array(numPages), (el, index) => (
+                <Page key={`page_${index + 1}`} pageNumber={index + 1} />
+              ))}
+            </Document>
+            <Typography fontSize={14}>
+              Page {pageNumber} of {numPages}
+            </Typography> */}
 
           </Container>
         </DialogContentText>
