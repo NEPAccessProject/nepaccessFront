@@ -6,10 +6,10 @@ const theme =
     palette: {
       mode: "light",
       primary: {
-        main: '#111',
+        main: '#1f77b4',
       },
       secondary: {
-        main: '#1f77b4',
+        main: '#9eabae',
       },
       error: {
         main: red.A400
@@ -65,6 +65,7 @@ const theme =
         fontColor: '#000',
         padding: 4,
         border: 1,
+        display: 'block',
 
 
       },

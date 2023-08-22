@@ -1,4 +1,4 @@
-import { AppBar, Autocomplete, Button, Divider, FormControl, FormLabel, Grid, Paper, TextField, Typography } from '@mui/material';
+import { AppBar, Autocomplete, Button, Divider, FormControl, FormLabel, Grid, List,ListItem, Paper, TextField, Typography } from '@mui/material';
 import { withStyles } from '@mui/styles';
 import React from 'react';
 
@@ -43,71 +43,62 @@ const MUITheme = (props) => {
           }}>
             {/* {JSON.stringify(theme)} */}
           <AppBar />
-            <Grid container flex={1} border={1}>
-              <AppBar />
-              <Grid item xs={6} border={1}>
                 <Typography variant="h1" color="primary">H1 Primary</Typography>
                 <Typography variant="h1" color="secondary">H1 Secondary</Typography>
                 <Typography variant="h2" color="primary">H2 Primary</Typography>
                 <Typography variant="h2" color="secondary">H2 Secondry</Typography>
                 <Typography variant="h3" color="primary">H3</Typography>
                 <Typography variant="h3" color="secondary">H3</Typography>
-              </Grid>
-              <Grid item xs={6} border={1}>
                 <Typography variant="h4" color="primary">H4</Typography>
                 <Typography variant="h4" color="secondary">H4</Typography>
                 <Typography variant="h5" color="primary">h5</Typography>
                 <Typography variant="h5" color="secondary">h5</Typography>
                 <Typography variant="subtitle" color="secondary">h5</Typography>
                 <Typography variant="title" color="secondary">h5</Typography>
-                <Typography variant="subtitle" color="secondary">h5</Typography>
-              </Grid>
-    
-              <Grid item xs={6}>
+                <Typography variant="subtitle" color="secondary">h5</Typography>    
                 <Divider />
-                <Typography variant="resultsSubtitle" color="primary">resultsSubtitle</Typography>
-                <Typography variant="resultsSubtitle" color="secondary">resultsSubtitle</Typography>
-                <Divider />
-                <Typography variant="resultsTitle" color="primary">resultsTitle</Typography>
-                <Typography variant="resultsTitle" color="secondary">resultsTitle</Typography>
-                <Divider />
-                <Typography variant="error" color="primary">Error</Typography>
+
+                <Typography variant="error" color="primary">Primary Error</Typography>
+                <Typography variant="error" color="secondary">Secondary Error</Typography>
     
-                <Typography variant="subtitle1" color="primary">subtitle1</Typography>
-                <Typography variant="subtitle1" color="secondary">subtitle1</Typography>
-                <Typography variant="h5" color="primary">Contained Buttons</Typography>
-              </Grid>
+                <Typography variant="subtitle1" color="primary">Primary Subtitle1</Typography>
+                <Typography variant="subtitle1" color="secondary">Secondary Subtitle1</Typography>
+    <Divider/>
+                <Typography variant="h5" color="primary">Buttons</Typography>
+
+                <Button variant="contained" color="primary"> Primary Contained Button</Button>
+                <Button variant="contained" color="secondary"> Secondary Contained Button</Button>
     
-              <Grid item xs={6}>
-                <Button variant="contained" color="primary"> Contained Button</Button>
-                <Button variant="contained" color="secondary"> Contained Button</Button>
-    
-                <Typography variant="h5" color="primary">Outlined Buttons</Typography>
-                <Button variant="outlined" color="primary"> OutLined Button Contained Button</Button>
-                <Button variant="outlined" color="secondary"> OutLined Contained Button</Button>
-              </Grid>
-              <Grid item xs={6}>
-                <Typography variant="h5" color="primary">Text Buttons</Typography>
-    
-                <Button variant="text" color="primary"> OutLined Button Contained Button</Button>
-                <Button variant="text" color="secondary"> OutLined Contained Button</Button>
-              </Grid>
-    
-              <Typography variant="h5" color="primary">Form Elements</Typography>
-              <Grid item xs={12}>
-                <Grid container spacing={2}>
-                  <Grid item xs={4} sm={6}>
+                <Button variant="outlined" color="primary"> Primary OutLined Button</Button>
+                <Button variant="outlined" color="secondary"> Contained Outlined Button</Button>
+                
+                <Button variant="text" color="primary"> Primary  Text Button</Button>
+                <Button variant="text" color="secondary"> Secondary Text Button</Button>
+              <Divider/>
+
+                <List color='primary'>
+                  <ListItem>List Item 1</ListItem>
+                  <ListItem>List Item 2</ListItem>
+                  <ListItem>List Item 3</ListItem>
+                </List>The
+
+          <List color='secondary'>
+            <ListItem>List Item 1</ListItem>
+            <ListItem>List Item 2</ListItem>
+            <ListItem>List Item 3</ListItem>
+          </List>
+
+              <Typography variant="h5" color="primary">Form Fields </Typography>
+
+
                     <TextField id="standard-basic" label="Standard" />
-                  </Grid>
-                  <Grid item xs={4} sm={6}>
                     <TextField id="filled-basic" label="Filled" variant="filled" />
-                  </Grid>
-                  <Grid item xs={4} sm={6}>
+
                     <FormControl
                       fullWidth
                     >
                       <FormLabel>
-                        Lead Agencies:
+                        Lead Agencies: {''}
                       </FormLabel>
                       <Autocomplete
                         id="searchAgency"
@@ -135,14 +126,8 @@ const MUITheme = (props) => {
                           />
                         )}
                       />
-                    </FormControl>
-                  </Grid>
-                </Grid>
-              </Grid>
-    
-    
+                    </FormControl>  
               <TextField label="Standard" variant="standard" />
-            </Grid>
           </Paper>
 </>
   )
