@@ -364,7 +364,7 @@ class Main extends React.Component {
                     <Route path="/up_geo_links" component={ImporterGeoLinks} />
                     <Route path="/up_alignment" component={ImporterAlignment} />
                     <Route path="/pdf" component={PDFViewerDialog}/>
-                    <Route path="/mui" component={MUITheme}/>
+                    <Route path="/styles" component={MUITheme}/>
                     <Route path="/" component={Landing}/>
                 </Switch>
             </div>
