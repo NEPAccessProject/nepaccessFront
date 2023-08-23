@@ -46,6 +46,12 @@ export default function MultiPDFViewer(props) {
   let _mounted = useRef(false);
   const [isLoaded, setIsLoaded] = useState(false);
   const samplePDF = 'https://arxiv.org/pdf/quant-ph/0410100.pdf';
+  const onDialogClose=(evt)=>{
+  c onsole.log("TLL: onDialogClose -> evt = " + evt);
+    
+  }
+
+
   function onDocumentLoadSuccess({ numPages }) {
     //console.log('onDocumentLoadSuccess', numPages);
     setIsLoaded(true);
@@ -72,56 +78,51 @@ export default function MultiPDFViewer(props) {
     setFullWidth(event.target.checked);
   };
 
-  useEffect(() => {
-    if (_mounted.current === false) {
-      return false;
-    }
-    const files = getFilesById(processId);
-    console.log(`Got files for id ${processId}`, files);
-    setFiles(files);
-  }, [processId])
+  // useEffect(() => {
+  //   if (_mounted.current === false) {
+  //     return false;
+  //   }
+  //   const files = getFilesById(processId);
+  //   console.log(`Got files for id ${processId}`, files);
+  //   setFiles(files);
+  // }, [processId])
 
-  const getFilesById = (processId) => {
+  const getFilesById = async(processId) => {
     if (_mounted.current !== true) {
+      console.log(`PDF Viewer is not mounted`)
       return;
     }
     if (!processId) {
       console.log(`No processId recived ${processId}`);
       return;
     }
+
     console.log("🚀 ~ file: PDFViewerDialog.jsx:72 ~ getFilesById ~ id:", processId)
     let url = Globals.currentHost + `file/nepafiles?processId=${processId}`;
 
-    axios
-      .get(url)
+      axios.get(url)
       .then((response) => {
-        console.log('file response')
-        console.log('getFiles data', response.data);
-        return response.data;
+        debugger;
+        console.log(`API Returned ${response.data.length}`);
+        //const files =  JSON.parse(response.data);
+        console.log (`received ${files.length} files for id ${processId}`);
+        setFiles(response.data);
       })
       .catch((e) => {
-        console.error(`Failed to get a list of files for id ${id}.With an Exception`, e)
+      console.error("TLL: getFilesById -> e = " + e);
         return [];
       })
   };
 
-  // useEffect(() => {
-  //   console.log('useEffect',id);
-  //   const files = getFilesById(id);
-  //   console.log("🚀 ~ file: PDFViewerDialog.jsx:90 ~ useEffect ~ files:", files)
-  //   setFiles(files);
-  // },[getFilesById])
-
-  //const {searchState,setSearchState} = useContext(SearchContext);
-//  const { isOpen, onDialogClose, docId, docTitle } = props;
   return (
     <Dialog
       id="pdf-viewer-dialog"
       ////open={isOpen}
       open={true}
-      fullWidth={fullWidth}
+      fullWidth={true}
       maxWidth={maxWidth}
       onClose={onDialogClose}
+      maxWidth= 'xl'
     >
       <DialogContent>
         <DialogTitle>

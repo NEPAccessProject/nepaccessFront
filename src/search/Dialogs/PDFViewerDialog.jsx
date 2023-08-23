@@ -27,12 +27,12 @@ import PDFViewer from './PDFViewer';
 // ).toString();
 
 export default function PDFViewerDialog(props) {
-//  console.log("🚀 ~ file: PDFViewerDialog.jsx ~ line 25 ~ PDFViewerDialog ~ props", JSON.stringify(props))
+  //  console.log("🚀 ~ file: PDFViewerDialog.jsx ~ line 25 ~ PDFViewerDialog ~ props", JSON.stringify(props))
 
   const id = 17281;
   const processId = 17281;
-const record = {
-  id: 17281,
+  const record = {
+    id: 17281,
     title: 'Test Record Title'
   }
   //    pdfjs.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.js`;
@@ -40,8 +40,10 @@ const record = {
   const [pageNumber, setPageNumber] = useState(1);
   const [fullWidth, setFullWidth] = React.useState(true);
   const [maxWidth, setMaxWidth] = React.useState('md');
+  const [currentFileIndex, setCurrentFileIndex] = useState(0);
+  const [currentFile, setCurrentFile] = useState(null);
   //  const { isOpen, onDialogClose,fileName } = props;
-  const [files,setFiles] = useState([]);
+  const [files, setFiles] = useState([]);
   let _mounted = useRef(false);
   const [isLoaded, setIsLoaded] = useState(false);
   const samplePDF = 'https://arxiv.org/pdf/quant-ph/0410100.pdf';
@@ -53,21 +55,49 @@ const record = {
 
   useEffect(() => {
     _mounted.current = true
-    return ()=>{
+    return () => {
       console.log('Component unmounted');
       _mounted.current = false;
     }
   }, []);
 
   useEffect(() => {
-    if(_mounted.current === false){
+    if (_mounted.current === false) {
       return;
     }
-//    console.log('useEffect',id);
+    //    console.log('useEffect',id);
     const files = getFilesById(processId);
     console.log("🚀 ~ file: PDFViewerDialog.jsx:90 ~ useEffect ~ files:", files)
     setFiles(files);
-  },processId);
+  }, processId);
+
+  const onShowNextPDF = (evt) => {
+    console.log(`TLL: onShowNextPDF -> evt = ` + evt);
+    if (currentFileIndex === files.length) {
+      //[TODO] If the currentFile is at the end of the files, then disable button
+      console.log(`currentFile is at the end of the files, then disable button`)
+      return;
+    }
+    else
+      //[TODO] redundant code for testing only need one  
+      setCurrentFileIndex(currentFileIndex + 1);
+    setCurrentFile(files[currentFileIndex + 1])
+    return;
+    evt.preventDefault();
+  }
+
+  const onShowPreviousPDF = (evt) => {
+    //do nothing at the end of filtes
+    //[TODO] If the currentFile is at 0, then disable button
+    if (currentFileIndex === files.length) {
+      console.log('currentFile is at the end of the files, then disable button')
+      return;
+    }
+    const currentFileIndex = currentFileIndex(currentFileIndex - 1);
+    setCurrentFile(files[currentFileIndex - 1])
+    console.log(`TLL: onShowPreviousPDF -> currentFile = ` + files[currentFileIndex - 1]);
+    evt.preventDefault();
+  }
 
 
   const handleMaxWidthChange = (event) => {
@@ -82,39 +112,38 @@ const record = {
     setFullWidth(event.target.checked);
   };
 
-  useEffect(()=> {
-    if(_mounted.current === false){
+  useEffect(() => {
+    if (_mounted.current === false) {
       return false;
     }
-     getFilesById(processId);
-     console.log(`Got files for id ${processId}`,files);
-     setFiles(files);
-  },[processId])
+    getFilesById(processId);
+    console.log(`Got files for id ${processId}`, files);
+    setFiles(files);
+  }, [processId])
 
-const getFilesById = (processId) => {
-  if(_mounted.current !== true){
-    return;
-  }
-  if(!processId){
-    console.log(`No processId recived ${processId}`);
-    return;
-  }
-   console.log("🚀 ~ file: PDFViewerDialog.jsx:72 ~ getFilesById ~ id:", processId)
-   let url = Globals.currentHost + `file/nepafiles?id=${processId}`;   
-   
-   axios
-    .get(url)
-    .then((response)=> {
-      console.log('file response')
-      console.log('getFiles data',response.data);
-      setFiles(response.data);
-      const filtered = response.data.filter((file)=> file.processId === processId )
-      console.log("TLL: getFilesById -> filtered = " + filtered);
-    })
-    .catch((e)=>{
-        console.error(`Failed to get a list of files for id ${id}.With an Exception`,e)
+  const getFilesById = (processId) => {
+    if (_mounted.current !== true) {
+      return;
+    }
+    if (!processId) {
+      console.log(`No processId recived ${processId}`);
+      return;
+    }
+    console.log("🚀 ~ file: PDFViewerDialog.jsx:72 ~ getFilesById ~ id:", processId)
+    let url = Globals.currentHost + `file/nepafiles?id=${processId}`;
+
+    axios
+      .get(url)
+      .then((response) => {
+        console.log('file response')
+        console.log('getFiles data', response.data);
+        const files = response.data //JSON.parse(response.data);
+        setFiles(files);
+      })
+      .catch((e) => {
+        console.error(`Failed to get a list of files for id ${id}.With an Exception`, e)
         return [];
-    })
+      })
   };
 
   // useEffect(() => {
@@ -126,19 +155,20 @@ const getFilesById = (processId) => {
 
   //const {searchState,setSearchState} = useContext(SearchContext);
   const { isOpen, onDialogClose, docId, docTitle } = props;
+  console.log(`🚀 ~ file: PDFViewerDialog.jsx:158 ~ PDFViewerDialog ~ props:`, props);
+
   return (
     <Dialog
       id="pdf-viewer-dialog"
       ////open={isOpen}
       open={true}
       fullWidth={fullWidth}
-      maxWidth={maxWidth}
       onClose={onDialogClose}
+      maxWidth={'lg'}
     >
       <DialogContent>
         <DialogTitle>
           <Grid container>
-            Process ID: {processId}
             <Grid item xs={10} textAlign={'left'} justifyContent={'flex-start'} justifyItems={'flex-start'}>
               <Typography color={'black'} fontSize={18} fontWeight={'bold'}>
                 {(docTitle) ? docTitle : ''}
@@ -146,7 +176,7 @@ const getFilesById = (processId) => {
             </Grid>
 
             <Grid item xs={2} textAlign={'right'}>
-              <IconButton onClick={onDialogClose}>
+              <IconButton onClick={(evt) => onDialogClose(evt)}>
                 <Typography fontWeight={'bold'} fontSize={'medium'}>X</Typography>
               </IconButton>
             </Grid>
@@ -156,52 +186,59 @@ const getFilesById = (processId) => {
           {/* {(files.length) && (files.map((file,idx)=>(
             <span key={idx}>filename : {file}</span>
           )))} */}
-
-          <Typography>{record.title}</Typography>
-          {/* {isLoaded ? <CircularProgress /> : ( */}
-          <Container id="pdf-viewer-document-container">
-            {/* <FloatingToolbar/> */}
-            <Typography> {record.title} </Typography>
-            {/* {JSON.stringify(files)} */}
-              <Grid container >
-              <Grid id="related-files-grid-item" item xs={3}>
-                  
-              {
-                  (files && files.length) &&
-                    files.splice(0,5).map((file,idx)=> {
-                      return(  
-                    
-                          <Box key={record.id}
-                          sx={{border:1}}>
-                            <ListItem>{idx} of {files.length}</ListItem>
-                              <span key={idx}><b>id</b> : {file.id}</span>
-                            <ListItem>
-    
-                              <span key={idx}><b>filename</b> : {file.filename}</span>
-                            </ListItem>
-                            {/* <ListItem>
-                              <span key={idx}><b>documentType</b> : {file.documentType}</span>
-                            </ListItem>
-                            <ListItem>
-                              <span key={idx}><b>folder</b> : {file.folder}</span>
-                            </ListItem>
-                            <ListItem>
-                              <span key={idx}><b>folder</b> : {file.folder}</span>
-                            </ListItem> */}
-    
-                          </Box>
-                      )
-                    })
-              }
+          {(files && files.length > 0) && (
+            <Grid container flex={1}>
+              <Grid xs={3}>
+                <Typography variant={'h6'} textAlign={'center'}>Related Files</Typography>
+                <showPDFileList files={files} currentFileIndex={currentFileIndex} />
               </Grid>
-              <Grid id="pdf-view-grid-item" xs={8} border={1}>
-                <PDFViewer processId={processId} />
-              </Grid>            
-           </Grid>
+              <Grid xs={9}>
 
-          </Container>
+                <Grid container>
+                  <ShowPDFDialogContent files={files} currentFileIndex={currentFileIndex} /></Grid>
+              </Grid>
+            </Grid>
+          )}
         </DialogContentText>
       </DialogContent>
     </Dialog>
   );
+}
+
+export function showPDFileList(props) {
+  console.log(`TLL: showPDFileList -> props = ` + props);
+  const { files, currentFileIndex } = props.files;
+  return (
+    <>
+      <Box>
+        {
+          (files && files.length) &&
+          files.splice(0, 5).map((file, idx) => {
+            return (
+
+              <Box key={file.id}
+                sx={{ border: 1 }}>
+                <ListItem>
+                  <span key={idx}><b>filename</b> : {(file.filename && file.filename.length < 50) ? file.filename : `${file.filename}  ...`}</span>
+                </ListItem>
+              </Box>
+            )
+          })
+        }
+      </Box>
+    </>
+  )
+}
+export function ShowPDFDialogContent(props) {
+  console.log(`TLL: PDFDialogContent -> props = `, props);
+  const { files, currentFileIndex } = props;
+  const currentFile = files[currentFileIndex];
+  return (
+    <>{''}
+      <Grid id="pdf-view-grid-item" xs={8} border={1}>
+        <b>Index {currentFileIndex}</b>
+        {currentFile.title}
+      </Grid>
+    </>
+  )
 }
