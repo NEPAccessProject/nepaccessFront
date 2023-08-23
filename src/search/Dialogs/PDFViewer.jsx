@@ -2,6 +2,7 @@ import { Viewer, Worker } from '@react-pdf-viewer/core';
 import { defaultLayoutPlugin } from '@react-pdf-viewer/default-layout';
 import { thumbnailPlugin } from '@react-pdf-viewer/thumbnail';
 import { toolbarPlugin } from '@react-pdf-viewer/toolbar';
+import {Paper,Typography} from '@mui/material';
 
 import * as React from 'react';
 //[TODO][Feature Request] - Feiz would like to see if we can highlight the section in the PDF where the most relevant / first snippet that is displayed is focused and highlighted
@@ -14,19 +15,16 @@ import '@react-pdf-viewer/toolbar/lib/styles/index.css';
 const workerUrl = "https://unpkg.com/pdfjs-dist@3.4.120/build/pdf.worker.min.js";
 
 const PDFViewer = (props) => {
-    const {file,processId} = props;
     console.log("🚀 ~ file: PDFViewer.jsx:20 ~ PDFViewer ~ props:", props)
+    const {file,processId} = props;
     //    const {fileUrl} = props;
-    const fileUrl = 'example.pdf'
+    const fileUrl = './example.pdf'
     const thumbnailPluginInstance = thumbnailPlugin({
 
     });
-    const defaultLayoutPluginInstance = defaultLayoutPlugin(
-        {
+    const defaultLayoutPluginInstance = defaultLayoutPlugin({
             //sidebarTabs: true,
-
-        }
-    );
+    });
 
     const toolbarPluginInstance = toolbarPlugin({
     });
@@ -35,7 +33,9 @@ const PDFViewer = (props) => {
 
     return (
 
-        <>
+        <Paper marginTop={200} border={1}>
+        <Typography variant='h2'> PDF Viewer</Typography>
+        <b>fileUrl: {fileUrl}</b>
             <div
                 style={{
                     position: 'relative',
@@ -55,11 +55,10 @@ const PDFViewer = (props) => {
                 </div>
                 {/* [TODO][Feature Request] - The Toolbar should be fixed and should be visible as you scroll */}
                 <Worker workerUrl={workerUrl}>
-                    <Viewer fileUrl={fileUrl} plugins={[toolbarPluginInstance]} />
+                    <Viewer fileUrl={'./examples.pdf'} plugins={[toolbarPluginInstance]} />
                 </Worker>
             </div>
-
-        </>
+        </Paper>
     );
 };
 

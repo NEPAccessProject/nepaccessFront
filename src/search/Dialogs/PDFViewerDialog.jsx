@@ -4,10 +4,17 @@ import {
   DialogContentText,
   DialogTitle,
   Grid,
+  Button,
   IconButton,
+  Paper,
   Typography
 } from '@mui/material';
+import theme from '../../styles/theme.js';
+import {makeStyles} from '@mui/styles';
 import React, { useDebugValue, useState } from 'react';
+//import PDFViewer from './PDFViewer';
+// import PDFViewer from '../../examples/PDFViewer/index.jsx';
+import PDFViewerDemo from '../PDFViewerDemo'
 // const [fullWidth, setFullWidth] = React.useState(true);
 // const [maxWidth, setMaxWidth] = React.useState('md');
 // import SearchContext from './SearchContext';
@@ -23,25 +30,47 @@ import Globals from '../../globals';
 //   import.meta.url,
 // ).toString();
 
+const useStyles = makeStyles(theme => (
+  {
+    centeredGridItem: {
+      verticalAlign: 'center',
+      textAlign: 'center',
+      alignContent: 'center',
+      justifyContent: 'center',
+      justifyItems: 'center',
+      fontColor: '#000',
+      border:1,
 
+    },
+    item: {
+      margin: 1,
+      padding: 1,
+      border: 1,
+      borderColor: "#ccc"
+    },
 
-export default function PDFViewerDialog(props){
+  }
+));
+export default function PDFViewerDialog(props) {
   console.log("🚀 ~ file: PDFViewerDialog.jsx:28 ~ PDFViewerDialog ~ props:", props)
   //    pdfjs.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.js`;
   //[TODO] set processId to props after testing
-//  const {processId} = props; 
-  const processId= 78
+  //  const {processId} = props; 
+  const processId = 78
   console.log("🚀 ~ file: PDFViewerDialog.jsx:31 ~ PDFViewerDialog ~ processId:", processId);
-   //params.processId || query.processId;
+  //params.processId || query.processId;
   const [numPages, setNumPages] = useState(null);
   const [pageNumber, setPageNumber] = useState(1);
   const [fullWidth, setFullWidth] = React.useState(true);
   const [maxWidth, setMaxWidth] = React.useState('md');
   //  const { isOpen, onDialogClose,fileName } = props;
   const [files, setFiles] = useState([]);
+  const [currentFileIndex, setCurrentFileIndex] = useState(0);
+  const [currentFile,setCurrentFile] = useState({});
   let _mounted = useRef(false);
   const [isLoaded, setIsLoaded] = useState(false);
   const samplePDF = 'https://arxiv.org/pdf/quant-ph/0410100.pdf';
+  const classes = useStyles(theme);
 
   console.log("🚀 ~ file: PDFViewerDialog.jsx ~ processId:", processId)
   useEffect(() => {
@@ -69,11 +98,11 @@ export default function PDFViewerDialog(props){
       const response = await axios.get(url);
       console.log("🚀 ~ file: PDFViewerDialog.jsx:116 ~ getFilesById ~ response:", response)
       const files = response.data;
-      //setFiles(response.data);
-      const filtered = response.data.filter((file) => file.processId === processId)
+      //remove all non pdf files
+      const filtered = response.data.filter((file) => file.filename.slice(file.filename.lastIndexOf('.'),file.filename.length) === ".pdf")
       console.log("TLL: getFilesById -> filtered = " + filtered);
       //setFiles(files);
-      return files;
+      return filtered;
     }
     catch (e) {
       console.error(`Failed to get a list of files for id ${processId}.With an Exception`, e);
@@ -88,41 +117,29 @@ export default function PDFViewerDialog(props){
     setIsLoaded(true);
     setNumPages(numPages);
   }
+  useEffect(async () => {
+    console.log(`Firing effect to get files, mounted: ${_mounted.current}`)
+    if (_mounted.current === false) {
+      console.log('Component did not mount')
+      return;
+    }
+    //    console.log('useEffect',id);
+    const files = await getFilesById(78);
+    console.log(`🚀 ~ file: PDFViewerDialog.jsx:90 ~ useEffect ~ files length  ${files.length ? files.length : 0}`);
+    setFiles(files);
+    if(files.length > 0){
+      setCurrentFile(files[0])
+    }
+    return async() => {
+      console.log('Component PDF Dialog is unmounted - resetting data');
+      setFiles([]);
+    }
+    //setFiles(files);
+  }, []);
 
-
-  // useEffect(async () => {
-  //   console.log('Firing Effect to get files');
-  //   if (_mounted.current === false) {
-  //     return false;
-  //   }
-  //   const files = await getFilesById(processId);
-  //   console.log(`Got files for id ${processId}`, files);
-  //   setFiles(files)
-  //     () => files = []
-  // }, [processId])
-
-  
-    useEffect(async() => {
-      console.log(`Firing effect to get files, mounted: ${_mounted.current}`)
-      if(_mounted.current === false){
-        console.log('Component did not mount')
-        return;
-      }
-  //    console.log('useEffect',id);
-      const files = await getFilesById(78);
-        console.log(`🚀 ~ file: PDFViewerDialog.jsx:90 ~ useEffect ~ files length  ${files.length ? files.length : 0}`);
-        setFiles(files);
-        
-        return () => {
-          console.log('Component PDF Dialog is unmounted - resetting data');
-          setFiles([]);
-        }
-        //setFiles(files);
-    },[]);
- 
   useDebugValue(files ? `state updated with ${files && files.length} files` : `Files not found for ProcessID : ${processId}`)
-  const onDialogClose= (evt)=>{
-    console.log('onDialogClose placeholder',evt);
+  const onDialogClose = (evt) => {
+    console.log('onDialogClose placeholder', evt);
 
   }
   const handleMaxWidthChange = (event) => {
@@ -131,33 +148,53 @@ export default function PDFViewerDialog(props){
       event.target.value,
     );
   };
-
-
+  const onLoadNextFile = (evt) => {
+    if(currentFileIndex !== files.length){
+      setCurrentFileIndex(currentFileIndex + 1);          
+      setCurrentFile(files[currentFileIndex])
+    }
+    else{
+      console.warn(`Cannot get next file the index ${currentFileIndex} is at ${files.length} `)
+    }
+      evt.preventDefault();
+  }
+  const onLoadPreviousFile = (evt) => {
+    if (currentFileIndex => 0) {
+      setCurrentFileIndex(currentFileIndex - 1);
+      setCurrentFile(files[currentFileIndex])
+    }
+    else {
+      console.warn('File Index Already 0 disable the button');
+    }
+    evt.preventDefault();
+  }
   const handleFullWidthChange = (event) => {
     //console.log('handleFullWidth', event.target.checked);
     setFullWidth(event.target.checked);
   };
-
+  const file = files[currentFileIndex];
   return (
     <Dialog
       id="pdf-viewer-dialog"
-      ////open={isOpen}
+      //open={isOpen}
       open={true}
-      fullWidth={fullWidth}
-      maxWidth={maxWidth}
+//      fullScreen={true}
+      maxWidth='xl'
+      height={'100vh'}
+//      maxWidth={lg}
       onClose={onDialogClose}
     >
       <DialogContent>
         <DialogTitle>
           <Grid container>
-            <Grid item xs={10} textAlign={'left'} justifyContent={'flex-start'} justifyItems={'flex-start'}>
+            {/* <Grid item xs={10} textAlign={'left'} justifyContent={'flex-start'} justifyItems={'flex-start'}>
               <Typography color={'black'} fontSize={18} fontWeight={'bold'}>
                 Title?
               </Typography>
-            </Grid>
+            </Grid> */}
 
             <Grid item xs={2} textAlign={'right'}>
-              <IconButton onClick={(evt)=>onDialogClose(evt)}>
+              <IconButton onClick={(evt) => onDialogClose(evt)}>
                 <Typography fontWeight={'bold'} fontSize={'medium'}>X</Typography>
               </IconButton>
             </Grid>
@@ -165,16 +202,29 @@ export default function PDFViewerDialog(props){
         </DialogTitle>
         <DialogContentText id="pdf-viewer-dialog-content">
           <Typography variant='h1' color='secondary'>PDF Viewer</Typography>
-          
-          {(files && files.length === 0) 
-            ? <CircularProgress/> 
-            :  <Grid container>
-                  <Grid container flex={1}>
-                    <Grid item xs={3}><AvailableFilesList files={files}/></Grid>
-                    <Grid item xs={9}><PDFContainer file={files}/></Grid>
-                  </Grid>
-            :  </Grid>
-            }
+
+          {(files && files.length === 0)
+            ? <Paper className={classes.centeredGridItem} sx={{
+              border:1,
+              height:500,
+              width: 500,
+            }}>
+                <CircularProgress /> 
+            </Paper>
+            : <Grid container border={1} borderColor='black'>
+              <Grid container className={classes.centeredGridItem}>
+                <Grid item xs={6} className={classes.centeredGridItem}>
+                  <Button variant='outlined' disabled={currentFileIndex === 0}  borderColor='black' border={1} color='primary' onClick={onLoadPreviousFile} >Previous File</Button>
+                </Grid>
+                <Grid item xs={6} className={classes.centeredGridItem}>
+                  <Button variant='outlined' disabled={currentFileIndex === files.length} color='primary' onClick={onLoadNextFile}>Next File</Button></Grid>
+              </Grid>
+              <Grid container border={1} flex={1} display='flex'>
+                <Grid item xs={3} border={1}><AvailableFilesList files={files} /></Grid>
+                <Grid item xs={9} border={1}><PDFContainer file={file} /></Grid>
+              </Grid>
+            </Grid>
+          }
         </DialogContentText>
       </DialogContent>
     </Dialog>
@@ -183,15 +233,19 @@ export default function PDFViewerDialog(props){
 
 
 export function PDFContainer(props) {
-  const { file, currentFileIndex } = props;
-  console.log("🚀 ~ file: PDFViewerDialog.jsx:178 ~ PDFContainer ~ props:", props)
+  const {file} = props;
+  const {eisdoc} = file;
+  const classes = useStyles(theme)
+  console.log("🚀 ~ file: PDFViewerDialog.jsx:178 ~ PDFContainer ~ eisdoc:", eisdoc)
   return (
     <Grid container>
-      <Grid item xs={12}>
-        <Typography variant='h1' color='secondary'>{file.filename}</Typography>
+      <Grid xs={12} item className={classes.centeredGridItem}>
+        <Typography variant={'h3'} textAlign='center'>
+            {eisdoc.title}
+        </Typography>
       </Grid>
-      <Grid item xs={12}>
-        <b key={currentFileIndex}>filename : {file.name}</b>
+      <Grid item xs={12}>                 
+          <PDFViewerDemo {...props} />
       </Grid>
     </Grid>
   )
@@ -199,14 +253,18 @@ export function PDFContainer(props) {
 
 export function AvailableFilesList(props) {
   console.log("🚀 ~ file: PDFViewerDialog.jsx:187 ~ AvailableFilesList ~ props:", props)
-  const [files, currentFileIndex] = props;
+  const {files} = props;
+  const classes = useStyles(theme)
+
   return (
-    <ul>
+    <>
+    <Grid container>
       {files.map((file, idx) => (
-        <li key={idx}>
+        <Typography>
           <a href={file.url} target="_blank" rel="noopener noreferrer">{file.filename}</a>
-        </li>
+        </Typography>
       ))}
-    </ul>
+      </Grid>
+    </>
   )
 }

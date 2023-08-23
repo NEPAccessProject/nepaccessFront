@@ -1,13 +1,7 @@
 import {
-  Button,
   Container,
-  Dialog,
-  DialogContent,
-  DialogContentText,
-  DialogTitle,
   Grid,
-  IconButton,
-  Typography
+  Paper
 } from '@mui/material';
 import React, { useState } from 'react';
 // const [fullWidth, setFullWidth] = React.useState(true);
@@ -17,25 +11,17 @@ import React, { useState } from 'react';
 //https://react-pdf-viewer.dev/examples/
 import axios from 'axios';
 import { useEffect, useRef } from 'react';
-import Globals from '../../globals';
-import PDFViewer from './PDFViewer';
-// pdfjs.GlobalWorkerOptions.workerSrc = new URL(
-//   'pdfjs-dist/build/pdf.worker.min.js',
-//   import.meta.url,
-// ).toString();
+import Globals from '../globals';
+import PDFViewer from '../search/MainSearch/PDFViewer';
 
 export default function MultiPDFViewer(props) {
   //  console.log("🚀 ~ file: PDFViewerDialog.jsx ~ line 25 ~ PDFViewerDialog ~ props", JSON.stringify(props))
-
-  const docTitle = 1004028;
-  const processId = 1004028;
-  const id = 1004028;
+  //const {id,record} = props
+  //Hard Code for Demo
   const record = {
-      id: 1004028,
-      title: 'placeholder title'
+    title: "Test Record"
   }
-  // const { id, record, processId } = props;
-
+  const filenames = props.filenames
   //    pdfjs.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.js`;
   const [numPages, setNumPages] = useState(null);
   const [pageNumber, setPageNumber] = useState(1);
@@ -44,27 +30,31 @@ export default function MultiPDFViewer(props) {
   //  const { isOpen, onDialogClose,fileName } = props;
   const [files, setFiles] = useState([]);
   let _mounted = useRef(false);
-  const [isLoaded, setIsLoaded] = useState(false);
+  const [isLoaded, setIsLoaded] = useState(true);
   const samplePDF = 'https://arxiv.org/pdf/quant-ph/0410100.pdf';
-  const onDialogClose=(evt)=>{
-  c onsole.log("TLL: onDialogClose -> evt = " + evt);
-    
-  }
-
-
   function onDocumentLoadSuccess({ numPages }) {
     //console.log('onDocumentLoadSuccess', numPages);
     setIsLoaded(true);
     setNumPages(numPages);
   }
+  //value is null to trigger the effect when it is loaded
+  const getId = () => {
+    const urlParams = new URLSearchParams(window.location.search);
+    console.log(`file: MultiPDFViewer.jsx:43 - id - urlParams:`, urlParams);
+    const process_id = urlParams.get('process_id');
+    console.log(`file: MultiPDFViewer.jsx:44 - id - process_id:`, process_id);
+    return process_id;
+  };
+  
 
-  useEffect(() => {
-    _mounted.current = true
-    return () => {
-      console.log('Component unmounted');
-      _mounted.current = false;
-    }
-  }, []);
+  // useEffect(() => {
+  //   _mounted.current = true;
+  //   console.log(`Mounted `, _mounted);
+  //   () => {
+  //     console.log('cleaning up mounted check after useEffect');
+  //     _mounted.current = false;
+  //   };
+  // }, [_mounted]);
 
   const handleMaxWidthChange = (event) => {
     setMaxWidth(
@@ -78,109 +68,79 @@ export default function MultiPDFViewer(props) {
     setFullWidth(event.target.checked);
   };
 
-  // useEffect(() => {
-  //   if (_mounted.current === false) {
-  //     return false;
-  //   }
-  //   const files = getFilesById(processId);
-  //   console.log(`Got files for id ${processId}`, files);
-  //   setFiles(files);
-  // }, [processId])
+  let process_id = null;
 
-  const getFilesById = async(processId) => {
-    if (_mounted.current !== true) {
-      console.log(`PDF Viewer is not mounted`)
-      return;
-    }
-    if (!processId) {
-      console.log(`No processId recived ${processId}`);
-      return;
-    }
-
-    console.log("🚀 ~ file: PDFViewerDialog.jsx:72 ~ getFilesById ~ id:", processId)
-    let url = Globals.currentHost + `file/nepafiles?processId=${processId}`;
-
-      axios.get(url)
+  const getFilesById = (process_id) => {
+    console.log("🚀 ~ file: PDFViewerDialog.jsx:72 ~ getFilesById ~ process_id:", process_id)
+    let url = Globals.currentHost + `test/get_process_full?processId=${process_id}`;
+   
+    console.log(`file: MultiPDFViewer.jsx:80 - getFilesById - url:`, url);
+    axios
+      .get(url)
       .then((response) => {
-        debugger;
-        console.log(`API Returned ${response.data.length}`);
-        //const files =  JSON.parse(response.data);
-        console.log (`received ${files.length} files for id ${processId}`);
+        console.log(`file: MultiPDFViewer.jsx:81 - .then - response:`, response);
+        console.log('getFiles data', response.data);
         setFiles(response.data);
       })
       .catch((e) => {
-      console.error("TLL: getFilesById -> e = " + e);
-        return [];
+        console.error(`Failed to get a list of files for process_id ${process_id}.With an Exception`, e.message);
+        
       })
   };
 
+  useEffect(() => {
+    // if(_mounted.current === false){
+    //   return;
+    // }
+    const process_id = getId();
+    console.log(`file: MultiPDFViewer.jsx:96 - useEffect - process_id:`, process_id);
+    console.log('useEffect', process_id);
+    const files = getFilesById(process_id)
+    console.log("🚀 ~ file: PDFViewerDialog.jsx:90 ~ useEffect ~ files:", files, "process_id", process_id)
+
+  }, [process_id]);
+
+  //const {searchState,setSearchState} = useContext(SearchContext);
+  const { isOpen, onDialogClose, docId, docTitle } = props;
   return (
-    <Dialog
-      id="pdf-viewer-dialog"
-      ////open={isOpen}
-      open={true}
-      fullWidth={true}
-      maxWidth={maxWidth}
-      onClose={onDialogClose}
-      maxWidth= 'xl'
-    >
-      <DialogContent>
-        <DialogTitle>
-          <Grid container>
-            Process ID: {processId}
-            <Grid item xs={10} textAlign={'left'} justifyContent={'flex-start'} justifyItems={'flex-start'}>
-              <Typography color={'black'} fontSize={18} fontWeight={'bold'}>
-                {(docTitle) ? docTitle : ''}
-              </Typography>
-            </Grid>
+    <Container sx={{
+      backgroundColor: '#fff',
+      border: 1,
+      marginTop: '125px'
+    }}>
+      <Paper border={0} elevation={1} backgroundColor="#fff">
 
-            <Grid item xs={2} textAlign={'right'}>
-              <IconButton onClick={()=><div>placeholder</div>}>
-                <Typography fontWeight={'bold'} fontSize={'medium'}>X</Typography>
-              </IconButton>
-            </Grid>
-          </Grid>
-        </DialogTitle>
-        <DialogContentText id="pdf-viewer-dialog-content">
-          {/* {(files.length) && (files.map((file,idx)=>(
-            <span key={idx}>filename : {file}</span>
-          )))} */}
-
-          <Typography>{record.title}</Typography>
-          {/* {isLoaded ? <CircularProgress /> : ( */}
-          <Container id="pdf-viewer-document-container">
-            {/* <FloatingToolbar/> */}
-            <Typography> {record.title} </Typography>
-            {(files && files.length)
-              ? files.map((file, idx) => {
-                return (<span key={idx}>filename : {file}</span>)
-              })
-              : <b>No Files found for processId {processId}</b>
-            }
-            {JSON.stringify(files)}
-            <PDFViewer processId={processId} />
-            <Grid flex={1} container>
-              <Grid item justifyContent={'flex-start'} xs={4}><Button variant='outlined' onClick={() => setPageNumber(pageNumber - 1)}>{'<'} Previous Page</Button></Grid>
-              <Grid item xs={4} justifyContent={'center'}>
-                Page {pageNumber} of {numPages}
-              </Grid>
-              <Grid item justifyContent={'flex-end'} xs={4}><Button variant='outlined' onClick={() => setPageNumber(pageNumber + 1)}>Next Page {'>'}</Button></Grid>
-
-            </Grid>
-            {/*
-            <Document file={samplePDF} onLoadSuccess={onDocumentLoadSuccess}>
-              <Page pageNumber={pageNumber} />
-              {Array.from(new Array(numPages), (el, index) => (
-                <Page key={`page_${index + 1}`} pageNumber={index + 1} />
-              ))}
-            </Document>
-            <Typography fontSize={14}>
-              Page {pageNumber} of {numPages}
-            </Typography> */}
-
-          </Container>
-        </DialogContentText>
-      </DialogContent>
-    </Dialog>
-  );
+        {/* <Typography variant="h4" sx={{ my: 2 }}>
+            {docTitle}
+          </Typography>
+          <Typography variant="h6" sx={{ my: 2 }}>
+            {id}
+          </Typography>
+          <Typography variant="h6" sx={{ my: 2 }}>
+            {docId}
+          </Typography>
+          <Typography variant="h6" sx={{ my: 2 }}>
+          {record.title}
+          </Typography> */}
+        <Grid Container>
+          <Grid item xs={12}>
+            {(files).map((file, index) => {
+              return (
+                file.filenames.map((filename, idx) => {
+                  return (
+                    <Paper key={filename}>
+                      {filename}
+                      <PDFViewer filename={filename} doc={file.doc} />
+                    </Paper>
+                    
+                  )
+                }))
+            })}            
+                
+                { JSON.stringify(files[0]) }
+  </Grid>
+        </Grid>
+      </Paper>
+    </Container>
+  )
 }
