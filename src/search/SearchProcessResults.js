@@ -16,6 +16,7 @@ import SearchProcessResult from "./SearchProcessResult";
 import SearchResultItems from './SearchResultsItems.jsx';
 import SearchTips from './SearchTips.jsx';
 //import SearchResultItems from "./SearchResultsItems.jsx";
+import CircularProgress from '@mui/material/CircularProgress';
 
 const _ = require("lodash");
 
@@ -75,20 +76,6 @@ const CardItem = styled(Paper)(({ theme }) => ({
     },
   },
 }));
-
-// const CardItem = styled(Paper)(({ theme }) => ({
-//   backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
-//   ...theme.typography.body2,
-//   padding: theme.spacing(1),
-//   // textAlign: 'center',
-//   color: theme.palette.text.secondary,
-//   elevation: 1,
-//   margin: 0.5,
-//   padding: 1,
-//   elevation: 1,
-//   border:1,
-// }));
-
 export default class SearchProcessResults extends React.Component {
   _size = 0;
   _columns = [];
@@ -294,7 +281,7 @@ export default class SearchProcessResults extends React.Component {
   }
 
   render() {
-    if (!this.props.results || !(this.props.results.length > 0)) {
+    if (!this.props.results || (!this.props.results.length > 0)) {
       /** Show nothing until loading results. props.resultsText will just be "Results" before any search.
        * During a search, it will be "Loading results..." and if 100+ async results we may
        * simultaneously have 100 props.results.  After a search we won't hit this logic because we'll have props.results
@@ -302,14 +289,18 @@ export default class SearchProcessResults extends React.Component {
       if (this.props.resultsText && this.props.resultsText !== "Results") {
         return (
           <>
-          <Box  padding={1} paddingLeft={3} paddingRight={3}>
-            
+          <Box  padding={1} paddingLeft={3} paddingRight={3} id="search-results-box">
               <Typography variant='h3' fontSize={20} >{this.state.searching}</Typography>
-              <Grid container >
-                <Grid item id="process-results">
+              <Grid container id="search-tips-item-container" >
+                <Grid item id="search-tips-grid-item">
                   <Grid paddingLeft={3} paddingRight={3} item xs={12} justifyContent={'center'} alignContent={'center'} > 
                     <divider>
-                        <SearchTips/>
+                      {(this.props.results.length  === 0)}
+                        ? Loading......
+                        <Box height={100} width={100}>
+                          <CircularProgress />
+                         </Box> 
+                        : <SearchTips/>
                     </divider>
                   </Grid>
                 </Grid>
@@ -325,15 +316,21 @@ export default class SearchProcessResults extends React.Component {
     try {
       return (
 				<>
-					<Box sx={{
-            padding:2,
+					<Box id="search-process-results-container" 
+          sx={{
+            padding:0,
 //            border: 1,
           }}>
-					  <Typography fontSize={26} variant='h4'>
-  						Search results
+					  <Typography variant='h2'>
+  						Search results {''}
   					</Typography>
-  					<Grid container display={'flex'} sx={9} flex={1} >
+            {(this.props.resultsText && this.props.resultsText !== "Results")}
+
+            ? <CircularProgress/>  
+            : <Grid container display={'flex'} sx={9} flex={1} >
   						{this.props.resultsText}&nbsp;
+              <CircularProgress/>
+              <Typography variant="h6">{this.props.searching}</Typography>
   						<Tippy
   							className='tippy-tooltip--small searchTips'
   							trigger='manual click'
@@ -372,12 +369,15 @@ export default class SearchProcessResults extends React.Component {
   								</span>
   							}
   						</Tippy>
-  						{this.props.searching ? <>Please wait...</> : <></>}
+  						{this.props.searching ? <>Searching</> : <>Done</>}
+               <Typography variant='h6'> Results # {this.props.results.length}</Typography>
+                Searching: {this.props.searching}
+              Search Result Text: {this.props.resultsText}
   						{this.props.results.map((result, index) => {
   							return (
   								<Grid item>
   									<>
-                    <Typography fontColor='black' fontSize={18} variant='h5'>{(result.title) 
+                    <Typography color={'primary'} variant='h5'>{(result.title) 
                       ? <a onClick={this.onDetailLink(result.processId)} href="#">{result.title}</a>
                       : ''}</Typography>
   										<SearchResultCards result={result} />
@@ -386,7 +386,7 @@ export default class SearchProcessResults extends React.Component {
   								</Grid>
   							);
   						})}
-  					</Grid>
+  					  </Grid>
 					</Box>
 				</>
 			);
