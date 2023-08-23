@@ -105,25 +105,6 @@ const SearchResults = (props) => {
     })
 
   };
-
-  // useEffect(()=>{
-  //   if(_mounted.current === false){
-  //     console.log('Component not mounted, exit sort results effect');
-  //     return;
-  //   }
-
-  //   console.log('Search Results useEffect',props.results);
-  //   const sorted = sortResults(props.results);
-  //   console.log("🚀 ~ file: SearchResults.jsx:116 ~ useEffect ~ sorted:", sorted);
-  //    console.log("🚀 ~ file: SearchResults.jsx:107 ~ useEffect ~ sortResults:", sortResults);
-  
-  // },[props.results]);
-
- 
-  // const sortedResults = results && results.length ? results.sort(sortByRelevance) : [];
-  //  console.log('🚀 ~ file: SearchResults.jsx:106 ~ SearchResults ~ sortedResults:', sortedResults);
-
-  //  console.log("🚀 ~ file: SearchResults.jsx:129 ~ SearchResults ~ results:", results)
   return (
     <Paper id="search-results-root">
       {/* <Typography variant="searchResultSubTitle" padding={2}>
@@ -133,7 +114,7 @@ const SearchResults = (props) => {
         results.map((result, index) => {
           return (
              <>
-             <Typography variant="searchResultSubTitle" padding={2}>
+             <Typography variant="h2" padding={2}>
               {/* {(result.records && result.records[0].title) &&
                 <a href="#">{result.records[0].title} - {result.records[0].id}</a>
               } */}

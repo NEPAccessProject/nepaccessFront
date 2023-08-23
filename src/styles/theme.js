@@ -75,30 +75,36 @@ const theme =
         marginLeft: 40,
         padding: 2,
         border:1,
+        display: 'block',
         fontFamily: 'open sans'
       },
       h3: {
         fontSize: "1.3rem",
-                marginLeft: 40,
+        display: 'block',
         padding: 2,
       },
       h4: {
+        display: 'block',
         fontSize: "1.2rem",
-                marginLeft: 40,
         padding: 2,
       },
       h5: {
+        display: 'block',
         fontSize: "1rem",
-                marginLeft: 40,
+        display: 'block',
         padding: 2,
       },
         h6: {
+          display: 'block',
         fontSize: "1rem",
-                marginLeft: 40,
         padding: 2,
       },
       caption: {
         fontSize: "0.8rem"
+      },
+      filterLabel: {
+        fontSize: "0.9rem",
+        fontColor: "#000"
       },
     },
     props: {

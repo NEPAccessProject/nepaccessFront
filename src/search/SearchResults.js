@@ -228,7 +228,6 @@ class SearchResults extends React.Component {
 
             return (
                 <div className="sidebar-results">
-                <h2>Sidebar Results</h2>
                     <div id="search-results">
                         <div className="tabulator-holder">
                             <ResultsHeader 

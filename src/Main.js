@@ -275,7 +275,6 @@ class Main extends React.Component {
     
                     <div id="main-menu">
                         <Link currentpage={(this.state.currentPage==="/search").toString()} className="main-menu-link" to="/search">
-                            <Typography variant='h1'> Themed  H1?</Typography>
                         </Link>
                         <div id="about-dropdown-2" className="main-menu-link dropdown">
                             <Link currentpage={(this.state.currentPage==="/search-tips" || this.state.currentPage==="/available-documents").toString()} id="about-button-2" className="main-menu-link drop-button" to="/search-tips">

@@ -10,6 +10,7 @@ import "./search.css";
 
 import {
 	Box,
+	CircularProgress,
 	Container,
 	Paper
 } from "@mui/material";
@@ -24,7 +25,6 @@ import SearchContext from "./SearchContext.js";
 import SideBarFilters from './SideBarFilters';
 import theme from "../styles/theme.js";
 import Grid from '@mui/material/Grid'; // Grid version 1
-
 import { makeStyles } from "@mui/styles";
 
 import ResultsHeader from "./ResultsHeader";
@@ -827,16 +827,15 @@ class Search extends React.Component {
 <ThemeProvider theme={theme}>
 					<SearchContext.Provider value={value}>
 						<Paper border={0}>
-							<Grid container>
-								{/* Start Header */}
-								<Grid container xs={12} flex={1} flexGrow={1}>
+							<Grid id="result-header-grid-container" container>{''}
+								<Grid container xs={12} flex={1} flexGrow={1} id="results-header-grid-container">
 											<ResultsHeader 
 												results={this.state.results}
 												total={this.state.total}
 											/>
 								</Grid>
-								<Grid container xs={12} flex={1} border={0}>
-									<Grid item xs={3} border={0}>
+								<Grid container xs={12} flex={1} border={0} id="filters-grid-container">
+									<Grid item xs={3} border={0} id="filters-grid-item">
 									{!this.state.filtersHidden &&	
 										<SideBarFilters
 												onActionChange={this.onActionChange}
@@ -879,9 +878,9 @@ class Search extends React.Component {
 										<h4>Results</h4>
 									</Item> 
 							{this.getSuggestions()}
-							<div className="loader-holder">
+							<div id="loader-holder">
 								<div className="center" hidden={this.props.searching}>
-									<span id="inputMessage">{this.state.inputMessage}</span>
+									<span id="inputMessage"><CircularProgress/> {this.state.inputMessage}</span>
 								</div>
 								<div className="lds-ellipsis" hidden={!this.props.searching}>
 									<div></div>
