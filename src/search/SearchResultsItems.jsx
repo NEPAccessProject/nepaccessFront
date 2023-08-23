@@ -121,6 +121,7 @@ export default function SearchResultItems(props) {
                   <Item key={idx} id="search-result-item-container">
                   {/* {JSON.stringify(record)} */}
                   <Divider />
+                  <Typography color={'secondary'} variant='h5'> Search Result Placeholder</Typography>
                   {/* <SearchResultItem record={record} /> */}
                   <Divider />
                 </Item>)

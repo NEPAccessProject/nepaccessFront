@@ -8,22 +8,12 @@ import RenderSnippets from './SearchResultSnippets.jsx';
 
 
 const useStyles = makeStyles((theme) => ({
-  subTitle: {
-    fontSize: '0.9rem',
-    textAlign : 'center',
-    padding:10,
-    margin:10,
-    fontColor: 'red',
-    border: 5,
-
-  },
   centeredContent: {
     alignContent: 'center',
     justifyContent: 'center',
     alignItems: 'center',
   },
   cardGridItem: {
-    color: 'green',
     fontSize: "1rem",
     fontWeight: 'bold',
   }
@@ -109,16 +99,13 @@ export default function SearchResultItem(props) {
     const year = commentDate && commentDate.length > 0 ? new Date(commentDate).getFullYear() : 'N/A';
     //console.log('SEARCH STATE SearchResultComponent');
     //  { Object.keys(record) }
-    const text = record.plaintext || '';
-    if(_mounted.current == false) {
-      return;
-    }
+    const text = record.plaintext || '';    
     return (
       <>
-        <Grid container border={1} borderColor={'#ccc'}>
+        <Grid container border={1} borderColor={'#ccc'} id="search-result-grid-container">
           <Grid
             container
-            id="search-result-item-root-item"
+            id="search-result-grid-item"
             flex={1}
             flexGrow={1}
             className={classes.centeredContent}
@@ -126,7 +113,7 @@ export default function SearchResultItem(props) {
             sx={{
             }}
           >  
-            <Grid container border={1} borderColor="#ccc" 
+            <Grid container border={1} borderColor="#ccc" id="search-result-row-container"
             textAlign={'center'} justifyContent={'center'}>
               <Grid  item id="year-box" 
                 xs={1}
@@ -184,7 +171,7 @@ export default function SearchResultItem(props) {
                 padding={1}
                 flex={1}
                 >
-                <Typography className={classes.subTitle} >{(title) ? title  : ''}</Typography>
+                <Typography id="snippets-title" variant='h4' >{(title) ? title  : ''}</Typography>
                 {/* <RenderSnippets record={record} /> */}
               </Grid>
               <Grid
@@ -198,7 +185,7 @@ export default function SearchResultItem(props) {
               //       className={classes.centeredContent}
               >
                 <Grid
-                  id="preview-button-grid-item"
+                  id="pdf-button-grid-item"
                   item
                   //          display={'flex'}
                   xs={6}
