@@ -33,10 +33,11 @@ const PDFViewer = (props) => {
 
     return (
 
-        <Paper marginTop={200} border={1}>
-        <Typography variant='h2'> PDF Viewer</Typography>
-        <b>fileUrl: {fileUrl}</b>
-            <div
+        <Paper 
+          //marginTop={200} 
+          //border={1}>
+
+            {/* <div
                 style={{
                     position: 'relative',
                 }}
@@ -50,14 +51,12 @@ const PDFViewer = (props) => {
                         border:1
                     }}
                 >
-                    {/* Render the toolbar */}
-                    <FloatingToolbar fileUrl={fileUrl} toolbarPluginInstance={toolbarPluginInstance} />
-                </div>
-                {/* [TODO][Feature Request] - The Toolbar should be fixed and should be visible as you scroll */}
+                </div> */}
+                        <b>fileUrl: {fileUrl}</b>
                 <Worker workerUrl={workerUrl}>
-                    <Viewer fileUrl={'./examples.pdf'} plugins={[toolbarPluginInstance]} />
+                    <Viewer fileUrl={'./'} plugins={[toolbarPluginInstance]} />
                 </Worker>
-            </div>
+            // </div>
         </Paper>
     );
 };

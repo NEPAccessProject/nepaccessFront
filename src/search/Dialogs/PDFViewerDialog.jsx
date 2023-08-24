@@ -3,11 +3,14 @@ import {
   DialogContent,
   DialogContentText,
   DialogTitle,
+  Divider,
   Grid,
   Button,
   IconButton,
   Paper,
-  Typography
+  Typography,
+  List,
+  ListItem
 } from '@mui/material';
 import theme from '../../styles/theme.js';
 import {makeStyles} from '@mui/styles';
@@ -38,7 +41,7 @@ const useStyles = makeStyles(theme => (
       alignContent: 'center',
       justifyContent: 'center',
       justifyItems: 'center',
-      fontColor: '#000',
+      fontColor: '#ccc',
       border:1,
 
     },
@@ -178,11 +181,14 @@ export default function PDFViewerDialog(props) {
       id="pdf-viewer-dialog"
       //open={isOpen}
       open={true}
-//      fullScreen={true}
+      fullScreen={true}
       maxWidth='xl'
       height={'100vh'}
 //      maxWidth={lg}
       onClose={onDialogClose}
+      xs={{
+        height: '100%'
+      }}
     >
       <DialogContent>
         <DialogTitle>
@@ -201,27 +207,40 @@ export default function PDFViewerDialog(props) {
           </Grid>
         </DialogTitle>
         <DialogContentText id="pdf-viewer-dialog-content">
-          <Typography variant='h1' color='secondary'>PDF Viewer</Typography>
-
+          <b>Current Index: {currentFileIndex}</b>
+          <Divider/>
+          <b>Current File Name</b>
+          <Divider/>
           {(files && files.length === 0)
             ? <Paper className={classes.centeredGridItem} sx={{
-              border:1,
-              height:500,
-              width: 500,
+              height:'100%',
+              width: '80%',
             }}>
                 <CircularProgress /> 
             </Paper>
-            : <Grid container border={1} borderColor='black'>
+            : <Grid container>
+            <Grid item xs={12}>
+              <Typography variant={'h6'} textAlign='center'>
+                {file.filename}
+              </Typography>
+                <Typography variant={'h6'} textAlign='center'>
+                  Current Index {currentFileIndex}
+                </Typography>
+                <Typography variant={'h6'} textAlign='center'>
+                  Number of Files {files.length}
+                </Typography>
+
+            </Grid>
               <Grid container className={classes.centeredGridItem}>
                 <Grid item xs={6} className={classes.centeredGridItem}>
-                  <Button variant='outlined' disabled={currentFileIndex === 0}  borderColor='black' border={1} color='primary' onClick={onLoadPreviousFile} >Previous File</Button>
+                  <Button variant='outlined' disabled={currentFileIndex === 0} color='primary' onClick={onLoadPreviousFile} >Previous File</Button>
                 </Grid>
                 <Grid item xs={6} className={classes.centeredGridItem}>
-                  <Button variant='outlined' disabled={currentFileIndex === files.length} color='primary' onClick={onLoadNextFile}>Next File</Button></Grid>
+                  <Button variant='outlined' disabled={currentFileIndex === (files.length-1)} color='primary' onClick={onLoadNextFile}>Next File</Button></Grid>
               </Grid>
               <Grid container border={1} flex={1} display='flex'>
-                <Grid item xs={3} border={1}><AvailableFilesList files={files} /></Grid>
-                <Grid item xs={9} border={1}><PDFContainer file={file} /></Grid>
+                <Grid item xs={2} border={1}><AvailableFilesList files={files} /></Grid>
+                <Grid item xs={10} border={1}><PDFContainer file={file} /></Grid>
               </Grid>
             </Grid>
           }
@@ -259,11 +278,18 @@ export function AvailableFilesList(props) {
   return (
     <>
     <Grid container>
-      {files.map((file, idx) => (
-        <Typography>
-          <a href={file.url} target="_blank" rel="noopener noreferrer">{file.filename}</a>
+    <Grid item xs={12} className={classes.centeredGridItem}>      
+        <Typography variant={'h6'} textAlign='center'>
+            Related Files
         </Typography>
-      ))}
+    </Grid>
+    <Grid item xs={12}>
+      <List>
+        {files.map((file, idx) => (
+            <ListItem><a href={file.url} target="_blank" rel="noopener noreferrer"><Typography variant='filterLabel'>{file.filename}</Typography></a></ListItem>
+        ))}
+      </List>
+        </Grid>
       </Grid>
     </>
   )

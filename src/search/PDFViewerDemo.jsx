@@ -65,7 +65,6 @@ const PDFViewerExample = (props) => {
                         padding: '4px',
                     }}
                 >
-                    <h2>Toolbar??</h2>
                     <Toolbar>
                         {(props) => {
                             const {
@@ -122,7 +121,7 @@ const PDFViewerExample = (props) => {
                     </Toolbar>
                 </div>
                 <Worker workerUrl={workerUrl}>
-                    <Viewer fileUrl={fileUrl} plugins={[toolbarPluginInstance]} />
+                    <Viewer fileUrl={'/example.pdf'} plugins={[toolbarPluginInstance]} />
                 </Worker>
             </div>
         </div>
