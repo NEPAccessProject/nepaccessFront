@@ -256,15 +256,20 @@ export function PDFContainer(props) {
   const {eisdoc} = file;
   const classes = useStyles(theme)
   console.log("🚀 ~ file: PDFViewerDialog.jsx:178 ~ PDFContainer ~ eisdoc:", eisdoc)
+  const fileURL = `/${file.folder}/${file.filename}`;
+
+  console.log(`🚀 ~ file: PDFViewerDialog.jsx:261 ~ PDFContainer ~ fileURL:`, fileURL);
+
   return (
     <Grid container>
+
       <Grid xs={12} item className={classes.centeredGridItem}>
         <Typography variant={'h3'} textAlign='center'>
             {eisdoc.title}
         </Typography>
       </Grid>
       <Grid item xs={12}>                 
-          <PDFViewerDemo {...props} />
+        <PDFViewerDemo {...props} fileURL={fileURL}  />
       </Grid>
     </Grid>
   )

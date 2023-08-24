@@ -11,7 +11,8 @@ const workerUrl = "https://unpkg.com/pdfjs-dist@3.4.120/build/pdf.worker.min.js"
 const PDFViewerExample = (props) => {
     //    const {fileUrl} = props;
     const {filename, doc} = props
-    const fileUrl = './example.pdf'
+    //const fileUrl = './example.pdf'
+    const {fileUrl} = props;
     const toolbarPluginInstance = toolbarPlugin({
         getFilePlugin: {
             // fileNameGenerator: (OpenFile) => {
@@ -120,8 +121,8 @@ const PDFViewerExample = (props) => {
                         }}
                     </Toolbar>
                 </div>
-                <Worker workerUrl={workerUrl}>
-                    <Viewer fileUrl={'/example.pdf'} plugins={[toolbarPluginInstance]} />
+ m                 <Worker workerUrl={workerUrl}>
+            <Viewer fileUrl={fileUrl} plugins={[toolbarPluginInstance]} />
                 </Worker>
             </div>
         </div>
