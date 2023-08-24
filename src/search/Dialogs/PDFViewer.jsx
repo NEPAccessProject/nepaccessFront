@@ -55,7 +55,7 @@ const PDFViewer = (props) => {
                 </div>
                 {/* [TODO][Feature Request] - The Toolbar should be fixed and should be visible as you scroll */}
                 <Worker workerUrl={workerUrl}>
-                    <Viewer fileUrl={'./examples.pdf'} plugins={[toolbarPluginInstance]} />
+                    <Viewer fileUrl={'/docs/examples-2.pdf'} plugins={[toolbarPluginInstance]} />
                 </Worker>
             </div>
         </Paper>

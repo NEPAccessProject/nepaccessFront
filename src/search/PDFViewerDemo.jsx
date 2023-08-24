@@ -8,10 +8,11 @@ import '@react-pdf-viewer/toolbar/lib/styles/index.css';
 
 const workerUrl = "https://unpkg.com/pdfjs-dist@3.4.120/build/pdf.worker.min.js";
 
-const PDFViewerExample = (props) => {
+const PDFViewerDemo = (props) => {
+  console.log(`PDFViewerDemo props`,props);
     //    const {fileUrl} = props;
     const {filename, doc} = props
-    const fileUrl = './example.pdf'
+    const fileUrl = '/example.pdf'
     const toolbarPluginInstance = toolbarPlugin({
         getFilePlugin: {
             // fileNameGenerator: (OpenFile) => {
@@ -65,7 +66,6 @@ const PDFViewerExample = (props) => {
                         padding: '4px',
                     }}
                 >
-                    <h2>Toolbar??</h2>
                     <Toolbar>
                         {(props) => {
                             const {
@@ -122,11 +122,11 @@ const PDFViewerExample = (props) => {
                     </Toolbar>
                 </div>
                 <Worker workerUrl={workerUrl}>
-                    <Viewer fileUrl={fileUrl} plugins={[toolbarPluginInstance]} />
+                    <Viewer fileUrl={'/docs/example.pdf'} plugins={[toolbarPluginInstance]} />
                 </Worker>
             </div>
         </div>
     );
 };
 
-export default PDFViewerExample;
+export default PDFViewerDemo;
