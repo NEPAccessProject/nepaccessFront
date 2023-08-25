@@ -11,8 +11,9 @@ const workerUrl = "https://unpkg.com/pdfjs-dist@3.4.120/build/pdf.worker.min.js"
 const PDFViewerDemo = (props) => {
   console.log(`PDFViewerDemo props`,props);
     //    const {fileUrl} = props;
-    const {filename, doc} = props
-    const fileUrl = '/example.pdf'
+  const fileUrl = '/docs/03FEIS_chp1tabsfig.pdf'
+  console.log('!!!! PDFViewerDemo FILE URL:',fileUrl);
+    //const fileUrl = '/example.pdf'
     const toolbarPluginInstance = toolbarPlugin({
         getFilePlugin: {
             // fileNameGenerator: (OpenFile) => {
@@ -34,7 +35,7 @@ const PDFViewerDemo = (props) => {
         <div
             className="rpv-core__viewer"
             style={{
-                border: '1px solid rgba(0, 0, 0, 0.3)',
+                //border: '1px solid rgba(0, 0, 0, 0.3)',
                 display: 'flex',
                 flexDirection: 'column',
                 height: '100%',
@@ -44,9 +45,9 @@ const PDFViewerDemo = (props) => {
                 style={{
                     alignItems: 'center',
                     backgroundColor: '#eeeeee',
-                    borderBottom: '1px solid rgba(0, 0, 0, 0.1)',
+                    //borderBottom: '1px solid rgba(0, 0, 0, 0.1)',
                     display: 'flex',
-                    padding: '4px',
+                    //padding: '4px',
                 }}
             >
                 <Toolbar />
@@ -61,12 +62,12 @@ const PDFViewerDemo = (props) => {
                     style={{
                         alignItems: 'center',
                         backgroundColor: '#eeeeee',
-                        borderBottom: '1px solid rgba(0, 0, 0, 0.1)',
+                        //borderBottom: '1px solid rgba(0, 0, 0, 0.1)',
                         display: 'flex',
-                        padding: '4px',
+                        //padding: '4px',
                     }}
                 >
-                    <Toolbar>
+            {/* <Toolbar>
                         {(props) => {
                             const {
                                 CurrentPageInput,
@@ -119,10 +120,13 @@ const PDFViewerDemo = (props) => {
                                 </>
                             );
                         }}
-                    </Toolbar>
+                    </Toolbar> */}
                 </div>
                 <Worker workerUrl={workerUrl}>
-                    <Viewer fileUrl={'/docs/example.pdf'} plugins={[toolbarPluginInstance]} />
+            <Viewer fileUrl={fileUrl}
+            //plugins={[toolbarPluginInstance]} 
+
+            />
                 </Worker>
             </div>
         </div>
