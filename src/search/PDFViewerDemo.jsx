@@ -2,7 +2,7 @@ import { Viewer, Worker } from '@react-pdf-viewer/core';
 import { SelectionMode } from '@react-pdf-viewer/selection-mode';
 import { toolbarPlugin } from '@react-pdf-viewer/toolbar';
 import * as React from 'react';
-
+import { Box, Button, Divider, Grid, Paper, Typography } from '@mui/material';
 import '@react-pdf-viewer/core/lib/styles/index.css';
 import '@react-pdf-viewer/toolbar/lib/styles/index.css';
 
@@ -10,8 +10,7 @@ const workerUrl = "https://unpkg.com/pdfjs-dist@3.4.120/build/pdf.worker.min.js"
 
 const PDFViewerDemo = (props) => {
   console.log(`PDFViewerDemo props`,props);
-    //    const {fileUrl} = props;
-  const fileUrl = '/docs/03FEIS_chp1tabsfig.pdf'
+  const {fileUrl,file} = props;
   console.log('!!!! PDFViewerDemo FILE URL:',fileUrl);
     //const fileUrl = '/example.pdf'
     const toolbarPluginInstance = toolbarPlugin({
@@ -122,10 +121,10 @@ const PDFViewerDemo = (props) => {
                         }}
                     </Toolbar> */}
                 </div>
+                <Typography>{file.title}</Typography>
                 <Worker workerUrl={workerUrl}>
             <Viewer fileUrl={fileUrl}
             //plugins={[toolbarPluginInstance]} 
-
             />
                 </Worker>
             </div>

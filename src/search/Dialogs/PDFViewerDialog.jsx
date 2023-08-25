@@ -142,7 +142,7 @@ export default function PDFViewerDialog(props) {
     if(_mounted.current === false){
       return
     }
-
+    console.log(`FIREING EFFECT for currentFile change`)
   },[currentFile])
 
   function onDocumentLoadSuccess({ numPages }) {
@@ -265,7 +265,7 @@ export default function PDFViewerDialog(props) {
                   border={0}>
                   <Grid
                     item
-                    xs={3}
+                    xs={2}
                     className={classes.centered}
                     border={0}
                     borderColor='#ccc'
@@ -278,13 +278,17 @@ export default function PDFViewerDialog(props) {
                   </Grid>
                   <Grid
                     container
-                    xs={9}
+                    xs={10}
                     className={classes.centered}
-                    border={1}
+                    border={0}
                     borderColor={'#ccc'}
                     id="pdf-viewer-grid-container"
                     >
-            
+                    <Grid item xs={12}>
+                      <Grid flex={1} item xs={3}>Current Index: {currentFileIndex}</Grid>
+                      <Grid flex={1} item xs={3}>Current File: {currentFile.filename}</Grid>
+                      <Grid flex={1} item xs={3}>Current id: {(currentFile.eisdoc) ? currentFile.eisdoc.id : "No file loaded"}</Grid>
+                    </Grid>
                     <Grid
                       item
                       xs={12}
@@ -336,23 +340,21 @@ export default function PDFViewerDialog(props) {
                         </Button>
                       </Grid>
                     </Grid>
-                    <Grid item xs={12}>
-                      <Paper>Current Index: {currentFileIndex}</Paper>
-                      <Paper>Current File: {currentFile.filename}</Paper>
-                      <Paper>Current id: {currentFile.filename}</Paper>
-                      <Paper>
-                        Current EISDOC: {currentFile.eisdoc ? currentFile.eisdoc.title : '0'}
-                      </Paper>                    </Grid>
+                    
                     <Grid
                       item
                       xs={12}
-                      border={0}
-                      borderColor={'#ccc'}
+                      border={1}
+                      //borderColor={'#ccc'}
                       id='pdf-viewer-grid-item-container'>
-                      <PDFContainer
+                      <b> Current File at index {currentFileIndex} ?</b>
+                      {JSON.stringify(currentFile)} 
+                      <Divider/>
+                      {/* {JSON.stringify(files)} */}
+                      {/* <PDFContainer
                         {...props}
                         file={currentFile}
-                      />
+                      /> */}
                   </Grid>
                   </Grid>
               </Grid>
@@ -397,6 +399,7 @@ export function PDFContainer(props) {
           >
           <PDFViewerDemo
             {...props}
+            file={file}
             fileURL={fileURL}
           />
         </Grid>
