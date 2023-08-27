@@ -8,7 +8,7 @@ import '@react-pdf-viewer/toolbar/lib/styles/index.css';
 
 const workerUrl = "https://unpkg.com/pdfjs-dist@3.4.120/build/pdf.worker.min.js";
 
-const PDFViewerDemo = (props) => {
+const PDFViewer = (props) => {
   console.log(`PDFViewerDemo props`,props);
     //    const {fileUrl} = props;
     const {filename, doc} = props
@@ -129,4 +129,4 @@ const PDFViewerDemo = (props) => {
     );
 };
 
-export default PDFViewerDemo;
+export default PDFViewer;

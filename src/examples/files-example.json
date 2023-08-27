@@ -1,0 +1,38 @@
+{
+    "files" :[
+    {
+        "id": 56846,
+        "documentType": "Final",
+        "filename": "00 Thousand Palms Flood Control Project FEIR-FEIS.pdf",
+        "folder": "EisDocuments-387127",
+        "relativePath": "/EisDocuments-387127/",
+        "eisdoc": {
+            "id": 17710,
+            "title": "Thousand Palms Flood Control Project",
+            "documentType": "Final",
+            "commentDate": null,
+            "registerDate": "2022-12-23",
+            "agency": "U.S. Army Corps of Engineers",
+            "department": "",
+            "cooperatingAgency": "",
+            "state": "CA",
+            "county": "",
+            "filename": "EisDocuments-387127.zip",
+            "commentsFilename": null,
+            "folder": "EisDocuments-387127",
+            "size": 221302656,
+            "link": "",
+            "notes": "",
+            "status": "",
+            "subtype": "",
+            "summaryText": null,
+            "noiDate": null,
+            "draftNoa": null,
+            "finalNoa": null,
+            "firstRodDate": null,
+            "processId": null,
+            "action": "",
+            "decision": ""
+        }
+    }
+]}

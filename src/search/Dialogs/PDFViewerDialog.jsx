@@ -18,7 +18,9 @@ import { makeStyles } from '@mui/styles';
 import React, { useDebugValue, useState } from 'react';
 //import PDFViewer from './PDFViewer';
 // import PDFViewer from '../../examples/PDFViewer/index.jsx';
-import PDFViewerDemo from '../PDFViewerDemo';
+import PDFViewer from '.../PDFViewer/PDFViewer.jsx';
+import PDFViewerContainer from '../PDFViewer/PDFViewerContainer.jsx';
+import AvailablePDFsList from '../PDFViewer/AvailablePDFsList.js'
 // const [fullWidth, setFullWidth] = React.useState(true);
 // const [maxWidth, setMaxWidth] = React.useState('md');
 // import SearchContext from './SearchContext';
@@ -29,6 +31,7 @@ import axios from 'axios';
 import _ from 'lodash';
 import { useEffect, useRef } from 'react';
 import Globals from '../../globals';
+
 // pdfjs.GlobalWorkerOptions.workerSrc = new URL(
 //   'pdfjs-dist/build/pdf.worker.min.js',
 //   import.meta.url,
@@ -45,13 +48,13 @@ const useStyles = makeStyles((theme) => ({
     borderColor: '#ccc',
     borderRadius: 1,
     "&:hover": {
-           backgroundColor: theme.palette.grey[200],
-            boxShadow: '0px 4px 8px rgba(0.5, 0.5, 0.5, 0.5)',
-            cursor: "pointer",
-            "& .addIcon": {
-              color: "purple"
-            }
-          }
+      backgroundColor: theme.palette.grey[200],
+      boxShadow: '0px 4px 8px rgba(0.5, 0.5, 0.5, 0.5)',
+      cursor: "pointer",
+      "& .addIcon": {
+        color: "purple"
+      }
+    }
   },
 }));
 
@@ -68,7 +71,7 @@ export default function PDFViewerDialog(props) {
   const [maxWidth, setMaxWidth] = React.useState('md');
   //  const { isOpen, onDialogClose,fileName } = props;
   const [files, setFiles] = useState([]);
-  const [currentEisDoc,setCurrentEisDoc] = useState({});
+  const [currentEisDoc, setCurrentEisDoc] = useState({});
   const [currentFileIndex, setCurrentFileIndex] = useState(0);
   const [currentFile, setCurrentFile] = useState({});
   let _mounted = useRef(false);
@@ -82,7 +85,7 @@ export default function PDFViewerDialog(props) {
       _mounted.current = false;
     };
   }, []);
-  const getFilesById = async (processId=0) => {
+  const getFilesById = async (processId = 0) => {
     if (_mounted.current !== true) {
       return;
     }
@@ -106,37 +109,53 @@ export default function PDFViewerDialog(props) {
   //  const bouncedGetFilesById = _.debounce(getFilesById, 1000);
 
 
-  useEffect(()=> {
-    if(_mounted.current !== true){
+  useEffect(() => {
+    if (_mounted.current !== true) {
       return;
     }
-    async function getFiles(){
+    async function getFiles() {
       const files = await getFilesById(processId);
-      console.log('116 useffect got files',files);
+      console.log('116 useffect got files', files);
       setFiles(files);
-      if(files.length > 0){
-        console.log('Setting Current File to ',files[0]);
+      if (files.length > 0) {
+        console.log('Setting Current File to ', files[0]);
         setCurrentFile(files[0]);
         setCurrentEisDoc(files[0].eisdoc);
       }
     }
     getFiles();
-    return ()=> {
+    return () => {
       console.log('PDF Viewer Dialog UnMounted, reseting results');
       setFiles(null);
     }
-  },[])
+  }, [])
 
   useDebugValue(
     files
       ? `state updated with ${files && files.length} files`
       : `Files not found for ProcessID : ${processId}`,
   );
+    const handleFullWidthChange = (event) => {
+    //console.log('handleFullWidth', event.target.checked);
+    setFullWidth(event.target.checked);
+  };
+
   function onDocumentLoadSuccess({ numPages }) {
-  //console.log('onDocumentLoadSuccess', numPages);
-  setIsLoaded(true);
-  setNumPages(numPages);
-}
+    //console.log('onDocumentLoadSuccess', numPages);
+    setIsLoaded(true);
+    setNumPages(numPages);
+  }
+  function onPDFListFileSelect(id){
+    console.log(`onPDFListFileSelect fired with id of ${id} - currentFile`,currentFile)
+     const file = files.filter((file) => file.id === id);
+
+    console.log(`🚀 ~ file: PDFViewerDialog.jsx:147 setting current file with id of ${id}`, file);
+    //[TODO] when a file is not found display an error message.
+    if(file && file.id){
+      setCurrentFile(file)
+    }
+;
+  }
   const onDialogClose = (evt) => {
     console.log('onDialogClose placeholder', evt);
   };
@@ -147,9 +166,12 @@ export default function PDFViewerDialog(props) {
     );
   };
   const onLoadNextFile = (evt) => {
+    console.log(`Next Button fired, current File with at index ${currentFileIndex} was:`,currentFile)
     if (currentFileIndex !== files.length) {
       setCurrentFileIndex(currentFileIndex + 1);
       setCurrentFile(files[currentFileIndex]);
+      console.log(`Next Button fired, updated file with file new index is ${currentFileIndex} Current File is not`,currentFile)
+
     } else {
       console.warn(`Cannot get next file the index ${currentFileIndex} is at ${files.length} `);
     }
@@ -164,17 +186,8 @@ export default function PDFViewerDialog(props) {
     }
     evt.preventDefault();
   };
-  const handleFullWidthChange = (event) => {
-    //console.log('handleFullWidth', event.target.checked);
-    setFullWidth(event.target.checked);
-  };
-  //const file = files[currentFileIndex];
-  console.log(` PDFViewerDialog.jsx:191 ~ PDFViewerDialog ~ number of files: ${(files && files.length) ? files.length : 0} with index of ${currentFileIndex}`);
 
-   
-   console.log(`🚀 ~ file: PDFViewerDialog.jsx:177 ~ PDFViewerDialog ~ eisdoc:`, currentEisDoc);
-
-   // const {title} = eisdoc;
+  // const {title} = eisdoc;
   return (
     <Dialog
       id="pdf-viewer-dialog"
@@ -223,7 +236,7 @@ export default function PDFViewerDialog(props) {
             </Paper>
           ) : (
             <Paper>
-              <Grid container border={0}>
+              {/* <Grid container border={0}>
                 <Grid item xs={3} className={classes.centered} border={0} borderColor='#ccc' id="file-list-grid-item">
                   <AvailableFilesList {...props} files={files} />
                 </Grid>
@@ -236,114 +249,52 @@ export default function PDFViewerDialog(props) {
                       <PDFContainer {...props} file={currentFile} />
                   </Grid>
                 </Grid>
-              </Grid>
+              </Grid> */}
 
               <Grid container border={0} borderColor="#ccc">
-                <Grid container className={classes.centered} id="grid-button-container">
-                  <Grid item xs={6} className={classes.centered} id="previous-button-grid-item">
-                    <Button
-                      variant="outlined"
-                      disabled={currentFileIndex === 0}
-                      color="primary"
-                      onClick={onLoadPreviousFile}
-                    >
-                      Previous File
-                    </Button>
-                  </Grid>
-                  <Grid item xs={6} className={classes.centered} id="next-button-grid-item">
-                    <Button
-                      variant="outlined"
-                      disabled={currentFileIndex === files.length}
-                      color="primary"
-                      onClick={onLoadNextFile}
-                    >
-                      Next File
-                    </Button>
-                  </Grid>
-                </Grid>
+
                 <Grid container border={0} spacing={1} justifyContent='space-between' flex={1} display="flex">
                   <Grid item xs={3}>
-                    <AvailableFilesList {...props} files={files} />
+                      <AvailableFilesList {...props} files={files} onPDFListFileSelect={onPDFListFileSelect} />
                   </Grid>
                   <Grid item xs={9} border={0}>
-                    <PDFContainer {...props} file={currentFile} />
+                    <Grid border={1} container className={classes.centered} id="grid-button-container">
+                      <Grid item xs={6} flex={1} className={classes.centered} id="previous-button-grid-item">
+                        <Button
+                          variant="outlined"
+                          disabled={currentFileIndex === 0}
+                          color="primary"
+                          onClick={onLoadPreviousFile}
+                        >
+                          Previous File
+                        </Button>
+                      </Grid>
+                      <Grid item xs={6} className={classes.centered} id="next-button-grid-item">
+                        <Button
+                          variant="outlined"
+                          disabled={(!files || (currentFileIndex === files.length))}
+                          color="primary"
+                          onClick={onLoadNextFile}
+                        >
+                          Next File
+                        </Button>
+                      </Grid>
+                    </Grid>
+                    <Grid container id="pdf-viewer-grid-container">
+                      <Grid item xs={12} border={1} borderColor={'#ccc'} id="pdf-viewer-grid-item">
+                        <Typography textAlign={'center'} variant="h6">{(currentFile && currentFile.eisdoc) ? currentFile.eisdoc.title : '0'}</Typography>
+                      </Grid>
+                      <Grid item xs={12}>
+                        <PDFContainer {...props} file={currentFile} />
+                      </Grid>
+                    </Grid>
                   </Grid>
-             </Grid>
+                </Grid>
               </Grid>
             </Paper>
           )}
         </DialogContentText>
       </DialogContent>
     </Dialog>
-  );
-}
-
-export function PDFContainer(props) {
-  console.log(`🚀 ~ file: PDFViewerDialog.jsx:298 ~ PDFContainer ~ props:`, props);
-
-  const { file } = props;
-  const { eisdoc } = file;
-  const fileURL = `\docs\${file.filename}`;
-  const classes = useStyles(theme);
-  return (
-    <Paper elevation={1} id="pdf-container-viewer" sx={{
-    }} >
-      <Grid container spacing={2} id="pdf-container-grid-container">
-        {/* <Grid xs={12} item className={classes.centered} id="pdf-container-grid-item" border={1}>
-          <Grid container flex={1} alignItems={'flex-start'} id="pdf-docs-grid-container">
-            {file.filename && <Grid item lg={3} md={4} xs={6} className={classes.item}><Paper>File: {file.filename}</Paper></Grid>}
-            {file.status && <Grid item lg={3} md={4} xs={6} className={classes.item}><Paper>Status: {file.status}</Paper></Grid>}
-            {file.alignItems && <Grid item lg={3} md={4} xs={6}><Paper className={classes.item}>Decision: {file.decision}</Paper></Grid>}
-            {file.agency && <Grid item lg={3} md={4} xs={6}><Paper className={classes.item}>Agency: {file.agency}</Paper></Grid>}
-            {(eisdoc && eisdoc.notes) && <Grid item lg={3} md={4} xs={6}><Paper className={classes.item} >Notes: {eisdoc.notes}</Paper></Grid>}
-            {(eisdoc && eisdoc.summaryText) && <Grid item lg={3} md={4} xs={6}><Paper className={classes.item} >Summary: {eisdoc.summaryText}</Paper></Grid>}
-          </Grid>
-        </Grid> */}
-        <Grid  item xs={12} id="pdf-viewer-container-grid-item" alignSelf={'centered'}>
-          <PDFViewerDemo {...props} fileURL={fileURL} />
-        </Grid>
-      </Grid>
-    </Paper>
-  );
-}
-
-export function AvailableFilesList(props) {
-  const { files } = props;
-  const classes = useStyles(theme);
-
-  return (
-    <>
-      <Paper
-        elavation={1}
-        sx={{
-          borderLeft: 1,
-          borderColor: '#ccc',
-        }}
-      >
-        <Grid container>
-          <Grid item xs={12} textAlign={'center'} className={classes.centered} padding={2}>
-            <Typography variant="h4">Related Files</Typography>
-            <Divider/>
-          </Grid>
-          <Grid item xs={12}>
-            <List border={0} p={1} sx={12}>
-              {(files && files.length) && files.map((file, idx) => (
-                <ListItem key={file.id}>
-                  <Typography
-                    sx={{
-                      textDecoration: 'underline',
-                    }}
-                  >
-                    <a href={file.url} target="_blank" rel="noopener noreferrer">
-                      {file.filename}
-                    </a>
-                  </Typography>
-                </ListItem>
-              ))}
-            </List>
-          </Grid>
-        </Grid>
-      </Paper>
-    </>
   );
 }
