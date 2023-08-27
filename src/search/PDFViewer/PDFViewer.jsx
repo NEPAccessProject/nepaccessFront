@@ -2,7 +2,7 @@ import { Viewer, Worker } from '@react-pdf-viewer/core';
 import { SelectionMode } from '@react-pdf-viewer/selection-mode';
 import { toolbarPlugin } from '@react-pdf-viewer/toolbar';
 import * as React from 'react';
-
+import { Box, Button, Divider, Grid, Paper, Typography } from '@mui/material';
 import '@react-pdf-viewer/core/lib/styles/index.css';
 import '@react-pdf-viewer/toolbar/lib/styles/index.css';
 
@@ -10,9 +10,9 @@ const workerUrl = "https://unpkg.com/pdfjs-dist@3.4.120/build/pdf.worker.min.js"
 
 const PDFViewer = (props) => {
   console.log(`PDFViewerDemo props`,props);
-    //    const {fileUrl} = props;
-    const {filename, doc} = props
-    const fileUrl = '/example.pdf'
+  const {fileUrl,file} = props;
+  console.log('!!!! PDFViewerDemo FILE URL:',fileUrl);
+    //const fileUrl = '/example.pdf'
     const toolbarPluginInstance = toolbarPlugin({
         getFilePlugin: {
             // fileNameGenerator: (OpenFile) => {
@@ -34,7 +34,7 @@ const PDFViewer = (props) => {
         <div
             className="rpv-core__viewer"
             style={{
-                border: '1px solid rgba(0, 0, 0, 0.3)',
+                //border: '1px solid rgba(0, 0, 0, 0.3)',
                 display: 'flex',
                 flexDirection: 'column',
                 height: '100%',
@@ -44,9 +44,9 @@ const PDFViewer = (props) => {
                 style={{
                     alignItems: 'center',
                     backgroundColor: '#eeeeee',
-                    borderBottom: '1px solid rgba(0, 0, 0, 0.1)',
+                    //borderBottom: '1px solid rgba(0, 0, 0, 0.1)',
                     display: 'flex',
-                    padding: '4px',
+                    //padding: '4px',
                 }}
             >
                 <Toolbar />
@@ -61,12 +61,12 @@ const PDFViewer = (props) => {
                     style={{
                         alignItems: 'center',
                         backgroundColor: '#eeeeee',
-                        borderBottom: '1px solid rgba(0, 0, 0, 0.1)',
+                        //borderBottom: '1px solid rgba(0, 0, 0, 0.1)',
                         display: 'flex',
-                        padding: '4px',
+                        //padding: '4px',
                     }}
                 >
-                    <Toolbar>
+            {/* <Toolbar>
                         {(props) => {
                             const {
                                 CurrentPageInput,
@@ -119,10 +119,13 @@ const PDFViewer = (props) => {
                                 </>
                             );
                         }}
-                    </Toolbar>
+                    </Toolbar> */}
                 </div>
+                <Typography>{file.title}</Typography>
                 <Worker workerUrl={workerUrl}>
-                    <Viewer fileUrl={'/docs/example.pdf'} plugins={[toolbarPluginInstance]} />
+            <Viewer fileUrl={fileUrl}
+            //plugins={[toolbarPluginInstance]} 
+            />
                 </Worker>
             </div>
         </div>
