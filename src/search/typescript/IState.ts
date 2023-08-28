@@ -1,3 +1,4 @@
+import Globals from '../../globals'
 export interface ISearchState {
   titleRaw: string;
   startPublish: null;
@@ -34,7 +35,7 @@ export interface ISearchState {
   limit: number;
   offset: number;
   searchOption: string;
-  test: Globals.anEnum.options;
+  test: [];
   tooltipOpen: undefined;
   proximityOption: null;
   proximityDisabled: boolean;
@@ -46,6 +47,5 @@ export interface ISearchState {
   surveyDone: boolean;
   surveyResult: string;
   filtersHidden: boolean;
-
-  countyOptions: Globals.counties;
+  countyOptions: [];
 }

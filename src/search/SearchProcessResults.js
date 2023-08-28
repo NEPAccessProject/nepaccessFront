@@ -9,7 +9,7 @@ import "react-tabulator/lib/styles.css"; // required styles
 import "../cardProcess.css";
 import Globals from "../globals.js";
 import "../loader.css";
-import theme from "../styles/theme.js";
+import theme from '../styles/theme.ts';
 import "./search.css";
 //import SearchProcessResult from "./SearchProcessResult.js";
 import SearchProcessResult from "./SearchProcessResult";

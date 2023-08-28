@@ -1,7 +1,7 @@
 import { Button, Grid, Typography } from '@mui/material';
 import { makeStyles } from '@mui/styles';
 import React, { useContext, useEffect, useRef, useState } from 'react';
-import theme from '../styles/theme.js';
+import theme from '../styles/theme';
 import PDFViewerDialog from './Dialogs/PDFViewerDialog';
 import SearchContext from './SearchContext';
 import RenderSnippets from './SearchResultSnippets.jsx';

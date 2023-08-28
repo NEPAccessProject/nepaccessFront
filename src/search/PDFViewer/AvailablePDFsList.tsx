@@ -65,16 +65,18 @@ export default function AvailablePDFsList(props : IProps) {
 //  const eisDoc: IEISDoc;
   return (
     <>
-      <Paper>
-        <Grid container>
-          <Grid item xs={12} textAlign={'center'} classes={classes.centered} padding={2}>
+      <Paper id="available-files-paper-container" sx={{
+        border:1, 
+        borderStyle:"dotted", 
+      }}>
+        <Grid container id="avaiable-files-grid-container">
+          <Grid item xs={12} textAlign={'center'} classes={classes.centered} padding={2} id="available-files-title-grid-item">
             <Typography variant="h4">Related Files</Typography>
             <Divider />
           </Grid>
-          <Grid item xs={12}>
-            <List sx={{
-              padding:1,
-            }}>
+          <Grid item xs={12} id="grid-pdf-list-grid-item">
+            <List id="available-files-list">
+
               {(files && files.length) && files.map((file: IFile, idx:number) => (
                 <ListItem key={file.id}>
                   <Typography>

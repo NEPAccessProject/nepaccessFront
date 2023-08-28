@@ -23,7 +23,7 @@ import Globals from "../globals.js";
 import persist from "../persist.js";
 import SearchContext from "./SearchContext.js";
 import SideBarFilters from './SideBarFilters';
-import theme from "../styles/theme.js";
+import theme from "../styles/theme";
 import Grid from '@mui/material/Grid'; // Grid version 1
 import { makeStyles } from "@mui/styles";
 

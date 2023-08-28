@@ -13,12 +13,11 @@ import {
   List,
   ListItem,
 } from '@mui/material';
-import theme from '../../styles/theme.js';
+import theme from '../../styles/theme';
 import { makeStyles } from '@mui/styles';
 import React, { useDebugValue, useState } from 'react';
-//import PDFViewer from './PDFViewer';
+import PDFViewer from '../PDFViewer';
 // import PDFViewer from '../../examples/PDFViewer/index.jsx';
-import PDFViewerDemo from '../PDFViewerDemo';
 // const [fullWidth, setFullWidth] = React.useState(true);
 // const [maxWidth, setMaxWidth] = React.useState('md');
 // import SearchContext from './SearchContext';
@@ -29,6 +28,9 @@ import axios from 'axios';
 import _ from 'lodash';
 import { useEffect, useRef } from 'react';
 import Globals from '../../globals';
+import AvailableDocuments from '../PDFViewer/PDFViewer';
+import PDFContainer from '../PDFViewer/PDFContainer';
+import AvailablePDFsList from '../PDFViewer/AvailablePDFsList';
 // pdfjs.GlobalWorkerOptions.workerSrc = new URL(
 //   'pdfjs-dist/build/pdf.worker.min.js',
 //   import.meta.url,
@@ -58,7 +60,7 @@ const useStyles = makeStyles((theme) => ({
     borderColor: '#ccc',
     borderRadius: 1,
     '&:hover': {
-      backgroundColor: theme.palette.grey[200],
+      backgroundColor: theme.palette.background,
       boxShadow: '0px 4px 8px rgba(0.5, 0.5, 0.5, 0.5)',
       cursor: 'pointer',
       '& .addIcon': {
@@ -270,7 +272,7 @@ export default function PDFViewerDialog(props) {
                     border={0}
                     borderColor='#ccc'
                     id='pdf-file-list-grid-item'>
-                    <AvailableFilesList
+                    <AvailablePDFsList
                       {...props}
                       files={files}
                       onFileLinkClicked={onFileLinkClickedDebounced}
@@ -347,14 +349,14 @@ export default function PDFViewerDialog(props) {
                       border={1}
                       //borderColor={'#ccc'}
                       id='pdf-viewer-grid-item-container'>
-                      <b> Current File at index {currentFileIndex} ?</b>
+                      {/* <b> Current File at index {currentFileIndex} ?</b>
                       {JSON.stringify(currentFile)} 
-                      <Divider/>
+                      <Divider/> */}
                       {/* {JSON.stringify(files)} */}
-                      {/* <PDFContainer
+                      <PDFContainer
                         {...props}
                         file={currentFile}
-                      /> */}
+                      /> 
                   </Grid>
                   </Grid>
               </Grid>
@@ -370,89 +372,87 @@ export default function PDFViewerDialog(props) {
 
 // Function to retrive data from api https://paleobiodb.org/data1.2/occs/list.json?&interval_id=16&show=all&datainfo and display the results
 
-export function PDFContainer(props) {
-  console.log(`🚀 ~ file: PDFViewerDialog.jsx:298 ~ PDFContainer ~ props:`, props);
+// export function PDFContainer(props) {
+//   console.log(`🚀 ~ file: PDFViewerDialog.jsx:298 ~ PDFContainer ~ props:`, props);
 
-  const { file } = props;
-  if(!file){
-    console.error('PDF Container did not received file props, exiting!');
-    return;
-  }
-  const { eisdoc } = file;
-  const fileURL = 'docs\\' + file.filename;
-  console.log(`!!! - Line 378 - FILE URL!`,fileURL);
-  const classes = useStyles(theme);
-  return (
-    <Paper
-      elevation={1}
-      id='pdf-container-viewer'
-      sx={{}}>
-      <Grid
-        container
-        spacing={2}
-        id='pdf-container-grid-container'>
-        <Grid
-          item
-          xs={12}
-          id='pdf-viewer-container-grid-item'
-            // alignSelf={'centered'}
-          >
-          <PDFViewerDemo
-            {...props}
-            file={file}
-            fileURL={fileURL}
-          />
-        </Grid>
-      </Grid>
-    </Paper>
-  );
-}
-console.log('Colonize')
+//   const { file } = props;
+//   if(!file){
+//     console.error('PDF Container did not received file props, exiting!');
+//     return;
+//   }
+//   const { eisdoc } = file;
+//   const fileURL = 'docs\\' + file.filename;
+//   console.log(`!!! - Line 378 - FILE URL!`,fileURL);
+// //  const classes = useStyles(theme);
+//   return (
+//     <Paper
+//       elevation={1}
+//       id='pdf-container-viewer'
+//       sx={{}}>
+//       <Grid
+//         container
+//         spacing={2}
+//         id='pdf-container-grid-container'>
+//         <Grid
+//           item
+//           xs={12}
+//           id='pdf-viewer-container-grid-item'
+//             // alignSelf={'centered'}
+//           >
+//           <PDFViewer
+//             {...props}
+//             file={file}
+//             fileURL={fileURL}
+//           />
+//         </Grid>
+//       </Grid>
+//     </Paper>
+//   );
+// }
 
+// export function AvailableFilesList(props) {
+//   const { files, onFileLinkClicked } = props;
+//   const classes = useStyles(theme);
 
-export function AvailableFilesList(props) {
-  const { files, onFileLinkClicked } = props;
-  const classes = useStyles(theme);
+//   return (
+//     <>
+//         <Grid container>
+//         <Grid
+//           item
+//           xs={12}
+//           textAlign={'center'}
+//           className={classes.centered}
+//           padding={2}>
+//           <Typography variant='h4'>Related Files</Typography>
+//           <Divider />
+//           </Grid>
+//         <Grid
+//           item
+//           xs={12}>
+//           <List
+//             border={0}
+//             p={0}
+//             sx={12}
+//             borderBottom={1}
+//             backgroundColor= '#bbb'
+//             >
+//             {files &&
+//               files.length &&
+//               files.map((file, idx) => (
+//                 <ListItem key={file.id}>
 
-  return (
-    <>
-        <Grid container>
-        <Grid
-          item
-          xs={12}
-          textAlign={'center'}
-          className={classes.centered}
-          padding={2}>
-          <Typography variant='h4'>Related Files</Typography>
-          <Divider />
-          </Grid>
-        <Grid
-          item
-          xs={12}>
-          <List
-            border={0}
-            p={0}
-            sx={12}
-            borderBottom={1}
-            backgroundColor= '#bbb'
-            >
-            {files &&
-              files.length &&
-              files.map((file, idx) => (
-                <ListItem key={file.id}>
-
-                  <a onClick={(evt) => onFileLinkClicked(evt, file.id)}
-                    className={classes.link}
-                    href={file.url}
-                    target='_blank'
-                    rel='noopener noreferrer'>               
-                      {file.filename}
-                  </a>
-                </ListItem>
-              ))}
-            </List>
-          </Grid>
-      </Grid>
-    </>
-  );
-}
+//                   <a onClick={(evt) => onFileLinkClicked(evt, file.id)}
+//                     className={classes.link}
+//                     href={file.url}
+//                     target='_blank'
+//                     rel='noopener noreferrer'>               
+//                       {file.filename}
+//                   </a>
+//                 </ListItem>
+//               ))}
+//             </List>
+//           </Grid>
+//       </Grid>
+//     </>
+//   );
+// }

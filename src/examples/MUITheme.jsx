@@ -7,7 +7,7 @@ import { useTheme } from '@mui/styles';
 import theme from '../styles/theme';
 
 
-console.log("🚀 ~ file: MUITheme.jsx:6 ~ theme:", theme)
+console.log("🚀 ~ file: MUIthemex:6 ~ theme:", theme)
 
 const exampleInputLables = {
   "key": 1, "value": "Standard",
@@ -26,9 +26,9 @@ const styles = {
 };
 
 const MUITheme = (props) => {
-  console.log("🚀 ~ file: MUITheme.jsx:14 ~ constMUITheme ~ props:", props)
+  console.log("🚀 ~ file: MUIthemex:14 ~ constMUITheme ~ props:", props)
   const classes = useTheme(theme);
-  console.log("🚀 ~ file: MUITheme.jsx:30 ~ MUITheme ~ classes:", classes)
+  console.log("🚀 ~ file: MUIthemex:30 ~ MUITheme ~ classes:", classes)
   return (
 <>
 

@@ -16,7 +16,7 @@ import "./User/login.css";
 import Globals from "./globals.js";
 import persist from "./persist.js";
 import SearchContext from "./search/SearchContext.js";
-import theme from "./styles/theme.js";
+import theme from "./styles/theme";
 const _ = require("lodash");
 
 /** For testing redesigned, consolidated search which is in progress */
