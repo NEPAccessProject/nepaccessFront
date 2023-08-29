@@ -17,7 +17,7 @@ import {
 import theme from '../../styles/theme';
 import { makeStyles,styled } from '@mui/styles';
 import React, { useDebugValue, useState } from 'react';
-//import PDFViewer from './PDFViewer';
+import PDFViewer from '../PDFViewer';
 // import PDFViewer from '../../examples/PDFViewer/index.jsx';
 // const [fullWidth, setFullWidth] = React.useState(true);
 // const [maxWidth, setMaxWidth] = React.useState('md');
@@ -29,9 +29,9 @@ import axios from 'axios';
 import _ from 'lodash';
 import { useEffect, useRef } from 'react';
 import Globals from '../../globals';
-import AvailablePDFsList from '../PDFViewer/AvailablePDFsList';
+import AvailableDocuments from '../PDFViewer/PDFViewer';
 import PDFContainer from '../PDFViewer/PDFContainer';
-
+import AvailablePDFsList from '../PDFViewer/AvailablePDFsList';
 // pdfjs.GlobalWorkerOptions.workerSrc = new URL(
 //   'pdfjs-dist/build/pdf.worker.min.js',
 //   import.meta.url,
@@ -61,7 +61,7 @@ const useStyles = makeStyles((theme) => ({
     borderColor: '#ccc',
     borderRadius: 1,
     '&:hover': {
-      backgroundColor: theme.palette.grey[200],
+      backgroundColor: theme.palette.background,
       boxShadow: '0px 4px 8px rgba(0.5, 0.5, 0.5, 0.5)',
       cursor: 'pointer',
       '& .addIcon': {
@@ -88,12 +88,15 @@ export default function PDFViewerDialog(props) {
   //  const {processId} = props;
   //[TODO][CRITICAL] this is hardcode for testing
   const processId = props.processId || 78;
+  const isOpen = true;//props.isOpen || false;
+
+
   //params.processId || query.processId;
   const [numPages, setNumPages] = useState(null);
   const [pageNumber, setPageNumber] = useState(1);
   const [fullWidth, setFullWidth] = React.useState(true);
   const [maxWidth, setMaxWidth] = React.useState('md');
-  //  const { isOpen, onDialogClose,fileName } = props;
+  const {onDialogClose,fileName } = props;
   const [files, setFiles] = useState([]);
   const [currentEisDoc, setCurrentEisDoc] = useState({});
   const [currentFileIndex, setCurrentFileIndex] = useState(0);
@@ -164,9 +167,6 @@ export default function PDFViewerDialog(props) {
     setIsLoaded(true);
     setNumPages(numPages);
   }
-  const onDialogClose = (evt) => {
-    console.log('onDialogClose placeholder', evt);
-  };
   const handleMaxWidthChange = (event) => {
     setMaxWidth(
       // @ts-expect-error autofill of arbitrary value is not handled.
@@ -234,6 +234,8 @@ export default function PDFViewerDialog(props) {
   //[TODO] Not a fan of having to manually set more than one session var for one action, files are required hence eisdoc is well
   return (
     <Dialog
+    minWidth={600}
+    minHeight={600}
     marginTop={150}
       id='pdf-viewer-dialog'
       //open={isOpen}
@@ -270,7 +272,6 @@ export default function PDFViewerDialog(props) {
               elevation={1}
               className={classes.centered}
               sx={{
-                border: 0,
                 position: 'absolute',
                 top: '50%',
                 left: '50%',
@@ -279,26 +280,32 @@ export default function PDFViewerDialog(props) {
                 height: '80%',
                 width: '80%',
               }}>
+              <Box height={600} width={600} border={0} display={'absolute'} top={'50%'} left={'50%'}>
               <CircularProgress />
+              </Box>
             </Paper>
           ) : (
             <Paper elevation={0} marginTop={110}>
               <Grid
-                id="pdf-file-list-grid-container"
-                justifyContent=''
                 container
-                rowGap={1}
-                columnSpacing={1}
-                border={0}>
+                id="pdf-file-list-grid-container"
+//                justifyContent=''
+                // rowGap={1}
+                // columnSpacing={1}
+                //   flex={1}
+                >
 
 
                 <Grid
                   item
                   xs={2}
-                  className={classes.centered}
-                  border={0}
+//                  className={classes.centered}
                   borderColor='#ccc'
-                  id='pdf-file-list-grid-item'>
+                  borderStyle='dashed'
+                  id='pdf-file-list-grid-item'
+                  justifyContent='flex-start'
+                  alignItems='flex-start'
+                  >
                   <AvailablePDFsList
                     {...props}
                     files={files}
@@ -308,13 +315,13 @@ export default function PDFViewerDialog(props) {
                 <Grid
                   container
                   xs={10}
+                  justifyContent='flex-end'
+                  alignItems='flex-end'
                   className={classes.centered}
-                  border={0}
-                  borderColor={'#ccc'}
                   id="pdf-viewer-grid-container"
                 >
                   <Grid item xs={12} id="pdf-viewer-title-grid-item">
-                    <Typography variant='h3'>{(currentFile.eisdoc && currentFile.eisdoc.title) ? currentFile.eisdoc.title : 'N/A'}</Typography>
+                    <Typography textAlign='center' variant='h3'>{(currentFile.eisdoc && currentFile.eisdoc.title) ? currentFile.eisdoc.title : 'N/A'}</Typography>
                   </Grid>
 
                   {/* <Grid item xs={12} id="pdf-viewer-debug-info-grid-item">
@@ -370,7 +377,6 @@ export default function PDFViewerDialog(props) {
                       item
                       display='flex'
                       flex={1}
-                      border={0}
                       justifyContent={'center'}
                       alignItems={'center'}
                       id='next-button-grid-item'>
@@ -387,8 +393,6 @@ export default function PDFViewerDialog(props) {
                   <Grid
                     container
                     xs={12}
-                    //                    border={1}
-                    //borderColor={'#ccc'}
                     id='pdf-viewer-grid-item-container'>
                     {/* {JSON.stringify(files)} */}
                     <Grid item xs={12}>
@@ -408,3 +412,91 @@ export default function PDFViewerDialog(props) {
   );
 }
 
+// Event handler function that fires when sidebar link is clicked and set the currentEisDoc to corresponding eisdoc
+
+// Function to retrive data from api https://paleobiodb.org/data1.2/occs/list.json?&interval_id=16&show=all&datainfo and display the results
+
+// export function PDFContainer(props) {
+//   console.log(`🚀 ~ file: PDFViewerDialog.jsx:298 ~ PDFContainer ~ props:`, props);
+
+//   const { file } = props;
+//   if(!file){
+//     console.error('PDF Container did not received file props, exiting!');
+//     return;
+//   }
+//   const { eisdoc } = file;
+//   const fileURL = 'docs\\' + file.filename;
+//   console.log(`!!! - Line 378 - FILE URL!`,fileURL);
+// //  const classes = useStyles(theme);
+//   return (
+//     <Paper
+//       elevation={1}
+//       id='pdf-container-viewer'
+//       sx={{}}>
+//       <Grid
+//         container
+//         spacing={2}
+//         id='pdf-container-grid-container'>
+//         <Grid
+//           item
+//           xs={12}
+//           id='pdf-viewer-container-grid-item'
+//             // alignSelf={'centered'}
+//           >
+//           <PDFViewer
+//             {...props}
+//             file={file}
+//             fileURL={fileURL}
+//           />
+//         </Grid>
+//       </Grid>
+//     </Paper>
+//   );
+// }
+
+// export function AvailableFilesList(props) {
+//   const { files, onFileLinkClicked } = props;
+//   const classes = useStyles(theme);
+
+//   return (
+//     <>
+//         <Grid container>
+//         <Grid
+//           item
+//           xs={12}
+//           textAlign={'center'}
+//           className={classes.centered}
+//           padding={2}>
+//           <Typography variant='h4'>Related Files</Typography>
+//           <Divider />
+//           </Grid>
+//         <Grid
+//           item
+//           xs={12}>
+//           <List
+//             border={0}
+//             p={0}
+//             sx={12}
+//             borderBottom={1}
+//             backgroundColor= '#bbb'
+//             >
+//             {files &&
+//               files.length &&
+//               files.map((file, idx) => (
+//                 <ListItem key={file.id}>
+
+//                   <a onClick={(evt) => onFileLinkClicked(evt, file.id)}
+//                     className={classes.link}
+//                     href={file.url}
+//                     target='_blank'
+//                     rel='noopener noreferrer'>               
+//                       {file.filename}
+//                   </a>
+//                 </ListItem>
+//               ))}
+//             </List>
+//           </Grid>
+//       </Grid>
+//     </>
+//   );
+// }

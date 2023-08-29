@@ -29,117 +29,30 @@ const PDFViewer = (props) => {
             keyword: 'PDF',
         },
         selectionModePlugin: {
-            selectionMode: SelectionMode.Text,
+            //selectionMode: SelectionMode.Text,
         },
     });
     const { Toolbar } = toolbarPluginInstance;
 
     return (
-        <div
-            className="rpv-core__viewer"
-            style={{
-                //border: '1px solid rgba(0, 0, 0, 0.3)',
-                display: 'flex',
-                flexDirection: 'column',
-                height: '100%',
-            }}
-        >
-            <div
-                style={{
-                    alignItems: 'center',
-                    backgroundColor: '#eeeeee',
-                    //borderBottom: '1px solid rgba(0, 0, 0, 0.1)',
-                    display: 'flex',
-                    //padding: '4px',
-                }}
-            >
-                <Toolbar />
-            </div>
-            <div
-                style={{
-                    flex: 1,
-                    overflow: 'hidden',
-                }}
-            >
-                <div
-                    style={{
-                        alignItems: 'center',
-                        backgroundColor: '#eeeeee',
-                        //borderBottom: '1px solid rgba(0, 0, 0, 0.1)',
-                        display: 'flex',
-                        //padding: '4px',
-                    }}
-                >
-            {/* <Toolbar>
-                        {(props) => {
-                            const {
-                                CurrentPageInput,
-                                Download,
-                                EnterFullScreen,
-                                GoToNextPage,
-                                GoToPreviousPage,
-                                NumberOfPages,
-                                Print,
-                                ShowSearchPopover,
-                                Zoom,
-                                ZoomIn,
-                                ZoomOut,
-                            } = props;
-                            return (
-                                <>
-                                    <div style={{ padding: '0px 2px' }}>
-                                        <ShowSearchPopover />
-                                    </div>
-                                    <div style={{ padding: '0px 2px' }}>
-                                        <ZoomOut />
-                                    </div>
-                                    <div style={{ padding: '0px 2px' }}>
-                                        <Zoom />
-                                    </div>
-                                    <div style={{ padding: '0px 2px' }}>
-                                        <ZoomIn />
-                                    </div>
-                                    <div style={{ padding: '0px 2px', marginLeft: 'auto' }}>
-                                        <GoToPreviousPage />
-                                    </div>
-                                    <div style={{ padding: '0px 2px', width: '4rem' }}>
-                                        <CurrentPageInput />
-                                    </div>
-                                    <div style={{ padding: '0px 2px' }}>
-                                        / <NumberOfPages />
-                                    </div>
-                                    <div style={{ padding: '0px 2px' }}>
-                                        <GoToNextPage />
-                                    </div>
-                                    <div style={{ padding: '0px 2px', marginLeft: 'auto' }}>
-                                        <EnterFullScreen />
-                                    </div>
-                                    <div style={{ padding: '0px 2px' }}>
-                                        <Download />
-                                    </div>
-                                    <div style={{ padding: '0px 2px' }}>
-                                        <Print />
-                                    </div>
-                                </>
-                            );
-                        }}
-                    </Toolbar> */}
-                </div>
+        
                 
-                <Grid container flexGrow={1}>
-                  <Grid item xs={12} alignItems='center' justifyContent='center'>
-                      <Typography variant="h5">{file.name}</Typography>
+                <>
+                  <Grid container flexGrow={1}>
+                    <Grid item xs={12} alignItems='center' justifyContent='center'>
+                        <Typography variant="h5">{file.name}</Typography>
+                    </Grid>
+                    <Grid item xs={12}>
+                    <Worker workerUrl={workerUrl}>
+                      <Viewer fileUrl={fileUrl}
+                plugins={[Toolbar]} 
+                        />
+                    </Worker>
+                    </Grid>
                   </Grid>
-                  <Grid item xs={12}>
-                  <Worker workerUrl={workerUrl}>
-                    <Viewer fileUrl={fileUrl}
-                      //plugins={[toolbarPluginInstance]} 
-                      />
-                  </Worker>
-                  </Grid>
-                </Grid>
-            </div>
-        </div>
+                </>
+        //     </div>
+        // </div>
     );
 };
 

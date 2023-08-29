@@ -42,7 +42,7 @@ export default function PDFContainer(props:IProps) {
 				container
 				spacing={2}
 				id='pdf-container-grid-container'>
-				{/* <Grid xs={12} item className={classes.centered} id="pdf-container-grid-item" border={1}>
+				{/* <Grid xs={12} item className={classes.centered} id="pdf-container-grid-item" >
           <Grid container flex={1} alignItems={'flex-start'} id="pdf-docs-grid-container">
             {file.filename && <Grid item lg={3} md={4} xs={6} className={classes.item}><Paper>File: {file.filename}</Paper></Grid>}
             {file.status && <Grid item lg={3} md={4} xs={6} className={classes.item}><Paper>Status: {file.status}</Paper></Grid>}

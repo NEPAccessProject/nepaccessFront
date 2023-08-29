@@ -8,7 +8,7 @@ import RenderSnippets from './SearchResultSnippets.jsx';
 
 
 const useStyles = makeStyles((theme) => ({
-  centeredContent: {
+  centered: {
     alignContent: 'center',
     justifyContent: 'center',
     alignItems: 'center',
@@ -21,17 +21,18 @@ const useStyles = makeStyles((theme) => ({
 
 export default function SearchResultItem(props) {
 
-    console.log("🚀 ~ file: 126 ~ SearchResultItem ~ props:", props)
     if (!props.record) {
       console.warn('!!!!!! 36 - No record received for SearchResultItem exiting, got props:', props);
     }
-    const [isPDFViewOpen, setIsPDFViewOpen] = useState(true);
+    const [isPDFViewOpen, setIsPDFViewOpen] = useState(false);
     //  const { seachState, setState, showContext } = useContext(SearchContext);
     const classes = useStyles(theme);
     const context = useContext(SearchContext);
     const { state, setState } = context;
     const _mounted = useRef(false);
     const { record } = props;
+    console.log(`🚀 ~ file: SearchResultItem.jsx:35 ~ SearchResultItem ~ Record ID ${record.id} - title : ${record.title}    record:`, record);
+
     const onCheckboxChange = (evt) => {
       //console.log('Checkbox changed, setting showContext to ', evt.target.checked);
       setState({
@@ -74,35 +75,33 @@ export default function SearchResultItem(props) {
       processId,
     } = record;
   
+    function onPDFPreviewToggle(evt){
+      console.log('PDF VIEW Toggle,evt',evt);
+      evt.preventDefault();
+      setIsPDFViewOpen(!isPDFViewOpen)
+
+    }
     function onDocumentLoadSuccess({ numPages }) {
       setState({ ...state, numPages: numPages });
     }
-    // function openPDFPreview(evt, processId) {
-    //   console.log(`Open PDF for ID: ${id} evt: `, evt);
-    //   setIsPDFViewOpen(true);
-    //   evt.preventDefault();
-    // }
-      function togglePDFPreview(processId) {
-      console.log(`Toggle PDF from  ${processId} - isPDFViewOpen`, isPDFViewOpen);
+  function onPDFPreviewToggle(evt) {
+      evt.preventDefault();
       setIsPDFViewOpen(!isPDFViewOpen);
     }
     const handleDownloadClick = (evt, id) => {
       evt.preventDefault();
-      //console.log('Download ID Value and filename', id, filename);
+      console.log('Download ID Value and filename', id, filename);
     };
   
     const onDetailLink = (evt,processId) => {
-    console.log("🚀 ~ file: SearchResultsItems.jsx:193 ~ onDetailLink ~ evt,processId:", evt,processId)
-  
+      console.log("🚀 ~ file: SearchResultsItems.jsx:193 ~ onDetailLink ~ evt,processId:", evt,processId)
     }
 
     const year = commentDate && commentDate.length > 0 ? new Date(commentDate).getFullYear() : 'N/A';
-    //console.log('SEARCH STATE SearchResultComponent');
-    //  { Object.keys(record) }
     const text = record.plaintext || '';    
     return (
       <>
-        <Grid container border={1} borderColor={'#ccc'} id="search-result-grid-container">
+        <Grid container id="search-result-grid-container">
           <Grid
             container
             id="search-result-grid-item"
@@ -113,7 +112,7 @@ export default function SearchResultItem(props) {
             sx={{
             }}
           >  
-            <Grid container border={1} borderColor="#ccc" id="search-result-row-container"
+            <Grid container id="search-result-row-container"
             textAlign={'center'} justifyContent={'center'}>
               <Grid  item id="year-box" 
                 xs={1}
@@ -161,17 +160,16 @@ export default function SearchResultItem(props) {
               <Grid
                 display={'flex'}
                 container
-  //              border={1}
                 borderRight={1}
                 borderLeft={1}
-                borderColor={'#ccc'}
+                borderColor='#ccc'
                 //className={classes.centeredContent}
                 id="title-grid-container"
                 xs={7}
                 padding={1}
                 flex={1}
                 >
-                <Typography id="snippets-title" variant='h4' >{(title) ? title  : ''}</Typography>
+                <Typography id="snippets-title" variant='h5' >{(title) ? title  : ''}</Typography>
                 {/* <RenderSnippets record={record} /> */}
               </Grid>
               <Grid
@@ -199,11 +197,13 @@ export default function SearchResultItem(props) {
                     id="pdf-viewer-dialog"
                     record={record}
                     isOpen={isPDFViewOpen}
-                    onDialogClose={setIsPDFViewOpen(false)}
+                    onDialogClose={(evt)=>onPDFPreviewToggle(evt,processId)}
+                    processId = {processId}
+                    fileId = {record.id}
                   />
                   <Button
-                    //onClick={setIsPDFViewOpen(!isPDFViewOpen)}
-                    //color={'secondary'}
+                    onClick={(evt)=>onPDFPreviewToggle(evt,processId)}
+                    color={'secondary'}
                     variant="outlined"
                   >
                     Preview
@@ -214,22 +214,22 @@ export default function SearchResultItem(props) {
                   item
                   //         display={'flex'}
                   xs={6}
-                  border={0}
                   alignContent={'center'}
                   justifyContent="center"
                   alignItems={'center'}
                   display={'flex'}
                 >
-                  { processId &&
+                  {/* { processId &&
                     <PDFViewerDialog
                       processId={processId}
                       record={record}
                       isOpen={isPDFViewOpen}
-                    onDialogClose={(evt) => togglePDFPreview(processId)}
+                      fileId= {record.id}
+                    onDialogClose={(evt) => onPDFPreviewToggle(evt,processId)}
                     />
-                  }
+                  } */}
                   <Button
-                    onClick={(processId) => togglePDFPreview(processId)}
+                    onClick={(evt) => handleDownloadClick(evt)}
                     color={'secondary'}
                     display={'flex'}
                     variant={'outlined'}
@@ -239,7 +239,7 @@ export default function SearchResultItem(props) {
                   </Button>
                 </Grid>
               </Grid>
-              <Grid item xs={12} border={0}>
+              <Grid item xs={12}>
                   <RenderSnippets record={record} />
               </Grid>
             </Grid>

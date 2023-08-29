@@ -9,7 +9,7 @@ import "react-tabulator/lib/styles.css"; // required styles
 import "../cardProcess.css";
 import Globals from "../globals.js";
 import "../loader.css";
-import theme from "../styles/theme";
+import theme from '../styles/theme.ts';
 import "./search.css";
 //import SearchProcessResult from "./SearchProcessResult.js";
 import SearchProcessResult from "./SearchProcessResult";
@@ -34,7 +34,7 @@ const Item = styled(Paper)(({ theme }) => ({
   // textAlign: 'center',
   color: "#ccc", //theme.palette.text.secondary,
   elevation: 1,
-  border: 0,
+  
   borderRadius: 0,
   mt: 2,
   mb: 2,
@@ -62,7 +62,7 @@ const CardItem = styled(Paper)(({ theme }) => ({
   // textAlign: 'center',
   fontColor: "#000", //theme.palette.text.secondary,
   elevation: 1,
-  border: 0,
+  
   borderRadius: 0,
   // mt: 2,
   // mb: 2,
@@ -95,6 +95,7 @@ export default class SearchProcessResults extends React.Component {
       showContext: true,
       size: 0,
       hidden: new Set(),
+      hasSearched: false,
     };
     window.addEventListener("resize", this.handleResize);
     Globals.registerListener("new_search", this.resetHidden);
@@ -215,13 +216,11 @@ export default class SearchProcessResults extends React.Component {
     console.log("Custom pagination error logic");
     this.onPageLoaded(1);
   };
-
   onCheckboxChange = (evt) => {
     this.setState({
       showContext: evt.target.checked,
     });
   };
-
   /** To update show/hide text snippets, updates columns; also redraws table to accommodate potentially
    * different-sized contents (particularly height) so that nothing overflows and disappears outside the table itself
    */
@@ -267,7 +266,6 @@ export default class SearchProcessResults extends React.Component {
       }
     }
   };
-
   getCorrectResultsStyle = () => {
     if (this.props.filtersHidden) {
       return FULLSTYLE;
@@ -279,7 +277,6 @@ export default class SearchProcessResults extends React.Component {
     console.log('onDetailLink',processId);
     //this.props.onDetailLink(processId);
   }
-
   render() {
     if (!this.props.results || (!this.props.results.length > 0)) {
       /** Show nothing until loading results. props.resultsText will just be "Results" before any search.
@@ -294,14 +291,14 @@ export default class SearchProcessResults extends React.Component {
               <Grid container id="search-tips-item-container" >
                 <Grid item id="search-tips-grid-item">
                   <Grid paddingLeft={3} paddingRight={3} item xs={12} justifyContent={'center'} alignContent={'center'} > 
-                    <divider>
+                    {/* <divider>
                       {(this.props.results.length  === 0)}
                         ? Loading......
                         <Box height={100} width={100}>
                           <CircularProgress />
                          </Box> 
                         : <SearchTips/>
-                    </divider>
+                    </divider> */}
                   </Grid>
                 </Grid>
               </Grid>
@@ -319,24 +316,22 @@ export default class SearchProcessResults extends React.Component {
 					<Box id="search-process-results-container" 
           sx={{
             padding:0,
-//            border: 1,
           }}>
 					  <Typography variant='h2'>
   						Search results {''}
   					</Typography>
-            {(this.props.resultsText && this.props.resultsText !== "Results")}
+            {(this.props.searching !== "Results")}
 
             ? <CircularProgress/>  
-            : <Grid container display={'flex'} sx={9} flex={1} >
+            : <Grid container display={'flex'} sx={9} flex={1} id="results-text-container" >
   						{this.props.resultsText}&nbsp;
-              <CircularProgress/>
-              <Typography variant="h6">{this.props.searching}</Typography>
+              {/* <CircularProgress/> */}
   						<Tippy
   							className='tippy-tooltip--small searchTips'
   							trigger='manual click'
   							hideOnClick={true}
   							interactive={true}
-  							placement='right'
+                placement='right'
   							content={
   								<div>
   									The map view is a{' '}
@@ -369,7 +364,8 @@ export default class SearchProcessResults extends React.Component {
   								</span>
   							}
   						</Tippy>
-  						{this.props.searching ? <>Searching</> : <>Done</>}
+
+              {this.props.hasSearched && this.props.searching ? <>Searching</> : <>Done</>}
                <Typography variant='h6'> Results # {this.props.results.length}</Typography>
                 Searching: {this.props.searching}
               Search Result Text: {this.props.resultsText}
@@ -377,7 +373,7 @@ export default class SearchProcessResults extends React.Component {
   							return (
   								<Grid item>
   									<>
-                    <Typography color={'primary'} variant='h5'>{(result.title) 
+                    <Typography paddingLeft={2} color={'primary'} variant='h5'>{(result.title) 
                       ? <a onClick={this.onDetailLink(result.processId)} href="#">{result.title}</a>
                       : ''}</Typography>
   										<SearchResultCards result={result} />
@@ -414,7 +410,6 @@ export default class SearchProcessResults extends React.Component {
       );
     }
   }
-
   componentDidMount() {
     // // Restore user's last viewed page in results if possible
     if (localStorage.unmountedPage) {
@@ -425,17 +420,14 @@ export default class SearchProcessResults extends React.Component {
       }
     }
   }
-
   componentWillUnmount() {
     // // Save last viewed page number so user doesn't lose their place on navigation
     localStorage.unmountedPage = this.page;
   }
-
   componentDidUpdate() {
     this.updateTableDebounced();
   }
 }
-
 const useStyles = makeStyles(theme => (
   {
     centeredContent: {
@@ -450,7 +442,7 @@ const useStyles = makeStyles(theme => (
     item: {
       margin: 1,
       padding: 1,
-      border: 1,
+      
       borderColor: "#ccc"
     },
 
@@ -473,7 +465,7 @@ export function SearchResultCards(props) {
           sx={{
             margin: 0.25,
             padding: 1.5,
-            border: 0,
+            
             borderColor: "#ccc",
             //fontColor: "#222",
             minHeight: 2,
@@ -491,7 +483,7 @@ export function SearchResultCards(props) {
           sx={{
             margin: 0.25,
             padding: 0.5,
-            border: 0,
+            
             borderColor: "#ccc",
 //            lineHeight: 1,
             justifyContent: 'center',
@@ -505,7 +497,7 @@ export function SearchResultCards(props) {
           sx={{
             margin: 0.25,
             padding: 1.5,
-            border: 1,
+
             borderColor: "#ccc",
             minHeight: 2,
             lineHeight: 1,
@@ -521,7 +513,6 @@ export function SearchResultCards(props) {
           sx={{
             margin: 0.25,
             padding: 1.5,
-            border: 1,
             borderColor: "#ccc",
             minHeight: 2,
             lineHeight: 1,
@@ -537,7 +528,6 @@ export function SearchResultCards(props) {
           sx={{
             margin: 0.25,
             padding: 1.5,
-            border: 1,
             borderColor: "#ccc",
             minHeight: 2,
             lineHeight: 1,
@@ -553,7 +543,6 @@ export function SearchResultCards(props) {
           sx={{
             margin: 0.25,
             padding: 1.5,
-            border: 1,
             borderColor: "#ccc",
             minHeight: 2,
             lineHeight: 1,
@@ -571,8 +560,6 @@ export function SearchResultCards(props) {
           sx={{
             margin: 0.25,
             padding: 1.5,
-            border: 1,
-            borderColor: "#ccc",
             minHeight: 2,
             lineHeight: 1,
             justifyContent: 'center',
@@ -587,8 +574,6 @@ export function SearchResultCards(props) {
           sx={{
             margin: 0.25,
             padding: 1.5,
-            border: 1,
-            borderColor: "#ccc",
             minHeight: 2,
             lineHeight: 1,
             justifyContent: 'center',
@@ -604,8 +589,6 @@ export function SearchResultCards(props) {
           sx={{
             margin: 0.25,
             padding: 1.5,
-            border: 1,
-            borderColor: "#ccc",
             minHeight: 2,
             lineHeight: 1,
             justifyContent: 'center',
@@ -618,8 +601,6 @@ export function SearchResultCards(props) {
         <Paper sx={{
           margin: 0.25,
           padding: 1.5,
-          border: 1,
-          borderColor: "#ccc",
           minHeight: 2,
           lineHeight: 1,
           justifyContent: 'center',
@@ -634,7 +615,7 @@ export function SearchResultCards(props) {
           sx={{
             margin: 0.25,
             padding: 1.5,
-            border: 1,
+
             borderColor: "#ccc",
             minHeight: 2,
             lineHeight: 1,

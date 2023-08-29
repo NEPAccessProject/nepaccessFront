@@ -44,7 +44,6 @@ const FULLSTYLE = {
 	minWidth: "20%",
 	maxWidth: "100%",
 	marginBottom: "20px",
-	border: "2px solid rgba(218, 218, 218, 1)",
 	background: "rgba(240, 239, 237, 1)",
 };
 const Item = styled(Box)(({ theme }) => ({
@@ -791,7 +790,7 @@ class Search extends React.Component {
 		const customStyles = {
 			option: (styles, state) => ({
 				...styles,
-				borderBottom: "1px dotted",
+//				borderBottom: "1px dotted",
 				backgroundColor: "white",
 				color: "black",
 				"&:hover": {
@@ -819,14 +818,14 @@ class Search extends React.Component {
 		};
 		return (
 			<Container
-				disableGutters={true}
+				disableGutters={false}
 				sx={{
-					marginTop: 15,
+//					marginTop: 15,
 				}}
 			>
 <ThemeProvider theme={theme}>
 					<SearchContext.Provider value={value}>
-						<Paper border={0}>
+						<Paper >
 							<Grid id="result-header-grid-container" container>{''}
 								<Grid container xs={12} flex={1} flexGrow={1} id="results-header-grid-container">
 											<ResultsHeader 
@@ -834,8 +833,8 @@ class Search extends React.Component {
 												total={this.state.total}
 											/>
 								</Grid>
-								<Grid container xs={12} flex={1} border={0} id="filters-grid-container">
-									<Grid item xs={3} border={0} id="filters-grid-item">
+								<Grid container xs={12} flex={1}  id="filters-grid-container">
+									<Grid item xs={3}  id="filters-grid-item">
 									{!this.state.filtersHidden &&	
 										<SideBarFilters
 												onActionChange={this.onActionChange}
@@ -855,7 +854,7 @@ class Search extends React.Component {
 											/>
 									}
 									</Grid>
-									<Grid item xs={9} border={0}>
+									<Grid item xs={9} >
 										{/* <Typography fontSize={34}  variant='h1'>Header 1 </Typography>
 										<Typography fontSize={30}  variant='h2'>Header 2 </Typography>
 										<Typography fontSize={28} variant='h3'>Header 3 </Typography>
@@ -871,10 +870,10 @@ class Search extends React.Component {
 								
 							</Grid>
 							{/* End Header*/}
-							<Item xs={2} id="filter-container-items" border={0}>
+							<Item xs={2} id="filter-container-items" >
 										<h4>Filters</h4>
 									</Item>
-									<Item display={'flex'} xs={9} border={0} id="results-container-items">
+									<Item display={'flex'} xs={9}  id="results-container-items">
 										<h4>Results</h4>
 									</Item> 
 							{this.getSuggestions()}

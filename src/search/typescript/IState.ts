@@ -1,3 +1,4 @@
+import Globals from '../../globals'
 export interface ISearchState {
   titleRaw: string;
   startPublish: null;
@@ -46,6 +47,6 @@ export interface ISearchState {
   surveyDone: boolean;
   surveyResult: string;
   filtersHidden: boolean;
-
+  hasSearched: true;
   countyOptions: any;
 }

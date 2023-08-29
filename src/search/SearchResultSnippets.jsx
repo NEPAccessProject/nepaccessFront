@@ -97,7 +97,7 @@ export default function RenderSnippets(props) {
           <Box>
             {(text.length > 0)
               &&
-              <Box border={1}><div dangerouslySetInnerHTML={convertToHTML(text)} /></Box>
+              <Box ><div dangerouslySetInnerHTML={convertToHTML(text)} /></Box>
             }
           </Box>
           <Box padding={1}>

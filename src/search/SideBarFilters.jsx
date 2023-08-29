@@ -34,7 +34,6 @@ const Item = styled(Box)(({ theme }) => ({
   color: theme.palette.text.secondary,
   elevation: 0,
   border: 0,
-  borderRadius: 0,
   mt: 2,
   mb: 2,
   pl: 0,
@@ -79,10 +78,11 @@ const SideBarFilters = (props) => {
 
   return (
     <>
-
       <ThemeProvider theme={theme}>
-        <Paper >
-          <Item borderRight={1} borderColor={'#000'}
+        <>
+          <Item 
+            //borderRight={1} 
+            //borderColor={'#000'}
             //className="sidebar-filters"
             hidden={state.filtersHidden}
           // this would launch a new search on enter key, in some child inputs
@@ -157,9 +157,6 @@ const SideBarFilters = (props) => {
                 fullWidth
                 xs={{
                   p: 1,
-                  border: 0,
-                  borderColor: "grey.500",
-                  borderRadius: 1,
                   mb: 1,
                   mt: 1,
                 }}
@@ -357,7 +354,6 @@ const SideBarFilters = (props) => {
                 display={"flex"}
                 xs={12}
                 flexDirection={"column"}
-                border={0}
                 padding={0}
                 margin={0}
                 width={"100%"}
@@ -487,7 +483,7 @@ const SideBarFilters = (props) => {
           <Item hidden={state.hideOrganization} id="agency-svg-holder">
             <button onClick={orgClick}>x</button>
           </Item>
-        </Paper>
+        </>
       </ThemeProvider>
     </>
   );
