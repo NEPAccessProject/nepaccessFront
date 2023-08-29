@@ -1,19 +1,28 @@
 import {
+  AppBar,
   Box,
   Dialog,
   DialogContent,
   DialogContentText,
   DialogTitle,
   Divider,
+  Drawer,
   Grid,
   Button,
   IconButton,
+  Toolbar,
   Paper,
   Typography,
   List,
   ListItem,
+  ListItemButton,
+  ListItemText,
+  ListItemIcon,
 } from '@mui/material';
 import theme from '../../styles/theme';
+//import {InboxIcon,MailIcon} from '@mui/icons-material'
+import InboxIcon from '@mui/icons-material/MoveToInbox';
+import MailIcon from '@mui/icons-material/Mail';
 import { makeStyles,createStyles } from '@mui/styles';
 import {Theme} from '@mui/material/styles';
 import React, { useDebugValue, useState } from 'react'
@@ -32,8 +41,8 @@ interface IStyles {
   }
 }
 interface IProps {
-  files: IFiles,
-  onPDFListFileSelect: ()=>{}
+	files: IFiles;
+	onFileLinkClicked: (number) => {};
 }
 
 const useStyles = makeStyles((theme: Theme) => createStyles({
@@ -56,38 +65,101 @@ const useStyles = makeStyles((theme: Theme) => createStyles({
        }));
 
 export default function AvailablePDFsList(props : IProps) {
-
-  const onPDFListFileSelect : (number)=>{} = props.onPDFListFileSelect;
-
-  const files:IFiles = props.files;
+  const {onFileLinkClicked,files} =  props;
+ const drawerWidth= 150;
 //  const eisDoc: IEISDoc = file.eisdoc;
-  const classes = useStyles(theme);  
+  const classes = useStyles(theme);
 //  const eisDoc: IEISDoc;
   return (
-    <>
+		<>
+			{/* <Paper>
+				<Grid container>
+					<Grid
+						item
+						xs={12}
+						textAlign={'center'}
+						classes={classes.centered}
+						padding={2}>
+						<Typography variant='h4'>Related Files</Typography>
+						<Divider />
+					</Grid>
+					<Grid
+						item
+						xs={12}>
+						<List
+							sx={{
+								padding: 1,
+							}}>
+							{files &&
+								files.length &&
+								files.map((file: IFile, idx: number) => (
+									<ListItem key={file.id}>
+										<Typography>
+											<Button
+												onClick={() => onFileLinkClicked(file.id)}
+												variant='text'>
+												{file.filename}
+											</Button>
+										</Typography>
+									</ListItem>
+								))}
+						</List>
+					</Grid>
+				</Grid>
+			</Paper> */}
       <Paper>
-        <Grid container>
-          <Grid item xs={12} textAlign={'center'} classes={classes.centered} padding={2}>
-            <Typography variant="h4">Related Files</Typography>
-            <Divider />
-          </Grid>
-          <Grid item xs={12}>
-            <List sx={{
-              padding:1,
-            }}>
-              {(files && files.length) && files.map((file: IFile, idx:number) => (
-                <ListItem key={file.id}>
-                  <Typography>
-                    <Button onClick={()=>onPDFListFileSelect(file.id)} variant="text">
-                      {file.filename}
-                    </Button>
-                  </Typography>
-                </ListItem>
-              ))}
-            </List>
-          </Grid>
-        </Grid>
+
+         <AppBar
+        position="fixed"
+        sx={{ width: `calc(100% - ${drawerWidth}px)`, ml: `${drawerWidth}px` }}
+      >
+        <Toolbar>
+          <Typography variant="h6" noWrap component="div">
+            Permanent drawer
+          </Typography>
+        </Toolbar>
+      </AppBar>
+      <Drawer
+        sx={{
+          width: drawerWidth,
+          flexShrink: 0,
+          '& .MuiDrawer-paper': {
+            width: drawerWidth,
+            boxSizing: 'border-box',
+          },
+        }}
+        variant="permanent"
+        anchor="left"
+      >
+        <Toolbar />
+        <Divider />
+        <List>
+          {['Inbox', 'Starred', 'Send email', 'Drafts'].map((text, index) => (
+            <ListItem key={text} disablePadding>
+              <ListItemButton>
+                <ListItemIcon>
+                  {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
+                </ListItemIcon>
+                <ListItemText primary={text} />
+              </ListItemButton>
+            </ListItem>
+          ))}
+        </List>
+        <Divider />
+        <List>
+          {['All mail', 'Trash', 'Spam'].map((text, index) => (
+            <ListItem key={text} disablePadding>
+              <ListItemButton>
+                <ListItemIcon>
+                  {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
+                </ListItemIcon>
+                <ListItemText primary={text} />
+              </ListItemButton>
+            </ListItem>
+          ))}
+        </List>
+      </Drawer>
       </Paper>
-    </>
-  );
+		</>
+	);
 }

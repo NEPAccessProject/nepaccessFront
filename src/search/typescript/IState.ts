@@ -34,7 +34,7 @@ export interface ISearchState {
   limit: number;
   offset: number;
   searchOption: string;
-  test: Globals.anEnum.options;
+  test: any; //Globals.anEnum.options;
   tooltipOpen: undefined;
   proximityOption: null;
   proximityDisabled: boolean;
@@ -47,5 +47,5 @@ export interface ISearchState {
   surveyResult: string;
   filtersHidden: boolean;
 
-  countyOptions: Globals.counties;
+  countyOptions: any;
 }

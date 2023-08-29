@@ -8,11 +8,15 @@ import '@react-pdf-viewer/toolbar/lib/styles/index.css';
 
 const workerUrl = "https://unpkg.com/pdfjs-dist@3.4.120/build/pdf.worker.min.js";
 
+
+//[TODO][REFACTOR] need to break this into two components.  One as container responsible for get and handling the file and display component that just takes that as an arg
 const PDFViewer = (props) => {
-  console.log(`PDFViewerDemo props`,props);
-  const {fileUrl,file} = props;
-  console.log('!!!! PDFViewerDemo FILE URL:',fileUrl);
-    //const fileUrl = '/example.pdf'
+  console.log(`🚀 ~ file: PDFViewer.jsx:12 ~ PDFViewer ~ props:`, props);
+
+  //const {fileUrl,file} = props;
+  const {file,fileUrl} = props
+
+  console.log(`🚀 ~ file: PDFViewer.jsx:17 ~ PDFViewer ~ fileUrl:`, fileUrl);
     const toolbarPluginInstance = toolbarPlugin({
         getFilePlugin: {
             // fileNameGenerator: (OpenFile) => {
@@ -121,12 +125,19 @@ const PDFViewer = (props) => {
                         }}
                     </Toolbar> */}
                 </div>
-                <Typography>{file.title}</Typography>
-                <Worker workerUrl={workerUrl}>
-            <Viewer fileUrl={fileUrl}
-            //plugins={[toolbarPluginInstance]} 
-            />
-                </Worker>
+                
+                <Grid container flexGrow={1}>
+                  <Grid item xs={12} alignItems='center' justifyContent='center'>
+                      <Typography variant="h5">{file.name}</Typography>
+                  </Grid>
+                  <Grid item xs={12}>
+                  <Worker workerUrl={workerUrl}>
+                    <Viewer fileUrl={fileUrl}
+                      //plugins={[toolbarPluginInstance]} 
+                      />
+                  </Worker>
+                  </Grid>
+                </Grid>
             </div>
         </div>
     );

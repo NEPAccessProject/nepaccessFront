@@ -31,12 +31,18 @@ export default function PDFContainer(props:IProps) {
 
   const file:IFile = props.file;
   const eisDoc: IEISDoc = file.eisdoc;
-  const fileURL = `\docs\${file.filename}`;
+  const fileUrl = `/docs/${file.filename}`;
+  console.log(`🚀 ~ file: PDFContainer.tsx:36 ~ PDFContainer ~ fileUrl:`, fileUrl);
   return (
-    <Paper elevation={1} id="pdf-container-viewer" sx={{
-    }} >
-      <Grid container spacing={2} id="pdf-container-grid-container">
-        {/* <Grid xs={12} item className={classes.centered} id="pdf-container-grid-item" border={1}>
+		<Paper
+			elevation={1}
+			id='pdf-container-viewer'
+			sx={{}}>
+			<Grid
+				container
+				spacing={2}
+				id='pdf-container-grid-container'>
+				{/* <Grid xs={12} item className={classes.centered} id="pdf-container-grid-item" border={1}>
           <Grid container flex={1} alignItems={'flex-start'} id="pdf-docs-grid-container">
             {file.filename && <Grid item lg={3} md={4} xs={6} className={classes.item}><Paper>File: {file.filename}</Paper></Grid>}
             {file.status && <Grid item lg={3} md={4} xs={6} className={classes.item}><Paper>Status: {file.status}</Paper></Grid>}
@@ -46,10 +52,18 @@ export default function PDFContainer(props:IProps) {
             {(eisdoc && eisdoc.summaryText) && <Grid item lg={3} md={4} xs={6}><Paper className={classes.item} >Summary: {eisdoc.summaryText}</Paper></Grid>}
           </Grid>
         </Grid> */}
-        <Grid item xs={12} id="pdf-viewer-container-grid-item" alignSelf={'centered'}>
-          <PDFViewer {...props} fileURL={fileURL} />
-        </Grid>
-      </Grid>
-    </Paper>
-  );
+				<Grid
+					item
+					xs={12}
+					id='pdf-viewer-container-grid-item'
+					alignSelf={'centered'}>
+					<PDFViewer
+						{...props}
+            file={file}
+						fileUrl={fileUrl}
+					/>
+				</Grid>
+			</Grid>
+		</Paper>
+	);
 }
