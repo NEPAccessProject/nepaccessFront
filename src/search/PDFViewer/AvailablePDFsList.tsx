@@ -66,13 +66,13 @@ const useStyles = makeStyles((theme: Theme) => createStyles({
 
 export default function AvailablePDFsList(props : IProps) {
   const {onFileLinkClicked,files} =  props;
- const drawerWidth= 150;
+ const drawerWidth= 250;
 //  const eisDoc: IEISDoc = file.eisdoc;
   const classes = useStyles(theme);
 //  const eisDoc: IEISDoc;
   return (
 		<>
-			{/* <Paper>
+			<Paper>
 				<Grid container>
 					<Grid
 						item
@@ -106,8 +106,8 @@ export default function AvailablePDFsList(props : IProps) {
 						</List>
 					</Grid>
 				</Grid>
-			</Paper> */}
-      <Paper>
+			</Paper>
+      {/* <Paper>
 
          <AppBar
         position="fixed"
@@ -132,34 +132,28 @@ export default function AvailablePDFsList(props : IProps) {
         anchor="left"
       >
         <Toolbar />
+        <Typography variant='h4'>Related Files</Typography>
         <Divider />
-        <List>
-          {['Inbox', 'Starred', 'Send email', 'Drafts'].map((text, index) => (
-            <ListItem key={text} disablePadding>
-              <ListItemButton>
-                <ListItemIcon>
-                  {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
-                </ListItemIcon>
-                <ListItemText primary={text} />
-              </ListItemButton>
-            </ListItem>
-          ))}
-        </List>
-        <Divider />
-        <List>
-          {['All mail', 'Trash', 'Spam'].map((text, index) => (
-            <ListItem key={text} disablePadding>
-              <ListItemButton>
-                <ListItemIcon>
-                  {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
-                </ListItemIcon>
-                <ListItemText primary={text} />
-              </ListItemButton>
-            </ListItem>
-          ))}
-        </List>
+<List
+							sx={{
+								padding: 1,
+							}}>
+							{files &&
+								files.length &&
+								files.map((file: IFile, idx: number) => (
+									<ListItem key={file.id}>
+										<Typography>
+											<Button
+												onClick={() => onFileLinkClicked(file.id)}
+												variant='text'>
+												{file.filename}
+											</Button>
+										</Typography>
+									</ListItem>
+								))}
+						</List>
       </Drawer>
-      </Paper>
+      </Paper> */}
 		</>
 	);
 }

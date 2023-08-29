@@ -234,6 +234,7 @@ export default function PDFViewerDialog(props) {
   //[TODO] Not a fan of having to manually set more than one session var for one action, files are required hence eisdoc is well
   return (
     <Dialog
+    marginTop={150}
       id='pdf-viewer-dialog'
       //open={isOpen}
       open={true}
@@ -281,7 +282,7 @@ export default function PDFViewerDialog(props) {
               <CircularProgress />
             </Paper>
           ) : (
-            <Paper elevation={0}>
+            <Paper elevation={0} marginTop={110}>
               <Grid
                 id="pdf-file-list-grid-container"
                 justifyContent=''
@@ -316,7 +317,7 @@ export default function PDFViewerDialog(props) {
                     <Typography variant='h3'>{(currentFile.eisdoc && currentFile.eisdoc.title) ? currentFile.eisdoc.title : 'N/A'}</Typography>
                   </Grid>
 
-                  <Grid item xs={12} id="pdf-viewer-debug-info-grid-item">
+                  {/* <Grid item xs={12} id="pdf-viewer-debug-info-grid-item">
                     <Typography variant='subtitle1'>DEBUG INFO:</Typography>
                     <Paper>
                       Current File Index: {currentFileIndex}
@@ -341,7 +342,7 @@ export default function PDFViewerDialog(props) {
                       </Paper>
                       {renderObjectKeys(currentFile.eisdoc)}
 
-                  </Grid>
+                  </Grid> */}
 
                   <Grid
                     container
