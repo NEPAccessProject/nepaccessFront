@@ -15,6 +15,7 @@ import "./search.css";
 import SearchProcessResult from "./SearchProcessResult";
 import SearchResultItems from './SearchResultsItems.jsx';
 import SearchTips from './SearchTips.jsx';
+import SearchContext from './SearchContext';
 //import SearchResultItems from "./SearchResultsItems.jsx";
 import CircularProgress from '@mui/material/CircularProgress';
 
@@ -77,6 +78,7 @@ const CardItem = styled(Paper)(({ theme }) => ({
   },
 }));
 export default class SearchProcessResults extends React.Component {
+  static contextType = SearchContext;
   _size = 0;
   _columns = [];
   hidden = new Set();
@@ -91,11 +93,13 @@ export default class SearchProcessResults extends React.Component {
     //   "🚀 ~ file: SearchProcessResults.js:41 ~ SearchProcessResults ~ constructor ~ props:",
     //   props
     // );
+//    const {state} = this.context;
+    
     this.state = {
+ //     ...state,
       showContext: true,
       size: 0,
       hidden: new Set(),
-      hasSearched: false,
     };
     window.addEventListener("resize", this.handleResize);
     Globals.registerListener("new_search", this.resetHidden);
@@ -274,10 +278,13 @@ export default class SearchProcessResults extends React.Component {
     }
   };
   onDetailLink = (processId) => {
-    console.log('onDetailLink',processId);
+    //console.log('onDetailLink',processId);
     //this.props.onDetailLink(processId);
   }
   render() {
+    console.log(`🚀 ~ file: SearchProcessResults.js:97 ~ SearchProcessResults ~ constructor ~ this.context:`, this.context);
+    console.log(`🚀 ~ file: SearchProcessResults.js:97 ~ SearchProcessResults ~ constructor ~ Search Context:`, SearchContext);
+
     if (!this.props.results || (!this.props.results.length > 0)) {
       /** Show nothing until loading results. props.resultsText will just be "Results" before any search.
        * During a search, it will be "Loading results..." and if 100+ async results we may
@@ -313,18 +320,17 @@ export default class SearchProcessResults extends React.Component {
     try {
       return (
 				<>
-					<Box id="search-process-results-container" 
+          {this.state.hasSearched
+					? (
+              <Box id="search-process-results-container" 
           sx={{
             padding:0,
           }}>
-					  <Typography variant='h2'>
+					  <Typography margin={2}  marginLeft={1} color="primary" variant='h2'>
   						Search results {''}
   					</Typography>
-            {(this.props.searching !== "Results")}
-
-            ? <CircularProgress/>  
-            : <Grid container display={'flex'} sx={9} flex={1} id="results-text-container" >
-  						{this.props.resultsText}&nbsp;
+              <Grid container display={'flex'} sx={9} flex={1} id="results-text-container" >
+  						  <Typography variant="h4">{this.props.resultsText}&nbsp;</Typography>
               {/* <CircularProgress/> */}
   						<Tippy
   							className='tippy-tooltip--small searchTips'
@@ -383,7 +389,14 @@ export default class SearchProcessResults extends React.Component {
   							);
   						})}
   					  </Grid>
-					</Box>
+					    </Box>
+            )
+          : (
+              <>
+                <SearchTips/>
+              </>
+            )
+          }
 				</>
 			);
 
