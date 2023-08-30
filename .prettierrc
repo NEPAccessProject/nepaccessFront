@@ -9,9 +9,9 @@
   "tabWidth": 2,
   "trailingComma": "all",
   "useTabs": true,
-  "bracketSameLine": false,
+  "bracketSameLine": true,
   "arrowParens": "always",
   "vueIndentScriptAndStyle": true,
   "endOfLine": "lf",
-  "singleAttributePerLine": true
+  "singleAttributePerLine": true,
 }
