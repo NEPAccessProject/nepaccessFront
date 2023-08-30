@@ -194,14 +194,14 @@ export default function SearchResultItem(props) {
                   alignItems={'center'}
                   borderColor={'#bbb'}
                 >
-                  <PDFViewerDialog
+                  {/* <PDFViewerDialog
                     id="pdf-viewer-dialog"
                     record={record}
                     isOpen={isPDFViewOpen}
                     onDialogClose={(evt)=>onPDFPreviewToggle(evt,processId)}
                     processId = {processId}
                     fileId = {record.id}
-                  />
+                  /> */}
                   <Button
                     onClick={(evt)=>onPDFPreviewToggle(evt,processId)}
                     color={'primary'}
