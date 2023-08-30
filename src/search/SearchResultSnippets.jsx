@@ -1,8 +1,19 @@
-import React, { useContext, useState,useRef } from 'react';
+import React, { useContext,useEffect, useState,useRef } from 'react';
 import {Box,Button, Container, Grid, Typography } from '@mui/material';
-import { makeStyles, withStyles, useStyles } from '@mui/styles';
+import { makeStyles,withStyles } from '@mui/styles';
 import theme from '../styles/theme';
 import SearchContext from './SearchContext';
+import { common } from '@mui/material/colors';
+
+
+const useStyles = withStyles((theme) => ({
+  expanderButton: {
+    width: '100%',
+    padding: 1,
+    borderRadius: 0,
+    border: 0,
+  }
+}));
 
 
 export default function RenderSnippets(props) {
@@ -12,7 +23,6 @@ export default function RenderSnippets(props) {
       console.log('RenderSnippets props.record', record);
     const { state, setState } = useContext(SearchContext);
   
-  
     //  console.log("🚀 ~ file: SearchResultsItems.jsx:343 ~ RenderSnippets ~ record:", record)
     const [isPDFViewOpen, setIsPDFViewOpen] = useState(false);
     const [isContentExpanded, setIsContentExpanded] = useState(false);
@@ -21,12 +31,6 @@ export default function RenderSnippets(props) {
     function convertToHTML(content) {
       return { __html: content };
     }
-    function toggleContentExpansion(evt, id) {
-      //console.log(`toggleContentExpansion id: ${id} evt~ evt`, evt);
-      //console.log('Setting isContentExpanded to',!isContentExpanded);
-      setIsContentExpanded(!isContentExpanded);
-      evt.preventDefault();
-    }
     return (
       // useEffect(() => {
       //   console.log('useEffect for content expanded');
@@ -34,7 +38,9 @@ export default function RenderSnippets(props) {
       record.plaintext.map((text, idx) => {
         return (
           <>
-           <Box key={record.id}> <Snippets text={text} /></Box>
+           <Box key={record.id+'_'+idx}> 
+              <Snippets text={text} />
+            </Box>
           </>
         )
       }))
@@ -42,98 +48,150 @@ export default function RenderSnippets(props) {
   
   //priveate function
   function Snippets(props) {
-    const { text, hidden, isContentExpanded, id, processId } = props;
-    console.log("🚀 ~ file: SearchResultsItems.jsx:462 ~ Snippets ~ props:", props, `Snipets length is ${text.length}`)
+    const { text,id, processId } = props;
+    const { state, setState } = useContext(SearchContext);
+
+    //  console.log("🚀 ~ file: SearchResultsItems.jsx:343 ~ RenderSnippets ~ record:", record)
+    const [isContentExpanded, setIsContentExpanded] = useState(false);
+    const { hideText, hidden } = state;
+    console.log(`🚀 ~ file: SearchResultSnippets.jsx:57 ~ Snippets ~ state:`, state);
+
+    const _mounted = useRef(false);
+    useEffect(()=>{
+      _mounted.current = true
+      console.log('Snippets Component mounted')
+      return (()=>{
+        console.log('Snippets Component Unmounted')
+      })
+    },[])
+
+    const classes = useStyles(theme);
+    console.log(`🚀 ~ file: SearchResultSnippets.jsx:60 ~ Snippets ~ classes:`, classes);
+
+    console.log(`🚀 ~ file: SearchResultSnippets.jsx:60 ~ Snippets ~ theme:`, theme);
+
+
+    /*Originaly the app was designed to render the markup embedded with tags using:
+      <div dangerouslySetInnerHTML={convertToHTML(text.slice(0,255))} />
+      However, this can either break the page by having an unclosed tag(s) and give a potential XSS vector
+  */
+    const snippet = text.replace(/<\/?[^>]+(>|$)/g, "");
+    console.log(`🚀 ~ file: SearchResultSnippets.jsx:65 ~ Snippets ~ snippet:`, snippet);
     function convertToHTML(content) {
       return { __html: content };
     }
     function toggleContentExpansion(evt, id) {
       console.log(`Content Expansion Called for id ${id} evt:`, evt);
+      setIsContentExpanded(!isContentExpanded)
     }
-    return (
-      <>
-        <Box backgroudCcolor="#A2A5A6">
-        {text.length > 99
-          ? 
-            <Box border={0} borderColor={"#ccc"} backgroudColor="#A2A5A6">
-              <div dangerouslySetInnerHTML={convertToHTML(text.slice(0,255))} />
-              <Box
-              id="click-to-see-more-box"
-              width={'100%'}
-              alignContent={'center'}
-              textAlign={'center'}
-              justifyContent={'center'}
-              onClick={(evt) => toggleContentExpansion(evt, id)}
-              bgcolor="#A2A5A6"
-              paddingTop={0}
-              paddingBottom={0}>
-                <Typography variant="expanderButton">
-                  <Button Button sx={{
-                  fontColor: 'white',
-                  color: 'white',
-                }}>Click to See More</Button>
-                </Typography>
-              </Box>
-          </Box>
-            : 
-            <Box width={'100%'}
-              backgroundColor="#A2A5A6"
-              alignContent={'center'}
-              textAlign={'center'}
-              justifyContent={'center'}
-              onClick={(evt) => toggleContentExpansion(evt,id)}
-  
-              paddingTop={0}
-              paddingBottom={0}>
-              <Typography color="white" variant="expanderButton">
-                <Button>Click to See Less</Button>
-              </Typography>
-            </Box>
-        }
-          </Box>
-  
-        {/* <Box className={'content-snippets--result-item-container'}>
-          <Divider />
-          <Box>
-            {(text.length > 0)
-              &&
-              <Box ><div dangerouslySetInnerHTML={convertToHTML(text)} /></Box>
-            }
-          </Box>
-          <Box padding={1}>
-            {isContentExpanded && text && text.length <= 100
-              &&
-              <div dangerouslySetInnerHTML={convertToHTML(text)} />
-            }
-            {!isContentExpanded && text && text.length >= 100
-              && (
-                <div dangerouslySetInnerHTML={convertToHTML(text.substring(0, 100) + '...')} />
-              ) 
-              }
-          </Box>
-        </Box>
-        <Box
-          id="click-to-see-more-box"
-          width={'100%'}
-          alignContent={'center'}
-          textAlign={'center'}
-          justifyContent={'center'}
-          onClick={(evt) => toggleContentExpansion(evt,)}
-          bgcolor="#A2A5A6"
-          paddingTop={1}
-          paddingBottom={1}
-        >
-          {isContentExpanded && text.length >= 100
+
+    //if there is not text to display, render nothing
+    if(!text || text.length === 0) {
+      return(
+        <></>
+      )
+    }
+    else{
+      return (
+        <>
+          <Box borderTop={1} borderColor="#ccc">
+            {snippet.length >= 100 && !isContentExpanded
             ? 
-              <Typography variant="expanderButton">
-                Click to See less
-              </Typography>
-            : 
-              <Typography color={'#fff'} variant="expanderButton">Click to to See More...</Typography>
+              <Box padding={2}>
+                {/*[TODO][REFACTOR] Use https://stackoverflow.com/questions/52257993/strip-tag-from-text-in-react-js  to strip html tags vs displaying */}
+                {/* <div dangerouslySetInnerHTML={convertToHTML(text.slice(0,255))} /> */}             
+                <Typography>{snippet.slice(0,99)}...</Typography>
+                <Box
+                id="click-to-see-more-box"
+//                onClick={(evt) => toggleContentExpansion(evt, id)}
+                sx={{
+                 // backgroundColor: 'red', //theme.palette.primary,
+                 // fontColor: theme.palette.primary.contrastText
+                }}
+                >
+
+                    <Button 
+                      variant='contained'
+                      // color="primary"
+                      width= '100%'
+                      onClick={(evt) => toggleContentExpansion(evt, id)}
+                      sx={{
+                        width:'100%',
+                        padding:1,
+                        borderRadius:0,
+                        border:0,
+                      }}
+                      >
+                        Click to See More...
+                    </Button>
+                </Box>
+            </Box>
+              : 
+              <Box id="click-to-see-less-button-container"
+                paddingTop={0}
+                paddingBottom={0}
+                >
+                {snippet}
+                <Button
+                  variant='contained'
+                  // color='secondary'
+                  width='100%'
+                  onClick={(evt) => toggleContentExpansion(evt, id)}
+                  sx={{
+                    width: '100%',
+                    padding: 1,
+                    borderRadius: 0,
+                    border: 0,
+                  }}
+                >
+                  Click to See Less</Button>
+              </Box>
           }
-        </Box>
-          <Typography align='center'>This document's content is not available - {text.length} </Typography> */}
-  
-      </>
-    )
+            </Box>
+    
+          {/* <Box className={'content-snippets--result-item-container'}>
+            <Divider />
+            <Box>
+              {(text.length > 0)
+                &&
+                <Box ><div dangerouslySetInnerHTML={convertToHTML(text)} /></Box>
+              }
+            </Box>
+            <Box padding={1}>
+              {isContentExpanded && text && text.length <= 100
+                &&
+                <div dangerouslySetInnerHTML={convertToHTML(text)} />
+              }
+              {!isContentExpanded && text && text.length >= 100
+                && (
+                  <div dangerouslySetInnerHTML={convertToHTML(text.substring(0, 100) + '...')} />
+                ) 
+                }
+            </Box>
+          </Box>
+          <Box
+            id="click-to-see-more-box"
+            width={'100%'}
+            alignContent={'center'}
+            textAlign={'center'}
+            justifyContent={'center'}
+            onClick={(evt) => toggleContentExpansion(evt,)}
+            bgcolor="#A2A5A6"
+            paddingTop={1}
+            paddingBottom={1}
+          >
+            {isContentExpanded && text.length >= 100
+              ? 
+                <Typography variant="expanderButton">
+                  Click to See less
+                </Typography>
+              : 
+                <Typography color={'#fff'} variant="expanderButton">Click to to See More...</Typography>
+            }
+          </Box>
+            <Typography align='center'>This document's content is not available - {text.length} </Typography> */}
+    
+        </>
+      )
+          }
   }

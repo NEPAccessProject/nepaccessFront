@@ -239,7 +239,7 @@ export default function PDFViewerDialog(props) {
     marginTop={150}
       id='pdf-viewer-dialog'
       //open={isOpen}
-      open={true}
+      open={false}
       //      fullScreen={true}
       maxWidth='xl'
       width='xl'

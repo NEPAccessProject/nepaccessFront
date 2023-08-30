@@ -1,95 +1,90 @@
-import { Box, Button, Divider, Grid, Paper, Typography } from '@mui/material';
-import { styled } from '@mui/material/styles';
-import { makeStyles } from '@mui/styles';
-import React, { useContext, useEffect, useRef, useState } from 'react';
-import theme from '../styles/theme';
-import PDFViewerDialog from './Dialogs/PDFViewerDialog';
-import SearchContext from './SearchContext';
-import SearchResultsGrid from './SearchResultsGrid';
-import SearchResultItem from './SearchResultItem';
+import { Box, Button, Divider, Grid, Paper, Typography } from "@mui/material";
+import { styled } from "@mui/material/styles";
+import { makeStyles } from "@mui/styles";
+import React, { useContext, useEffect, useRef, useState } from "react";
+import theme from "../styles/theme";
+import PDFViewerDialog from "./Dialogs/PDFViewerDialog";
+import SearchContext from "./SearchContext";
+import SearchResultsGrid from "./SearchResultsGrid";
+import SearchResultItem from "./SearchResultItem";
 //import './search.css';
 
-
-
 const Item = styled(Paper)(({ theme }) => ({
-  backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
+  backgroundColor: theme.palette.mode === "dark" ? "#1A2027" : "#fff",
   ...theme.typography.body2,
   padding: theme.spacing(1),
   // textAlign: 'center',
   color: theme.palette.text.secondary,
-  elevation: 1,
+  elevation: 0,
   border: 0,
-  borderRadius: 1,
+  borderRadius: 0,
   fontColor: "#000",
-  fontFamily: 'open sans'
+  fontFamily: "open sans",
 }));
-
 
 const useStyles = makeStyles((theme) => ({
   centeredContent: {
-    verticalAlign: 'center',
-    textAlign: 'center',
-    alignContent: 'center',
-    justifyContent: 'center',
-    justifyItems: 'center',
-    fontFamily: 'open sans',
+    verticalAlign: "center",
+    textAlign: "center",
+    alignContent: "center",
+    justifyContent: "center",
+    justifyItems: "center",
+    fontFamily: "open sans",
   },
   autocomplete: {},
   resultsHeader: {
-    fontFamily: 'open sans',
+    fontFamily: "open sans",
     fontSize: 50,
-    fontWeight: 'bolder',
+    fontWeight: "bolder",
     padding: 4,
     margin: 2,
-    fontColor: '#000',
+    fontColor: "#000",
   },
   resultItemHeader: {
     fontSize: 25,
-    fontWeight: 'bold',
+    fontWeight: "bold",
     margin: 0.5,
     padding: 1,
     elevation: 1,
-    fontColor: '#000',
+    fontColor: "#000",
   },
-  card: {
-
-  },
+  card: {},
   cardGridItem: {
-    alignContent: 'center',
-    alignItems: 'center',
+    alignContent: "center",
+    alignItems: "center",
     backgroundColor: "blue",
     borderColor: "#ccc",
-    display: 'flex',
-    fontColor: '#000',
-    fontSize: '0.9rem',
-    fontWeight: 'bold',
+    display: "flex",
+    fontColor: "#000",
+    fontSize: "0.9rem",
+    fontWeight: "bold",
     justifyContent: "center",
-    justifySelf: 'center',
+    justifySelf: "center",
     margin: 2,
-    textAlign: 'center',
+    textAlign: "center",
   },
   itemHeader: {
-    fontFamily: 'open sans',
+    fontFamily: "open sans",
     fontSize: 40,
-    fontWeight: 'bold',
+    fontWeight: "bold",
     margin: 0.5,
     padding: 1,
-    fontColor: '#000',
+    fontColor: "#000",
     elevation: 1,
     p: 1,
-    '&:hover': {
-      backgroundColor: '#ccc', //theme.palette.grey[200],
-      boxShadow: '0px 4px 8px rgba(0.5, 0.5, 0.5, 0.25)',
-      cursor: 'pointer',
-      '& .addIcon': {
-        color: 'darkgrey',
+    "&:hover": {
+      backgroundColor: "#ccc", //theme.palette.grey[200],
+      boxShadow: "0px 4px 8px rgba(0.5, 0.5, 0.5, 0.25)",
+      cursor: "pointer",
+      "& .addIcon": {
+        color: "darkgrey",
       },
     },
     infoCard: {
       padding: 1,
       margin: 1,
       border: 1,
-      borderColor: '#ddd',
+      borderColor: "#ddd",
     },
   },
 }));
@@ -106,24 +101,28 @@ export default function SearchResultItems(props) {
   const { result, record } = props;
   const sortByDate = (a, b) => {
     return a.commentDate > b.commentDate;
-  }
+  };
 
   let sortedRecords = result.records.sort(sortByDate);
   return (
     <>
       {/* <h2>Search Result Items Result?</h2>
     {JSON.stringify(result)} */}
-      <Box marginTop={1} marginBottom={1} id="search-results-container-box">
+      <Paper marginTop={1} marginBottom={1} id="search-results-container-box">
         {sortedRecords.map((record, idx) => {
           return (
-            <Item key={record.id} id="search-result-item-container">
+            <Box key={record.id} id={`search-result-item-container-${record.id}`}>
               {/* {JSON.stringify(record)} */}
               {/* <Divider /> */}
               {/* <Typography color={'secondary'} variant='h5'> {record.title}</Typography> */}
-              <SearchResultItem record={record} />
-            </Item>)
-        })};
-      </Box>
+              <Item>
+                <SearchResultItem record={record} />
+              </Item>
+            </Box>
+          );
+        })}
+        ;
+      </Paper>
     </>
   );
 }

@@ -9,6 +9,7 @@ import {
   Drawer,
   Grid,
   Button,
+  Container,
   IconButton,
   Toolbar,
   Paper,
@@ -107,6 +108,12 @@ export default function AvailablePDFsList(props : IProps) {
 									</ListItem>
 								))}
 						</List>
+            <Divider/>
+<Container>
+              <Button name="download" id="download-zip-button">
+                      Download All
+              </Button>
+</Container>
 					</Grid>
 				</Grid>
 			</Paper>

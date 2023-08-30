@@ -1,4 +1,4 @@
-import { Button, Grid, Typography } from '@mui/material';
+import { Button,Divider, Grid, Typography } from '@mui/material';
 import { makeStyles } from '@mui/styles';
 import React, { useContext, useEffect, useRef, useState } from 'react';
 import theme from '../styles/theme';
@@ -101,6 +101,7 @@ export default function SearchResultItem(props) {
     const text = record.plaintext || '';    
     return (
       <>
+        <Divider/>
         <Grid container id="search-result-grid-container">
           <Grid
             container
@@ -203,8 +204,8 @@ export default function SearchResultItem(props) {
                   />
                   <Button
                     onClick={(evt)=>onPDFPreviewToggle(evt,processId)}
-                    color={'secondary'}
-                    variant="outlined"
+                    color={'primary'}
+                    variant="contained"
                   >
                     Preview
                   </Button>
@@ -228,13 +229,18 @@ export default function SearchResultItem(props) {
                     onDialogClose={(evt) => onPDFPreviewToggle(evt,processId)}
                     />
                   } */}
-                  <Button
+
+                  {/* <Button
                     onClick={(evt) => handleDownloadClick(evt)}
                     color={'secondary'}
                     display={'flex'}
                     variant={'outlined'}
-                  >
-                    
+                  > */}
+                  <Button
+                    onClick={(evt) => handleDownloadClick(evt)}
+                    variant='contained'
+                    color="secondary"
+                  >                    
                     Download
                   </Button>
                 </Grid>

@@ -1,22 +1,26 @@
 import { createTheme, Theme } from '@mui/material';
-import { orange,green, red,blueGrey } from '@mui/material/colors';
+import { orange,green, red,blueGrey,common } from '@mui/material/colors';
 import { Primary } from '@storybook/blocks';
 import {ThemeOptions} from '@mui/material/styles';
  const theme: Theme = createTheme({
 		palette: {
 			mode: 'light',
 			primary: {
-				main: '#1f77b4',
-				contrastText: orange[400],
+				main: '#1976D2',
+				contrastText: common.white,
 			},
 			secondary: {
-				main: '#9eabae',
-				contrastText: green[400],
+				main: '#abbdc4',
+				contrastText: common.white,
 			},
 			error: {
 				main: red.A400,
-				contrastText: blueGrey[600],
+				contrastText: common.white,
 			},
+      warning: {
+        main: orange.A400,
+				contrastText: common.white,
+      }
 			// primary: {
 			//   main: "#9eabae",
 			// },
@@ -61,7 +65,6 @@ import {ThemeOptions} from '@mui/material/styles';
 			// },
 			h1: {
 				fontSize: '1.6rem',
-				fontColor: '#000',
 				padding: 4,
 				border: 1,
 				display: 'block',
