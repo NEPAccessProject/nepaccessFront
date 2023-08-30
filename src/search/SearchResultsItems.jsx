@@ -108,21 +108,20 @@ export default function SearchResultItems(props) {
     <>
       {/* <h2>Search Result Items Result?</h2>
     {JSON.stringify(result)} */}
-      <Paper marginTop={1} marginBottom={1} id="search-results-container-box">
+      <Box margin={1} id="search-results-container-box">
         {sortedRecords.map((record, idx) => {
           return (
             <Box key={record.id} id={`search-result-item-container-${record.id}`}>
               {/* {JSON.stringify(record)} */}
               {/* <Divider /> */}
               {/* <Typography color={'secondary'} variant='h5'> {record.title}</Typography> */}
-              <Item>
+              <Box borderColor='#ccc' borderStyle="dotted" id="search-result-item-container-box">
                 <SearchResultItem record={record} />
-              </Item>
+              </Box>
             </Box>
           );
         })}
-        ;
-      </Paper>
+      </Box>
     </>
   );
 }
