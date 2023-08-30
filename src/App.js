@@ -1767,6 +1767,7 @@ export default class App extends React.Component {
                   scopingCount={this._scopingCount}
                 >
                   <SearchProcessResults
+                    {...this.props}
                     sort={this.sort}
                     informAppPage={this.setPageInfo}
                     gatherSpecificHighlights={this.gatherSpecificHighlights}
