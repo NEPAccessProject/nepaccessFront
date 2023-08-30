@@ -852,6 +852,7 @@ class Search extends React.Component {
 												toggleFiltersHidden={this.toggleFiltersHidden}
 												onNeedsDocumentChecked={this.onNeedsDocumentChecked}
 												renderClearFiltersButton={this.renderClearFiltersButton}
+                        onTitleOnlyChecked={this.onTitleOnlyChecked}
 											/>
 									}
 									</Grid>
@@ -871,12 +872,10 @@ class Search extends React.Component {
 								
 							</Grid>
 							{/* End Header*/}
-							<Item xs={2} id="filter-container-items" >
-										<h4>Filters</h4>
+							{/* <Item xs={2} id="filter-container-items" >
 									</Item>
 									<Item display={'flex'} xs={9}  id="results-container-items">
-										<h4>Results</h4>
-									</Item> 
+									</Item>  */}
 							{this.getSuggestions()}
 							<div id="loader-holder">
 								<div className="center" hidden={this.props.searching}>
