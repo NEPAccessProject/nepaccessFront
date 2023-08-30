@@ -1,12 +1,32 @@
 import { createTheme, Theme } from '@mui/material';
-import { orange,green, red,blueGrey,common } from '@mui/material/colors';
+import { orange,green, red,blueGrey,common, grey } from '@mui/material/colors';
 import { Primary } from '@storybook/blocks';
 import {ThemeOptions} from '@mui/material/styles';
+import { FormControlLabel } from '@material-ui/core';
+
+declare module "@mui/material/styles" {
+  interface TypographyVariants {
+		filterLabel: React.CSSProperties;
+	}
+
+  // allow configuration using `createTheme`
+  interface TypographyVariantsOptions {
+    filterLabel?: React.CSSProperties;
+  }
+}
+
+// Update the Typography's variant prop options
+declare module "@mui/material/Typography" {
+  interface TypographyPropsVariantOverrides {
+		filterLabel: true;
+	}
+}
+
  const theme: Theme = createTheme({
 		palette: {
 			mode: 'light',
 			primary: {
-				main: '#1976D2',
+				main: '#3D669C',
 				contrastText: common.white,
 			},
 			secondary: {
@@ -17,10 +37,14 @@ import {ThemeOptions} from '@mui/material/styles';
 				main: red.A400,
 				contrastText: common.white,
 			},
-      warning: {
-        main: orange.A400,
+			warning: {
+				main: orange.A400,
 				contrastText: common.white,
-      }
+			},
+      text: {
+        primary:"#000",
+        secondary: "#222",
+      },
 			// primary: {
 			//   main: "#9eabae",
 			// },
@@ -28,40 +52,20 @@ import {ThemeOptions} from '@mui/material/styles';
 			//   main: "#80a9ff",
 			// },
 		},
-
+		spacing: 8,
 		typography: {
 			fontFamily: 'Open Sans',
 			fontSize: 14,
-			//      padding: 20,
-			//      fontColor: 'red',
-			//      marginLeft:50,
-			//      border:6,
-			//      formControlLabel: {
-			//        fontSize: 1.1,
-			//        color: 'red',
 
-			// expanderButton: {
-			//   fontSize: "1.1rem",
-			//   fontColor: "#fff",
-			//   textAlign: "center",
-			// },
-			// filterLabel: {
-			// 	fontSize: '0.9rem',
-			// },
+			filterLabel: {
+				fontSize: '0.9rem',
+			},
 			// resultsTitle: {
 			//   fontSize: "1.6rem",
 			//   fontColor: "#80a9ff",
 			//   display: 'block',
 			//   paddingLeft: 8,
 
-			// },
-			// resultsSubtitle: {
-			//   fontSize: "1.1rem",
-			//   fontColor: "#80a9ff",
-			//   paddingLeft: 4,
-			//   margin: 10,
-			//   display:'Block',
-			//   fontFamily: 'impact',
 			// },
 			h1: {
 				fontSize: '1.6rem',
@@ -109,82 +113,92 @@ import {ThemeOptions} from '@mui/material/styles';
 			borderRadius: 4,
 		},
 		components: {
-			MuiButton: {
-				defaultProps: {
-					//border: '4px solid red',
-				},
-			},
 			// Name of the component
-			MuiButtonBase: {
-				defaultProps: {
-					//border: '4px solid red',
-				},
-			},
-			MuiTypography: {
-				defaultProps: {
-					variantMapping: {
-						h1: 'h2',
-						h2: 'h2',
-						h3: 'h2',
-						h4: 'h2',
-						h5: 'h2',
-						h6: 'h2',
-						subtitle1: 'h2',
-						subtitle2: 'h2',
-						body1: 'span',
-						body2: 'span',
-						//MuiFormControlLabel: "span",
-						//MUIFormLabel: "span",
+      MuiFormLabel: {
+        styleOverrides: {
+          root: {
+            fontSize: 14,
+            color: grey.A700
+          }
+        }
+      },
+      //example theme override
+			MuiButton: {
+				styleOverrides: {
+					// Name of the slot
+					root: {
+						// Overwrite defaults
+						
 					},
 				},
 			},
-			// MuiPaper: {
-			//   root: {
-			//     "& .MuiPaper-root": {
-			//       borderRadius: "100px",
-			//       backgroundColor:"#222",
-			//       boxShadow: "10px 10px 5px 0px rgba(0,0,0,0.75);"
-			//     }
-			//   }
-			// }
-			// overrides: {
-			//       MuiFormLabel: {
-			//         root: {
-			//           fontSize: 30,
-			//           fontColor: orange
-			//         },
+      MuiFormControlLabel: {
+        styleOverrides: {
+          label: "This is a label?",
+          root: {
+            fontSize: 12,
+            color: grey[700],
 
-			//       },
-			//       MuiPaper: {
-			//         backgroundColor: 'blue',
-			//         root: {
-			//           backgroundColor: 'red',
-			//           border: 6
-			//         }
-			//       },
-			//       MuiAppBar: {
-			//         root: {
-			//           backgroundColor: "#1976d2",
-			//           fontColor: "#fff",
-			//         },
-			//       },
-			//       MuiButton: {
-			//         margin: 10,
-			//         root: {
 
-			//           background: "linear-gradient(45deg, #FE6B8B 30%, #FF8E53 90%)",
-			//           fontColor: "#fff",
-			//           border: 0,
-			//           padding: 30,
-			//           margin: 5,
-			//           borderRadius: 3,
-			//           boxShadow: "0 3px 5px 2px rgba(255, 105, 135, .3)",
-			//           color: "white",
-			//           height: 48,
-			//         },
-			//       },
+          }
+        }
+      }
+			// MuiFormControlLabel: {
+			// 	styleOverrides: {
+			// 		// Name of the slot
+			// 		root: {
+			// 			// Some CSS
+			// 			backgroundColor: grey.A400,
+			// 			fontSize: 100,
+			// 		},
+			// 	},
+			// },
 		},
-		spacing: 8,
+		// MuiPaper: {
+		//   root: {
+		//     "& .MuiPaper-root": {
+		//       borderRadius: "100px",
+		//       backgroundColor:"#222",
+		//       boxShadow: "10px 10px 5px 0px rgba(0,0,0,0.75);"
+		//     }
+		//   }
+		// }
+		// overrides: {
+		//       MuiFormLabel: {
+		//         root: {
+		//           fontSize: 30,
+		//           fontColor: orange
+		//         },
+
+		//       },
+		//       MuiPaper: {
+		//         backgroundColor: 'blue',
+		//         root: {
+		//           backgroundColor: 'red',
+		//           border: 6
+		//         }
+		//       },
+		//       MuiAppBar: {
+		//         root: {
+		//           backgroundColor: "#1976d2",
+		//           fontColor: "#fff",
+		//         },
+		//       },
+		//       MuiButton: {
+		//         margin: 10,
+		//         root: {
+
+		//           background: "linear-gradient(45deg, #FE6B8B 30%, #FF8E53 90%)",
+		//           fontColor: "#fff",
+		//           border: 0,
+		//           padding: 30,
+		//           margin: 5,
+		//           borderRadius: 3,
+		//           boxShadow: "0 3px 5px 2px rgba(255, 105, 135, .3)",
+		//           color: "white",
+		//           height: 48,
+		//         },
+		//       },
  });
 
   export default theme;
