@@ -837,6 +837,7 @@ class Search extends React.Component {
 									<Grid item xs={3}  id="filters-grid-item">
 									{!this.state.filtersHidden &&	
 										<SideBarFilters
+                        {...this.props}
 												onActionChange={this.onActionChange}
 												onAgencyChange={this.onAgencyChange}
 												onCountyChange={this.onCountyChange}
