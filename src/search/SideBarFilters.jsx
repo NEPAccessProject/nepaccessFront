@@ -53,9 +53,7 @@ const useStyles = createUseStyles({
 
 
 const SideBarFilters = (props) => {
-  console.log("🚀 ~ file: SideBarFilters.jsx:74 ~ SideBarFilters ~ props:", props)
   const { state, setState } = useContext(SearchContext);
-  console.log(`🚀 ~ file: SideBarFilters.jsx:58 ~ SideBarFilters ~ state:`, state);
 
   const classes = useStyles(theme);
   const {
