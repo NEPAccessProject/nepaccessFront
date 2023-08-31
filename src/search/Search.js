@@ -166,6 +166,9 @@ class Search extends React.Component {
 		// console.log("State.", this.state);
 
 		var queryString = Globals.getParameterByName("q");
+    this.setState({
+      hasSearched: true
+    })
 		if (!this.props.count && (queryString === null || queryString === "")) {
 			// No query param/blank terms: Launch no-term search - Only if we have no results saved here already
 			// console.log("No query parameters, doing blank search.", this.props.count);
@@ -878,9 +881,9 @@ class Search extends React.Component {
 									</Item>  */}
 							{this.getSuggestions()}
 							<div id="loader-holder">
-								<div className="center" hidden={this.props.searching}>
+								{/* <div className="center" hidden={this.props.searching}>
 									<span id="inputMessage"><CircularProgress/> {this.state.inputMessage}</span>
-								</div>
+								</div> */}
 								<div className="lds-ellipsis" hidden={!this.props.searching}>
 									<div></div>
 									<div></div>
