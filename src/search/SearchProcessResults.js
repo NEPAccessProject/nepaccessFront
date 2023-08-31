@@ -1,4 +1,4 @@
-import { Box, Paper, Typography } from "@mui/material";
+import { Box,Button, Container, Paper, Typography, Chip, Skeleton, Divider, withStyles,Link } from "@mui/material";
 import Grid from '@mui/material/Grid'; // Grid version 1
 import { makeStyles, styled } from "@mui/styles";
 import Tippy from "@tippyjs/react";
@@ -18,6 +18,8 @@ import SearchTips from './SearchTips.jsx';
 import SearchContext from './SearchContext';
 //import SearchResultItems from "./SearchResultsItems.jsx";
 import CircularProgress from '@mui/material/CircularProgress';
+import ResultsLayoutSkeleton from './ResultsLayoutSkeleton';
+import SearchResultCards from './SearchResultCards';
 
 const _ = require("lodash");
 
@@ -35,7 +37,7 @@ const Item = styled(Paper)(({ theme }) => ({
   // textAlign: 'center',
   color: "#ccc", //theme.palette.text.secondary,
   elevation: 1,
-  
+
   borderRadius: 0,
   mt: 2,
   mb: 2,
@@ -49,11 +51,33 @@ const Item = styled(Paper)(({ theme }) => ({
     "& .addIcon": {
       color: "purple",
     },
-    fontFamily:"open sans"
+    fontFamily: "open sans"
   },
 }));
 
-
+const SkeletonItem = styled(Skeleton)(({ theme }) => ({
+  ...theme,
+  //backgroundColor: theme.palette.mode === "dark" ? "#1A2027" : "#fff",
+  //backgroundColor:"#ccc",
+  //...theme.typography.body2,
+  padding: 2,//theme.spacing(1),
+  // textAlign: 'center',
+  color: "#ccc", //theme.palette.text.secondary,
+  elevation: 1,
+  borderRadius: 1,
+  fontColor: '#000',
+  "&:hover": {
+    //           backgroundColor: //theme.palette.grey[200],
+    boxShadow: "0px 4px 8px rgba(0.5, 0.5, 0.5, 0.15)",
+    cursor: "pointer",
+    "& .addIcon": {
+      color: "purple",
+    },
+    fontFamily: "open sans",
+    width: 75,
+    height: 50,
+  },
+}));
 
 const CardItem = styled(Paper)(({ theme }) => ({
   //backgroundColor: theme.palette.mode === "dark" ? "#1A2027" : "#fff",
@@ -63,7 +87,7 @@ const CardItem = styled(Paper)(({ theme }) => ({
   // textAlign: 'center',
   fontColor: "#000", //theme.palette.text.secondary,
   elevation: 1,
-  
+
   borderRadius: 0,
   // mt: 2,
   // mb: 2,
@@ -93,10 +117,10 @@ export default class SearchProcessResults extends React.Component {
     //   "🚀 ~ file: SearchProcessResults.js:41 ~ SearchProcessResults ~ constructor ~ props:",
     //   props
     // );
-//    const {state} = this.context;
-    
+    const ctx = this.context;
+    console.log('Search Process Results - 97 - ctx', ctx);
     this.state = {
- //     ...state,
+      //     ...state,
       showContext: true,
       size: 0,
       hidden: new Set(),
@@ -281,148 +305,206 @@ export default class SearchProcessResults extends React.Component {
     //console.log('onDetailLink',processId);
     //this.props.onDetailLink(processId);
   }
+  // render() {
+  //   console.log(`🚀 ~ file: SearchProcessResults.js:97 ~ SearchProcessResults ~ constructor ~ this.context:`, this.context);
+  //   console.log(`🚀 ~ file: SearchProcessResults.js:97 ~ SearchProcessResults ~ constructor ~ Search Context:`, SearchContext);
+
+  //   if (!this.props.results || (!this.props.results.length > 0)) {
+  //     /** Show nothing until loading results. props.resultsText will just be "Results" before any search.
+  //      * During a search, it will be "Loading results..." and if 100+ async results we may
+  //      * simultaneously have 100 props.results.  After a search we won't hit this logic because we'll have props.results
+  //      */
+  //     if (this.props.resultsText !== "Results") {
+  //       return (
+  //         <>
+  //         <Box  padding={1} paddingLeft={3} paddingRight={3} id="search-results-box">
+  //             <Typography variant='h3' fontSize={20} >{this.state.searching}</Typography>
+
+  //             <Grid container id="search-tips-item-container" >
+  //               <Grid item id="search-tips-grid-item">
+  //                 <Grid paddingLeft={3} paddingRight={3} item xs={12} justifyContent={'center'} alignContent={'center'} > 
+  //                   {/* <divider>
+  //                     {(this.props.results.length  === 0)}
+  //                       ? Loading......
+  //                       <Box height={100} width={100}>
+  //                         <CircularProgress />
+  //                        </Box> 
+  //                       : <SearchTips/>
+  //                   </divider> */}
+  //                   <Skeleton variant="rectangular" width={'100%'} height={400} />
+  //                 </Grid>
+  //               </Grid>
+  //             </Grid>
+  //         </Box>
+
+  //         </>);
+  //     } else {
+  //       return <></>;
+  //     }
+  //   }
+
+  //   try {
+  //     return (
+  // 			<>
+  //         {this.state.hasSearched
+  // 				? (
+  //             <Box id="search-process-results-container" 
+  //         sx={{
+  //           padding:0,
+  //         }}>
+  // 				  <Typography margin={2}  marginLeft={1} color="primary" variant='h2'>
+  // 						Search results {''}
+  // 					</Typography>
+  //             <Grid container display={'flex'} sx={9} flex={1} id="results-text-container" >
+  // 						  <Typography variant="h4">{this.props.resultsText}&nbsp;</Typography>
+  //             {/* <CircularProgress/> */}
+  // 						<Tippy
+  // 							className='tippy-tooltip--small searchTips'
+  // 							trigger='manual click'
+  // 							hideOnClick={true}
+  // 							interactive={true}
+  //               placement='right'
+  // 							content={
+  // 								<div>
+  // 									The map view is a{' '}
+  // 									<span className='bold'>visual representation</span> of all
+  // 									states and counties found in the current results table.
+  // 									<div>
+  // 										• If you hover over a polygon, a tooltip will also show how
+  // 										many of the current results are linked to it.
+  // 									</div>
+  // 									<div>
+  // 										• You can toggle the state and/or county layer by clicking
+  // 										on the checkboxes in the upper left corner.
+  // 									</div>
+  // 								</div>
+  // 							}
+  // 						>
+  // 							{
+  // 								<span className={'side-link inline'}>
+  // 									<svg
+  // 										xmlns='http://www.w3.org/2000/svg'
+  // 										width='16px'
+  // 										height='16px'
+  // 										viewBox='0 0 100 100'
+  // 									>
+  // 										<path
+  // 											className='info-svg'
+  // 											d='M50.433,0.892c-27.119,0-49.102,21.983-49.102,49.102s21.983,49.103,49.102,49.103s49.101-21.984,49.101-49.103S77.552,0.892,50.433,0.892z M59,79.031C59,83.433,55.194,87,50.5,87S42,83.433,42,79.031V42.469c0-4.401,3.806-7.969,8.5-7.969s8.5,3.568,8.5,7.969V79.031z M50.433,31.214c-5.048,0-9.141-4.092-9.141-9.142c0-5.049,4.092-9.141,9.141-9.141c5.05,0,9.142,4.092,9.142,9.141C59.574,27.122,55.482,31.214,50.433,31.214z'
+  // 										/>
+  // 									</svg>
+  // 								</span>
+  // 							}
+  // 						</Tippy>
+
+  //             {this.props.hasSearched && this.props.searching ? <>Searching</> : <>Done</>}
+  //              <Typography variant='h6'> Results # {this.props.results.length}</Typography>
+  //               <Chip>Searching: {this.props.searching}</Chip>
+  //               <Chip>Search Result Text: {this.props.resultsText}</Chip>
+  // 						{this.props.results.map((result, index) => {
+  // 							return (
+  // 								<Grid item>
+  // 									<>
+  //                   <Typography paddingLeft={2} color={'primary'} variant='h5'>{(result.title) 
+  //                     ? <a onClick={this.onDetailLink(result.processId)} href="#">{result.title}</a>
+  //                     : ''}</Typography>
+  // 										<SearchResultCards result={result} />
+  // 										<SearchResultItems result={result} />
+  // 									</>
+  // 								</Grid>
+  // 							);
+  // 						})}
+  // 					  </Grid>
+  // 				    </Box>
+  //           )
+  //         : (
+  //             <>
+  //               <SearchTips/>
+  //             </>
+  //           )
+  //         }
+  // 			</>
+  // 		);
+
+  //   } catch (e) {
+  //     if (e instanceof TypeError) {
+  //       // Tabulator trying to render new results before it switches to new column definitions
+  //       console.error("TypeError", e);
+  //     } else {
+  //       console.error(e);
+  //     }
+  //     return (
+  //       <div className="sidebar-results">
+  //         {/* <Typography variant="h4" id="results-label">First Search Result Items with # of results {this.props.results.length}
+  //           ResultsText= {this.props.resultsText}</Typography> */}
+  //         {this.props.results.map((result, index) => {
+  //           return (
+  //             <>
+  //               <b>{index}</b>
+  //               {/* <SearchResultItems result={result} /> */}
+  //             </>
+  //           )
+  //         })}
+  //       </div>
+  //     );
+  //   }
+  // }
+
   render() {
-    console.log(`🚀 ~ file: SearchProcessResults.js:97 ~ SearchProcessResults ~ constructor ~ this.context:`, this.context);
-    console.log(`🚀 ~ file: SearchProcessResults.js:97 ~ SearchProcessResults ~ constructor ~ Search Context:`, SearchContext);
+    const ctxState = this.context.state;
+    const { results } = this.props;
+    console.log('render context state', this.context.state);
+    console.log('render context setState', this.context.setState);
 
-    if (!this.props.results || (!this.props.results.length > 0)) {
-      /** Show nothing until loading results. props.resultsText will just be "Results" before any search.
-       * During a search, it will be "Loading results..." and if 100+ async results we may
-       * simultaneously have 100 props.results.  After a search we won't hit this logic because we'll have props.results
-       */
-      if (this.props.resultsText && this.props.resultsText !== "Results") {
-        return (
-          <>
-          <Box  padding={1} paddingLeft={3} paddingRight={3} id="search-results-box">
-              <Typography variant='h3' fontSize={20} >{this.state.searching}</Typography>
-              <Grid container id="search-tips-item-container" >
-                <Grid item id="search-tips-grid-item">
-                  <Grid paddingLeft={3} paddingRight={3} item xs={12} justifyContent={'center'} alignContent={'center'} > 
-                    {/* <divider>
-                      {(this.props.results.length  === 0)}
-                        ? Loading......
-                        <Box height={100} width={100}>
-                          <CircularProgress />
-                         </Box> 
-                        : <SearchTips/>
-                    </divider> */}
-                  </Grid>
-                </Grid>
-              </Grid>
-          </Box>
-
-          </>);
-      } else {
-        return <></>;
-      }
+    //If searching display skeleton
+    if (this.props.searching)
+      return (
+        <>
+          <ResultsLayoutSkeleton />
+            <Divider/>
+          <ResultsLayoutSkeleton />
+        </>
+      )
+    //Search was attempted but got no results, display search tips
+    else if (ctxState.hasSearched && (!this.props.results.length && !this.props.searching)) {
+      return (
+        <>
+          <Typography variant="h4">
+            {results.length} Results Found for "{this.props.titleRaw}"
+          </Typography>
+          <SearchTips />
+        </>
+      )
     }
-
-    try {
+    //If there are results, then diplay them
+    else {
       return (
-				<>
-          {this.state.hasSearched
-					? (
-              <Box id="search-process-results-container" 
-          sx={{
-            padding:0,
-          }}>
-					  <Typography margin={2}  marginLeft={1} color="primary" variant='h2'>
-  						Search results {''}
-  					</Typography>
-              <Grid container display={'flex'} sx={9} flex={1} id="results-text-container" >
-  						  <Typography variant="h4">{this.props.resultsText}&nbsp;</Typography>
-              {/* <CircularProgress/> */}
-  						<Tippy
-  							className='tippy-tooltip--small searchTips'
-  							trigger='manual click'
-  							hideOnClick={true}
-  							interactive={true}
-                placement='right'
-  							content={
-  								<div>
-  									The map view is a{' '}
-  									<span className='bold'>visual representation</span> of all
-  									states and counties found in the current results table.
-  									<div>
-  										• If you hover over a polygon, a tooltip will also show how
-  										many of the current results are linked to it.
-  									</div>
-  									<div>
-  										• You can toggle the state and/or county layer by clicking
-  										on the checkboxes in the upper left corner.
-  									</div>
-  								</div>
-  							}
-  						>
-  							{
-  								<span className={'side-link inline'}>
-  									<svg
-  										xmlns='http://www.w3.org/2000/svg'
-  										width='16px'
-  										height='16px'
-  										viewBox='0 0 100 100'
-  									>
-  										<path
-  											className='info-svg'
-  											d='M50.433,0.892c-27.119,0-49.102,21.983-49.102,49.102s21.983,49.103,49.102,49.103s49.101-21.984,49.101-49.103S77.552,0.892,50.433,0.892z M59,79.031C59,83.433,55.194,87,50.5,87S42,83.433,42,79.031V42.469c0-4.401,3.806-7.969,8.5-7.969s8.5,3.568,8.5,7.969V79.031z M50.433,31.214c-5.048,0-9.141-4.092-9.141-9.142c0-5.049,4.092-9.141,9.141-9.141c5.05,0,9.142,4.092,9.142,9.141C59.574,27.122,55.482,31.214,50.433,31.214z'
-  										/>
-  									</svg>
-  								</span>
-  							}
-  						</Tippy>
-
-              {this.props.hasSearched && this.props.searching ? <>Searching</> : <>Done</>}
-               <Typography variant='h6'> Results # {this.props.results.length}</Typography>
-                Searching: {this.props.searching}
-              Search Result Text: {this.props.resultsText}
-  						{this.props.results.map((result, index) => {
-  							return (
-  								<Grid item>
-  									<>
-                    <Typography paddingLeft={2} color={'primary'} variant='h5'>{(result.title) 
-                      ? <a onClick={this.onDetailLink(result.processId)} href="#">{result.title}</a>
-                      : ''}</Typography>
-  										<SearchResultCards result={result} />
-  										<SearchResultItems result={result} />
-  									</>
-  								</Grid>
-  							);
-  						})}
-  					  </Grid>
-					    </Box>
-            )
-          : (
-              <>
-                <SearchTips/>
-              </>
-            )
-          }
-				</>
-			);
-
-    } catch (e) {
-      if (e instanceof TypeError) {
-        // Tabulator trying to render new results before it switches to new column definitions
-        console.error("TypeError", e);
-      } else {
-        console.error(e);
-      }
-      return (
-        <div className="sidebar-results">
-          {/* <Typography variant="h4" id="results-label">First Search Result Items with # of results {this.props.results.length}
-            ResultsText= {this.props.resultsText}</Typography> */}
-          {this.props.results.map((result, index) => {
+        <>
+          {results.map((result, index) => {
             return (
-              <>
-                <b>{index}</b>
-                {/* <SearchResultItems result={result} /> */}
-              </>
-            )
-          })}
-        </div>
-      );
+              <Paper borderColor="#eee" marginTop={2}>
+                <Box id="search-results-parent-container-box" margintTop={1}  border={1} borderColor={"#eee"} paddingTop={1} paddingBottom={1} >           
+                <Typography paddingLeft={2} color={'primary'} variant='h4'>
+                  <Link  onClick={this.onDetailLink(result.processId)}>{result.title}</Link>
+                </Typography>
+
+                  <Box id="search-results-cards-container-box">
+                    <SearchResultCards result={result} />
+                  </Box>
+                  <Box id="search-results-items-container-box">
+                    <SearchResultItems result={result} />
+                  </Box>
+
+                </Box>
+              </Paper>
+            );
+          }
+          )}
+        </>
+      )
     }
   }
+
   componentDidMount() {
     // // Restore user's last viewed page in results if possible
     if (localStorage.unmountedPage) {
@@ -440,209 +522,6 @@ export default class SearchProcessResults extends React.Component {
   componentDidUpdate() {
     this.updateTableDebounced();
   }
-}
-const useStyles = makeStyles(theme => (
-  {
-    centeredContent: {
-      verticalAlign: 'center',
-      textAlign: 'center',
-      alignContent: 'center',
-      justifyContent: 'center',
-      justifyItems: 'center',
-      fontColor: '#000'
-
-    },
-    item: {
-      margin: 1,
-      padding: 1,
-      
-      borderColor: "#ccc"
-    },
-
-  }
-));
-
-export function SearchResultCards(props) {
-
-  const { result } = props;
-  const classes = useStyles(theme);
-  return (
-    <div 
-      //className={classes.root}
-    >
-
-      <Grid container
-        //className={classes.root}
-        padding={2} xs={12} flexDirection={'row'} flex={1}>
-        <Paper
-          sx={{
-            margin: 0.25,
-            padding: 1.5,
-            
-            borderColor: "#ccc",
-            //fontColor: "#222",
-            minHeight: 2,
-            lineHeight: 1,
-            justifyContent: 'center',
-            justifyItems: 'center',
-          }}
-          className={classes.Item}
-        >
-
-          Status: <b>{result.decision ? result.decision : 'N/A'}</b>
-        </Paper>
-        <Paper
-          className={classes.Item}
-          sx={{
-            margin: 0.25,
-            padding: 0.5,
-            
-            borderColor: "#ccc",
-//            lineHeight: 1,
-            justifyContent: 'center',
-            justifyItems: 'center',
-            fontSize: 16
-          }}
-        >
-          Date: <b>{result.commentDate ? result.commentDate : 'N/A'}</b>
-        </Paper>
-        <Paper
-          sx={{
-            margin: 0.25,
-            padding: 1.5,
-
-            borderColor: "#ccc",
-            minHeight: 2,
-            lineHeight: 1,
-            justifyContent: 'center',
-            justifyItems: 'center',
-
-          }}
-          className={classes.Item}
-        >
-          State: <b>{result.state ? result.state : 'N/A'}</b>
-        </Paper>
-        <Paper
-          sx={{
-            margin: 0.25,
-            padding: 1.5,
-            borderColor: "#ccc",
-            minHeight: 2,
-            lineHeight: 1,
-            justifyContent: 'center',
-            justifyItems: 'center',
-
-          }}
-          className={classes.Item}
-        >
-          County: <b>{result.county ? result.county : 'N/A'}</b>
-        </Paper>
-        <Paper
-          sx={{
-            margin: 0.25,
-            padding: 1.5,
-            borderColor: "#ccc",
-            minHeight: 2,
-            lineHeight: 1,
-            justifyContent: 'center',
-            justifyItems: 'center',
-
-          }}
-          className={classes.Item}
-        >
-          Action: <b>{result.action ? result.action : 'N/A'}</b>
-        </Paper>
-        <Paper
-          sx={{
-            margin: 0.25,
-            padding: 1.5,
-            borderColor: "#ccc",
-            minHeight: 2,
-            lineHeight: 1,
-            justifyContent: 'center',
-            justifyItems: 'center',
-
-          }}
-          className={classes.Item}
-        >
-          Decision <b>{result.decision ? result.decision : 'N/A'}</b>
-        </Paper>
-        {/* {(result.commentDate) 
-                ? ( */}
-        <Paper
-          sx={{
-            margin: 0.25,
-            padding: 1.5,
-            minHeight: 2,
-            lineHeight: 1,
-            justifyContent: 'center',
-            justifyItems: 'center',
-
-          }}
-          className={classes.Item}
-        >
-          Project Start Date: <b>{result.registerDate ? result.registerDate : 'N/A'}</b>
-        </Paper>
-        <Paper
-          sx={{
-            margin: 0.25,
-            padding: 1.5,
-            minHeight: 2,
-            lineHeight: 1,
-            justifyContent: 'center',
-            justifyItems: 'center',
-
-          }}
-          className={classes.Item}
-        >
-          Project Endate Date: <b>{result.commentDate ? result.commentDate : 'N/A'}</b>
-        </Paper>
-        <Paper
-          className={classes.Item}
-          sx={{
-            margin: 0.25,
-            padding: 1.5,
-            minHeight: 2,
-            lineHeight: 1,
-            justifyContent: 'center',
-            justifyItems: 'center',
-
-          }}
-        >
-          Final NOA: <b>{result.finalNoa ? result.finalNoa : 'N/A'}</b>
-        </Paper>
-        <Paper sx={{
-          margin: 0.25,
-          padding: 1.5,
-          minHeight: 2,
-          lineHeight: 1,
-          justifyContent: 'center',
-          justifyItems: 'center',
-
-        }}
-          className={classes.Item}
-        >
-          Draft NOA: <b>{result.draftNoa ? result.draftNoa : 'N/A'}</b>
-        </Paper>
-        <Paper
-          sx={{
-            margin: 0.25,
-            padding: 1.5,
-
-            borderColor: "#ccc",
-            minHeight: 2,
-            lineHeight: 1,
-            justifyContent: 'center',
-            justifyItems: 'center',
-
-          }}
-          className={classes.Item}
-        >
-          Process ID: <b>{result.processId ? result.processId : 'N/A'}</b>
-        </Paper>
-      </Grid>
-    </div>
-  );
 }
 
 // function uuidv4() {
