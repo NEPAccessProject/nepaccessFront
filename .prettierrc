@@ -1,17 +1,24 @@
 {
+
+  "arrowParens": "always",
+  "bracketSameLine": false,
+  "barcketLine": true,
   "bracketSpacing": true,
+  "editorconfig": true,
+  "endOfLine": "lf",
   "jsxBracketSameLine": true,
   "jsxSingleQuote": true,
-  "printWidth": 100,
+  "printWidth": 80,
+  "proseWrap": "always",
   "quoteProps": "as-needed",
+  "requirePragma": false,
   "semi": true,
+  "semicolons": true,
+  "singleAttributePerLine": false,
   "singleQuote": true,
   "tabWidth": 2,
   "trailingComma": "all",
   "useTabs": true,
-  "bracketSameLine": true,
-  "arrowParens": "always",
-  "vueIndentScriptAndStyle": true,
-  "endOfLine": "lf",
-  "singleAttributePerLine": true,
+  "vueIndentScriptAndStyle": true
+
 }
