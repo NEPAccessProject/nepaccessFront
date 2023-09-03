@@ -9,23 +9,21 @@ import "../survey.css";
 import "./search.css";
 
 import {
-	Box,
-	CircularProgress,
-	Container,
-	Paper
+  Box,
+  Container,
+  Paper
 } from "@mui/material";
+import Grid from '@mui/material/Grid'; // Grid version 1
 import { ThemeProvider, styled } from "@mui/material/styles";
-import { withStyles } from "@mui/styles";
+import { makeStyles } from "@mui/styles";
 import "react-datepicker/dist/react-datepicker.css";
 import { withRouter } from "react-router";
 import "tippy.js/dist/tippy.css"; // optional
 import Globals from "../globals.js";
 import persist from "../persist.js";
+import theme from "../styles/theme";
 import SearchContext from "./SearchContext.js";
 import SideBarFilters from './SideBarFilters';
-import theme from "../styles/theme";
-import Grid from '@mui/material/Grid'; // Grid version 1
-import { makeStyles } from "@mui/styles";
 
 import ResultsHeader from "./ResultsHeader";
 const useStyles = makeStyles((theme) => ({
@@ -860,16 +858,7 @@ class Search extends React.Component {
 									}
 									</Grid>
 									<Grid item xs={9} >
-										{/* <Typography fontSize={34}  variant='h1'>Header 1 </Typography>
-										<Typography fontSize={30}  variant='h2'>Header 2 </Typography>
-										<Typography fontSize={28} variant='h3'>Header 3 </Typography>
-										<Typography fontSize={26} variant='h4'>Header 4 </Typography>
-										<Typography fontSize={22} variant='h5'>Header 5 </Typography>
-										<Typography fontSize={14} variant='p'>phagraph one </Typography> */}
-		
-										{/* <Suspense fallback={<CircularProgress/>}> */}
 											{this.props.children}
-										{/* </Suspense> */}
 								 </Grid>
 							 </Grid>
 								
