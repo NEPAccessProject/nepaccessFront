@@ -1,11 +1,7 @@
 import React, { useEffect, useRef } from "react";
 import { Helmet } from "react-helmet";
-
 import { GeoJSON, MapContainer, Popup, TileLayer, Tooltip, ZoomControl } from "react-leaflet";
 import CustomSearchControl from './CustomSearchControl';
-
-// import { LatLngBounds } from "leaflet";
-
 import Globals from '../globals.js';
 
 import '../leaflet.css';

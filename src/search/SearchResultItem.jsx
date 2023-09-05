@@ -74,18 +74,13 @@ export default function SearchResultItem(props) {
     processId,
   } = record;
 
-  function onPDFPreviewToggle(evt) {
+  function onPDFPreviewToggle(evt,fileId,record) {
     console.log('PDF VIEW Toggle,evt', evt);
     evt.preventDefault();
-    setIsPDFViewOpen(!isPDFViewOpen)
-
+    setIsPDFViewOpen(true)
   }
   function onDocumentLoadSuccess({ numPages }) {
     setState({ ...state, numPages: numPages });
-  }
-  function onPDFPreviewToggle(evt) {
-    evt.preventDefault();
-    setIsPDFViewOpen(!isPDFViewOpen);
   }
   const handleDownloadClick = (evt, id) => {
     evt.preventDefault();
@@ -196,16 +191,24 @@ export default function SearchResultItem(props) {
                   alignItems={'center'}
                   borderColor={'#bbb'}
                 >
-                  {/* <PDFViewerDialog
+                  <PDFViewerDialog
                       id="pdf-viewer-dialog"
                       record={record}
                       isOpen={isPDFViewOpen}
                       onDialogClose={(evt)=>onPDFPreviewToggle(evt,processId)}
                       processId = {processId}
                       fileId = {record.id}
-                    /> */}
+                    />
+                            <PDFViewerDialog
+                                id="pdf-viewer-dialog"
+                                record={record}
+                                isOpen={isPDFViewOpen}
+                                onDialogClose={(evt)=>onPDFPreviewToggle(evt,processId)}
+                                processId = {processId}
+                                fileId = {record.id}/>
+                                
                   <Button
-                    onClick={(evt) => onPDFPreviewToggle(evt, processId)}
+                    onClick={(evt) => onPDFPreviewToggle(evt,record.id,record)}
                     color={'primary'}
                     variant="contained"
                   >
@@ -222,28 +225,13 @@ export default function SearchResultItem(props) {
                   alignItems={'center'}
                   display={'flex'}
                 >
-                  {/* { processId &&
-                      <PDFViewerDialog
-                        processId={processId}
-                        record={record}
-                        isOpen={isPDFViewOpen}
-                        fileId= {record.id}
-                      onDialogClose={(evt) => onPDFPreviewToggle(evt,processId)}
-                      />
-                    } */}
 
-                  {/* <Button
-                      onClick={(evt) => handleDownloadClick(evt)}
-                      color={'secondary'}
-                      display={'flex'}
-                      variant={'outlined'}
-                    > */}
                   <Button
                     onClick={(evt) => handleDownloadClick(evt)}
                     variant='contained'
                     color="secondary"
                   >
-                    Download
+                    isPDFViewOpen? {isPDFViewOpen}? - processId: {processId} - id: {id} Download
                   </Button>
                 </Grid>
               </Grid>

@@ -46,7 +46,7 @@ interface IStyles {
 }
 interface IProps {
 	files: IFiles;
-	onFileLinkClicked: (number) => {};
+	onFileLinkClicked: any; //(React.MouseEvent<HTMLElement>:evt,number) => {};
 }
 
 const useStyles = makeStyles((theme: Theme) => createStyles({
@@ -66,7 +66,7 @@ const useStyles = makeStyles((theme: Theme) => createStyles({
            height: '100%',
            width: '100%',
          },
-       }));
+}));
 
 export default function AvailablePDFsList(props : IProps) {
   const {onFileLinkClicked,files} =  props;
@@ -100,7 +100,7 @@ export default function AvailablePDFsList(props : IProps) {
 									<ListItem key={file.id}>
 										<Typography>
 											<Button
-												onClick={() => onFileLinkClicked(file.id)}
+												onClick={(evt) => onFileLinkClicked(evt,file.id)}
 												variant='text'>
 												{file.filename}
 											</Button>

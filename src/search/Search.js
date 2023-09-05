@@ -826,7 +826,9 @@ class Search extends React.Component {
 			>
 <ThemeProvider theme={theme}>
 					<SearchContext.Provider value={value}>
-						<Paper >
+						<Paper sx={{
+							marginTop:10
+						}}>
 							<Grid id="result-header-grid-container" container>{''}
 								<Grid container xs={12} flex={1} flexGrow={1} id="results-header-grid-container">
 											<ResultsHeader 

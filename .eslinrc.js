@@ -27,6 +27,6 @@ module.exports = {
     "react/jsx-uses-react": 2,
     "react/react-in-jsx-scope": 2,
     "react/no-children-prop": 2,
-
+    "react/no-unused-vars": 0 
   }
 };

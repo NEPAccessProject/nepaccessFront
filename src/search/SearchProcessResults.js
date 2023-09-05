@@ -301,150 +301,6 @@ export default class SearchProcessResults extends React.Component {
     //console.log('onDetailLink',processId);
     //this.props.onDetailLink(processId);
   }
-  // render() {
-  //   console.log(`🚀 ~ file: SearchProcessResults.js:97 ~ SearchProcessResults ~ constructor ~ this.context:`, this.context);
-  //   console.log(`🚀 ~ file: SearchProcessResults.js:97 ~ SearchProcessResults ~ constructor ~ Search Context:`, SearchContext);
-
-  //   if (!this.props.results || (!this.props.results.length > 0)) {
-  //     /** Show nothing until loading results. props.resultsText will just be "Results" before any search.
-  //      * During a search, it will be "Loading results..." and if 100+ async results we may
-  //      * simultaneously have 100 props.results.  After a search we won't hit this logic because we'll have props.results
-  //      */
-  //     if (this.props.resultsText !== "Results") {
-  //       return (
-  //         <>
-  //         <Box  padding={1} paddingLeft={3} paddingRight={3} id="search-results-box">
-  //             <Typography variant='h3' fontSize={20} >{this.state.searching}</Typography>
-
-  //             <Grid container id="search-tips-item-container" >
-  //               <Grid item id="search-tips-grid-item">
-  //                 <Grid paddingLeft={3} paddingRight={3} item xs={12} justifyContent={'center'} alignContent={'center'} > 
-  //                   {/* <divider>
-  //                     {(this.props.results.length  === 0)}
-  //                       ? Loading......
-  //                       <Box height={100} width={100}>
-  //                         <CircularProgress />
-  //                        </Box> 
-  //                       : <SearchTips/>
-  //                   </divider> */}
-  //                   <Skeleton variant="rectangular" width={'100%'} height={400} />
-  //                 </Grid>
-  //               </Grid>
-  //             </Grid>
-  //         </Box>
-
-  //         </>);
-  //     } else {
-  //       return <></>;
-  //     }
-  //   }
-
-  //   try {
-  //     return (
-  // 			<>
-  //         {this.state.hasSearched
-  // 				? (
-  //             <Box id="search-process-results-container" 
-  //         sx={{
-  //           padding:0,
-  //         }}>
-  // 				  <Typography margin={2}  marginLeft={1} color="primary" variant='h2'>
-  // 						Search results {''}
-  // 					</Typography>
-  //             <Grid container display={'flex'} sx={9} flex={1} id="results-text-container" >
-  // 						  <Typography variant="h4">{this.props.resultsText}&nbsp;</Typography>
-  //             {/* <CircularProgress/> */}
-  // 						<Tippy
-  // 							className='tippy-tooltip--small searchTips'
-  // 							trigger='manual click'
-  // 							hideOnClick={true}
-  // 							interactive={true}
-  //               placement='right'
-  // 							content={
-  // 								<div>
-  // 									The map view is a{' '}
-  // 									<span className='bold'>visual representation</span> of all
-  // 									states and counties found in the current results table.
-  // 									<div>
-  // 										• If you hover over a polygon, a tooltip will also show how
-  // 										many of the current results are linked to it.
-  // 									</div>
-  // 									<div>
-  // 										• You can toggle the state and/or county layer by clicking
-  // 										on the checkboxes in the upper left corner.
-  // 									</div>
-  // 								</div>
-  // 							}
-  // 						>
-  // 							{
-  // 								<span className={'side-link inline'}>
-  // 									<svg
-  // 										xmlns='http://www.w3.org/2000/svg'
-  // 										width='16px'
-  // 										height='16px'
-  // 										viewBox='0 0 100 100'
-  // 									>
-  // 										<path
-  // 											className='info-svg'
-  // 											d='M50.433,0.892c-27.119,0-49.102,21.983-49.102,49.102s21.983,49.103,49.102,49.103s49.101-21.984,49.101-49.103S77.552,0.892,50.433,0.892z M59,79.031C59,83.433,55.194,87,50.5,87S42,83.433,42,79.031V42.469c0-4.401,3.806-7.969,8.5-7.969s8.5,3.568,8.5,7.969V79.031z M50.433,31.214c-5.048,0-9.141-4.092-9.141-9.142c0-5.049,4.092-9.141,9.141-9.141c5.05,0,9.142,4.092,9.142,9.141C59.574,27.122,55.482,31.214,50.433,31.214z'
-  // 										/>
-  // 									</svg>
-  // 								</span>
-  // 							}
-  // 						</Tippy>
-
-  //             {this.props.hasSearched && this.props.searching ? <>Searching</> : <>Done</>}
-  //              <Typography variant='h6'> Results # {this.props.results.length}</Typography>
-  //               <Chip>Searching: {this.props.searching}</Chip>
-  //               <Chip>Search Result Text: {this.props.resultsText}</Chip>
-  // 						{this.props.results.map((result, index) => {
-  // 							return (
-  // 								<Grid item>
-  // 									<>
-  //                   <Typography paddingLeft={2} color={'primary'} variant='h5'>{(result.title) 
-  //                     ? <a onClick={this.onDetailLink(result.processId)} href="#">{result.title}</a>
-  //                     : ''}</Typography>
-  // 										<SearchResultCards result={result} />
-  // 										<SearchResultItems result={result} />
-  // 									</>
-  // 								</Grid>
-  // 							);
-  // 						})}
-  // 					  </Grid>
-  // 				    </Box>
-  //           )
-  //         : (
-  //             <>
-  //               <SearchTips/>
-  //             </>
-  //           )
-  //         }
-  // 			</>
-  // 		);
-
-  //   } catch (e) {
-  //     if (e instanceof TypeError) {
-  //       // Tabulator trying to render new results before it switches to new column definitions
-  //       console.error("TypeError", e);
-  //     } else {
-  //       console.error(e);
-  //     }
-  //     return (
-  //       <div className="sidebar-results">
-  //         {/* <Typography variant="h4" id="results-label">First Search Result Items with # of results {this.props.results.length}
-  //           ResultsText= {this.props.resultsText}</Typography> */}
-  //         {this.props.results.map((result, index) => {
-  //           return (
-  //             <>
-  //               <b>{index}</b>
-  //               {/* <SearchResultItems result={result} /> */}
-  //             </>
-  //           )
-  //         })}
-  //       </div>
-  //     );
-  //   }
-  // }
 
   render() {
     const ctxState = this.context.state;
@@ -454,21 +310,6 @@ export default class SearchProcessResults extends React.Component {
     if (this.props.searching)
       return (
         <>
-                   <b>this.props.searching: {this.props.searching}</b>
-                  <Divider/>
-                  <b>this.state.searching: {this.state.searching}</b>
-                  <Divider/>
-                  <b>this.props.results.length: {results.length}</b>
-                  <Divider/>
-                  <b>this.props.resultsText: {this.props.resultsText}</b>
-                  <Divider/>
-                  <b>this.state.resultsText: {this.state.resultsText}</b>
-                  <Divider/>
-                  <b>this.props.hasSearched: {this.props.hasSearched}</b>      
-                    <Divider/>
-                  <b>this.state.hasSearched: {this.state.hasSearched}</b>     
-                  <b>state.hasSearched {this.props.hasSearched}</b>  
-                          <Divider/>
           <ResultsLayoutSkeleton />
             <Divider/>
           <ResultsLayoutSkeleton />
@@ -477,9 +318,9 @@ export default class SearchProcessResults extends React.Component {
         </>
       )
     //Search was attempted but got no results, display search tips
-    else if (ctxState.hasSearched && (!this.props.results.length && !this.props.searching)) {
+    else if ((this.props.titleRaw && ctxState.hasSearched) && (!this.props.results.length && !this.props.searching)) {
       return (
-        <>
+        <> 
           <Typography variant="h4">
             {results.length} Results Found for "{this.props.titleRaw}"
           </Typography>
@@ -492,7 +333,6 @@ export default class SearchProcessResults extends React.Component {
 
       return (
         <>
-          {}
           {results.map((result, index) => {
             return (
               <Paper key={result.id}>
@@ -500,20 +340,6 @@ export default class SearchProcessResults extends React.Component {
                 <Typography paddingLeft={2} color={'primary'} variant='h4'>
                   <Link  onClick={this.onDetailLink(result.processId)}>{result.title}</Link>
                 </Typography>
-                  <b>this.props.searching: {this.props.searching}</b>
-                  <Divider/>
-                  <b>this.props.searching: {this.state.searching}</b>
-                  <Divider/>
-                  <b>this.props.results.length: {results.length}</b>
-                  <Divider/>
-                  <b>this.props.resultsText: {this.props.resultsText}</b>
-                  <Divider/>
-                  <b>this.state.resultsText: {this.state.resultsText}</b>
-                  <Divider/>
-                  <b>this.props.hasSearched: {this.props.hasSearched}</b>      
-                    <Divider/>
-                  <b>this.state.hasSearched: {this.state.hasSearched}</b>      
-                    <Divider/>
                   <Box id="search-results-cards-container-box">
                     <SearchResultCards result={result} />
                   </Box>

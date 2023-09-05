@@ -24,13 +24,15 @@ import {IFile,IFiles,IEISDoc} from '../Interfaces';
 
 interface IProps {
     file: IFile
+    currentFile: IFile;
 }
 
 export default function PDFContainer(props:IProps) {
   console.log(`🚀 ~ file: PDFViewerDialog.jsx:298 ~ PDFContainer ~ props:`, props);
-
-  const file:IFile = props.file;
-  const eisDoc: IEISDoc = file.eisdoc;
+  // const eisDoc: IEISDoc = file.eisdoc;
+  // const classes = useStyles();
+  const {file} = props;
+  if(!file) return (<div>File not found</div>);
   const fileUrl = `/docs/${file.filename}`;
   console.log(`🚀 ~ file: PDFContainer.tsx:36 ~ PDFContainer ~ fileUrl:`, fileUrl);
   return (
