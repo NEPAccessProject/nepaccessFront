@@ -616,6 +616,7 @@ export default class App extends React.Component {
         })
           .then((response) => {
             let responseOK = response && response.status === 200;
+            console.log(`${searchUrl} returned ${response.data.length} results`)
             if (responseOK) {
               // console.log("Initial search results returned");
               return response.data;
@@ -639,6 +640,8 @@ export default class App extends React.Component {
             }
           })
           .then((currentResults) => {
+            console.log(`🚀 ~ file: App.js:643 ~ App ~ .then ~ currentResults length:`, currentResults.length);
+
             let _data = [];
             if (currentResults && currentResults[0] && currentResults[0].doc) {
               // console.log("Raw results",currentResults);
@@ -686,6 +689,8 @@ export default class App extends React.Component {
               let processResults = {};
               processResults = this.buildData(_data);
               _data = processResults;
+              console.log(`🚀 ~ file: App.js:692 ~ App ~ .then ~ _data length:`, _data.length);
+
               // console.log("Process oriented results flattened",_data);
 
               // At this point we don't need the hashmap design anymore, it's just very fast for its purpose.
@@ -846,6 +851,8 @@ export default class App extends React.Component {
     })
       .then((response) => {
         let responseOK = response && response.status === 200;
+        console.log(`🚀 ~ file: App.js:854 ~ App ~ .then ~ response length`, response.length);
+
         if (responseOK) {
           return response.data;
         } else if (response.status === 204) {

@@ -149,7 +149,7 @@ const SideBarFilters = (props) => {
                     renderInput={(params) => (
                       <TextField
                         {...params}
-                        value={state.agencyRaw}
+                        //value={state.agencyRaw}
                         variant="outlined"
                         sx={{
                           width: "100%",
@@ -186,7 +186,7 @@ const SideBarFilters = (props) => {
                     tabIndex="4"
                     options={agencyOptions}
                     onChange={onCooperatingAgencyChange}
-                    value={state.cooperatingAgencyRaw}
+                    //value={state.cooperatingAgencyRaw}
                     placeholder="Type or select agencies"
                     fullWidth
                     autoComplete={true}
@@ -197,11 +197,11 @@ const SideBarFilters = (props) => {
                     variant="standard"
                     // menuIsOpen={true}
 
-                    getOptionLabel={(agencyOptions) => agencyOptions.label}
+                    getOptionLabel={(agencyOptions) => `${agencyOptions.label}`}
                     renderInput={(params) => (
                       <TextField
                         {...params}
-                        value={state.agencyRaw}
+                        //value={state.agencyRaw}
                         variant="outlined"
                         sx={{
                           width: "100%",
@@ -304,7 +304,7 @@ const SideBarFilters = (props) => {
                       tabIndex="7"
                       options={actionOptions}
                       onChange={onActionChange}
-                      value={state.actionRaw}
+                      //value={state.actionRaw}
                       placeholder="Type or select action type"
                       renderInput={(params) => (
                         <TextField
@@ -341,7 +341,7 @@ const SideBarFilters = (props) => {
                     tabIndex="8"
                     options={decisionOptions}
                     onChange={onDecisionChange}
-                    value={state.decisionRaw}
+                    //value={state.decisionRaw}
                     placeholder="Type or select decision"
                     // getOptionLabel={(stateOptions) => `${stateOptions.label}`}
                     renderInput={(params) => (

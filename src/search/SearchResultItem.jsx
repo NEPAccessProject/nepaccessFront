@@ -32,7 +32,7 @@ export default function SearchResultItem(props) {
   const { state, setState } = context;
   const _mounted = useRef(false);
   const { record } = props;
-  console.log(`🚀 ~ file: SearchResultItem.jsx:35 ~ SearchResultItem ~ Record ID ${record.id} - title : ${record.title}    record:`, record);
+//  console.log(`🚀 ~ file: SearchResultItem.jsx:35 ~ SearchResultItem ~ Record ID ${record.id} - title : ${record.title}    record:`, record);
 
   const onCheckboxChange = (evt) => {
     //console.log('Checkbox changed, setting showContext to ', evt.target.checked);
@@ -44,10 +44,8 @@ export default function SearchResultItem(props) {
   // console.log("🚀 ~ file: SearchResultsItems.jsx:129 ~ SearchResultItem ~ propss / record:", props)
 
   useEffect(() => {
-    console.log('SearchResultItem is being mounted');
     _mounted.current = true;
     return (() => {
-      console.log('UnMounted SearchResyltItem');
       _mounted.current = false
     })
   }, [])

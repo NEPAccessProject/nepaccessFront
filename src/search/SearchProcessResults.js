@@ -1,7 +1,5 @@
-import { Box,Button, Container, Paper, Typography, Chip, Skeleton, Divider, withStyles,Link } from "@mui/material";
-import Grid from '@mui/material/Grid'; // Grid version 1
-import { makeStyles, styled } from "@mui/styles";
-import Tippy from "@tippyjs/react";
+import { Box, Divider, Link, Paper, Skeleton, Typography } from "@mui/material";
+import { styled } from "@mui/styles";
 import React from "react";
 import { reactFormatter } from "react-tabulator";
 import "react-tabulator/lib/css/tabulator_site.min.css"; // theme
@@ -9,15 +7,13 @@ import "react-tabulator/lib/styles.css"; // required styles
 import "../cardProcess.css";
 import Globals from "../globals.js";
 import "../loader.css";
-import theme from '../styles/theme.ts';
 import "./search.css";
 //import SearchProcessResult from "./SearchProcessResult.js";
+import SearchContext from './SearchContext';
 import SearchProcessResult from "./SearchProcessResult";
 import SearchResultItems from './SearchResultsItems.jsx';
 import SearchTips from './SearchTips.jsx';
-import SearchContext from './SearchContext';
 //import SearchResultItems from "./SearchResultsItems.jsx";
-import CircularProgress from '@mui/material/CircularProgress';
 import ResultsLayoutSkeleton from './ResultsLayoutSkeleton';
 import SearchResultCards from './SearchResultCards';
 
@@ -453,13 +449,28 @@ export default class SearchProcessResults extends React.Component {
   render() {
     const ctxState = this.context.state;
     const { results } = this.props;
-    console.log('render context state', this.context.state);
-    console.log('render context setState', this.context.setState);
 
     //If searching display skeleton
     if (this.props.searching)
       return (
         <>
+                   <b>this.props.searching: {this.props.searching}</b>
+                  <Divider/>
+                  <b>this.state.searching: {this.state.searching}</b>
+                  <Divider/>
+                  <b>this.props.results.length: {results.length}</b>
+                  <Divider/>
+                  <b>this.props.resultsText: {this.props.resultsText}</b>
+                  <Divider/>
+                  <b>this.state.resultsText: {this.state.resultsText}</b>
+                  <Divider/>
+                  <b>this.props.hasSearched: {this.props.hasSearched}</b>      
+                    <Divider/>
+                  <b>this.state.hasSearched: {this.state.hasSearched}</b>     
+                  <b>state.hasSearched {this.props.hasSearched}</b>  
+                          <Divider/>
+          <ResultsLayoutSkeleton />
+            <Divider/>
           <ResultsLayoutSkeleton />
             <Divider/>
           <ResultsLayoutSkeleton />
@@ -478,16 +489,31 @@ export default class SearchProcessResults extends React.Component {
     }
     //If there are results, then diplay them
     else {
+
       return (
         <>
+          {}
           {results.map((result, index) => {
             return (
-              <Paper borderColor="#eee" marginTop={2}>
-                <Box id="search-results-parent-container-box" margintTop={1}  border={1} borderColor={"#eee"} paddingTop={1} paddingBottom={1} >           
+              <Paper key={result.id}>
+                <Box id="search-results-parent-container-box" border={1} borderColor={"#eee"} paddingTop={1} paddingBottom={1} >           
                 <Typography paddingLeft={2} color={'primary'} variant='h4'>
                   <Link  onClick={this.onDetailLink(result.processId)}>{result.title}</Link>
                 </Typography>
-
+                  <b>this.props.searching: {this.props.searching}</b>
+                  <Divider/>
+                  <b>this.props.searching: {this.state.searching}</b>
+                  <Divider/>
+                  <b>this.props.results.length: {results.length}</b>
+                  <Divider/>
+                  <b>this.props.resultsText: {this.props.resultsText}</b>
+                  <Divider/>
+                  <b>this.state.resultsText: {this.state.resultsText}</b>
+                  <Divider/>
+                  <b>this.props.hasSearched: {this.props.hasSearched}</b>      
+                    <Divider/>
+                  <b>this.state.hasSearched: {this.state.hasSearched}</b>      
+                    <Divider/>
                   <Box id="search-results-cards-container-box">
                     <SearchResultCards result={result} />
                   </Box>

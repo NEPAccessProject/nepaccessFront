@@ -20,10 +20,10 @@ export default function RenderSnippets(props) {
     const {
       record
     } = props;
-      console.log('RenderSnippets props.record', record);
+    
+    //console.log('RenderSnippets props.record', record);
     const { state, setState } = useContext(SearchContext);
   
-    //  console.log("🚀 ~ file: SearchResultsItems.jsx:343 ~ RenderSnippets ~ record:", record)
     const [isPDFViewOpen, setIsPDFViewOpen] = useState(false);
     const [isContentExpanded, setIsContentExpanded] = useState(false);
     const { hideText, hidden } = state;
@@ -54,21 +54,15 @@ export default function RenderSnippets(props) {
     //  console.log("🚀 ~ file: SearchResultsItems.jsx:343 ~ RenderSnippets ~ record:", record)
     const [isContentExpanded, setIsContentExpanded] = useState(false);
     const { hideText, hidden } = state;
-    console.log(`🚀 ~ file: SearchResultSnippets.jsx:57 ~ Snippets ~ state:`, state);
 
     const _mounted = useRef(false);
     useEffect(()=>{
       _mounted.current = true
-      console.log('Snippets Component mounted')
       return (()=>{
-        console.log('Snippets Component Unmounted')
       })
     },[])
 
     const classes = useStyles(theme);
-    console.log(`🚀 ~ file: SearchResultSnippets.jsx:60 ~ Snippets ~ classes:`, classes);
-
-    console.log(`🚀 ~ file: SearchResultSnippets.jsx:60 ~ Snippets ~ theme:`, theme);
 
 
     /*Originaly the app was designed to render the markup embedded with tags using:
@@ -76,7 +70,7 @@ export default function RenderSnippets(props) {
       However, this can either break the page by having an unclosed tag(s) and give a potential XSS vector
   */
     const snippet = text.replace(/<\/?[^>]+(>|$)/g, "");
-    console.log(`🚀 ~ file: SearchResultSnippets.jsx:65 ~ Snippets ~ snippet:`, snippet);
+//    console.log(`🚀 ~ file: SearchResultSnippets.jsx:65 ~ Snippets ~ snippet:`, snippet);
     function convertToHTML(content) {
       return { __html: content };
     }

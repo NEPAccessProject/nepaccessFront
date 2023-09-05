@@ -90,7 +90,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function SearchResultItems(props) {
-  console.log(`🚀 ~ file: SearchResultsItems.jsx:102 ~ SearchResultItems ~ props:`, props);
+//  console.log(`🚀 ~ file: SearchResultsItems.jsx:102 ~ SearchResultItems ~ props:`, props);
 
   const context = useContext(SearchContext);
   const [isPDFViewOpen, setIsPDFViewOpen] = useState(false);
@@ -115,7 +115,8 @@ export default function SearchResultItems(props) {
               {/* {JSON.stringify(record)} */}
               {/* <Divider /> */}
               {/* <Typography color={'secondary'} variant='h5'> {record.title}</Typography> */}
-              <Box borderColor='#ccc' borderStyle="dotted" id="search-result-item-container-box">
+              <Box borderColor='#ccc' id="search-result-item-container-box">
+                <Typography variant="h5">INDEX:{idx}</Typography>
                 <SearchResultItem record={record} />
               </Box>
             </Box>
