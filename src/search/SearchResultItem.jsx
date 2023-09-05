@@ -6,7 +6,7 @@ import theme from '../styles/theme';
 import PDFViewerDialog from './Dialogs/PDFViewerDialog';
 import SearchContext from './SearchContext';
 import RenderSnippets from './SearchResultSnippets.jsx';
-
+import {createPortal} from'react-dom';
 
 const useStyles = makeStyles((theme) => ({
   centered: {
@@ -78,6 +78,21 @@ export default function SearchResultItem(props) {
     console.log('PDF VIEW Toggle,evt', evt);
     evt.preventDefault();
     setIsPDFViewOpen(true)
+  }
+
+  function showPDFPreview(evt,fileId,record) {
+    console.log('PDF VIEW Toggle,evt', evt);
+    evt.preventDefault();
+    setIsPDFViewOpen(true)
+      {createPortal(
+      <PDFViewerDialog
+      id="pdf-viewer-dialog"
+      record={record}
+      isOpen={true}
+      onDialogClose={(evt)=>onPDFPreviewToggle(evt,processId)}
+      processId = {processId}
+      fileId = {record.id}/>
+    )}
   }
   function onDocumentLoadSuccess({ numPages }) {
     setState({ ...state, numPages: numPages });
@@ -191,21 +206,8 @@ export default function SearchResultItem(props) {
                   alignItems={'center'}
                   borderColor={'#bbb'}
                 >
-                  <PDFViewerDialog
-                      id="pdf-viewer-dialog"
-                      record={record}
-                      isOpen={isPDFViewOpen}
-                      onDialogClose={(evt)=>onPDFPreviewToggle(evt,processId)}
-                      processId = {processId}
-                      fileId = {record.id}
-                    />
-                            <PDFViewerDialog
-                                id="pdf-viewer-dialog"
-                                record={record}
-                                isOpen={isPDFViewOpen}
-                                onDialogClose={(evt)=>onPDFPreviewToggle(evt,processId)}
-                                processId = {processId}
-                                fileId = {record.id}/>
+                  
+                          
                                 
                   <Button
                     onClick={(evt) => onPDFPreviewToggle(evt,record.id,record)}
