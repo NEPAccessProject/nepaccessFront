@@ -110,7 +110,7 @@ declare module "@mui/material/Typography" {
 		},
 
 		shape: {
-			borderRadius: 4,
+			//borderRadius: 4,
 		},
 		components: {
 			// Name of the component
