@@ -71,6 +71,7 @@ import MUITheme from './examples/MUITheme';
 import ImporterAlignment from './ImporterAlignment';
 import PDFViewerDialog from './search/Dialogs/PDFViewerDialog';
 import theme from './styles/theme';
+import Playground from './examples/Playground';
 
 const _ = require('lodash');
 
@@ -364,6 +365,7 @@ class Main extends React.Component {
                     <Route path="/up_alignment" component={ImporterAlignment} />
                     <Route path="/pdf" component={PDFViewerDialog}/>
                     <Route path="/styles" component={MUITheme}/>
+                    <Route path="/playground" component={Playground} />
                     {/* <Route path="/react_query" component={ReactQuery}/> */}
                     <Route path="/" component={Landing}/>
                 </Switch>

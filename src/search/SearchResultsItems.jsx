@@ -116,7 +116,6 @@ export default function SearchResultItems(props) {
               {/* <Divider /> */}
               {/* <Typography color={'secondary'} variant='h5'> {record.title}</Typography> */}
               <Box borderColor='#ccc' id="search-result-item-container-box">
-                <Typography variant="h5">INDEX:{idx}</Typography>
                 <SearchResultItem record={record} />
               </Box>
             </Box>

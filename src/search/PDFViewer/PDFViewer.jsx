@@ -1,10 +1,11 @@
-import { Viewer, Worker } from '@react-pdf-viewer/core';
-import { SelectionMode } from '@react-pdf-viewer/selection-mode';
-import { toolbarPlugin } from '@react-pdf-viewer/toolbar';
-import * as React from 'react';
-import { Box, Button, Divider, Grid, Paper, Typography } from '@mui/material';
+import { Grid, Snackbar, Typography } from '@mui/material';
+import { Alert } from '@mui/material/';
+
+import { ProgressBar, Viewer, Worker } from '@react-pdf-viewer/core';
 import '@react-pdf-viewer/core/lib/styles/index.css';
+import { toolbarPlugin } from '@react-pdf-viewer/toolbar';
 import '@react-pdf-viewer/toolbar/lib/styles/index.css';
+import { useState } from 'react';
 
 const workerUrl = "https://unpkg.com/pdfjs-dist@3.4.120/build/pdf.worker.min.js";
 
@@ -12,6 +13,11 @@ const workerUrl = "https://unpkg.com/pdfjs-dist@3.4.120/build/pdf.worker.min.js"
 //[TODO][REFACTOR] need to break this into two components.  One as container responsible for get and handling the file and display component that just takes that as an arg
 const PDFViewer = (props) => {
   console.log(`🚀 ~ file: PDFViewer.jsx:12 ~ PDFViewer ~ props:`, props);
+  const [hasError,setHasError] = useState(false);
+  const [hasInfo,setHasInfo] = useState(false);
+  const [hasSuccess,setHasSuccess] = useState(false);
+  const [hasWarning,setHasWarning] = useState(false);
+
 
   //const {fileUrl,file} = props;
   const {file,fileUrl} = props
@@ -33,6 +39,48 @@ const PDFViewer = (props) => {
         },
     });
     const { Toolbar } = toolbarPluginInstance;
+    const onDocumentLoad = (evt,doc) => {
+        console.log('Document loaded:', doc,evt);
+        return(
+          <>
+          <Snackbar open={hasError} autoHideDuration={6000} onClose={()=>setHasError(false)}>
+            <Alert  severity="info">On Document Load</Alert>
+          </Snackbar>
+          </>
+        )
+    };
+    const handleDocumentLoad = (evt) => {
+      console.log(`Number of pages: ${evt.doc.numPages}`);
+  };
+  const handleDocumentError = (evt) => {
+//    setHasInfo(true);
+    return(
+      <>
+      <Snackbar open={true} autoHideDuration={6000} onClose={()=>setHasError(false)}>
+        <Alert  severity="error">On Document Load</Alert>
+      </Snackbar>
+      </>
+    )
+  }
+ const onErrorRender = (msg,name) =>{
+    console.log("🚀 ~ file: PDFViewer.jsx ~ line 54 ~ PDFViewer ~ msg,name", msg,name);   
+    return(
+      <>
+      <Snackbar open={true} autoHideDuration={6000} onClose={()=>setHasError(false)}>
+        <Alert  severity="error">{name}-{msg}</Alert>
+      </Snackbar>
+      </>
+    )
+  }
+  const onPageRender = (page) => {
+    return(
+      <>
+      <Snackbar open={true} autoHideDuration={6000} onClose={()=>setHasError(false)}>
+        <Alert  severity="error">On Page Render !</Alert>
+      </Snackbar>
+      </>
+    )
+  }
 
     return (
         
@@ -43,8 +91,31 @@ const PDFViewer = (props) => {
                         <Typography variant="h5">{file.name}</Typography>
                     </Grid>
                     <Grid item xs={12}>
+                            <Snackbar open={hasError} autoHideDuration={6000} onClose={()=>setHasError(false)}>
+                              <Alert  severity="error">This is an error message!</Alert>
+                            </Snackbar>
+                            <Snackbar open={hasWarning} autoHideDuration={6000} onClose={()=>setHasWarning(false)}>
+                            <Alert severity="warning">This is a warning message!</Alert>
+                            </Snackbar>
+
+                            <Snackbar open={hasInfo} autoHideDuration={6000} onClose={()=>setHasInfo(false)}>
+                            <Alert severity="info">Loading ...</Alert>
+                            </Snackbar>
+                            <Snackbar open={hasSuccess} autoHideDuration={6000} onClose={()=>setHasSuccess(false)}>
+                            <Alert severity="success">This is a success message!</Alert>
+                            </Snackbar>
                     <Worker workerUrl={workerUrl}>
-                      <Viewer fileUrl={fileUrl}
+                      <Viewer 
+                        renderError={onErrorRender}
+                        renderPage={onPageRender}
+                        onDocumentLoad={handleDocumentLoad}
+                        renderLoader={(percentages) => (
+                          <div style={{ width: '240px' }}>
+                              <ProgressBar progress={Math.round(percentages)} />
+                          </div>
+                        )}
+                        onDocumentLoad={onDocumentLoad} 
+                        fileUrl={fileUrl}
                 plugins={[Toolbar]} 
                         />
                     </Worker>
