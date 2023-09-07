@@ -57,7 +57,7 @@ const PDFViewer = (props) => {
     return(
       <>
       <Snackbar open={true} autoHideDuration={6000} onClose={()=>setHasError(false)}>
-        <Alert  severity="error">On Document Load</Alert>
+        <Alert  severity="error">On Document Load Error</Alert>
       </Snackbar>
       </>
     )
@@ -67,16 +67,17 @@ const PDFViewer = (props) => {
     return(
       <>
       <Snackbar open={true} autoHideDuration={6000} onClose={()=>setHasError(false)}>
-        <Alert  severity="error">{name}-{msg}</Alert>
+        <Alert  severity="error">{`${name} -  ${msg}`}</Alert>
       </Snackbar>
       </>
     )
   }
   const onPageRender = (page) => {
+    console.log("🚀 ~ file: PDFViewer.jsx:76 ~ onPageRender ~ page:", page)
     return(
       <>
-      <Snackbar open={true} autoHideDuration={6000} onClose={()=>setHasError(false)}>
-        <Alert  severity="error">On Page Render !</Alert>
+      <Snackbar open={true} autoHideDuration={6000} onClose={()=>setHasInfo(false)}>
+        <Alert  severity="info">On Page Render !</Alert>
       </Snackbar>
       </>
     )
@@ -90,20 +91,7 @@ const PDFViewer = (props) => {
                     <Grid item xs={12} alignItems='center' justifyContent='center'>
                         <Typography variant="h5">{file.name}</Typography>
                     </Grid>
-                    <Grid item xs={12}>
-                            <Snackbar open={hasError} autoHideDuration={6000} onClose={()=>setHasError(false)}>
-                              <Alert  severity="error">This is an error message!</Alert>
-                            </Snackbar>
-                            <Snackbar open={hasWarning} autoHideDuration={6000} onClose={()=>setHasWarning(false)}>
-                            <Alert severity="warning">This is a warning message!</Alert>
-                            </Snackbar>
-
-                            <Snackbar open={hasInfo} autoHideDuration={6000} onClose={()=>setHasInfo(false)}>
-                            <Alert severity="info">Loading ...</Alert>
-                            </Snackbar>
-                            <Snackbar open={hasSuccess} autoHideDuration={6000} onClose={()=>setHasSuccess(false)}>
-                            <Alert severity="success">This is a success message!</Alert>
-                            </Snackbar>
+                   
                     <Worker workerUrl={workerUrl}>
                       <Viewer 
                         renderError={onErrorRender}
@@ -120,7 +108,6 @@ const PDFViewer = (props) => {
                         />
                     </Worker>
                     </Grid>
-                  </Grid>
                 </>
         //     </div>
         // </div>

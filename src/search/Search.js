@@ -832,6 +832,9 @@ class Search extends React.Component {
 							<Grid id="result-header-grid-container" container>{''}
 								<Grid container xs={12} flex={1} flexGrow={1} id="results-header-grid-container">
 											<ResultsHeader 
+                        handleProximityValues={this.handleProximityValues}
+                        onInput={this.onInput}
+                        titleRaw= {this.state.titleRaw}
 												results={this.state.results}
 												total={this.state.total}
 											/>

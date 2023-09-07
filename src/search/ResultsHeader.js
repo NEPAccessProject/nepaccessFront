@@ -26,17 +26,16 @@ export default class ResultsHeader extends React.Component {
 
   constructor(props) {
     super(props);
-    this.titleRaw = props.titleRaw;
-    this.results = props.results;
-    this.state = props.state;
+    const {onInput,handleProximityValues,state,results,titleRaw} = props;
+    console.log("🚀 ~ file: ResultsHeader.js:30 ~ ResultsHeader ~ constructor ~ props:", props)
 
-    console.log("🚀 ~ file: ResultsHeader.js:25 ~ constructor ~ props:", props);
     this.state = {
       sort: { value: "relevance", label: "Relevance" },
       order: { value: true, label: "^" },
     };
   }
 
+  
   toggleSearchTipsDialog = (evt) => {
     console.log(
       "🚀 ~ file: ResultsHeader.js:22 ~ toggleSearchTipsDialog ~ evt:",
@@ -68,7 +67,6 @@ export default class ResultsHeader extends React.Component {
       );
     }
   };
-
   onSortOrderChange = (value_label, event) => {
     if (event.action === "select-option") {
       this.setState(
@@ -191,8 +189,8 @@ export default class ResultsHeader extends React.Component {
                   id="main-search-text-field"
                   name="titleRaw"
                   variant="outlined"
-                  // focused
-                  // onInput={onInput}
+                  focused
+                  onInput={(evt)=>this.onInput(evt)}
                   // onKeyUp={onKeyUp}
                   // onKeyDown={onKeyDown}
                   placeholder="Search for NEPA documents"

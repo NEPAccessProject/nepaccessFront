@@ -28,10 +28,11 @@ interface IProps {
 }
 
 export default function PDFContainer(props:IProps) {
-  console.log(`🚀 ~ file: PDFViewerDialog.jsx:298 ~ PDFContainer ~ props:`, props);
+//  console.log(`🚀 ~ file: PDFViewerDialog.jsx:298 ~ PDFContainer ~ props:`, props);
   // const eisDoc: IEISDoc = file.eisdoc;
   // const classes = useStyles();
   const {file} = props;
+  console.log("🚀 ~ file: PDFContainer.tsx:35 ~ PDFContainer ~ props:", props)
   if(!file) return (<div>File not found</div>);
   const fileUrl = `/docs/${file.filename}`;
   console.log(`🚀 ~ file: PDFContainer.tsx:36 ~ PDFContainer ~ fileUrl:`, fileUrl);

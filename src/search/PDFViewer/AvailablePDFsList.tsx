@@ -69,7 +69,19 @@ const useStyles = makeStyles((theme: Theme) => createStyles({
 }));
 
 export default function AvailablePDFsList(props : IProps) {
+  const [selectedFileId,setSelectedFileId] = useState<number>(0);
+
   const {onFileLinkClicked,files} =  props;
+
+  const _onFileLinkClicked = (evt,fileid) => {
+    let file:any = _.find(files, { id: fileid });
+    console.log("🚀 ~ file: AvailablePDFsList.tsx:78 ~ AvailablePDFsList ~ file:", file)
+    const {id} = file;
+    setSelectedFileId(id);
+    console.log("🚀 ~ file: AvailablePDFsList.tsx:139 ~ ResponsiveDrawer ~ file:", file)
+
+  }
+
 //  const eisDoc: IEISDoc = file.eisdoc;
   const classes = useStyles(theme);
 //  const eisDoc: IEISDoc;
@@ -85,29 +97,30 @@ export default function AvailablePDFsList(props : IProps) {
 						classes={classes.centered}
 						padding={2}>
 						<Typography variant='h4'>Related Files</Typography>
+            <Typography variant='h6'>Selected File ID {selectedFileId} </Typography>
 						<Divider />
 					</Grid>
 					<Grid
 						item
+
+            border={1}
 						xs={12}>
-						<List
-							sx={{
-								padding: 1,
-							}}>
 							{files &&
 								files.length &&
 								files.map((file: IFile, idx: number) => (
 									<ListItem key={file.id}>
-										<Typography>
 											<Button
-												onClick={(evt) => onFileLinkClicked(evt,file.id)}
-												variant='text'>
-												{file.filename}
+												onClick={(evt) => _onFileLinkClicked(evt,file.id)}
+                        variant="text"
+                        >
+                        <Typography textAlign={'left'} display={"block"} variant={"caption"}>
+                          {file.filename}
+                          </Typography>
+                        <Typography textAlign='left' variant="subtitle1">{file.size ? (file.size / 1024 / 1024).toFixed(2) +" mb"  : '' } </Typography>                        
 											</Button>
-										</Typography>
 									</ListItem>
-								))}
-						</List>
+								))
+                }
             <Divider/>
 <Container>
               <Button name="download" id="download-zip-button">
@@ -134,6 +147,7 @@ export function ResponsiveDrawer(props: IDrawerProps) {
 	const { window, files,onFileLinkClicked } = props;
 	const [mobileOpen, setMobileOpen] = React.useState(false);
 
+
 	const handleDrawerToggle = (evt) => {
     console.log('onDrawerOpen Place holder evt', evt);
     evt.preventDefault();
@@ -157,7 +171,7 @@ export function ResponsiveDrawer(props: IDrawerProps) {
 						<ListItem key={file.id}>
 							<Typography>
 								<Button
-									onClick={() => onFileLinkClicked(file.id)}
+									onClick={(evt) => onFileLinkClicked(evt,file.id)}
 									variant='text'>
 									{file.filename}
 								</Button>

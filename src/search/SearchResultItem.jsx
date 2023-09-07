@@ -118,15 +118,12 @@ export default function SearchResultItem(props) {
     setIsOpen(false)
 		setModal('')
 	}
-	const ModalManager = ({
-	record={},
-	id = 0,
-	closeFn = () => null,
-	modal = '',
-	isOpen = false
-}) => (
-	<>
-	<h4>PDF VIEWER RECORD ID {record.id}</h4>
+	const ModalManager = (props) => {
+    console.log("🚀 ~ file: SearchResultItem.jsx:122 ~ ModalManager ~ props:", props)
+    const {record={},id=0,modal='',isOpen=false} = props
+    return (
+  <>
+  { isOpen && 
   <PDFViewerDialog
 			id={`pdf-dialog-${id}`}
 			name={`modal-${record.id}`}
@@ -134,7 +131,8 @@ export default function SearchResultItem(props) {
 			//isOpen={isOpen[record.id]}
 			isOpen={isOpen && currentModalId === `modal-${record.id}`}
 			onDialogClose={(evt) => closeModal(evt, record.id)}
-			fileId={id} />
+			/>
+  }
 		{/* <ModalOne
 			closeFn={closeFn}
 			open={modal === `modal-${id}`} /> */}
@@ -148,7 +146,7 @@ export default function SearchResultItem(props) {
 			open={modal === 'modal-three'} />
 	*/}
 	</>
-)
+  )};
 	const year = commentDate && commentDate.length > 0 ? new Date(commentDate).getFullYear() : 'N/A';
 	const text = record.plaintext || '';
 	return (
@@ -156,6 +154,10 @@ export default function SearchResultItem(props) {
 			<div id="portal-root">
 
 			</div>
+      <div id="modal-root">
+
+			</div>
+      
 			{/* {createPortal(
 				<PDFViewerDialog
 					id={`pdf-dialog-${id}`}
@@ -262,12 +264,11 @@ export default function SearchResultItem(props) {
 									<Button color={'primary'} 
                     variant={'contained'} 
                     data-modal={`modal-${record.id}`} 
-                    onClick={(evt)=> openModal(evt, processId,record.id)}>
-                      Open Record ID: {record.id} - processId: {processId}
+                    onClick={(evt)=> openModal(evt, record.id)}>
+                      Preview PDF
                     </Button>
-									<Grid border={1}>
-                    <Typography>modal-{record.id}</Typography>
-                    {currentModalId === `modal-${record.id}` &&
+									<Grid>
+                    {/*                     
                       <PDFViewerDialog
                           id={`pdf-dialog-${id}`}
                           name={`modal-${record.id}`}
@@ -277,8 +278,13 @@ export default function SearchResultItem(props) {
                           isOpen={isOpen && currentModalId === `modal-${record.id}`}
                           onDialogClose={(evt) => closeModal(evt, record.id)}
                           fileId={id} />
-                    }
-									{/* <ModalManager record={record} id={record.id} closeFn={closeModal} modal={modalOpen} /> */}
+                   */}
+									<ModalManager 
+                    record={record} 
+                    id={record.id}
+                    isOpen={isOpen}
+                    closeFn={closeModal} 
+                    modal={modalOpen} />
 									</Grid>
 
 									{/* 
