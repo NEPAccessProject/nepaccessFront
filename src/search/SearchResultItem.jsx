@@ -35,16 +35,12 @@ export default function SearchResultItem(props) {
 	const [modalOpen, setModal] = useState(false)
 	const [currentModalId,setCurrentModalId] = useState(0)
 
-	//  console.log(`🚀 ~ file: SearchResultItem.jsx:35 ~ SearchResultItem ~ Record ID ${record.id} - title : ${record.title}    record:`, record);
-
 	const onCheckboxChange = (evt) => {
-		//console.log('Checkbox changed, setting showContext to ', evt.target.checked);
 		setState({
 			...state,
 			showContext: evt.target.checked,
 		});
 	};
-	// console.log("🚀 ~ file: SearchResultsItems.jsx:129 ~ SearchResultItem ~ propss / record:", props)
 
 	useEffect(() => {
 		_mounted.current = true;
@@ -102,24 +98,20 @@ export default function SearchResultItem(props) {
 
 
 	const openModal = ((event,id) => {
-		console.log(`🚀 ~ file: SearchResultItem.jsx:103 ~ openModal ~ event:`, event);
 		event.preventDefault()
 		const { target: { dataset: { modal } } } = event
 		setCurrentModalId(`modal-${id}`)
 		setIsOpen(true)
-		console.log('Setting modal to ', modal)
 		if (modal) setModal(modal)
 	})
 
 
 	const closeModal = (evt,id) => {
-    console.log(`🚀 ~ file: SearchResultItem.jsx:113 ~ closeModal ~ evt:`, evt);
     setCurrentModalId(null)
     setIsOpen(false)
 		setModal('')
 	}
 	const ModalManager = (props) => {
-    console.log("🚀 ~ file: SearchResultItem.jsx:122 ~ ModalManager ~ props:", props)
     const {record={},id=0,modal='',isOpen=false} = props
     return (
   <>

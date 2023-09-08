@@ -1,9 +1,8 @@
 
-import React, { useContext,useState } from 'react';
-import SearchContext from './SearchContext';
-import { Grid, Typography, Button } from '@mui/material';
-import { makeStyles } from '@mui/styles';
+import { Button, Grid, Typography } from '@mui/material';
 import { withStyles } from '@mui/styles';
+import React, { useContext, useState } from 'react';
+import SearchContext from './SearchContext';
 
 import theme from '../styles/theme';
 
@@ -96,8 +95,6 @@ function SearchResultsGrid(props) {
   
     return (
       <>
-        {/* {JSON.stringify(result)} */}
-  
         <Grid item xs={1} className={classes.centeredContent} borderRight={1} borderColor={"#ddd"}>
           2022
         </Grid>

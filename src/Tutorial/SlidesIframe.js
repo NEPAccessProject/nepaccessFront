@@ -1,7 +1,7 @@
 import React from 'react';
 
-import ReactModal from 'react-modal';
 import IframeResizer from 'iframe-resizer-react';
+import ReactModal from 'react-modal';
 
 import LoginModal from '../User/LoginModal';
 
@@ -28,7 +28,6 @@ import './slides.css';
 //       background: '#fff',
 //       overflow: 'auto',
 //       WebkitOverflowScrolling: 'touch',
-//       borderRadius: '4px',
 //       outline: 'none',
 //       padding: '20px'
 //     }

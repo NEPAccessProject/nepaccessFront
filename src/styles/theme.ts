@@ -1,8 +1,6 @@
 import { createTheme, Theme } from '@mui/material';
-import { orange,green, red,blueGrey,common, grey } from '@mui/material/colors';
-import { Primary } from '@storybook/blocks';
-import {ThemeOptions} from '@mui/material/styles';
-import { FormControlLabel } from '@material-ui/core';
+import { common, grey, orange, red } from '@mui/material/colors';
+import { ThemeOptions } from '@mui/material/styles';
 
 declare module "@mui/material/styles" {
   interface TypographyVariants {
@@ -110,7 +108,6 @@ declare module "@mui/material/Typography" {
 		},
 
 		shape: {
-			//borderRadius: 4,
 		},
 		components: {
 			// Name of the component
@@ -193,7 +190,6 @@ declare module "@mui/material/Typography" {
 		//           border: 0,
 		//           padding: 30,
 		//           margin: 5,
-		//           borderRadius: 3,
 		//           boxShadow: "0 3px 5px 2px rgba(255, 105, 135, .3)",
 		//           color: "white",
 		//           height: 48,

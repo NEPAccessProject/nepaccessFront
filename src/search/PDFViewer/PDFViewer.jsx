@@ -5,7 +5,6 @@ import { ProgressBar, Viewer, Worker } from '@react-pdf-viewer/core';
 import '@react-pdf-viewer/core/lib/styles/index.css';
 import { toolbarPlugin } from '@react-pdf-viewer/toolbar';
 import '@react-pdf-viewer/toolbar/lib/styles/index.css';
-import { set } from 'lodash';
 import { useState } from 'react';
 
 const workerUrl = "https://unpkg.com/pdfjs-dist@3.4.120/build/pdf.worker.min.js";
@@ -14,10 +13,10 @@ const workerUrl = "https://unpkg.com/pdfjs-dist@3.4.120/build/pdf.worker.min.js"
 //[TODO][REFACTOR] need to break this into two components.  One as container responsible for get and handling the file and display component that just takes that as an arg
 const PDFViewer = (props) => {
   console.log(`🚀 ~ file: PDFViewer.jsx:12 ~ PDFViewer ~ props:`, props);
-  const [hasError, setHasError] = useState("");
-  const [hasInfo, setHasInfo] = useState("");
-  const [hasSuccess, setHasSuccess] = useState("");
-  const [hasWarning, setHasWarning] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
+  const [infoMessage, setInfoMessage] = useState("");
+  const [successMessage, setSuccessMessage] = useState("");
+  const [warningMessage, setWarning] = useState("");
 
 
   //const {fileUrl,file} = props;
@@ -40,50 +39,27 @@ const PDFViewer = (props) => {
     },
   });
   const { Toolbar } = toolbarPluginInstance;
+
   const onDocumentLoad = (evt, doc) => {
     console.log('Document loaded:', doc, evt);
     return (
       <>
-        <Snackbar open={hasError} autoHideDuration={6000} onClose={() => setHasError(false)}>
-          <Alert severity="info">{hasInfo}</Alert>
+        <Snackbar open={infoMessage} autoHideDuration={2000} onClose={() => setErrorMessage("")}>
+          <Alert severity="info">{infoMessage}</Alert>
         </Snackbar>
       </>
     )
   };
   const handleDocumentLoad = (evt) => {
     console.log(`handleDocumentLoad - Number of pages: ${evt.doc.numPages}`);
-    setHasSuccess(true)
+    setSuccessMessage(`Document ${file.title} loaded`)
   };
-  const handleDocumentError = (evt) => {
-    //    setHasInfo(true);
-    return (
-      <>
-        <Snackbar open={true} autoHideDuration={6000} onClose={() => setHasError(false)}>
-          <Alert severity="error">{hasError}</Alert>
-        </Snackbar>
-      </>
-    )
-  }
-  const onErrorRender = (msg, name) => {
-    console.log("🚀 ~ file: PDFViewer.jsx ~ line 54 ~ PDFViewer ~ msg,name", msg, name);
-    setHasError(`Error loading PDF! Error message ${msg}`)
-    return (
-      <>
-        <Snackbar open={true} autoHideDuration={6000} onClose={() => setHasError(false)}>
-          <Alert severity="error">{hasError}</Alert>
-        </Snackbar>
-      </>
-    )
+  const onErrorRender = (err) => {
+    setErrorMessage(`Error loading PDF! ${err.name} ${err.message}`)
   }
   const onPageRender = (page) => {
     console.log("🚀 ~ file: PDFViewer.jsx:76 ~ onPageRender ~ page:", page)
-    return (
-      <>
-        <Snackbar open={true} autoHideDuration={6000} onClose={() => setHasInfo(false)}>
-          <Alert severity="info">{hasInfo} - { page }}</Alert>
-        </Snackbar>
-      </>
-    )
+    setInfoMessage(`Loading page ${page}`)
   }
 
   return (
@@ -95,7 +71,30 @@ const PDFViewer = (props) => {
       }}>
         <Grid container flexGrow={1}>
           <Grid item xs={12} alignItems='center' justifyContent='center'>
-            <Typography variant="h5">{file.name}</Typography>
+    
+          <Snackbar open={infoMessage && infoMessage.length} autoHideDuration={6000} onClose={() => setInfoMessage("")}>
+            <Alert severity="info">Loading {file.filename} - {infoMessage}</Alert>
+          </Snackbar>
+
+          <Snackbar open={errorMessage && errorMessage.length} autoHideDuration={6000} onClose={() => setErrorMessage("")}>
+            <Alert severity="error">{errorMessage}</Alert>
+          </Snackbar>
+    
+            <Typography variant="h4">{file.title}</Typography>
+
+            <Typography variant="h5">Filename {file.filename}</Typography>
+            <Typography variant="h5">File ID: {file.id}</Typography>
+            <Typography variant="h5">Process ID: {file.processId}</Typography>
+            <Typography variant="h5">fileUrl: {fileUrl}</Typography>
+            <Typography variant="h5">filenames: 
+              {file.filenames.map((filename) => {
+                return (
+                 <>
+                  {JSON.stringify(filename)}
+                 </>
+                )
+              })}
+            </Typography>
           </Grid>
 
           <Worker workerUrl={workerUrl}>

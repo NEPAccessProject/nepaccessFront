@@ -1,11 +1,8 @@
-import { Box, Button, Divider, Grid, Paper, Typography } from "@mui/material";
+import { Box, Paper, Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { makeStyles } from "@mui/styles";
-import React, { useContext, useEffect, useRef, useState } from "react";
-import theme from "../styles/theme";
-import PDFViewerDialog from "./Dialogs/PDFViewerDialog";
+import React, { useContext, useState } from "react";
 import SearchContext from "./SearchContext";
-import SearchResultsGrid from "./SearchResultsGrid";
 import SearchResultItem from "./SearchResultItem";
 //import './search.css';
 
@@ -112,9 +109,7 @@ export default function SearchResultItems(props) {
         {sortedRecords.map((record, idx) => {
           return (
             <Box key={record.id} id={`search-result-item-container-${record.id}`}>
-              {/* {JSON.stringify(record)} */}
-              {/* <Divider /> */}
-              {/* <Typography color={'secondary'} variant='h5'> {record.title}</Typography> */}
+              <Typography color={'secondary'} variant='h5'> {record.title}</Typography>
               <Box borderColor='#ccc' id="search-result-item-container-box">
                 <SearchResultItem record={record} />
               </Box>

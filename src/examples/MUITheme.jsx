@@ -1,4 +1,4 @@
-import { AppBar, Autocomplete, Button, Divider, FormControl, FormLabel, Grid, List,ListItem, Paper, TextField, Typography } from '@mui/material';
+import { AppBar, Autocomplete, Button, Divider, FormControl, FormLabel, List, ListItem, Paper, TextField, Typography } from '@mui/material';
 import { withStyles } from '@mui/styles';
 import React from 'react';
 
@@ -17,7 +17,7 @@ const styles = {
   root: {
     background: "linear-gradient(45deg, green 30%, orange 90%)",
     border: 0,
-    borderRadius: 3,
+    borderRadius: 1,
     boxShadow: "0 3px 5px 2px rgba(255, 105, 135, .3)",
     color: "white",
     height: 48,

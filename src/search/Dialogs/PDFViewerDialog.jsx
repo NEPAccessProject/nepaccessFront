@@ -2,6 +2,7 @@ import {
   Alert,
   Box,
   Button,
+  Container,
   Dialog,
   DialogContent,
   DialogContentText,
@@ -84,7 +85,6 @@ export default function PDFViewerDialog(props) {
 const queryParams = useParams();
 console.log('🚀 ~ file: PDFViewerDialog.jsx:88 ~ PDFViewerDialog ~ queryParams:', queryParams);
 	const params = new URLSearchParams(window.location.search)
-	console.log('all params:', params.getAll())
   //Strictly for debugging so I can test it without props
   const record = props.record || {
     id: 5970,
@@ -100,7 +100,7 @@ console.log('🚀 ~ file: PDFViewerDialog.jsx:88 ~ PDFViewerDialog ~ queryParams
   //let { id, processId } = record;
 
 //  const { q,id } = useParams();
-  console.log('🚀 ~ file: PDFViewerDialog.jsx:88 ~ PDFViewerDialog ~ q,processId,id:', q,processId,id);
+  console.log('🚀 ~ file: PDFViewerDialog.jsx:88 ~ PDFViewerDialog ~ q,processId,id:', processId,id);
 
 	const [numPages, setNumPages] = useState(null);
 	const [pageNumber, setPageNumber] = useState(1);
@@ -118,8 +118,6 @@ console.log('🚀 ~ file: PDFViewerDialog.jsx:88 ~ PDFViewerDialog ~ queryParams
   const [message,setMessage] = useState("");
 
 	let _mounted = useRef(false);
-	const [isLoaded, setIsLoaded] = useState(false);
-	const samplePDF = 'https://arxiv.org/pdf/quant-ph/0410100.pdf';
 
 	const classes = useStyles(theme);
 	const getFilesById = async (id = 0) => {
@@ -192,7 +190,7 @@ console.log('🚀 ~ file: PDFViewerDialog.jsx:88 ~ PDFViewerDialog ~ queryParams
 
 	//[TODO] Only for testing longer load times and the spinner
 
-  useEffect(async()=>{
+  useEffect(()=>{
     if(!_mounted.current){
       return;
     }
@@ -200,15 +198,14 @@ console.log('🚀 ~ file: PDFViewerDialog.jsx:88 ~ PDFViewerDialog ~ queryParams
 			const data = await getProcessByProcessId(processId);    
       data.map((item,idx)=>{
         const doc = item.doc;
-        const filenames = item.filenames;
-
-        // filenames.push({
-        //   id: doc.id,
-        //   processId: doc.processId,
-        //   folder: doc.folder,
-        //   filenames: _filenames
-        // })
-
+        const names = item.filenames.map((filename,idx)=>{
+          return {
+            id:idx,
+            filename:filename,
+            path: `/docs/${doc.folder}/${filename}}`
+          }
+        })
+        const filenames = names; 
         files.push({
           ...doc,
           size: doc.size ? Math.round(doc.size / 1024 / 1024 ) : 'N/A' ,
@@ -217,6 +214,7 @@ console.log('🚀 ~ file: PDFViewerDialog.jsx:88 ~ PDFViewerDialog ~ queryParams
         })
         const currentFile = files.filter((file)=>file.processId === processId && file.id === id);
         if(!currentFile && files){
+          console.log('Defaulting to first file in the list',files[0]);
           setCurrentFile(files[0])
         }
         else {
@@ -224,15 +222,15 @@ console.log('🚀 ~ file: PDFViewerDialog.jsx:88 ~ PDFViewerDialog ~ queryParams
           <Alert severity="error">'Unable to Preview File, no files were found'</Alert>
         </Snackbar>
         }
+        setFiles(files);
         return files;
       });
     }
-      const _files =  await getFiles();
-      console.log("🚀 ~ file: PDFViewerDialog.jsx:201 ~ useEffect ~ _files:", _files)
-
+      const _files =  getFiles();
+      console.log("🚀 ~ file: PDFViewerDialog.jsx ~ line 237 ~ PDFViewerDialog ~ _files", JSON.stringify(_files))
       const currentFile = files.filter((file)=>file.processId === processId);
       console.log("🚀 ~ file: PDFViewerDialog.jsx:203 ~ useEffect ~ currentFile:", currentFile)
-      setCurrentFile(currentFile);			
+      setCurrentFile(currentFile[0]);			
   },[processId,id])
 
 
@@ -244,7 +242,7 @@ console.log('🚀 ~ file: PDFViewerDialog.jsx:88 ~ PDFViewerDialog ~ queryParams
 
 	function onDocumentLoadSuccess({ numPages }) {
 		//console.log('onDocumentLoadSuccess', numPages);
-		setIsLoaded(true);
+		setHasSuccess(true);
     setHasInfo(true)
     setMessage("Document Loaded Successfully")
 		setNumPages(numPages);
@@ -296,26 +294,6 @@ console.log('🚀 ~ file: PDFViewerDialog.jsx:88 ~ PDFViewerDialog ~ queryParams
 	// 	return <MuiAlert elevation={6} ref={ref} variant='filled' {...props} />;
 	// });
 
-
-	const _onFileLinkClicked = (evt, fileId) => {
-		console.log(
-			'🚀 ~ file: PDFViewerDialog.jsx:233 ~ PDFViewerDialog ~ files are:',
-			files,
-		);
-		const selectedFile = files.filter((file) => file.id === fileId);
-		console.log(
-			'🚀 ~ file: PDFViewerDialog.jsx:236 ~ PDFViewerDialog ~ selectedFile:',
-			selectedFile,
-		);
-		if (selectedFile) {
-			console.log(
-				'🚀 ~ file: PDFViewerDialog.jsx:237 ~ PDFViewerDialog ~ selectedFile:',
-				selectedFile,
-			);
-			setCurrentFile(selectedFile[0]);
-		}
-	};
-
   const handleAlertClose = (evt) =>{
     setHasError(false);
     setHasInfo(false);
@@ -337,8 +315,8 @@ console.log('🚀 ~ file: PDFViewerDialog.jsx:88 ~ PDFViewerDialog ~ queryParams
 				//open={isOpen}
 				open={isOpen}
 				fullScreen
-        maxWidth='lg'
-				maxHeight='lg'
+        // maxWidth='lg'
+				// maxHeight='lg'
 //				minWidth='md'
 	//			minHeight='md'
 				//height={'100vh'}
@@ -399,9 +377,7 @@ console.log('🚀 ~ file: PDFViewerDialog.jsx:88 ~ PDFViewerDialog ~ queryParams
 										<AvailablePDFsList
 											{...props}
 											files={files}
-											onFileLinkClicked={(evt) =>
-												_onFileLinkClicked(evt, currentFile.id)
-											}
+											onFileLinkClicked={onFileLinkClicked}
 										/>
 									</Grid>
 									<Grid
@@ -413,9 +389,7 @@ console.log('🚀 ~ file: PDFViewerDialog.jsx:88 ~ PDFViewerDialog ~ queryParams
 										id='pdf-viewer-grid-container'>
 										<Grid item xs={12} id='pdf-viewer-title-grid-item'>
 											<Typography textAlign='center' variant='h3'>
-												{currentFile.eisdoc && currentFile.eisdoc.title
-													? currentFile.eisdoc.title
-													: 'N/A'}
+												{JSON.stringify(currentFile)}
 											</Typography>
 										</Grid>
 
@@ -457,18 +431,19 @@ console.log('🚀 ~ file: PDFViewerDialog.jsx:88 ~ PDFViewerDialog ~ queryParams
 										</Grid>
 
 										<Grid container xs={12} id='pdf-viewer-grid-item-container'>
-											{/* {JSON.stringify(files)} */}
-											<Grid item xs={12}>
+											<Grid margin={2} item xs={12}>
 												<Typography>
-													Current File ID: {currentFile.id} Process ID{' '}
-													{currentFile.processId}{' '}
+													Current File ID: {currentFile && currentFile.id ? currentFile.id : "N/A"} Process ID
+													{currentFile && currentFile.processId ? currentFile.processId : "N/A"}
 												</Typography>
 
 												<Typography>
 													# Files {files && files.length ? files.length : 'N/A'}
 												</Typography>
 												<Typography>
-													Filename : {currentFile.fileName}
+                          <Typography variant="h5">
+													{/* Filename : {currentFile.filename} */}
+                          </Typography>
 												</Typography>
 												    
                             {hasError && message && <Snackbar open={hasError} autoHideDuration={6000} onClose={handleAlertClose}>
@@ -497,7 +472,11 @@ console.log('🚀 ~ file: PDFViewerDialog.jsx:88 ~ PDFViewerDialog ~ queryParams
                             <Alert severity="success">{message}</Alert>
                             </Snackbar>
                           }
-												<PDFContainer {...props} file={currentFile} />
+												<Container sx={{
+                          border:1,
+                          minHeight:'80%',
+                          minWidth:'80%',
+                        }}><PDFContainer {...props} file={currentFile} /></Container>
 											</Grid>
 										</Grid>
 									</Grid>

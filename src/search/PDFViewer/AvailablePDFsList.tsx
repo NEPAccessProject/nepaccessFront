@@ -13,7 +13,7 @@ import {
   ListItemText,
   Paper,
   Toolbar,
-  Typography
+  Typography,
 } from '@mui/material';
 import theme from '../../styles/theme';
 //import {InboxIcon,MailIcon} from '@mui/icons-material'
@@ -23,9 +23,8 @@ import InboxIcon from '@mui/icons-material/MoveToInbox';
 import CssBaseline from '@mui/material/CssBaseline';
 import { Theme } from '@mui/material/styles';
 import { createStyles, makeStyles } from '@mui/styles';
-import _ from 'lodash';
 import React, { useState } from 'react';
-import { IFile, IFiles } from '../Interfaces';
+import { IFiles } from '../Interfaces';
 
 // pdfjs.GlobalWorkerOptions.workerSrc = new URL(
 //   'pdfjs-dist/build/pdf.worker.min.js',
@@ -33,55 +32,67 @@ import { IFile, IFiles } from '../Interfaces';
 // ).toString();
 
 interface IStyles {
-  centered: {
-    textAlign: string
-  }
+	centered: {
+		textAlign: string;
+	};
 }
 interface IProps {
 	files: IFiles;
 	onFileLinkClicked: any; //(React.MouseEvent<HTMLElement>:evt,number) => {};
 }
 
-const useStyles = makeStyles((theme: Theme) => createStyles({
-         root:{
-            backgroundColor : '#f9f9f9',
-         },
-         centered: {
-           textAlign: 'center',
-         },
-         button: {
-           margin: theme.spacing(1),
-         },
-         input: {
-           display: 'none',
-         },
-         pdfViewer: {
-           height: '100%',
-           width: '100%',
-         },
-}));
+const useStyles = makeStyles((theme: Theme) =>
+	createStyles({
+		root: {
+			backgroundColor: '#f9f9f9',
+		},
+		centered: {
+			textAlign: 'center',
+		},
+		button: {
+			margin: theme.spacing(1),
+		},
+		input: {
+			display: 'none',
+		},
+		pdfViewer: {
+			height: '100%',
+			width: '100%',
+		},
+	}),
+);
 
-export default function AvailablePDFsList(props : IProps) {
-  const [selectedFileId,setSelectedFileId] = useState<number>(0);
+export default function AvailablePDFsList(props: IProps) {
+	const [selectedFileId, setSelectedFileId] = useState<number>(0);
 
-  const {onFileLinkClicked,files} =  props;
+	const { onFileLinkClicked, files } = props;
 
-  const _onFileLinkClicked = (evt,fileid) => {
-    let file:any = _.find(files, { id: fileid });
-    console.log("🚀 ~ file: AvailablePDFsList.tsx:78 ~ AvailablePDFsList ~ file:", file)
-    const {id} = file;
-    setSelectedFileId(id);
-    console.log("🚀 ~ file: AvailablePDFsList.tsx:139 ~ ResponsiveDrawer ~ file:", file)
+	const _onFileLinkClicked = (evt,fileId,file) => {
 
-  }
+    file.filenames.map((filename, idx) => {
+			if (filename.id === fileId) {
+        console.log('🚀 ~ file: AvailablePDFsList.tsx:74 ~ set current file', filename);
+				setSelectedFileId(filename.id);
+			}
+		});
+		console.log(
+			'🚀 ~ file: AvailablePDFsList.tsx:78 ~ AvailablePDFsList ~ file:',
+			file,
+		);
+		const { id } = file;
+		setSelectedFileId(id);
+		console.log(
+			'🚀 ~ file: AvailablePDFsList.tsx:139 ~ ResponsiveDrawer ~ file:',
+			file,
+		);
+	};
 
-//  const eisDoc: IEISDoc = file.eisdoc;
-  const classes = useStyles(theme);
-//  const eisDoc: IEISDoc;
-  return (
+	//  const eisDoc: IEISDoc = file.eisdoc;
+	const classes = useStyles(theme);
+	//  const eisDoc: IEISDoc;
+	return (
 		<>
-			<Paper sx={{
-      }}>
+			<Paper sx={{}}>
 				<Grid container>
 					<Grid
 						item
@@ -90,38 +101,59 @@ export default function AvailablePDFsList(props : IProps) {
 						classes={classes.centered}
 						padding={2}>
 						<Typography variant='h4'>Related Files</Typography>
-            <Typography variant='h6'>Selected File ID {selectedFileId} </Typography>
+						<Typography variant='h6'>
+							Selected File ID {selectedFileId}{' '}
+						</Typography>
 						<Divider />
 					</Grid>
-					<Grid
-						item
-
-            border={1}
-						xs={12}>
-							{files &&
-								files.length &&
-								files.map((file: IFile, idx: number) => (
-									<ListItem key={file.id}>
-											<Button
-												onClick={(evt) => _onFileLinkClicked(evt,file.id)}
-                        variant="text"
-                        >
-                        <Typography textAlign={'left'} display={"block"} variant={"caption"}>
-                        {file.documentType} - {file.filename}
-                          <Typography textAlign='left' variant="subtitle1">{file.size && file.size > 0 ? file.size  +" mb"  : '' } </Typography>                        
-                        </Typography>
-											</Button>
-									</ListItem>
-								))
-                }
-            <Divider/>
-              <Grid item xs={12}>
-                <Button name="download" variant="contained" color='primary'  id="download-zip-button" sx={{
-                  width:'100%'
-                }}>
-                        Download All
-                </Button>
-              </Grid>
+					<Grid item border={1} xs={12}>
+						{files &&
+							files.length &&
+							files.map((file: any, idx: number) => (
+								<ListItem key={`${file.id}-${file.filename.replace(/\s/g, "")}`}>
+									<Typography
+										textAlign={'left'}
+										display={'block'}
+										variant={'caption'}>
+                  {file.filenames.map((filename, i) => {  
+                    return (
+                      <>  
+												 <Typography key={filename.id-filename.filename} textAlign='left'>
+                           {idx} - {i}
+												 	<Button
+												 		sx={{ width: '100%' }}
+                             color='primary'
+												 		onClick={(evt) => onFileLinkClicked(evt,idx, file)}
+												 		variant={
+												 			i === selectedFileId ? 'outlined' : 'text'
+												 		}>
+												 		{/* {`/docs/${file.folder}/${filename.filename}`} */}
+                            {filename.filename} 
+                            -IDX: {i} 
+                            - Selected File ID {selectedFileId} 
+                            - File ID {file.id} 
+                            - Process ID {file.processId}
+												 	</Button>
+												 </Typography>
+                        </>
+											)
+                    })}
+									</Typography>
+								</ListItem>
+							))}
+						<Divider />
+						<Grid item xs={12}>
+							<Button
+								name='download'
+								variant='contained'
+								color='primary'
+								id='download-zip-button'
+								sx={{
+									width: '100%',
+								}}>
+								Download All
+							</Button>
+						</Grid>
 					</Grid>
 				</Grid>
 			</Paper>
@@ -139,20 +171,19 @@ interface IDrawerProps {
 	files: IFiles;
 }
 export function ResponsiveDrawer(props: IDrawerProps) {
-	const { window, files,onFileLinkClicked } = props;
+	const { window, files, onFileLinkClicked } = props;
 	const [mobileOpen, setMobileOpen] = React.useState(false);
 
-
 	const handleDrawerToggle = (evt) => {
-    console.log('onDrawerOpen Place holder evt', evt);
-    evt.preventDefault();
-    setMobileOpen(!mobileOpen);
+		console.log('onDrawerOpen Place holder evt', evt);
+		evt.preventDefault();
+		setMobileOpen(!mobileOpen);
 	};
-  const onDrawerOpen=(evt)=>{
-    evt.preventDefault();
-    console.log('onDrawerOpen Place holder evt',evt);
-  }
- const drawerWidth = 250;
+	const onDrawerOpen = (evt) => {
+		evt.preventDefault();
+		console.log('onDrawerOpen Place holder evt', evt);
+	};
+	const drawerWidth = 250;
 
 	const drawer = (
 		<div>
@@ -160,13 +191,11 @@ export function ResponsiveDrawer(props: IDrawerProps) {
 			<Divider />
 			<List>
 				{files.map((file, index) => (
-					<ListItem
-						key={file.id}
-						disablePadding>
+					<ListItem key={file.id} disablePadding>
 						<ListItem key={file.id}>
 							<Typography>
 								<Button
-									onClick={(evt) => onFileLinkClicked(evt,file.id)}
+									onClick={(evt) => onFileLinkClicked(evt, file.id)}
 									variant='text'>
 									{file.filename}
 								</Button>
@@ -182,11 +211,11 @@ export function ResponsiveDrawer(props: IDrawerProps) {
 			<Divider />
 			<List>
 				{['All mail', 'Trash', 'Spam'].map((text, index) => (
-					<ListItem
-						key={text}
-						disablePadding>
+					<ListItem key={text} disablePadding>
 						<ListItemButton>
-							<ListItemIcon>{index % 2 === 0 ? <InboxIcon /> : <MailIcon />}</ListItemIcon>
+							<ListItemIcon>
+								{index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
+							</ListItemIcon>
 							<ListItemText primary={text} />
 						</ListItemButton>
 					</ListItem>
@@ -195,10 +224,11 @@ export function ResponsiveDrawer(props: IDrawerProps) {
 		</div>
 	);
 
-	const container = window !== undefined ? () => window().document.body : undefined;
+	const container =
+		window !== undefined ? () => window().document.body : undefined;
 
 	return (
-		<Box sx={{ display: 'flex',border:0, margintTop:25 }}>
+		<Box sx={{ display: 'flex', border: 0, margintTop: 25 }}>
 			<CssBaseline />
 			<AppBar
 				position='sticky'
@@ -215,10 +245,7 @@ export function ResponsiveDrawer(props: IDrawerProps) {
 						sx={{ mr: 2, display: { sm: 'none' } }}>
 						<MenuIcon />
 					</IconButton>
-					<Typography
-						variant='h6'
-						noWrap
-						component='div'>
+					<Typography variant='h6' noWrap component='div'>
 						Responsive drawer
 					</Typography>
 				</Toolbar>
@@ -238,7 +265,10 @@ export function ResponsiveDrawer(props: IDrawerProps) {
 					}}
 					sx={{
 						display: { xs: 'block', sm: 'none' },
-						'& .MuiDrawer-paper': { boxSizing: 'border-box', width: drawerWidth },
+						'& .MuiDrawer-paper': {
+							boxSizing: 'border-box',
+							width: drawerWidth,
+						},
 					}}>
 					{drawer}
 				</Drawer>
@@ -246,7 +276,10 @@ export function ResponsiveDrawer(props: IDrawerProps) {
 					variant='permanent'
 					sx={{
 						display: { xs: 'none', sm: 'block' },
-						'& .MuiDrawer-paper': { boxSizing: 'border-box', width: drawerWidth },
+						'& .MuiDrawer-paper': {
+							boxSizing: 'border-box',
+							width: drawerWidth,
+						},
 					}}
 					open>
 					{drawer}
