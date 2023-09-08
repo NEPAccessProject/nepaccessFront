@@ -1,22 +1,20 @@
 import {
   Alert,
-	Box,
-	Button,
-	Chip,
-	Dialog,
-	DialogContent,
-	DialogContentText,
-	DialogTitle,
-	Grid,
-	IconButton,
-	Paper,
-	Snackbar,
-	Typography,
+  Box,
+  Button,
+  Dialog,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
+  Grid,
+  IconButton,
+  Paper,
+  Snackbar,
+  Typography
 } from '@mui/material';
-import MuiAlert from '@mui/material/Alert';
-import { useParams } from 'react-router-dom';
 import { makeStyles, styled } from '@mui/styles';
 import React, { useState } from 'react';
+import { useParams } from 'react-router-dom';
 import theme from '../../styles/theme';
 // import PDFViewer from '../../examples/PDFViewer/index.jsx';
 // const [fullWidth, setFullWidth] = React.useState(true);
@@ -25,7 +23,6 @@ import theme from '../../styles/theme';
 //https://codesandbox.io/s/pdf-view-l3i46?file=/src/Components/DrawArea.js
 //https://react-pdf-viewer.dev/examples/
 import axios from 'axios';
-import _ from 'lodash';
 import { useEffect, useRef } from 'react';
 import Globals from '../../globals';
 import AvailablePDFsList from '../PDFViewer/AvailablePDFsList';
@@ -83,20 +80,27 @@ const Item = styled(Paper)(({ theme }) => ({
 export default function PDFViewerDialog(props) {
 	//    pdfjs.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.js`;
 
-	let { record, isOpen, onDialogClose } = props;
-	isOpen=true;
-
-  record = {
+//	let { record, isOpen, onDialogClose } = props;
+const queryParams = useParams();
+console.log('🚀 ~ file: PDFViewerDialog.jsx:88 ~ PDFViewerDialog ~ queryParams:', queryParams);
+	const params = new URLSearchParams(window.location.search)
+	console.log('all params:', params.getAll())
+  //Strictly for debugging so I can test it without props
+  const record = props.record || {
     id: 5970,
     title: 'Mock Record Title',
     processId: 1003943  
   }
-  let { id, processId } = record;
+  const isOpen = props.isOpen || params.get('isOpen');
+  const id = record.id;
+  const processId = record.processId;
+  const onDialogClose = //props.onDialogClose || 
+  (evt)=>{ console.log('onDialogClose evt',evt);
+  }
+  //let { id, processId } = record;
 
-  const { q } = useParams();
-  const params = useParams();
-  console.log('🚀 ~ file: PDFViewerDialog.jsx:88 ~ PDFViewerDialog ~ params:', params);
-	console.log('🚀 ~ file: PDFViewerDialog.jsx:88 ~ PDFViewerDialog ~ q:', q);
+//  const { q,id } = useParams();
+  console.log('🚀 ~ file: PDFViewerDialog.jsx:88 ~ PDFViewerDialog ~ q,processId,id:', q,processId,id);
 
 	const [numPages, setNumPages] = useState(null);
 	const [pageNumber, setPageNumber] = useState(1);
@@ -107,10 +111,11 @@ export default function PDFViewerDialog(props) {
 	const [currentFileIndex, setCurrentFileIndex] = useState(0);
 	const [currentFile, setCurrentFile] = useState({});
 
-	const [hasWarning, setHasWarning] = useState(false);
-	const [hasError, setHasError] = useState(false);
-	const [hasInfo, setHasInfo] = useState(false);
-	const [hasSuccess, setHasSuccess] = useState(false);
+	const [hasWarning, setHasWarning] = useState("");
+	const [hasError, setHasError] = useState("");
+	const [hasInfo, setHasInfo] = useState("");
+	const [hasSuccess, setHasSuccess] = useState("");
+  const [message,setMessage] = useState("");
 
 	let _mounted = useRef(false);
 	const [isLoaded, setIsLoaded] = useState(false);
@@ -144,6 +149,9 @@ export default function PDFViewerDialog(props) {
 		}
 	};
 	const getProcessByProcessId = async (processId = 0) => {
+    setMessage('Loading Files');
+    setHasInfo(true);
+
 		console.log(
 			'🚀 ~ file: PDFViewerDialog.jsx:132 ~ getProcessByProcessId ~ id:',
 			processId,
@@ -159,11 +167,15 @@ export default function PDFViewerDialog(props) {
 			const data = response.data;
 
 			return data;
-		} catch (e) {
+		} 
+    catch (e) {
 			console.error(
 				`Failed to get a list of files for id ${processId}.With an Exception`,
 				e,
 			);
+      setHasError(true)
+      setMessage('Failed to get a list of files for id ${processId}.With an Exception')
+
 			return [];
 		}
 	};
@@ -180,15 +192,12 @@ export default function PDFViewerDialog(props) {
 
 	//[TODO] Only for testing longer load times and the spinner
 
-  useEffect(()=>{
+  useEffect(async()=>{
     if(!_mounted.current){
       return;
     }
     async function getFiles(){
-
-			const data = await getProcessByProcessId(processId);
-      console.log("🚀 ~ file: PDFViewerDialog.jsx:177 ~ getFiles ~ data:", data)
-      console.log('DATA KEYS',Object.keys(data));
+			const data = await getProcessByProcessId(processId);    
       data.map((item,idx)=>{
         const doc = item.doc;
         const filenames = item.filenames;
@@ -218,45 +227,14 @@ export default function PDFViewerDialog(props) {
         return files;
       });
     }
-      const _files =  getFiles();
+      const _files =  await getFiles();
       console.log("🚀 ~ file: PDFViewerDialog.jsx:201 ~ useEffect ~ _files:", _files)
 
       const currentFile = files.filter((file)=>file.processId === processId);
       console.log("🚀 ~ file: PDFViewerDialog.jsx:203 ~ useEffect ~ currentFile:", currentFile)
       setCurrentFile(currentFile);			
-  },[])
+  },[processId,id])
 
-	// useEffect(() => {
-	// 	if (_mounted.current !== true) {
-	// 		console.warn(`component not mounted or not open for id ${id} `);
-	// 		return;
-	// 	}
-	// 	async function getFiles() {
-	// 		const files = await getFilesById(id);
-	// 		if (files.length === 0) {
-	// 			setHasError(true);
-	// 		}
-	// 		console.log(
-	// 			'🚀 ~ file: PDFViewerDialog.jsx:146 ~ getFiles ~ files:',
-	// 			files,
-	// 		);
-	// 		setFiles(files);
-	// 		if (files.length > 0) {
-	// 			setCurrentFile(files[0]);
-	// 		}
-	// 	}
-	// 	getFiles();
-
-	// 	console.log(
-	// 		'🚀 ~ file: PDFViewerDialog.jsx ~ line 200 ~ useEffect ~ files',
-	// 		JSON.stringify(files),
-	// 	);
-
-	// 	return () => {
-	// 		console.log('PDF Viewer Dialog UnMounted, reseting results');
-	// 		setFiles(null);
-	// 	};
-	// }, []);
 
 	useEffect(() => {
 		if (_mounted.current === false) {
@@ -267,6 +245,8 @@ export default function PDFViewerDialog(props) {
 	function onDocumentLoadSuccess({ numPages }) {
 		//console.log('onDocumentLoadSuccess', numPages);
 		setIsLoaded(true);
+    setHasInfo(true)
+    setMessage("Document Loaded Successfully")
 		setNumPages(numPages);
 	}
 	const handleMaxWidthChange = (event) => {
@@ -336,6 +316,14 @@ export default function PDFViewerDialog(props) {
 		}
 	};
 
+  const handleAlertClose = (evt) =>{
+    setHasError(false);
+    setHasInfo(false);
+    setHasSuccess(false);
+    setHasWarning(false);
+    setMessage("");
+    evt.preventDefault();
+  }
 	const onBackdropClicked = (evt) => {
 		onDialogClose(evt);
 	};
@@ -482,24 +470,33 @@ export default function PDFViewerDialog(props) {
 												<Typography>
 													Filename : {currentFile.fileName}
 												</Typography>
-												{/* <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
-                              <Alert onClose={handleClose} severity="success" sx={{ width: '100%' }}>
-                                This is a success message!
+												    
+                            {hasError && message && <Snackbar open={hasError} autoHideDuration={6000} onClose={handleAlertClose}>
+                              <Alert onClose={(evt)=>handleAlertClose(evt)} severity="success" sx={{ width: '100%' }}>
+                                This is a success message! {message}
                               </Alert>
-                            </Snackbar> */}
-												{/* <Snackbar open={hasError} autoHideDuration={6000} onClose={()=>setHasError(false)}>
-                              <Alert  severity="error">This is an error message!</Alert>
                             </Snackbar>
+                          }
+                          { hasInfo && message &&
+												    <Snackbar open={hasInfo} autoHideDuration={6000} onClose={()=>setHasError(false)}>
+                              <Alert  severity="error">This is an error message! {message}</Alert>
+                            </Snackbar>
+                          }
+                          { hasWarning && message &&
                             <Snackbar open={hasWarning} autoHideDuration={6000} onClose={()=>setHasWarning(false)}>
-                            <Alert severity="warning">This is a warning message!</Alert>
+                            <Alert severity="warning">This is a warning message! {message}</Alert>
                             </Snackbar>
-
+                          }
+                          { hasInfo &&
                             <Snackbar open={hasInfo} autoHideDuration={6000} onClose={()=>setHasInfo(false)}>
-                            <Alert severity="info">Loading {currentFile.name}...</Alert>
+                            <Alert severity="info">{message}</Alert>
                             </Snackbar>
+                          }
+                          { hasSuccess &&
                             <Snackbar open={hasSuccess} autoHideDuration={6000} onClose={()=>setHasSuccess(false)}>
-                            <Alert severity="success">This is a success message!</Alert>
-                            </Snackbar> */}
+                            <Alert severity="success">{message}</Alert>
+                            </Snackbar>
+                          }
 												<PDFContainer {...props} file={currentFile} />
 											</Grid>
 										</Grid>

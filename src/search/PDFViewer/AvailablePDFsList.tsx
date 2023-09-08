@@ -1,38 +1,31 @@
 import {
   AppBar,
   Box,
-  Dialog,
-  DialogContent,
-  DialogContentText,
-  DialogTitle,
+  Button,
   Divider,
   Drawer,
   Grid,
-  Button,
-  Container,
   IconButton,
-  Toolbar,
-  Paper,
-  Typography,
   List,
   ListItem,
   ListItemButton,
-  ListItemText,
   ListItemIcon,
+  ListItemText,
+  Paper,
+  Toolbar,
+  Typography
 } from '@mui/material';
 import theme from '../../styles/theme';
 //import {InboxIcon,MailIcon} from '@mui/icons-material'
-import InboxIcon from '@mui/icons-material/MoveToInbox';
 import MailIcon from '@mui/icons-material/Mail';
-import { makeStyles,createStyles } from '@mui/styles';
-import {Theme} from '@mui/material/styles';
-import React, { useDebugValue, useState } from 'react'
-import PDFViewer from './PDFViewer';
-import { CircularProgress} from '@material-ui/core';
-import _ from 'lodash';
-import {IFile,IFiles,IEISDoc} from '../Interfaces';
-import CssBaseline from '@mui/material/CssBaseline';
 import MenuIcon from '@mui/icons-material/Menu';
+import InboxIcon from '@mui/icons-material/MoveToInbox';
+import CssBaseline from '@mui/material/CssBaseline';
+import { Theme } from '@mui/material/styles';
+import { createStyles, makeStyles } from '@mui/styles';
+import _ from 'lodash';
+import React, { useState } from 'react';
+import { IFile, IFiles } from '../Interfaces';
 
 // pdfjs.GlobalWorkerOptions.workerSrc = new URL(
 //   'pdfjs-dist/build/pdf.worker.min.js',
@@ -114,19 +107,21 @@ export default function AvailablePDFsList(props : IProps) {
                         variant="text"
                         >
                         <Typography textAlign={'left'} display={"block"} variant={"caption"}>
-                          {file.filename}
-                          </Typography>
-                        <Typography textAlign='left' variant="subtitle1">{file.size ? (file.size / 1024 / 1024).toFixed(2) +" mb"  : '' } </Typography>                        
+                        {file.documentType} - {file.filename}
+                          <Typography textAlign='left' variant="subtitle1">{file.size && file.size > 0 ? file.size  +" mb"  : '' } </Typography>                        
+                        </Typography>
 											</Button>
 									</ListItem>
 								))
                 }
             <Divider/>
-<Container>
-              <Button name="download" id="download-zip-button">
-                      Download All
-              </Button>
-</Container>
+              <Grid item xs={12}>
+                <Button name="download" variant="contained" color='primary'  id="download-zip-button" sx={{
+                  width:'100%'
+                }}>
+                        Download All
+                </Button>
+              </Grid>
 					</Grid>
 				</Grid>
 			</Paper>

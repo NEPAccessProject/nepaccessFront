@@ -133,40 +133,18 @@ export default function SearchResultItem(props) {
 			onDialogClose={(evt) => closeModal(evt, record.id)}
 			/>
   }
-		{/* <ModalOne
-			closeFn={closeFn}
-			open={modal === `modal-${id}`} /> */}
-
-		{/* <ModalTwo
-			closeFn={closeFn}
-			open={modal === 'modal-two'} />
-
-		<ModalThree
-			closeFn={closeFn}
-			open={modal === 'modal-three'} />
-	*/}
 	</>
   )};
 	const year = commentDate && commentDate.length > 0 ? new Date(commentDate).getFullYear() : 'N/A';
 	const text = record.plaintext || '';
 	return (
 		<>
-			<div id="portal-root">
+			<div  id="portal-root">
 
 			</div>
       <div id="modal-root">
 
 			</div>
-      
-			{/* {createPortal(
-				<PDFViewerDialog
-					id={`pdf-dialog-${id}`}
-					name={`modal-${record.id}`}
-					record={record}
-					//isOpen={isOpen[record.id]}
-					isOpen={isOpen && currentModalId === `modal-${record.id}`}
-					onDialogClose={(evt) => closeModal(evt, record.id)}
-					fileId={id} />)} */}
 			<Paper elevantion={5} sx={{
 				margin: 1,
 				backGroundColor: "#eee"
@@ -196,13 +174,6 @@ export default function SearchResultItem(props) {
 							>
 								<Typography
 									id="year-typography"
-									sx={{
-										// alignContent: 'center',
-										// justifyItems: 'center',
-										// jistifyContent: 'center',
-										// alignItems: 'center',
-										// textAlign: 'center',
-									}}
 									className={classes.centeredContent}
 									fontWeight={'bold'}
 								>
@@ -218,7 +189,6 @@ export default function SearchResultItem(props) {
 								alignContent={'center'}
 								justifyContent="center"
 								alignItems={'center'}
-
 								className={classes.centeredContent}
 							>
 								<Typography
@@ -233,7 +203,6 @@ export default function SearchResultItem(props) {
 								borderRight={1}
 								borderLeft={1}
 								borderColor='#ccc'
-								//className={classes.centeredContent}
 								id="title-grid-container"
 								xs={7}
 								padding={1}
@@ -255,7 +224,6 @@ export default function SearchResultItem(props) {
 								<Grid
 									id="pdf-button-grid-item"
 									item
-									//          display={'flex'}
 									xs={6}
 									display={'flex'}
 									alignContent={'center'}
@@ -268,17 +236,7 @@ export default function SearchResultItem(props) {
                       Preview PDF
                     </Button>
 									<Grid>
-                    {/*                     
-                      <PDFViewerDialog
-                          id={`pdf-dialog-${id}`}
-                          name={`modal-${record.id}`}
-                          record={record}
-                          processId={processId}
-                          //isOpen={isOpen[record.id]}
-                          isOpen={isOpen && currentModalId === `modal-${record.id}`}
-                          onDialogClose={(evt) => closeModal(evt, record.id)}
-                          fileId={id} />
-                   */}
+
 									<ModalManager 
                     record={record} 
                     id={record.id}
@@ -286,15 +244,6 @@ export default function SearchResultItem(props) {
                     closeFn={closeModal} 
                     modal={modalOpen} />
 									</Grid>
-
-									{/* 
-									<Button
-										onClick={openModal}
-										color={'primary'}
-										variant="contained"
-									>
-										Preview {isPDFViewOpen}
-									</Button> */}
 								</Grid>
 								<Grid
 									id="preview-button-grid-item"
