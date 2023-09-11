@@ -1,14 +1,10 @@
+import { Grid, Paper } from '@mui/material';
+import { styled } from '@mui/styles';
 import React from 'react';
-import { Grid, Paper, Card } from '@mui/material';
 import { ISearchResult } from './Interfaces';
-import { makeStyles, Styles, styled } from '@mui/styles';
-import theme from '../styles/theme';
 
 const CardItem = styled(Paper)(({ theme }) => ({
-	//backgroundColor: theme.palette.mode === "dark" ? "#1A2027" : "#fff",
-	//...theme.typography.body2,
-	...theme,
-	padding: 2, //theme.spacing(1),
+	padding: 1,
   margin: 1,
   borderColor: "#ccc",
   minHeight: 2,
@@ -16,7 +12,6 @@ const CardItem = styled(Paper)(({ theme }) => ({
   justifyContent: 'center',
   justifyItems: 'center',
 
-	// textAlign: 'center',
 	fontColor: "#111", //theme.palette.text.secondary,
 	elevation: 1,
 	borderRadius: 1,
@@ -34,29 +29,8 @@ interface IProps {
 	result: ISearchResult;
 }
 
-const useStyles = makeStyles((theme) => ({
-	centeredContent: {
-		verticalAlign: 'center',
-		textAlign: 'center',
-		alignContent: 'center',
-		justifyContent: 'center',
-		justifyItems: 'center',
-		fontColor: '#000',
-	},
-	item: {
-		margin: 1,
-		padding: 1,
-
-		borderColor: '#ccc',
-	},
-	card: {
-		margin:2,
-    padding:2,
-	},
-}));
-
 export default function SearchResultCards(props: IProps) {
-	const classes = useStyles(theme);
+	///const classes = useStyles(theme);
 
 	const { result } = props;
 	return (
