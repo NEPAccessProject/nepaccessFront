@@ -1,4 +1,4 @@
-import { Box, Paper, Typography, Chip, Skeleton, Divider, withStyles } from '@mui/material';
+import { Paper, Skeleton } from '@mui/material';
 import Grid from '@mui/material/Grid'; // Grid version 1
 import { makeStyles, styled } from '@mui/styles';
 import React from 'react';
@@ -246,7 +246,7 @@ export default function ResultsLayoutSkeleton() {
             className={classes.card}
             xs={4}>
             <Skeleton
-              classes={[classes]}
+              classes={classes}
               animation='pulse'
               variant='rectangular'
               height={50}
