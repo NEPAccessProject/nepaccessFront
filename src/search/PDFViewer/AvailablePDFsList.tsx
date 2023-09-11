@@ -62,16 +62,20 @@ const useStyles = makeStyles((theme: Theme) =>
 	}),
 );
 
+
 export default function AvailablePDFsList(props: IProps) {
+	console.log("🚀 ~ file: AvailablePDFsList.tsx:67 ~ AvailablePDFsList ~ props:", props)
 	const [selectedFileId, setSelectedFileId] = useState<number>(0);
 
-	const { onFileLinkClicked, files } = props;
+	const { onFileLinkClicked, files = [] } = props;
 
-	const _onFileLinkClicked = (evt,fileId,file) => {
-
-    file.filenames.map((filename, idx) => {
+	const _onFileLinkClicked = (evt, fileId, file) => {
+		file.filenames.map((filename, idx) => {
 			if (filename.id === fileId) {
-        console.log('🚀 ~ file: AvailablePDFsList.tsx:74 ~ set current file', filename);
+				console.log(
+					'🚀 ~ file: AvailablePDFsList.tsx:74 ~ set current file',
+					filename,
+				);
 				setSelectedFileId(filename.id);
 			}
 		});
@@ -107,37 +111,36 @@ export default function AvailablePDFsList(props: IProps) {
 						<Divider />
 					</Grid>
 					<Grid item border={1} xs={12}>
+            FILES LENGTH? {files.length}
 						{files &&
 							files.length &&
-							files.map((file: any, idx: number) => (
-								<ListItem key={`${file.id}-${file.filename.replace(/\s/g, "")}`}>
+						files.map((file: any, idx: number) => (
+								<ListItem key={file.id}>
 									<Typography
 										textAlign={'left'}
 										display={'block'}
 										variant={'caption'}>
-                  {file.filenames.map((filename, i) => {  
-                    return (
-                      <>  
-												 <Typography key={filename.id-filename.filename} textAlign='left'>
-                           {idx} - {i}
-												 	<Button
-												 		sx={{ width: '100%' }}
-                             color='primary'
-												 		onClick={(evt) => onFileLinkClicked(evt,idx, file)}
-												 		variant={
-												 			i === selectedFileId ? 'outlined' : 'text'
-												 		}>
-												 		{/* {`/docs/${file.folder}/${filename.filename}`} */}
-                            {filename.filename} 
-                            -IDX: {i} 
-                            - Selected File ID {selectedFileId} 
-                            - File ID {file.id} 
-                            - Process ID {file.processId}
-												 	</Button>
-												 </Typography>
-                        </>
-											)
-                    })}
+                      {/* {`${file.relativePath}/${file.filename}`} */}
+                      
+												<>
+													<Typography
+														key={file.id - file.filename}
+														textAlign='left'
+                            justifyContent={'flex-start'}
+                            >
+														<Button
+															sx={{ width: '100%', border:0 }}
+															color='primary'
+															onClick={(evt) =>
+																onFileLinkClicked(evt, idx, file)
+															}
+															variant={
+																idx === selectedFileId ? 'outlined' : 'text'
+															}>
+															{file.filename}
+														</Button>
+													</Typography>
+												</>
 									</Typography>
 								</ListItem>
 							))}
@@ -150,6 +153,7 @@ export default function AvailablePDFsList(props: IProps) {
 								id='download-zip-button'
 								sx={{
 									width: '100%',
+                  borderRadius:0
 								}}>
 								Download All
 							</Button>

@@ -5,16 +5,16 @@ import {
   Divider,
   FormControl,
   FormLabel,
-  Paper,
   TextField,
-  Typography,
+  Typography
 } from "@mui/material";
 import Grid from '@mui/material/Unstable_Grid2';
 import { styled } from "@mui/styles";
 import React, { useContext } from "react";
-import { ThemeProvider, createUseStyles } from "react-jss";
+//import { ThemeProvider, createUseStyles } from "react-jss";
 import SearchContext from "./SearchContext";
 //import Grid from '@mui/material/Grid'; // Grid version 1
+import { ThemeProvider } from "@material-ui/core";
 import Globals from "../globals";
 import theme from "../styles/theme";
 import SearchDatePickers from "./SearchDatePickers";
@@ -47,15 +47,9 @@ const Item = styled(Box)(({ theme }) => ({
   },
 }));
 
-const useStyles = createUseStyles({
-
-});
-
 
 const SideBarFilters = (props) => {
   const { state, setState } = useContext(SearchContext);
-
-  const classes = useStyles(theme);
   const {
     filtersHidden,
     onActionChange,

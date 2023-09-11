@@ -33,14 +33,13 @@ export default function PDFContainer(props:IProps) {
 					item
 					xs={12}
 					id='pdf-viewer-container-grid-item'
-					alignSelf={'centered'}
-          padding={2}
           >
 					<PDFViewer
 						{...props}
+            
             file={file}
-						fileUrl={fileUrl}
-					/>
+						fileUrl={'/docs/EisDocument-UOFA-03225/110318/110318_0001.pdf'}
+					/> 
 				</Grid>
 			</Grid>
 		</Paper>

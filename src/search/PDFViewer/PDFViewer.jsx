@@ -1,4 +1,4 @@
-import { Grid, Paper, Snackbar, Typography } from '@mui/material';
+import { Paper, Snackbar, Typography } from '@mui/material';
 import { Alert } from '@mui/material/';
 
 import { ProgressBar, Viewer, Worker } from '@react-pdf-viewer/core';
@@ -68,51 +68,40 @@ const PDFViewer = (props) => {
     <>
       <Paper sx={{
         padding: 4,
+        backgroundColor: 'lightblue',
       }}>
-        <Grid container flexGrow={1}>
-          <Grid item xs={12} alignItems='center' justifyContent='center'>
-    
-          <Snackbar open={infoMessage && infoMessage.length} autoHideDuration={6000} onClose={() => setInfoMessage("")}>
-            <Alert severity="info">Loading {file.filename} - {infoMessage}</Alert>
-          </Snackbar>
 
-          <Snackbar open={errorMessage && errorMessage.length} autoHideDuration={6000} onClose={() => setErrorMessage("")}>
-            <Alert severity="error">{errorMessage}</Alert>
-          </Snackbar>
-    
+            <Snackbar open={infoMessage && infoMessage.length} autoHideDuration={6000} onClose={() => setInfoMessage("")}>
+              <Alert severity="info">Loading {file.filename} - {infoMessage}</Alert>
+            </Snackbar>
+
+            <Snackbar open={errorMessage && errorMessage.length} autoHideDuration={6000} onClose={() => setErrorMessage("")}>
+              <Alert severity="error">{errorMessage}</Alert>
+            </Snackbar>
+
             <Typography variant="h4">{file.title}</Typography>
 
             <Typography variant="h5">Filename {file.filename}</Typography>
             <Typography variant="h5">File ID: {file.id}</Typography>
             <Typography variant="h5">Process ID: {file.processId}</Typography>
             <Typography variant="h5">fileUrl: {fileUrl}</Typography>
-            <Typography variant="h5">filenames: 
-              {file.filenames.map((filename) => {
-                return (
-                 <>
-                  {JSON.stringify(filename)}
-                 </>
-                )
-              })}
-            </Typography>
-          </Grid>
 
-          <Worker workerUrl={workerUrl}>
-            <Viewer
-              renderError={onErrorRender}
-              renderPage={onPageRender}
-              onDocumentLoad={handleDocumentLoad}
-              renderLoader={(percentages) => (
-                <div style={{ width: '240px' }}>
-                  <ProgressBar progress={Math.round(percentages)} />
-                </div>
-              )}
-              onDocumentLoad={onDocumentLoad}
-              fileUrl={fileUrl}
-              plugins={[Toolbar]}
-            />
-          </Worker>
-        </Grid>
+            <h2>Worker??</h2>
+            <Worker workerUrl={workerUrl}>
+              <Viewer
+                renderError={onErrorRender}
+                renderPage={onPageRender}
+                onDocumentLoad={handleDocumentLoad}
+                renderLoader={(percentages) => (
+                  <div style={{ width: '240px' }}>
+                    <ProgressBar progress={Math.round(percentages)} />
+                  </div>
+                )}
+                onDocumentLoad={onDocumentLoad}
+                fileUrl={fileUrl}
+                plugins={[Toolbar]}
+              />
+            </Worker>
       </Paper>
     </>
     //     </div>
