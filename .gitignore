@@ -42,4 +42,4 @@ src/NEPAccess frontend source/UserDetails.txt
 *.old2
 src/NEPAccess.code-workspace
 .history/**
-*.pdf
+public/docs**

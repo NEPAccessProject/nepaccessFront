@@ -104,14 +104,13 @@ export default function AvailablePDFsList(props: IProps) {
 						textAlign={'center'}
 						classes={classes.centered}
 						padding={2}>
-						<Typography variant='h4'>Related Files</Typography>
+						<Typography variant='h4'>#{files.length} Related Files</Typography>
 						<Typography variant='h6'>
 							Selected File ID {selectedFileId}{' '}
 						</Typography>
 						<Divider />
 					</Grid>
-					<Grid item border={1} xs={12}>
-            FILES LENGTH? {files.length}
+					<Grid item xs={12}>
 						{files &&
 							files.length &&
 						files.map((file: any, idx: number) => (
@@ -129,7 +128,7 @@ export default function AvailablePDFsList(props: IProps) {
                             justifyContent={'flex-start'}
                             >
 														<Button
-															sx={{ width: '100%', border:0 }}
+															sx={{ width: '100%', border:0, padding:0,margin:0 }}
 															color='primary'
 															onClick={(evt) =>
 																onFileLinkClicked(evt, idx, file)

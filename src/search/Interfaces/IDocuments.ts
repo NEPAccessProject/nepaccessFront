@@ -39,6 +39,7 @@ export interface IFile {
   //eisdoc: IEISDoc;
   size?: number;
   filenames: string[];
+  eisdoc: IEISDoc;
 }
 
 export interface IFiles extends Array<IFile>{}

@@ -14,17 +14,13 @@ import {
   Typography
 } from '@mui/material';
 import { makeStyles, styled } from '@mui/styles';
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import theme from '../../styles/theme';
 import AvailablePDFsList from '../PDFViewer/AvailablePDFsList';
 import PDFContainer from '../PDFViewer/PDFContainer';
+import SearchContext from '../SearchContext';
 
-// import PDFViewer from '../../examples/PDFViewer/index.jsx';
-// const [fullWidth, setFullWidth] = React.useState(true);
-// const [maxWidth, setMaxWidth] = React.useState('md');
-// import SearchContext from './SearchContext';
-//https://codesandbox.io/s/pdf-view-l3i46?file=/src/Components/DrawArea.js
 //https://react-pdf-viewer.dev/examples/
 import axios from 'axios';
 import { useEffect, useRef } from 'react';
@@ -43,12 +39,6 @@ const useStyles = makeStyles((theme) => ({
     borderRadius: 0,
     '&:hover': {
       textDecoration: 'underline',
-      //backgroundColor: theme.palette.grey[200],
-      //      boxShadow: '0px 1px 1px rgba(0.5, 0.5, 0.5, 0.5)',
-      //      cursor: 'pointer',
-      // '& .addIcon': {
-      //color: 'purple',
-      // },
     },
   },
   item: {
@@ -84,25 +74,23 @@ export default function PDFViewerDialog(props) {
 
   //	let { record, isOpen, onDialogClose } = props;
   const queryParams = useParams();
+  const ctx = useContext(SearchContext);
+  const { state, setState } = ctx;
   const params = new URLSearchParams(window.location.search)
   //Strictly for debugging so I can test it without props
   const record = props.record || {
-    id: 5970,
+    id: 15993,
     title: 'Mock Record Title',
-    processId: 1003943
+    proceess: 1004685
   }
   const isOpen = props.isOpen || params.get('isOpen');
   const id = record.id;
   const processId = record.processId;
-  const onDialogClose = //props.onDialogClose || 
-    (evt) => {
-      console.log('onDialogClose evt', evt);
-    }
   //let { id, processId } = record;
 
   //  const { q,id } = useParams();
   console.log('🚀 ~ file: PDFViewerDialog.jsx:88 ~ PDFViewerDialog ~ q,processId,id:', processId, id);
-
+  
   const [numPages, setNumPages] = useState(null);
   const [pageNumber, setPageNumber] = useState(1);
   const [fullWidth, setFullWidth] = React.useState(true);
@@ -119,6 +107,11 @@ export default function PDFViewerDialog(props) {
   const [message, setMessage] = useState("");
 
   let _mounted = useRef(false);
+  const onDialogClose = //props.onDialogClose || 
+    (evt) => {
+      console.log("🚀 ~ file: PDFViewerDialog.jsx:112 ~ PDFViewerDialog ~ evt:", evt)
+      setState({ ...state, isOpen: false });
+    }
 
   const classes = useStyles(theme);
   const getFilesById = async (id = 0) => {
@@ -163,9 +156,15 @@ export default function PDFViewerDialog(props) {
     try {
       const files = [];
       const response = await axios.get(url);
-      const data = response.data;
+      files = response.data.filter(
+        (file) =>
+          file.filename.slice(
+            file.filename.lastIndexOf('.'),
+            file.filename.length,
+          ) === '.pdf',
+      );
 
-      return data;
+      return files;
     }
     catch (e) {
       console.error(
@@ -327,30 +326,31 @@ export default function PDFViewerDialog(props) {
         id='pdf-viewer-dialog'
         //open={isOpen}
         open={isOpen}
-        fullScreen
-        // maxWidth='lg'
-        // maxHeight='lg'
+        //fullScreen
+        maxWidth='lg'
+        maxHeight='lg'
         //				minWidth='md'
         //			minHeight='md'
         //height={'100vh'}
         //      maxWidth={lg}
         onClose={onDialogClose}>
         <DialogContent>
+          
+          <DialogContentText id='pdf-viewer-dialog-content'>
           <DialogTitle>
             <Grid
-              marginTop={5}
+              marginTop={10}
               container
               display={'flex'}
               justifyContent={'flex-end'}
               alignItems={'center'}>
               <IconButton onClick={(evt) => onDialogClose(evt)}>
-                <Typography fontWeight={'bold'} fontSize={'medium'}>
+                <Typography fontWeight={'bold'} fontSize={'large'}>
                   X
                 </Typography>
               </IconButton>
             </Grid>
           </DialogTitle>
-          <DialogContentText id='pdf-viewer-dialog-content'>
             <Divider />
             <h3>FILES #{files.length}</h3>
             <Divider />
@@ -387,7 +387,6 @@ export default function PDFViewerDialog(props) {
                       xs={2}
                       //                  className={classes.centered}
                       borderColor='#ccc'
-                      border={2}
                       borderStyle='dashed'
                       id='pdf-file-list-grid-item'
                       justifyContent='flex-start'
@@ -401,7 +400,6 @@ export default function PDFViewerDialog(props) {
                     </Grid>
                     <Grid
                       container
-                      border={1}
                       xs={9}
                       justifyContent='flex-end'
                       alignItems='flex-end'
@@ -422,12 +420,6 @@ export default function PDFViewerDialog(props) {
 
                       <Grid container xs={12} id='pdf-viewer-grid-item-container'>
                         <Grid margin={2} item xs={12}>
-                          <Typography>
-                            <Typography variant="h5">
-                              Filename : {currentFile.filename}
-                            </Typography>
-                          </Typography>
-
                           {hasError && message && <Snackbar open={hasError} autoHideDuration={6000} onClose={handleAlertClose}>
                             <Alert onClose={(evt) => handleAlertClose(evt)} severity="success" sx={{ width: '100%' }}>
                               This is a success message! {message}
@@ -454,7 +446,6 @@ export default function PDFViewerDialog(props) {
                               <Alert severity="success">{message}</Alert>
                             </Snackbar>
                           }
-                          <h2>START PDF CONTAINER</h2>
                           <PDFContainer {...props} file={files[0]} />
                         </Grid>
                       </Grid>
