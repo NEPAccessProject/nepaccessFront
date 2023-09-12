@@ -1,6 +1,7 @@
 import {
   Grid,
-  Paper
+  Paper,
+  Typography
 } from '@mui/material';
 import React from 'react';
 import { IFile } from '../Interfaces';
@@ -16,6 +17,7 @@ export default function PDFContainer(props:IProps) {
   // const eisDoc: IEISDoc = file.eisdoc;
   // const classes = useStyles();
   const {file} = props;
+  const {eisdoc} = file;
   console.log("🚀 ~ file: PDFContainer.tsx:35 ~ PDFContainer ~ props:", props)
   if(!file) return (<div>File not found</div>);
   const fileUrl = `/docs/${file.filename}`;
@@ -34,11 +36,18 @@ export default function PDFContainer(props:IProps) {
 					xs={12}
 					id='pdf-viewer-container-grid-item'
           >
+            <Typography>File ID: {file.id}</Typography>
+            <Typography>Process ID: {file.eisdoc.processId}</Typography>
+            <Typography>Folder: {file.folder}</Typography>
+            <Typography>Filename: {file.folder}</Typography>
+            <Typography>File Path: {fileUrl}</Typography>
+            <Typography>Title: {(eisdoc.title) ? eisdoc?.title : "N/A"}</Typography>
+            <Typography>Notes: {(eisdoc.notes) ? eisdoc?.notes : "N/A"}</Typography>
 					<PDFViewer
 						{...props}
             
             file={file}
-						fileUrl={'/docs/EisDocument-UOFA-03225/110318/110318_0001.pdf'}
+						fileUrl={'../../assets/example.pdf'}
 					/> 
 				</Grid>
 			</Grid>

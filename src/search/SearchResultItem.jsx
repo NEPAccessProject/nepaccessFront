@@ -225,7 +225,7 @@ export default function SearchResultItem(props) {
                     variant={'contained'} 
                     data-modal={`modal-${record.id}`} 
                     onClick={(evt)=> openModal(evt, record.id)}>
-                      Preview PDF
+                      Preview PDF - {record.id} - {record.processId}
                     </Button>
 									<Grid>
 
