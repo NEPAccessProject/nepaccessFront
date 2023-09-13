@@ -201,6 +201,8 @@ export default function SearchResultItem(props) {
 								flex={1}
 							>
 								<Typography id="snippets-title" variant='h5' >{(title) ? title : ''}</Typography>
+                Process ID {record.processId}
+                Record ID {record.id}
 								{/* <RenderSnippets record={record} /> */}
 							</Grid>
 							<Grid
@@ -225,7 +227,7 @@ export default function SearchResultItem(props) {
                     variant={'contained'} 
                     data-modal={`modal-${record.id}`} 
                     onClick={(evt)=> openModal(evt, record.id)}>
-                      Preview PDF - {record.id} - {record.processId}
+                      Preview PDF
                     </Button>
 									<Grid>
 
