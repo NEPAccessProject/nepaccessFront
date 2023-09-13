@@ -1,7 +1,6 @@
 import {
   Grid,
-  Paper,
-  Typography
+  Paper
 } from '@mui/material';
 import React from 'react';
 import { IEISDoc, IFile } from '../Interfaces';
@@ -16,7 +15,11 @@ interface IProps {
 export default function PDFViewerContainer(props:IProps) {
   console.log(`🚀 ~ file: PDFViewerDialog.jsx:298 ~ PDFContainer ~ props:`, props);
   // const classes = useStyles();
-  const {file,doc} = props;
+  const {file} = props;
+  const {eisdoc} = file;
+  console.log(`file: PDFViewerContainer.tsx:20 ~ PDFViewerContainer ~ eisdoc:`, eisdoc);
+  
+  console.log(`file: PDFViewerContainer.tsx:19 ~ PDFViewerContainer ~ props:`, props);
   console.log("🚀 ~ file: PDFViewerContainer.tsx:19 ~ PDFViewerContainer ~ file:", file)
   console.log("🚀 ~ file: PDFContainer.tsx:35 ~ PDFContainer ~ props:", props)
   const fileUrl = `/docs/${file.folder}/${file.filename}`;
@@ -43,14 +46,13 @@ export default function PDFViewerContainer(props:IProps) {
             <Typography>File Path: {fileUrl}</Typography> */}
             {/* <Typography>Title: {(eisdoc.title) ? eisdoc?.title : "N/A"}</Typography>
             <Typography>Notes: {(eisdoc.notes) ? eisdoc?.notes : "N/A"}</Typography> */}
-          <Typography>Start PDF Viewer</Typography>
 					<PDFViewer
 						{...props}
             
             file={file}
 						fileUrl={fileUrl}
 					/> 
-                    <Typography>END PDF Viewer</Typography>
+
 				</Grid>
 			</Grid>
 		</Paper>

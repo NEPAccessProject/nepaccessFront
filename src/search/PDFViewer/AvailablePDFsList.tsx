@@ -2,6 +2,7 @@ import {
   Button,
   Divider,
   Grid,
+  List,
   ListItem,
   Paper,
   Typography
@@ -97,6 +98,15 @@ export default function AvailablePDFsList(props: IProps) {
 						textAlign={'center'}
 						classes={classes.centered}
 						padding={2}>
+              <List>
+                <ListItem>
+                  <Typography variant='h4'>Props Files: {JSON.stringify(props.files)} </Typography>
+                </ListItem>
+                <ListItem>
+                  <Typography>PROPS {Object.keys(props)}</Typography>
+                </ListItem>
+              </List>
+
 						<Typography variant='h4'>#{files.length} Related Files</Typography>
 						<Typography variant='h6'>
 							Selected File ID {currentFile.id}{' '}
@@ -147,7 +157,7 @@ export default function AvailablePDFsList(props: IProps) {
 									width: '100%',
                   borderRadius:0
 								}}>
-								  Download All - {downloadLink}
+								  Download All
 							</Button>
 						</Grid>
 					</Grid>

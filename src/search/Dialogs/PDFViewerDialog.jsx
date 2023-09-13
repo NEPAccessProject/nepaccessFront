@@ -1,7 +1,6 @@
 import {
   Alert,
   Box,
-  Button,
   Dialog,
   DialogContent,
   DialogContentText,
@@ -19,16 +18,19 @@ import theme from '../../styles/theme';
 import AvailablePDFsList from '../PDFViewer/AvailablePDFsList';
 //https://react-pdf-viewer.dev/examples/
 import axios from 'axios';
-import { useEffect, useRef } from 'react';
+import fileDownload from 'js-file-download';
+import { useEffect } from 'react';
 import Globals from '../../globals';
 import PDFViewerContainer from '../PDFViewer/PDFViewerContainer';
+import PDFViewerContext from '../PDFViewer/PDFViewerContext';
 import SearchContext from '../SearchContext';
+import { PageNavButtons } from './PageNavButtons';
 // pdfjs.GlobalWorkerOptions.workerSrc = new URL(
 //   'pdfjs-dist/build/pdf.worker.min.js',
 //   import.meta.url,
 // ).toString();
 
-const useStyles = makeStyles((theme) => ({
+export const useStyles = makeStyles((theme) => ({
   centered: {},
   link: {
     fontSize: '0.9em',
@@ -44,7 +46,6 @@ const useStyles = makeStyles((theme) => ({
     padding: 5,
     borderRadius: 1,
     '&:hover': {
-      backgroundColor: theme.palette.background,
       boxShadow: '0px 4px 8px rgba(0.5, 0.5, 0.5, 0.5)',
       cursor: 'pointer',
       '& .addIcon': {
@@ -62,6 +63,8 @@ const Item = styled(Paper)(({ theme }) => ({
   elevation: 1,
   borderRadius: 1,
 }));
+
+//Function adds two numbers
 
 export default function PDFViewerDialog(props) {
   console.log("🚀 ~ file: PDFViewerDialog.jsx:73 ~ PDFViewerDialog ~ props:", props)
@@ -85,31 +88,36 @@ export default function PDFViewerDialog(props) {
   //let { id, processId } = record;
 
   //  const { q,id } = useParams();
-  console.log('🚀 ~ file: PDFViewerDialog.jsx:88 ~ PDFViewerDialog ~ q,processId,id:', processId, id);
+  const _mounted = React.useRef(false);
+
+  const [state,setState] = useState({
+    currentFile: {},
+    currentFileIndex: 0,
+    numPages:0,
+    pageNumber:1,
+    files:[],
+    maxWidth:'md',
+    errorMessage:'',
+    infoMessage: '',
+    warningMessage: '',
+  });
+
   
-  const [numPages, setNumPages] = useState(null);
-  const [pageNumber, setPageNumber] = useState(1);
-  const [fullWidth, setFullWidth] = React.useState(true);
-  const [maxWidth, setMaxWidth] = React.useState('md');
-  const [files, setFiles] = useState([]);
-  const [currentFileIndex, setCurrentFileIndex] = useState(0);
-  const [currentFile, setCurrentFile] = useState({});
-
-  const [warningMessage, setHasWarning] = useState("");
-  const [errorMessage, setHasError] = useState("");
-  const [infoMessage, setHasInfo] = useState("");
-  const [hasSuccess, setHasSuccess] = useState("");
-  const [message, setMessage] = useState("");
-
-  let _mounted = useRef(false);
-
+  function onDownloadZip(url, filename) {
+    axios.get(url, {
+      responseType: 'blob',
+    }).then(res => {
+      fileDownload(res.data, filename);
+    });
+  }
 
   const classes = useStyles(theme);
+
   const getFilesById = async (id = 0) => {
-    console.log('🚀 ~ file: PDFViewerDialog.jsx:111 ~ getFilesById ~ id:', id);
     if (_mounted.current !== true) {
       return;
     }
+    console.log('🚀 ~ file: PDFViewerDialog.jsx:111 ~ getFilesById ~ id:', id);
     let url = Globals.currentHost + `file/nepafiles?id=${id}`;
     try {
       const response = await axios.get(url);
@@ -132,22 +140,19 @@ export default function PDFViewerDialog(props) {
     }
   };
   const getProcessByProcessId = async (processId = 0) => {
-    setMessage('Loading Files');
-    setHasInfo(true);
+    setState({
+      ...state,
+      infoMessage: `TEST - Retrieving files for processId ${processId}`,
+    })
 
-    console.log(
-      '🚀 ~ file: PDFViewerDialog.jsx:132 ~ getProcessByProcessId ~ id:',
-      processId,
-    );
     if (_mounted.current !== true) {
       return;
     }
     let url =
       Globals.currentHost + `test/get_process_full?processId=${processId}`;
     try {
-      const files = [];
       const response = await axios.get(url);
-      files = response.data.filter(
+      const files = response.data.filter(
         (file) =>
           file.filename.slice(
             file.filename.lastIndexOf('.'),
@@ -162,7 +167,10 @@ export default function PDFViewerDialog(props) {
         `Failed to get a list of files for id ${processId}.With an Exception`,
         e,
       );
-      setHasError(true)
+      setState({
+        ...state,
+        errorMessage: e.message
+      })
 
       return [];
     }
@@ -178,10 +186,18 @@ export default function PDFViewerDialog(props) {
     };
   }, [isOpen]);
 
-  //[TODO] Only for testing longer load times and the spinner
+  // Function calls getFiles() to get a list files then call getFilesById() to get a list of files for a given file.id and merges them
+
+  useEffect(()=>{
+    const files = getFiles()
+    console.log(`file: PDFViewerDialog.jsx:193 ~ useEffect ~ files:`, files);
+  },[])
 
   async function getFiles() {
     const data = await getProcessByProcessId(processId);
+    console.log(`🚀 ~ file: PDFViewerDialog.jsx:198 ~ getFiles ~ data:`, data);
+
+    const files=[];
     data.map((item, idx) => {
       const doc = item.doc;
       const names = item.filenames.map((filename, idx) => {
@@ -210,11 +226,14 @@ export default function PDFViewerDialog(props) {
 
       }
       else {
-        <Snackbar open={true} autoHideDuration={6000} onClose={() => setHasError(false)}>
+        <Snackbar open={true} autoHideDuration={1000} onClose={() => setState({
+            ...state,
+            errorMessage:''
+            })}>
           <Alert severity="error">'Unable to Preview File, no files were found'</Alert>
         </Snackbar>
       }
-      setFiles(files);
+      setState({...state,files})
       return files;
     });
   }
@@ -224,44 +243,45 @@ export default function PDFViewerDialog(props) {
     }
 
     async function getFilesFromAPI() {
+      const temp = await getFiles();
+      console.log(`file: PDFViewerDialog.jsx:247 ~ getFilesFromAPI ~ temp:`, temp);
       const files = await getFilesById(id);
       console.log("🚀 ~ file: PDFViewerDialog.jsx:232 ~ getFilesFromAPI ~ files:", files)
       const currentFile = files.filter((file) => file.processId === processId);
       console.log("🚀 ~ file: PDFViewerDialog.jsx:203 ~ useEffect ~ currentFile:", currentFile)
-      setCurrentFile(files[0]);
-      setFiles(files);
+      setState({...state, currentFile,files });
       console.log("🚀 ~ file: PDFViewerDialog.jsx:232 ~ files:", files)
 
     }
-    getFilesFromAPI()
-      .then(res => {
-        console.log("🚀 ~ file: PDFViewerDialog.jsx:241 ~ useEffect ~ res:", res)
-      })
-      .catch(err => console.error(err))
+    try{
+      getFilesFromAPI();
+    }
+    catch(err){
+      console.error(`Unexpected error retriving files for processId ${processId}`, err);
+    }
 
   }, [])
 
 
   function onDocumentLoadSuccess({ numPages }) {
+    setState({...state,infoMessage:'',errorMessage:'', warningMessage:'', numPages });
     //console.log('onDocumentLoadSuccess', numPages);
-    setHasSuccess(true);
-    setHasInfo(true)
-    setMessage("Document Loaded Successfully")
-    setNumPages(numPages);
   }
   const handleMaxWidthChange = (event) => {
-    setMaxWidth(
-      // @ts-expect-error autofill of arbitrary value is not handled.
-      event.target.value,
-    );
+    setState({...state,maxWidth: event.target.value})
   };
   const onLoadNextFile = (evt) => {
-    if (currentFileIndex !== files.length) {
-      setCurrentFileIndex(currentFileIndex + 1);
-      setCurrentFile(files[currentFileIndex]);
+    if (state.currentFileIndex !== state.files.length) {
+      const idx =  state.currentFileIndex + 1;
+
+      setState({
+        ...state,
+        currentFileIndex: idx,
+        currentFile: state.files[idx],
+      })
     } else {
       console.warn(
-        `Cannot get next file the index ${currentFileIndex} is at ${files.length} `,
+        `Cannot get next file the index ${state.currentFileIndex} - Total Files ${state.files.length} `,
       );
     }
     evt.preventDefault();
@@ -269,15 +289,20 @@ export default function PDFViewerDialog(props) {
   const onLoadPreviousFile = (evt) => {
     if ((currentFileIndex) => 0) {
       //[TODO][REFACTOR]
-      setCurrentFileIndex(currentFileIndex - 1);
-      setCurrentFile(files[currentFileIndex - 1]);
+      const currentFileIndex = state.currentFileIndex - 1;
+      const currentFile= state.files[currentFileIndex];
+      setState({
+        ...state,
+        currentFileIndex,
+        currentFile
+      })
     } else {
       console.warn('File Index Already 0 disable the button');
     }
     evt.preventDefault();
   };
   const onFileLinkClicked = (evt, id) => {
-    const file = files.filter((file) => file.id === id);
+    const file = state.files.filter((file) => file.id === id);
 
     if (!file) {
       // Hmm we could retain the current file as a fallback or set to empty.
@@ -285,10 +310,15 @@ export default function PDFViewerDialog(props) {
       console.warn('No file  was found');
       return;
     } else {
-      const idx = currentFileIndex + 1;
+      const idx = state.currentFileIndex + 1;
+
       console.log('Updated currentFileIndex', idx);
-      setCurrentFileIndex(idx);
-      setCurrentFile(files[idx]);
+
+      setState({
+       ...state,
+        currentFileIndex: idx,
+        currentFile: file[idx],
+      })
     }
   };
 
@@ -297,11 +327,12 @@ export default function PDFViewerDialog(props) {
   // });
 
   const handleAlertClose = (evt) => {
-    setHasError(false);
-    setHasInfo(false);
-    setHasSuccess(false);
-    setHasWarning(false);
-    setMessage("");
+    setState({
+      ...state,
+      infoMessage: '',
+      warningMessage: '',
+      errorMessage: '',
+    })
     evt.preventDefault();
   }
   const onBackdropClicked = (evt) => {
@@ -310,7 +341,14 @@ export default function PDFViewerDialog(props) {
 
   //Files take a while to load, debouncing handlers
   //[TODO] Not a fan of having to manually set more than one session var for one action, files are required hence eisdoc is well
+
+  //wrap state func(s) into value so we can expand it to add funcs etc.
+  const value = {
+    state,
+    setState
+  }
   return (
+    <PDFViewerContext.Provider value={value}>
     <Box sx={{}}>
       <Dialog
         id='pdf-viewer-dialog'
@@ -359,9 +397,10 @@ export default function PDFViewerDialog(props) {
                         >
                         <AvailablePDFsList
                           {...props}
-                          files={files}
-                          currentFile={currentFile}
+                          files={state.files}
+                          currentFile={state.currentFile}
                           onFileLinkClicked={onFileLinkClicked}
+                          onDownloadZip={onDownloadZip}
                         />
                       </Grid>
                     <Grid
@@ -375,15 +414,32 @@ export default function PDFViewerDialog(props) {
 
                       <Grid container xs={12} flex={1} id='page-nav-button-grid-container'>
                         <PageNavButtons
-                          files={files}
-                          currentFileIndex={currentFileIndex}
+                          files={state.files}
+                          currentFileIndex={state.currentFileIndex}
                           onFileLinkClicked={onFileLinkClicked}
                           onLoadPreviousFile={onLoadPreviousFile}
                           onLoadNextFile={onLoadNextFile}
                         />
                       </Grid>
-                      <Grid item flex={1} xs={12} border={1} justifyContent={'center'} >
-                        <PDFViewerContainer {...props} file={currentFile} eisdoc={currentFile.eisdoc} /></Grid>
+                      <Grid item flex={1} xs={12} justifyContent={'center'} >
+                        
+                        {
+                        state.currentFile 
+                        ? (
+                          <PDFViewerContainer 
+                              {...props} 
+                              file={state.currentFile} 
+                              onDownloadZip={onDownloadZip}
+                              eisdoc={state.currentFile.eisdoc}
+                            />
+                          )
+                        : (
+                          <>
+                            <Typography variant={'h3'}>No File Selected</Typography>
+                          </>
+                        )
+                      }
+                        </Grid>
                     </Grid>
                   </Grid>
                   </Paper>
@@ -391,51 +447,8 @@ export default function PDFViewerDialog(props) {
         </DialogContent>
       </Dialog>
     </Box>
+    </PDFViewerContext.Provider>
   );
 }
 
-export function PageNavButtons(props) {
-  const { currentFileIndex, files, onFileLinkClicked, onLoadPreviousFile, onLoadNextFile } = props;
-  const classes = useStyles(theme);
 
-  return (
-    <>
-      <Grid container xs={12} flex={1} justifyContent={'center'} alignItems={'flex-start'} id='button-grid-container'>
-        <Grid
-          item
-          alignItems={'center'}
-          display='flex'
-          flex={1}
-          id='previous-button-grid-item'
-          justifyContent={'center'}
-          paddingBottom={1}
-          paddingTop={1}
-          xs={6}>
-          <Button
-            variant='outlined'
-            disabled={currentFileIndex === 0 || files.length===0}
-            onClick={onLoadPreviousFile}>
-            Previous File
-          </Button>
-        </Grid>
-        <Grid
-          item
-          display='flex'
-          flex={1}
-          justifyContent={'center'}
-          alignItems={'center'}
-          id='next-button-grid-item'>
-          <Button
-            variant='outlined'
-            disabled={
-                (files.length <= 1)
-            }
-            color='primary'
-            onClick={onLoadNextFile}>
-            Next File
-          </Button>
-        </Grid>
-      </Grid>
-    </>
-  )
-}

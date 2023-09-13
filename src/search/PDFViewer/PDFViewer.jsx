@@ -1,83 +1,83 @@
-import { Alert, Box, Snackbar } from '@mui/material';
-import { Viewer, Worker } from '@react-pdf-viewer/core';
+import { Box, Container, Typography } from '@mui/material';
+import { ProgressBar, Viewer, Worker } from '@react-pdf-viewer/core';
 import '@react-pdf-viewer/core/lib/styles/index.css';
+import '@react-pdf-viewer/default-layout/lib/styles/index.css';
 import { toolbarPlugin } from '@react-pdf-viewer/toolbar';
 import '@react-pdf-viewer/toolbar/lib/styles/index.css';
-import React, { useEffect, useState } from 'react';
-import SearchContext from '../SearchContext';
+import React, { useEffect } from 'react';
+import PDFViewerContext from './PDFViewerContext';
+
 const workerUrl = "https://unpkg.com/pdfjs-dist@3.4.120/build/pdf.worker.min.js";
 
 
 //[TODO][REFACTOR] need to break this into two components.  One as container responsible for get and handling the file and display component that just takes that as an arg
 const PDFViewer = (props) => {
+  const [isLoading, setIsLoading] = React.useState(false);
   console.log(`🚀 ~ file: PDFViewer.jsx:12 ~ PDFViewer ~ props:`, props);
-  const {file,fileUrl} = props;
-  const ctx = React.useContext(SearchContext)
-  const {state,setState} = ctx;
-  console.log("🚀 ~ file: PDFViewer.jsx:19 ~ PDFViewer ~ state:", state)
-  //const {errorMessage,warningMessage,infoMessage,setInfoMessage,setErrorMessage,setWarningMessage} = state;
-  state.infoMessage = `Loading file : ${fileUrl}`
-
-
-  const [errorMessage, setErrorMessage] = useState("");
-  const [infoMessage, setInfoMessage] = useState("");
-  const [warningMessage, setWarningMesage] = useState("");
+  const { file, fileUrl } = props;
+  //const ctx = React.useContext(SearchContext)
+  const ctx = React.useContext(PDFViewerContext)
   const _mounted = React.useRef(false);
-  
+  const { state, setState } = ctx;
+
   useEffect(() => {
     _mounted.current = true;
+    console.log(`file: PDFViewer.jsx:23 ~ useEffect ~ _mounted.current:`, _mounted.current);
+    setState({
+      ...state,
+      infoMessage: `Loading document ${file.title}...`,
+      errorMessage: '',
+    })
+
     return (() => {
       _mounted.current = false
     })
-  },[])
+  }, [])
 
-  //const {fileUrl,file} = props;
-
-  console.log(`🚀 ~ file: PDFViewer.jsx:17 ~ PDFViewer ~ fileUrl:`, fileUrl);   
-  return (
-
-    <>
-            <Snackbar open={infoMessage.length} autoHideDuration={3000} onClose={() => setInfoMessage("")}>
-              <Alert severity="info">{infoMessage}</Alert>
-          </Snackbar>
-          <Snackbar open={warningMessage.length} autoHideDuration={3000} onClose={() => setWarningMesage("")}>
-              <Alert severity="warning">{warningMessage}</Alert>
-          </Snackbar>
-          <Snackbar open={errorMessage.length} autoHideDuration={3000} onClose={() => setErrorMessage("")}>
-              <Alert severity="error">{errorMessage}</Alert>
-          </Snackbar>
-
-
-            <Box>
-              Loading file : {fileUrl}
-              <Worker workerUrl={workerUrl}>
-                <Viewer
-                  initialPage={2}
-                  fileUrl={fileUrl}
-                  plugins={[toolbarPlugin]}
-                  onDocumentLoad={(doc) => {
-                    console.log('PDFViewer - onDocument Load args',doc)
-                    setInfoMessage(`Document is loaded (total pages: ${doc.numPages})`);
-                  }}
-                  renderError={(error) => {
-                    setErrorMessage(error.message)
-                  }}
-                  // renderPage={(props) => {
-                  //   setSuccessMessage(`Page ${props.pageNumber} is rendered`);
-                  //   return (
-                  //     <>
-                  //      <Snackbar open={successMessage} autoHideDuration={6000} onClose={() => setSuccessMessage("")}>
-                  //           <Alert severity="info">{JSON.stringify(props)}</Alert>
-                  //       </Snackbar>
-                  //     </>
-                  //   )
-                  // }}
-                />
-              </Worker>
-            </Box>
+  try {
+    return (
+      <>
+        <Box>
+          <Worker workerUrl={workerUrl}>
+            <Viewer
+              initialPage={2}
+              fileUrl={fileUrl}
+              plugins={[toolbarPlugin]}
+              renderLoader={(percentages) => (
+                <div style={{ width: '240px' }}>
+                    <ProgressBar progress={Math.round(percentages)} />
+                </div>
+            )}
+            // onDocumentLoad={(doc) => {
+            //   console.log('PDFViewer - onDocument Load args',doc)
+            //   setState({...state, infoMessage:`Document ${file.title} loaded successfully`})
+            //   setIsLoading(true)
+            // }}
+            // renderError={(error) => {
+            //   setState({...state, errorMessage: `${error.name} - ${error.message}`})
+            //   setIsLoading(false);
+            // }}
+            // renderPage={(props) => {
+            //   setState({...state, infoMessage:`Page ${JSON.stringify(props)} is rendered`})
+            //   setIsLoading(false);
+            // }}
+            />
+          </Worker>
+        </Box>
+      </>
+      //     </div>
+      // </div>
+    );
+  }
+  catch (err) {
+    return (<>
+      <Container>
+        <Typography variant='warning'>
+          Failed to Load PDF! {err.message}
+        </Typography>
+      </Container>
     </>
-    //     </div>
-    // </div>
-  );
+    )
+  }
 }
 export default PDFViewer;
