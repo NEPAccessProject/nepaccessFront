@@ -43,4 +43,5 @@ src/NEPAccess frontend source/UserDetails.txt
 src/NEPAccess.code-workspace
 .history/**
 public/docs**
-/src/search/*.pdf
+!**/.pdf
+*.pdf
