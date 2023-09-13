@@ -106,7 +106,7 @@ export default function SearchResultItem(props) {
 	})
 
 
-	const closeModal = (evt,id) => {
+	const onDialogClose = (evt,id) => {
     setCurrentModalId(null)
     setIsOpen(false)
 		setModal('')
@@ -122,7 +122,7 @@ export default function SearchResultItem(props) {
 			record={record}
 			//isOpen={isOpen[record.id]}
 			isOpen={isOpen && currentModalId === `modal-${record.id}`}
-			onDialogClose={(evt) => closeModal(evt, record.id)}
+			onDialogClose={(evt) => onDialogClose(evt, record.id)}
 			/>
   }
 	</>
@@ -233,7 +233,7 @@ export default function SearchResultItem(props) {
                     record={record} 
                     id={record.id}
                     isOpen={isOpen}
-                    closeFn={closeModal} 
+                    closeFn={onDialogClose} 
                     modal={modalOpen} />
 									</Grid>
 								</Grid>
