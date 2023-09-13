@@ -5,6 +5,7 @@ module.exports = {
   },
   "extends": [
     'plugin:react/recommended',
+    "plugin:cypress/recommended",
     'plugin:react-hooks/recommended',
   ],
   "parser": "@typescript-eslint/parser",
