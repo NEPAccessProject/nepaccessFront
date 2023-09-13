@@ -1,43 +1,83 @@
-import { Paper } from '@mui/material';
-import { Viewer, Worker } from '@react-pdf-viewer/core';
+import { Box, Container, Typography } from '@mui/material';
+import { ProgressBar, Viewer, Worker } from '@react-pdf-viewer/core';
 import '@react-pdf-viewer/core/lib/styles/index.css';
+import '@react-pdf-viewer/default-layout/lib/styles/index.css';
+import { toolbarPlugin } from '@react-pdf-viewer/toolbar';
 import '@react-pdf-viewer/toolbar/lib/styles/index.css';
-import { useState } from 'react';
+import React, { useEffect } from 'react';
+import PDFViewerContext from './PDFViewerContext';
 
 const workerUrl = "https://unpkg.com/pdfjs-dist@3.4.120/build/pdf.worker.min.js";
 
 
 //[TODO][REFACTOR] need to break this into two components.  One as container responsible for get and handling the file and display component that just takes that as an arg
 const PDFViewer = (props) => {
+  const [isLoading, setIsLoading] = React.useState(false);
   console.log(`🚀 ~ file: PDFViewer.jsx:12 ~ PDFViewer ~ props:`, props);
-  const [errorMessage, setErrorMessage] = useState("");
-  const [infoMessage, setInfoMessage] = useState("");
-  const [successMessage, setSuccessMessage] = useState("");
-  const [warningMessage, setWarning] = useState("");
+  const { file, fileUrl } = props;
+  //const ctx = React.useContext(SearchContext)
+  const ctx = React.useContext(PDFViewerContext)
+  const _mounted = React.useRef(false);
+  const { state, setState } = ctx;
 
+  useEffect(() => {
+    _mounted.current = true;
+    console.log(`file: PDFViewer.jsx:23 ~ useEffect ~ _mounted.current:`, _mounted.current);
+    setState({
+      ...state,
+      infoMessage: `Loading document ${file.title}...`,
+      errorMessage: '',
+    })
 
-  //const {fileUrl,file} = props;
-  const { file, fileUrl } = props
+    return (() => {
+      _mounted.current = false
+    })
+  }, [])
 
-  console.log(`🚀 ~ file: PDFViewer.jsx:17 ~ PDFViewer ~ fileUrl:`, fileUrl);
-   
-  return (
-
-    <>
-      <Paper sx={{
-        padding: 2,
-      }}>
-            Loading file : {fileUrl}
-            <Worker workerUrl={workerUrl}>
-              <Viewer
-                initialPage={2}
-                fileUrl={fileUrl}
-              />
-            </Worker>
-      </Paper>
+  try {
+    return (
+      <>
+        <Box>
+          <Worker workerUrl={workerUrl}>
+            <Viewer
+              initialPage={2}
+              fileUrl={fileUrl}
+              plugins={[toolbarPlugin]}
+              renderLoader={(percentages) => (
+                <div style={{ width: '240px' }}>
+                    <ProgressBar progress={Math.round(percentages)} />
+                </div>
+            )}
+            // onDocumentLoad={(doc) => {
+            //   console.log('PDFViewer - onDocument Load args',doc)
+            //   setState({...state, infoMessage:`Document ${file.title} loaded successfully`})
+            //   setIsLoading(true)
+            // }}
+            // renderError={(error) => {
+            //   setState({...state, errorMessage: `${error.name} - ${error.message}`})
+            //   setIsLoading(false);
+            // }}
+            // renderPage={(props) => {
+            //   setState({...state, infoMessage:`Page ${JSON.stringify(props)} is rendered`})
+            //   setIsLoading(false);
+            // }}
+            />
+          </Worker>
+        </Box>
+      </>
+      //     </div>
+      // </div>
+    );
+  }
+  catch (err) {
+    return (<>
+      <Container>
+        <Typography variant='warning'>
+          Failed to Load PDF! {err.message}
+        </Typography>
+      </Container>
     </>
-    //     </div>
-    // </div>
-  );
+    )
+  }
 }
 export default PDFViewer;

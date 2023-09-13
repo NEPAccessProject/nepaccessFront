@@ -1,31 +1,21 @@
 import {
-  AppBar,
-  Box,
   Button,
   Divider,
-  Drawer,
   Grid,
-  IconButton,
   List,
   ListItem,
-  ListItemButton,
-  ListItemIcon,
-  ListItemText,
   Paper,
-  Toolbar,
-  Typography,
+  Typography
 } from '@mui/material';
 import theme from '../../styles/theme';
 //import {InboxIcon,MailIcon} from '@mui/icons-material'
-import MailIcon from '@mui/icons-material/Mail';
-import MenuIcon from '@mui/icons-material/Menu';
-import InboxIcon from '@mui/icons-material/MoveToInbox';
-import CssBaseline from '@mui/material/CssBaseline';
 import { Theme } from '@mui/material/styles';
 import { createStyles, makeStyles } from '@mui/styles';
-import React, { useState } from 'react';
-import { IFiles } from '../Interfaces';
-
+import Axios from 'axios';
+import fileDownload from 'js-file-download';
+import React from 'react';
+import { IFile, IFiles } from '../Interfaces';
+import SearchContext from '../SearchContext';
 // pdfjs.GlobalWorkerOptions.workerSrc = new URL(
 //   'pdfjs-dist/build/pdf.worker.min.js',
 //   import.meta.url,
@@ -38,7 +28,9 @@ interface IStyles {
 }
 interface IProps {
 	files: IFiles;
-	onFileLinkClicked: any; //(React.MouseEvent<HTMLElement>:evt,number) => {};
+  currentFile: IFile;
+	onFileLinkClicked: any; //[TODO][REFACTOR] Set to proper type (React.MouseEvent<React.HTMLElement>:evt,number) => {};
+  
 }
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -65,36 +57,38 @@ const useStyles = makeStyles((theme: Theme) =>
 
 export default function AvailablePDFsList(props: IProps) {
 	console.log("🚀 ~ file: AvailablePDFsList.tsx:67 ~ AvailablePDFsList ~ props:", props)
-	const [selectedFileId, setSelectedFileId] = useState<number>(0);
+	const {files = [],currentFile ,onFileLinkClicked} = props;
+  const ctx = React.useContext(SearchContext);
+	const classes = useStyles(theme);
 
-	const { onFileLinkClicked, files = [] } = props;
+  if(!files || !files.length) {
+  return (<>  
+    <Typography variant='h4'>No Files Found</Typography>
+    
+  </>);
+  }
+ if(!currentFile) {
+    return (<>  
+      <Typography variant='h4'>No File Selected</Typography>
+      
+    </>);
+ }
 
-	const _onFileLinkClicked = (evt, fileId, file) => {
-		file.filenames.map((filename, idx) => {
-			if (filename.id === fileId) {
-				console.log(
-					'🚀 ~ file: AvailablePDFsList.tsx:74 ~ set current file',
-					filename,
-				);
-				setSelectedFileId(filename.id);
-			}
-		});
-		console.log(
-			'🚀 ~ file: AvailablePDFsList.tsx:78 ~ AvailablePDFsList ~ file:',
-			file,
-		);
-		const { id } = file;
-		setSelectedFileId(id);
-		console.log(
-			'🚀 ~ file: AvailablePDFsList.tsx:139 ~ ResponsiveDrawer ~ file:',
-			file,
-		);
-	};
 
 	//  const eisDoc: IEISDoc = file.eisdoc;
-	const classes = useStyles(theme);
+  const downloadLink = `${files[0].folder}${files[0].filename}`;
+  
+  
+  function onDownloadZip(url: string, filename: string) {
+      Axios.get(url, {
+        responseType: 'blob',
+      }).then(res => {
+        fileDownload(res.data, filename);
+      });
+    }
 	//  const eisDoc: IEISDoc;
-	return (
+
+  return (
 		<>
 			<Paper sx={{}}>
 				<Grid container>
@@ -104,9 +98,18 @@ export default function AvailablePDFsList(props: IProps) {
 						textAlign={'center'}
 						classes={classes.centered}
 						padding={2}>
+              <List>
+                <ListItem>
+                  <Typography variant='h4'>Props Files: {JSON.stringify(props.files)} </Typography>
+                </ListItem>
+                <ListItem>
+                  <Typography>PROPS {Object.keys(props)}</Typography>
+                </ListItem>
+              </List>
+
 						<Typography variant='h4'>#{files.length} Related Files</Typography>
 						<Typography variant='h6'>
-							Selected File ID {selectedFileId}{' '}
+							Selected File ID {currentFile.id}{' '}
 						</Typography>
 						<Divider />
 					</Grid>
@@ -133,8 +136,7 @@ export default function AvailablePDFsList(props: IProps) {
 															onClick={(evt) =>
 																onFileLinkClicked(evt, idx, file)
 															}
-															variant={
-																idx === selectedFileId ? 'outlined' : 'text'
+															variant={currentFile.id === file.id ? 'outlined' : 'text'
 															}>
 															{file.filename}
 														</Button>
@@ -150,11 +152,12 @@ export default function AvailablePDFsList(props: IProps) {
 								variant='contained'
 								color='primary'
 								id='download-zip-button'
+                onClick={() => onDownloadZip(downloadLink, `${(currentFile?.folder) ? currentFile.folder : ""}/${currentFile.filename}`)}
 								sx={{
 									width: '100%',
                   borderRadius:0
 								}}>
-								Download All
+								  Download All
 							</Button>
 						</Grid>
 					</Grid>
@@ -164,130 +167,3 @@ export default function AvailablePDFsList(props: IProps) {
 	);
 }
 
-interface IDrawerProps {
-	/**
-	 * Injected by the documentation to work in an iframe.
-	 * You won't need it on your project.
-	 */
-	onFileLinkClicked;
-	window?: () => Window;
-	files: IFiles;
-}
-export function ResponsiveDrawer(props: IDrawerProps) {
-	const { window, files, onFileLinkClicked } = props;
-	const [mobileOpen, setMobileOpen] = React.useState(false);
-
-	const handleDrawerToggle = (evt) => {
-		console.log('onDrawerOpen Place holder evt', evt);
-		evt.preventDefault();
-		setMobileOpen(!mobileOpen);
-	};
-	const onDrawerOpen = (evt) => {
-		evt.preventDefault();
-		console.log('onDrawerOpen Place holder evt', evt);
-	};
-	const drawerWidth = 250;
-
-	const drawer = (
-		<div>
-			<Toolbar />
-			<Divider />
-			<List>
-				{files.map((file, index) => (
-					<ListItem key={file.id} disablePadding>
-						<ListItem key={file.id}>
-							<Typography>
-								<Button
-									onClick={(evt) => onFileLinkClicked(evt, file.id)}
-									variant='text'>
-									{file.filename}
-								</Button>
-							</Typography>
-						</ListItem>
-						{/* <ListItemButton>
-							<ListItemIcon>{index % 2 === 0 ? <InboxIcon /> : <MailIcon />}</ListItemIcon>
-							<ListItemText primary={text} />
-						</ListItemButton> */}
-					</ListItem>
-				))}
-			</List>
-			<Divider />
-			<List>
-				{['All mail', 'Trash', 'Spam'].map((text, index) => (
-					<ListItem key={text} disablePadding>
-						<ListItemButton>
-							<ListItemIcon>
-								{index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
-							</ListItemIcon>
-							<ListItemText primary={text} />
-						</ListItemButton>
-					</ListItem>
-				))}
-			</List>
-		</div>
-	);
-
-	const container =
-		window !== undefined ? () => window().document.body : undefined;
-
-	return (
-		<Box sx={{ display: 'flex', border: 0, margintTop: 25 }}>
-			<CssBaseline />
-			<AppBar
-				position='sticky'
-				sx={{
-					width: { sm: `calc(100% - ${drawerWidth}px)` },
-					ml: { sm: `${drawerWidth}px` },
-				}}>
-				<Toolbar>
-					<IconButton
-						color='inherit'
-						aria-label='open drawer'
-						edge='start'
-						onClick={handleDrawerToggle}
-						sx={{ mr: 2, display: { sm: 'none' } }}>
-						<MenuIcon />
-					</IconButton>
-					<Typography variant='h6' noWrap component='div'>
-						Responsive drawer
-					</Typography>
-				</Toolbar>
-			</AppBar>
-			<Box
-				component='nav'
-				sx={{ width: { sm: drawerWidth }, flexShrink: { sm: 0 } }}
-				aria-label='mailbox folders'>
-				{/* The implementation can be swapped with js to avoid SEO duplication of links. */}
-				<Drawer
-					container={container}
-					variant='temporary'
-					open={mobileOpen}
-					onClose={handleDrawerToggle}
-					ModalProps={{
-						keepMounted: true, // Better open performance on mobile.
-					}}
-					sx={{
-						display: { xs: 'block', sm: 'none' },
-						'& .MuiDrawer-paper': {
-							boxSizing: 'border-box',
-							width: drawerWidth,
-						},
-					}}>
-					{drawer}
-				</Drawer>
-				<Drawer
-					variant='permanent'
-					sx={{
-						display: { xs: 'none', sm: 'block' },
-						'& .MuiDrawer-paper': {
-							boxSizing: 'border-box',
-							width: drawerWidth,
-						},
-					}}
-					open>
-					{drawer}
-				</Drawer>
-			</Box>
-		</Box>
-	);
-}

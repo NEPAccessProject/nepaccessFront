@@ -3,5 +3,22 @@
     "source.fixAll.eslint": false,
    },
   "editor.defaultFormatter": "esbenp.prettier-vscode",
-  "editor.formatOnSave": false
+  "editor.formatOnSave": false,
+  "sqltools.connections": [
+    {
+      "mysqlOptions": {
+        "authProtocol": "default",
+        "enableSsl": "Disabled"
+      },
+      "previewLimit": 50,
+      "server": "localhost",
+      "port": 3306,
+      "driver": "MySQL",
+      "name": "Nepaccess",
+      "group": "local",
+      "database": "nepaccess_7_21",
+      "username": "root",
+      "password": "rsbr220Sql!"
+    }
+  ]
   }

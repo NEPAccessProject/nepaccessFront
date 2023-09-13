@@ -106,7 +106,7 @@ export default function SearchResultItem(props) {
 	})
 
 
-	const closeModal = (evt,id) => {
+	const onDialogClose = (evt,id) => {
     setCurrentModalId(null)
     setIsOpen(false)
 		setModal('')
@@ -122,7 +122,7 @@ export default function SearchResultItem(props) {
 			record={record}
 			//isOpen={isOpen[record.id]}
 			isOpen={isOpen && currentModalId === `modal-${record.id}`}
-			onDialogClose={(evt) => closeModal(evt, record.id)}
+			onDialogClose={(evt) => onDialogClose(evt, record.id)}
 			/>
   }
 	</>
@@ -201,6 +201,8 @@ export default function SearchResultItem(props) {
 								flex={1}
 							>
 								<Typography id="snippets-title" variant='h5' >{(title) ? title : ''}</Typography>
+                Process ID {record.processId}
+                Record ID {record.id}
 								{/* <RenderSnippets record={record} /> */}
 							</Grid>
 							<Grid
@@ -225,7 +227,7 @@ export default function SearchResultItem(props) {
                     variant={'contained'} 
                     data-modal={`modal-${record.id}`} 
                     onClick={(evt)=> openModal(evt, record.id)}>
-                      Preview PDF - {record.id} - {record.processId}
+                      Preview PDF
                     </Button>
 									<Grid>
 
@@ -233,7 +235,7 @@ export default function SearchResultItem(props) {
                     record={record} 
                     id={record.id}
                     isOpen={isOpen}
-                    closeFn={closeModal} 
+                    closeFn={onDialogClose} 
                     modal={modalOpen} />
 									</Grid>
 								</Grid>

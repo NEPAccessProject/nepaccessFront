@@ -1,7 +1,6 @@
 import {
   Alert,
   Box,
-  Button,
   Dialog,
   DialogContent,
   DialogContentText,
@@ -14,23 +13,24 @@ import {
   Typography
 } from '@mui/material';
 import { makeStyles, styled } from '@mui/styles';
-import React, { useContext, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import React, { useState } from 'react';
 import theme from '../../styles/theme';
 import AvailablePDFsList from '../PDFViewer/AvailablePDFsList';
-import PDFContainer from '../PDFViewer/PDFContainer';
-import SearchContext from '../SearchContext';
-
 //https://react-pdf-viewer.dev/examples/
 import axios from 'axios';
-import { useEffect, useRef } from 'react';
+import fileDownload from 'js-file-download';
+import { useEffect } from 'react';
 import Globals from '../../globals';
+import PDFViewerContainer from '../PDFViewer/PDFViewerContainer';
+import PDFViewerContext from '../PDFViewer/PDFViewerContext';
+import SearchContext from '../SearchContext';
+import { PageNavButtons } from './PageNavButtons';
 // pdfjs.GlobalWorkerOptions.workerSrc = new URL(
 //   'pdfjs-dist/build/pdf.worker.min.js',
 //   import.meta.url,
 // ).toString();
 
-const useStyles = makeStyles((theme) => ({
+export const useStyles = makeStyles((theme) => ({
   centered: {},
   link: {
     fontSize: '0.9em',
@@ -44,11 +44,8 @@ const useStyles = makeStyles((theme) => ({
   item: {
     //margin: 5,
     padding: 5,
-    border: 0,
-    borderColor: '#ccc',
     borderRadius: 1,
     '&:hover': {
-      backgroundColor: theme.palette.background,
       boxShadow: '0px 4px 8px rgba(0.5, 0.5, 0.5, 0.5)',
       cursor: 'pointer',
       '& .addIcon': {
@@ -62,20 +59,22 @@ const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
   ...theme.typography.body2,
   padding: theme.spacing(1),
-  // textAlign: 'center',
   color: theme.palette.text.secondary,
   elevation: 1,
-  border: 0,
   borderRadius: 1,
 }));
 
-export default function PDFViewerDialog(props) {
-  //    pdfjs.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.js`;
+//Function adds two numbers
 
+export default function PDFViewerDialog(props) {
+  console.log("🚀 ~ file: PDFViewerDialog.jsx:73 ~ PDFViewerDialog ~ props:", props)
+  //    pdfjs.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.js`;
+  const {onDialogClose} = props;
+   
   //	let { record, isOpen, onDialogClose } = props;
-  const queryParams = useParams();
-  const ctx = useContext(SearchContext);
-  const { state, setState } = ctx;
+  const ctx = React.useContext(SearchContext);
+  console.log("🚀 ~ file: PDFViewerDialog.jsx:73 ~ PDFViewerDialog ~ ctx:", ctx)
+//  const { state, setState } = ctx;
   const params = new URLSearchParams(window.location.search)
   //Strictly for debugging so I can test it without props
   const record = props.record || {
@@ -89,36 +88,36 @@ export default function PDFViewerDialog(props) {
   //let { id, processId } = record;
 
   //  const { q,id } = useParams();
-  console.log('🚀 ~ file: PDFViewerDialog.jsx:88 ~ PDFViewerDialog ~ q,processId,id:', processId, id);
+  const _mounted = React.useRef(false);
+
+  const [state,setState] = useState({
+    currentFile: {},
+    currentFileIndex: 0,
+    numPages:0,
+    pageNumber:1,
+    files:[],
+    maxWidth:'md',
+    errorMessage:'',
+    infoMessage: '',
+    warningMessage: '',
+  });
+
   
-  const [numPages, setNumPages] = useState(null);
-  const [pageNumber, setPageNumber] = useState(1);
-  const [fullWidth, setFullWidth] = React.useState(true);
-  const [maxWidth, setMaxWidth] = React.useState('md');
-  const [files, setFiles] = useState([]);
-  const [currentEisDoc, setCurrentEisDoc] = useState({});
-  const [currentFileIndex, setCurrentFileIndex] = useState(0);
-  const [currentFile, setCurrentFile] = useState({});
-
-  const [hasWarning, setHasWarning] = useState("");
-  const [hasError, setHasError] = useState("");
-  const [hasInfo, setHasInfo] = useState("");
-  const [hasSuccess, setHasSuccess] = useState("");
-  const [message, setMessage] = useState("");
-
-  let _mounted = useRef(false);
-  const onDialogClose = //props.onDialogClose || 
-    (evt) => {
-      console.log("🚀 ~ file: PDFViewerDialog.jsx:112 ~ PDFViewerDialog ~ evt:", evt)
-      setState({ ...state, isOpen: false });
-    }
+  function onDownloadZip(url, filename) {
+    axios.get(url, {
+      responseType: 'blob',
+    }).then(res => {
+      fileDownload(res.data, filename);
+    });
+  }
 
   const classes = useStyles(theme);
+
   const getFilesById = async (id = 0) => {
-    console.log('🚀 ~ file: PDFViewerDialog.jsx:111 ~ getFilesById ~ id:', id);
     if (_mounted.current !== true) {
       return;
     }
+    console.log('🚀 ~ file: PDFViewerDialog.jsx:111 ~ getFilesById ~ id:', id);
     let url = Globals.currentHost + `file/nepafiles?id=${id}`;
     try {
       const response = await axios.get(url);
@@ -141,22 +140,19 @@ export default function PDFViewerDialog(props) {
     }
   };
   const getProcessByProcessId = async (processId = 0) => {
-    setMessage('Loading Files');
-    setHasInfo(true);
+    setState({
+      ...state,
+      infoMessage: `TEST - Retrieving files for processId ${processId}`,
+    })
 
-    console.log(
-      '🚀 ~ file: PDFViewerDialog.jsx:132 ~ getProcessByProcessId ~ id:',
-      processId,
-    );
     if (_mounted.current !== true) {
       return;
     }
     let url =
       Globals.currentHost + `test/get_process_full?processId=${processId}`;
     try {
-      const files = [];
       const response = await axios.get(url);
-      files = response.data.filter(
+      const files = response.data.filter(
         (file) =>
           file.filename.slice(
             file.filename.lastIndexOf('.'),
@@ -171,8 +167,10 @@ export default function PDFViewerDialog(props) {
         `Failed to get a list of files for id ${processId}.With an Exception`,
         e,
       );
-      setHasError(true)
-      setMessage('Failed to get a list of files for id ${processId}.With an Exception')
+      setState({
+        ...state,
+        errorMessage: e.message
+      })
 
       return [];
     }
@@ -188,10 +186,18 @@ export default function PDFViewerDialog(props) {
     };
   }, [isOpen]);
 
-  //[TODO] Only for testing longer load times and the spinner
+  // Function calls getFiles() to get a list files then call getFilesById() to get a list of files for a given file.id and merges them
+
+  useEffect(()=>{
+    const files = getFiles()
+    console.log(`file: PDFViewerDialog.jsx:193 ~ useEffect ~ files:`, files);
+  },[])
 
   async function getFiles() {
     const data = await getProcessByProcessId(processId);
+    console.log(`🚀 ~ file: PDFViewerDialog.jsx:198 ~ getFiles ~ data:`, data);
+
+    const files=[];
     data.map((item, idx) => {
       const doc = item.doc;
       const names = item.filenames.map((filename, idx) => {
@@ -202,23 +208,32 @@ export default function PDFViewerDialog(props) {
         }
       })
       const filenames = names;
+      console.log("🚀 ~ file: PDFViewerDialog.jsx:198 ~ data.map ~ filenames:", filenames)
       files.push({
         ...doc,
         size: doc.size ? Math.round(doc.size / 1024 / 1024) : 'N/A',
-        filename: doc.filename,
         filenames: filenames
       })
-      const currentFile = files.filter((file) => file.processId === processId && file.id === id);
+      const currentFile = files.filter((file) => {
+        const hasCurrent =  file.processId === processId && file.id === record.id;
+        console.log(`🚀 ~ file: PDFViewerDialog.jsx:203 ~ useEffect ~ file.processId === processId && file.id === record.id`, file.processId === processId && file.id === record.id)
+        console.log("🚀 ~ file: PDFViewerDialog.jsx:207 ~ currentFile ~ hasCurrent:", hasCurrent)
+        return hasCurrent;
+    });
+
       if (!currentFile && files) {
         console.log('Defaulting to first file in the list', files[0]);
 
       }
       else {
-        <Snackbar open={true} autoHideDuration={6000} onClose={() => setHasError(false)}>
+        <Snackbar open={true} autoHideDuration={1000} onClose={() => setState({
+            ...state,
+            errorMessage:''
+            })}>
           <Alert severity="error">'Unable to Preview File, no files were found'</Alert>
         </Snackbar>
       }
-      setFiles(files);
+      setState({...state,files})
       return files;
     });
   }
@@ -228,50 +243,45 @@ export default function PDFViewerDialog(props) {
     }
 
     async function getFilesFromAPI() {
+      const temp = await getFiles();
+      console.log(`file: PDFViewerDialog.jsx:247 ~ getFilesFromAPI ~ temp:`, temp);
       const files = await getFilesById(id);
       console.log("🚀 ~ file: PDFViewerDialog.jsx:232 ~ getFilesFromAPI ~ files:", files)
       const currentFile = files.filter((file) => file.processId === processId);
       console.log("🚀 ~ file: PDFViewerDialog.jsx:203 ~ useEffect ~ currentFile:", currentFile)
-      setCurrentFile(files[0]);
-      setFiles(files);
+      setState({...state, currentFile,files });
       console.log("🚀 ~ file: PDFViewerDialog.jsx:232 ~ files:", files)
 
     }
-    getFilesFromAPI()
-      .then(res => {
-        console.log("🚀 ~ file: PDFViewerDialog.jsx:241 ~ useEffect ~ res:", res)
-      })
-      .catch(err => console.error(err))
+    try{
+      getFilesFromAPI();
+    }
+    catch(err){
+      console.error(`Unexpected error retriving files for processId ${processId}`, err);
+    }
 
   }, [])
 
 
-  useEffect(() => {
-    if (_mounted.current === false) {
-      return;
-    }
-  }, [currentFile]);
-
   function onDocumentLoadSuccess({ numPages }) {
+    setState({...state,infoMessage:'',errorMessage:'', warningMessage:'', numPages });
     //console.log('onDocumentLoadSuccess', numPages);
-    setHasSuccess(true);
-    setHasInfo(true)
-    setMessage("Document Loaded Successfully")
-    setNumPages(numPages);
   }
   const handleMaxWidthChange = (event) => {
-    setMaxWidth(
-      // @ts-expect-error autofill of arbitrary value is not handled.
-      event.target.value,
-    );
+    setState({...state,maxWidth: event.target.value})
   };
   const onLoadNextFile = (evt) => {
-    if (currentFileIndex !== files.length) {
-      setCurrentFileIndex(currentFileIndex + 1);
-      setCurrentFile(files[currentFileIndex]);
+    if (state.currentFileIndex !== state.files.length) {
+      const idx =  state.currentFileIndex + 1;
+
+      setState({
+        ...state,
+        currentFileIndex: idx,
+        currentFile: state.files[idx],
+      })
     } else {
       console.warn(
-        `Cannot get next file the index ${currentFileIndex} is at ${files.length} `,
+        `Cannot get next file the index ${state.currentFileIndex} - Total Files ${state.files.length} `,
       );
     }
     evt.preventDefault();
@@ -279,15 +289,20 @@ export default function PDFViewerDialog(props) {
   const onLoadPreviousFile = (evt) => {
     if ((currentFileIndex) => 0) {
       //[TODO][REFACTOR]
-      setCurrentFileIndex(currentFileIndex - 1);
-      setCurrentFile(files[currentFileIndex - 1]);
+      const currentFileIndex = state.currentFileIndex - 1;
+      const currentFile= state.files[currentFileIndex];
+      setState({
+        ...state,
+        currentFileIndex,
+        currentFile
+      })
     } else {
       console.warn('File Index Already 0 disable the button');
     }
     evt.preventDefault();
   };
   const onFileLinkClicked = (evt, id) => {
-    const file = files.filter((file) => file.id === id);
+    const file = state.files.filter((file) => file.id === id);
 
     if (!file) {
       // Hmm we could retain the current file as a fallback or set to empty.
@@ -295,10 +310,15 @@ export default function PDFViewerDialog(props) {
       console.warn('No file  was found');
       return;
     } else {
-      const idx = currentFileIndex + 1;
+      const idx = state.currentFileIndex + 1;
+
       console.log('Updated currentFileIndex', idx);
-      setCurrentFileIndex(idx);
-      setCurrentFile(files[idx]);
+
+      setState({
+       ...state,
+        currentFileIndex: idx,
+        currentFile: file[idx],
+      })
     }
   };
 
@@ -307,20 +327,28 @@ export default function PDFViewerDialog(props) {
   // });
 
   const handleAlertClose = (evt) => {
-    setHasError(false);
-    setHasInfo(false);
-    setHasSuccess(false);
-    setHasWarning(false);
-    setMessage("");
+    setState({
+      ...state,
+      infoMessage: '',
+      warningMessage: '',
+      errorMessage: '',
+    })
     evt.preventDefault();
   }
   const onBackdropClicked = (evt) => {
-    onDialogClose(evt);
+    props.onDialogClose(evt);
   };
 
   //Files take a while to load, debouncing handlers
   //[TODO] Not a fan of having to manually set more than one session var for one action, files are required hence eisdoc is well
+
+  //wrap state func(s) into value so we can expand it to add funcs etc.
+  const value = {
+    state,
+    setState
+  }
   return (
+    <PDFViewerContext.Provider value={value}>
     <Box sx={{}}>
       <Dialog
         id='pdf-viewer-dialog'
@@ -333,13 +361,12 @@ export default function PDFViewerDialog(props) {
         //			minHeight='md'
         //height={'100vh'}
         //      maxWidth={lg}
-        onClose={onDialogClose}>
+        onClose={(evt) => onDialogClose(evt)}>
         <DialogContent>
           
           <DialogContentText id='pdf-viewer-dialog-content'>
           <DialogTitle>
             <Grid
-              marginTop={10}
               container
               display={'flex'}
               justifyContent={'flex-end'}
@@ -352,158 +379,76 @@ export default function PDFViewerDialog(props) {
             </Grid>
           </DialogTitle>
             <Divider />
-            <h3>FILES #{files.length}</h3>
-            <Divider />
-            {files && files.length === 0 ? (
-              <Paper
-                elevation={1}
-                className={classes.centered}
-                sx={{
-                  position: 'absolute',
-                  top: '50%',
-                  left: '50%',
-                  minHeight: 640,
-                  minWidth: 800,
-                  height: '80%',
-                  width: '80%',
-                }}>
-                {/* <Box height={600} width={600} border={0} display={'absolute'} top={'50%'} left={'50%'}>
-                <CircularProgress />
-                </Box> */}
-              </Paper>
-            ) :
-              (
-                <Paper elevation={0} marginTop={110}>
+           
+                <Paper elevation={0} backgroundColor='#ddd'>
                   <Grid
                     container
                     id='pdf-file-list-grid-container'
-                  //                justifyContent=''
-                  rowGap={1}
-                  columnSpacing={1}
+                    //rowGap={1}
+                    //columnSpacing={1}
                     flex={1}
                   >
-                    <Grid
-                      item
-                      xs={2}
-                      //                  className={classes.centered}
-                      borderColor='#ccc'
-                      borderStyle='dashed'
-                      id='pdf-file-list-grid-item'
-                      justifyContent='flex-start'
-                      alignItems='flex-start'>
-                      <AvailablePDFsList
-                        {...props}
-                        files={files}
-                        currentFile={currentFile}
-                        onFileLinkClicked={onFileLinkClicked}
-                      />
-                    </Grid>
+                      <Grid
+                        item
+                        xs={3}
+                        id='pdf-file-list-grid-item'
+                        // justifyContent='flex-start'
+                        // alignItems='flex-start'
+                        >
+                        <AvailablePDFsList
+                          {...props}
+                          files={state.files}
+                          currentFile={state.currentFile}
+                          onFileLinkClicked={onFileLinkClicked}
+                          onDownloadZip={onDownloadZip}
+                        />
+                      </Grid>
                     <Grid
                       container
                       xs={9}
-                      justifyContent='flex-end'
-                      alignItems='flex-end'
                       className={classes.centered}
                       id='pdf-viewer-grid-container'>
-                      <Grid item xs={12} id='pdf-viewer-title-grid-item'>
+                      <Grid item xs={12} 
+                        id='pdf-viewer-title-grid-item'>
                       </Grid>
 
-                      <Grid container xs={12} flex={1} id='button-grid-container'>
+                      <Grid container xs={12} flex={1} id='page-nav-button-grid-container'>
                         <PageNavButtons
-                          files={files}
-                          currentFileIndex={currentFileIndex}
+                          files={state.files}
+                          currentFileIndex={state.currentFileIndex}
                           onFileLinkClicked={onFileLinkClicked}
                           onLoadPreviousFile={onLoadPreviousFile}
                           onLoadNextFile={onLoadNextFile}
                         />
                       </Grid>
-
-                      <Grid container xs={12} id='pdf-viewer-grid-item-container'>
-                        <Grid margin={2} item xs={12}>
-                          {hasError && message && <Snackbar open={hasError} autoHideDuration={6000} onClose={handleAlertClose}>
-                            <Alert onClose={(evt) => handleAlertClose(evt)} severity="success" sx={{ width: '100%' }}>
-                              This is a success message! {message}
-                            </Alert>
-                          </Snackbar>
-                          }
-                          {hasInfo && message &&
-                            <Snackbar open={hasInfo} autoHideDuration={6000} onClose={() => setHasError(false)}>
-                              <Alert severity="error">This is an error message! {message}</Alert>
-                            </Snackbar>
-                          }
-                          {hasWarning && message &&
-                            <Snackbar open={hasWarning} autoHideDuration={6000} onClose={() => setHasWarning(false)}>
-                              <Alert severity="warning">This is a warning message! {message}</Alert>
-                            </Snackbar>
-                          }
-                          {hasInfo &&
-                            <Snackbar open={hasInfo} autoHideDuration={6000} onClose={() => setHasInfo(false)}>
-                              <Alert severity="info">{message}</Alert>
-                            </Snackbar>
-                          }
-                          {hasSuccess &&
-                            <Snackbar open={hasSuccess} autoHideDuration={6000} onClose={() => setHasSuccess(false)}>
-                              <Alert severity="success">{message}</Alert>
-                            </Snackbar>
-                          }
-                          <PDFContainer {...props} file={files[0]} />
+                      <Grid item flex={1} xs={12} justifyContent={'center'} >
+                        
+                        {
+                        state.currentFile 
+                        ? (
+                          <PDFViewerContainer 
+                              {...props} 
+                              file={state.currentFile} 
+                              onDownloadZip={onDownloadZip}
+                              eisdoc={state.currentFile.eisdoc}
+                            />
+                          )
+                        : (
+                          <>
+                            <Typography variant={'h3'}>No File Selected</Typography>
+                          </>
+                        )
+                      }
                         </Grid>
-                      </Grid>
                     </Grid>
                   </Grid>
-                </Paper>
-              )}
+                  </Paper>
           </DialogContentText>
         </DialogContent>
       </Dialog>
     </Box>
+    </PDFViewerContext.Provider>
   );
 }
 
-export function PageNavButtons(props) {
-  const { currentFileIndex, files, onFileLinkClicked, onLoadPreviousFile, onLoadNextFile } = props;
-  const classes = useStyles(theme);
 
-  return (
-    <>
-
-
-      <Grid container xs={12} flex={1} id='button-grid-container'>
-        <Grid
-          item
-          xs={6}
-          display='flex'
-          flex={1}
-          paddingTop={1}
-          paddingBottom={1}
-          justifyContent={'center'}
-          alignItems={'center'}
-          id='previous-button-grid-item'>
-          <Button
-            variant='outlined'
-            disabled={currentFileIndex === 0}
-            onClick={onLoadPreviousFile}>
-            Previous File
-          </Button>
-        </Grid>
-        <Grid
-          item
-          display='flex'
-          flex={1}
-          justifyContent={'center'}
-          alignItems={'center'}
-          id='next-button-grid-item'>
-          <Button
-            variant='outlined'
-            disabled={
-              currentFileIndex === (files && files.length)
-            }
-            color='primary'
-            onClick={onLoadNextFile}>
-            Next File
-          </Button>
-        </Grid>
-      </Grid>
-    </>
-  )
-}
