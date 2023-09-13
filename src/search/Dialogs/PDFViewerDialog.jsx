@@ -14,17 +14,15 @@ import {
   Typography
 } from '@mui/material';
 import { makeStyles, styled } from '@mui/styles';
-import React, { useContext, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import React, { useState } from 'react';
 import theme from '../../styles/theme';
 import AvailablePDFsList from '../PDFViewer/AvailablePDFsList';
-import PDFContainer from '../PDFViewer/PDFContainer';
-import SearchContext from '../SearchContext';
-
 //https://react-pdf-viewer.dev/examples/
 import axios from 'axios';
 import { useEffect, useRef } from 'react';
 import Globals from '../../globals';
+import PDFViewerContainer from '../PDFViewer/PDFViewerContainer';
+import SearchContext from '../SearchContext';
 // pdfjs.GlobalWorkerOptions.workerSrc = new URL(
 //   'pdfjs-dist/build/pdf.worker.min.js',
 //   import.meta.url,
@@ -44,8 +42,6 @@ const useStyles = makeStyles((theme) => ({
   item: {
     //margin: 5,
     padding: 5,
-    border: 0,
-    borderColor: '#ccc',
     borderRadius: 1,
     '&:hover': {
       backgroundColor: theme.palette.background,
@@ -62,20 +58,20 @@ const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
   ...theme.typography.body2,
   padding: theme.spacing(1),
-  // textAlign: 'center',
   color: theme.palette.text.secondary,
   elevation: 1,
-  border: 0,
   borderRadius: 1,
 }));
 
 export default function PDFViewerDialog(props) {
+  console.log("🚀 ~ file: PDFViewerDialog.jsx:73 ~ PDFViewerDialog ~ props:", props)
   //    pdfjs.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.js`;
-
+  const {onDialogClose} = props;
+   
   //	let { record, isOpen, onDialogClose } = props;
-  const queryParams = useParams();
-  const ctx = useContext(SearchContext);
-  const { state, setState } = ctx;
+  const ctx = React.useContext(SearchContext);
+  console.log("🚀 ~ file: PDFViewerDialog.jsx:73 ~ PDFViewerDialog ~ ctx:", ctx)
+//  const { state, setState } = ctx;
   const params = new URLSearchParams(window.location.search)
   //Strictly for debugging so I can test it without props
   const record = props.record || {
@@ -96,22 +92,17 @@ export default function PDFViewerDialog(props) {
   const [fullWidth, setFullWidth] = React.useState(true);
   const [maxWidth, setMaxWidth] = React.useState('md');
   const [files, setFiles] = useState([]);
-  const [currentEisDoc, setCurrentEisDoc] = useState({});
   const [currentFileIndex, setCurrentFileIndex] = useState(0);
   const [currentFile, setCurrentFile] = useState({});
 
-  const [hasWarning, setHasWarning] = useState("");
-  const [hasError, setHasError] = useState("");
-  const [hasInfo, setHasInfo] = useState("");
+  const [warningMessage, setHasWarning] = useState("");
+  const [errorMessage, setHasError] = useState("");
+  const [infoMessage, setHasInfo] = useState("");
   const [hasSuccess, setHasSuccess] = useState("");
   const [message, setMessage] = useState("");
 
   let _mounted = useRef(false);
-  const onDialogClose = //props.onDialogClose || 
-    (evt) => {
-      console.log("🚀 ~ file: PDFViewerDialog.jsx:112 ~ PDFViewerDialog ~ evt:", evt)
-      setState({ ...state, isOpen: false });
-    }
+
 
   const classes = useStyles(theme);
   const getFilesById = async (id = 0) => {
@@ -172,7 +163,6 @@ export default function PDFViewerDialog(props) {
         e,
       );
       setHasError(true)
-      setMessage('Failed to get a list of files for id ${processId}.With an Exception')
 
       return [];
     }
@@ -202,13 +192,19 @@ export default function PDFViewerDialog(props) {
         }
       })
       const filenames = names;
+      console.log("🚀 ~ file: PDFViewerDialog.jsx:198 ~ data.map ~ filenames:", filenames)
       files.push({
         ...doc,
         size: doc.size ? Math.round(doc.size / 1024 / 1024) : 'N/A',
-        filename: doc.filename,
         filenames: filenames
       })
-      const currentFile = files.filter((file) => file.processId === processId && file.id === id);
+      const currentFile = files.filter((file) => {
+        const hasCurrent =  file.processId === processId && file.id === record.id;
+        console.log(`🚀 ~ file: PDFViewerDialog.jsx:203 ~ useEffect ~ file.processId === processId && file.id === record.id`, file.processId === processId && file.id === record.id)
+        console.log("🚀 ~ file: PDFViewerDialog.jsx:207 ~ currentFile ~ hasCurrent:", hasCurrent)
+        return hasCurrent;
+    });
+
       if (!currentFile && files) {
         console.log('Defaulting to first file in the list', files[0]);
 
@@ -245,12 +241,6 @@ export default function PDFViewerDialog(props) {
 
   }, [])
 
-
-  useEffect(() => {
-    if (_mounted.current === false) {
-      return;
-    }
-  }, [currentFile]);
 
   function onDocumentLoadSuccess({ numPages }) {
     //console.log('onDocumentLoadSuccess', numPages);
@@ -315,7 +305,7 @@ export default function PDFViewerDialog(props) {
     evt.preventDefault();
   }
   const onBackdropClicked = (evt) => {
-    onDialogClose(evt);
+    props.onDialogClose(evt);
   };
 
   //Files take a while to load, debouncing handlers
@@ -333,13 +323,12 @@ export default function PDFViewerDialog(props) {
         //			minHeight='md'
         //height={'100vh'}
         //      maxWidth={lg}
-        onClose={onDialogClose}>
+        onClose={(evt) => onDialogClose(evt)}>
         <DialogContent>
           
           <DialogContentText id='pdf-viewer-dialog-content'>
           <DialogTitle>
             <Grid
-              marginTop={10}
               container
               display={'flex'}
               justifyContent={'flex-end'}
@@ -352,63 +341,39 @@ export default function PDFViewerDialog(props) {
             </Grid>
           </DialogTitle>
             <Divider />
-            <h3>FILES #{files.length}</h3>
-            <Divider />
-            {files && files.length === 0 ? (
-              <Paper
-                elevation={1}
-                className={classes.centered}
-                sx={{
-                  position: 'absolute',
-                  top: '50%',
-                  left: '50%',
-                  minHeight: 640,
-                  minWidth: 800,
-                  height: '80%',
-                  width: '80%',
-                }}>
-                {/* <Box height={600} width={600} border={0} display={'absolute'} top={'50%'} left={'50%'}>
-                <CircularProgress />
-                </Box> */}
-              </Paper>
-            ) :
-              (
-                <Paper elevation={0} marginTop={110}>
+           
+                <Paper elevation={0} backgroundColor='#ddd'>
                   <Grid
                     container
                     id='pdf-file-list-grid-container'
-                  //                justifyContent=''
-                  rowGap={1}
-                  columnSpacing={1}
+                    //rowGap={1}
+                    //columnSpacing={1}
                     flex={1}
                   >
-                    <Grid
-                      item
-                      xs={2}
-                      //                  className={classes.centered}
-                      borderColor='#ccc'
-                      borderStyle='dashed'
-                      id='pdf-file-list-grid-item'
-                      justifyContent='flex-start'
-                      alignItems='flex-start'>
-                      <AvailablePDFsList
-                        {...props}
-                        files={files}
-                        currentFile={currentFile}
-                        onFileLinkClicked={onFileLinkClicked}
-                      />
-                    </Grid>
+                      <Grid
+                        item
+                        xs={3}
+                        id='pdf-file-list-grid-item'
+                        // justifyContent='flex-start'
+                        // alignItems='flex-start'
+                        >
+                        <AvailablePDFsList
+                          {...props}
+                          files={files}
+                          currentFile={currentFile}
+                          onFileLinkClicked={onFileLinkClicked}
+                        />
+                      </Grid>
                     <Grid
                       container
                       xs={9}
-                      justifyContent='flex-end'
-                      alignItems='flex-end'
                       className={classes.centered}
                       id='pdf-viewer-grid-container'>
-                      <Grid item xs={12} id='pdf-viewer-title-grid-item'>
+                      <Grid item xs={12} 
+                        id='pdf-viewer-title-grid-item'>
                       </Grid>
 
-                      <Grid container xs={12} flex={1} id='button-grid-container'>
+                      <Grid container xs={12} flex={1} id='page-nav-button-grid-container'>
                         <PageNavButtons
                           files={files}
                           currentFileIndex={currentFileIndex}
@@ -417,42 +382,11 @@ export default function PDFViewerDialog(props) {
                           onLoadNextFile={onLoadNextFile}
                         />
                       </Grid>
-
-                      <Grid container xs={12} id='pdf-viewer-grid-item-container'>
-                        <Grid margin={2} item xs={12}>
-                          {hasError && message && <Snackbar open={hasError} autoHideDuration={6000} onClose={handleAlertClose}>
-                            <Alert onClose={(evt) => handleAlertClose(evt)} severity="success" sx={{ width: '100%' }}>
-                              This is a success message! {message}
-                            </Alert>
-                          </Snackbar>
-                          }
-                          {hasInfo && message &&
-                            <Snackbar open={hasInfo} autoHideDuration={6000} onClose={() => setHasError(false)}>
-                              <Alert severity="error">This is an error message! {message}</Alert>
-                            </Snackbar>
-                          }
-                          {hasWarning && message &&
-                            <Snackbar open={hasWarning} autoHideDuration={6000} onClose={() => setHasWarning(false)}>
-                              <Alert severity="warning">This is a warning message! {message}</Alert>
-                            </Snackbar>
-                          }
-                          {hasInfo &&
-                            <Snackbar open={hasInfo} autoHideDuration={6000} onClose={() => setHasInfo(false)}>
-                              <Alert severity="info">{message}</Alert>
-                            </Snackbar>
-                          }
-                          {hasSuccess &&
-                            <Snackbar open={hasSuccess} autoHideDuration={6000} onClose={() => setHasSuccess(false)}>
-                              <Alert severity="success">{message}</Alert>
-                            </Snackbar>
-                          }
-                          <PDFContainer {...props} file={files[0]} />
-                        </Grid>
-                      </Grid>
+                      <Grid item flex={1} xs={12} border={1} justifyContent={'center'} >
+                        <PDFViewerContainer {...props} file={currentFile} eisdoc={currentFile.eisdoc} /></Grid>
                     </Grid>
                   </Grid>
-                </Paper>
-              )}
+                  </Paper>
           </DialogContentText>
         </DialogContent>
       </Dialog>
@@ -466,22 +400,20 @@ export function PageNavButtons(props) {
 
   return (
     <>
-
-
-      <Grid container xs={12} flex={1} id='button-grid-container'>
+      <Grid container xs={12} flex={1} justifyContent={'center'} alignItems={'flex-start'} id='button-grid-container'>
         <Grid
           item
-          xs={6}
+          alignItems={'center'}
           display='flex'
           flex={1}
-          paddingTop={1}
-          paddingBottom={1}
+          id='previous-button-grid-item'
           justifyContent={'center'}
-          alignItems={'center'}
-          id='previous-button-grid-item'>
+          paddingBottom={1}
+          paddingTop={1}
+          xs={6}>
           <Button
             variant='outlined'
-            disabled={currentFileIndex === 0}
+            disabled={currentFileIndex === 0 || files.length===0}
             onClick={onLoadPreviousFile}>
             Previous File
           </Button>
@@ -496,7 +428,7 @@ export function PageNavButtons(props) {
           <Button
             variant='outlined'
             disabled={
-              currentFileIndex === (files && files.length)
+                (files.length <= 1)
             }
             color='primary'
             onClick={onLoadNextFile}>
