@@ -17,11 +17,6 @@ export default function PDFViewerContainer(props:IProps) {
   // const classes = useStyles();
   const {file} = props;
   const {eisdoc} = file;
-  console.log(`file: PDFViewerContainer.tsx:20 ~ PDFViewerContainer ~ eisdoc:`, eisdoc);
-  
-  console.log(`file: PDFViewerContainer.tsx:19 ~ PDFViewerContainer ~ props:`, props);
-  console.log("🚀 ~ file: PDFViewerContainer.tsx:19 ~ PDFViewerContainer ~ file:", file)
-  console.log("🚀 ~ file: PDFContainer.tsx:35 ~ PDFContainer ~ props:", props)
   const fileUrl = `/docs/${file.folder}/${file.filename}`;
   console.log(`🚀 ~ file: PDFContainer.tsx:36 ~ PDFContainer ~ fileUrl:`, fileUrl);
   return (

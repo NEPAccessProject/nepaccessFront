@@ -69,8 +69,10 @@ const Item = styled(Paper)(({ theme }) => ({
 export default function PDFViewerDialog(props) {
   console.log("🚀 ~ file: PDFViewerDialog.jsx:73 ~ PDFViewerDialog ~ props:", props)
   //    pdfjs.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.js`;
-  const {onDialogClose} = props;
-   
+  const onDialogClose = props.onDialogClose;
+  //  const onDialogClose = (evt) => {
+  //   console.log(evt)
+  //  }
   //	let { record, isOpen, onDialogClose } = props;
   const ctx = React.useContext(SearchContext);
   console.log("🚀 ~ file: PDFViewerDialog.jsx:73 ~ PDFViewerDialog ~ ctx:", ctx)
@@ -80,11 +82,11 @@ export default function PDFViewerDialog(props) {
   const record = props.record || {
     id: 15993,
     title: 'Mock Record Title',
-    proceess: 1004685
+    proceess: params.get('isOpen')
   }
   const isOpen = props.isOpen || params.get('isOpen');
-  const id = record.id;
-  const processId = record.processId;
+  const id = record.id || params.get('id');
+  const processId = record.processId || params.get('processId');
   //let { id, processId } = record;
 
   //  const { q,id } = useParams();
@@ -130,12 +132,10 @@ export default function PDFViewerDialog(props) {
           ) === '.pdf',
       );
       //setFiles(files);
+      console.log(`file: PDFViewerDialog.jsx:136 ~ getFilesById ~ files:`, files);
       return files;
     } catch (e) {
-      console.error(
-        `Failed to get a list of files for id ${id}.With an Exception`,
-        e,
-      );
+      console.error('ERROR GETTING FILES',e)
       return [];
     }
   };
@@ -152,15 +152,15 @@ export default function PDFViewerDialog(props) {
       Globals.currentHost + `test/get_process_full?processId=${processId}`;
     try {
       const response = await axios.get(url);
-      const files = response.data.filter(
-        (file) =>
-          file.filename.slice(
-            file.filename.lastIndexOf('.'),
-            file.filename.length,
-          ) === '.pdf',
-      );
+      // const files = response.data.filter(
+      //   (file) =>
+      //     file.filename.slice(
+      //       file.filename.lastIndexOf('.'),
+      //       file.filename.length,
+      //     ) === '.pdf',
+      // );
 
-      return files;
+      return response.data;
     }
     catch (e) {
       console.error(
@@ -198,7 +198,7 @@ export default function PDFViewerDialog(props) {
     console.log(`🚀 ~ file: PDFViewerDialog.jsx:198 ~ getFiles ~ data:`, data);
 
     const files=[];
-    data.map((item, idx) => {
+    data.map(async(item, idx) => {
       const doc = item.doc;
       const names = item.filenames.map((filename, idx) => {
         return {
@@ -207,23 +207,18 @@ export default function PDFViewerDialog(props) {
           path: `/docs/${doc.folder}/${filename}`
         }
       })
-      const filenames = names;
       console.log("🚀 ~ file: PDFViewerDialog.jsx:198 ~ data.map ~ filenames:", filenames)
       files.push({
         ...doc,
         size: doc.size ? Math.round(doc.size / 1024 / 1024) : 'N/A',
-        filenames: filenames
+        filenames: names
       })
-      const currentFile = files.filter((file) => {
-        const hasCurrent =  file.processId === processId && file.id === record.id;
-        console.log(`🚀 ~ file: PDFViewerDialog.jsx:203 ~ useEffect ~ file.processId === processId && file.id === record.id`, file.processId === processId && file.id === record.id)
-        console.log("🚀 ~ file: PDFViewerDialog.jsx:207 ~ currentFile ~ hasCurrent:", hasCurrent)
-        return hasCurrent;
-    });
+
+      let currentFile = files.filter((file) => file.processId === processId && file.id === record.id);
 
       if (!currentFile && files) {
         console.log('Defaulting to first file in the list', files[0]);
-
+        currentFile = files[0];
       }
       else {
         <Snackbar open={true} autoHideDuration={1000} onClose={() => setState({
@@ -233,7 +228,7 @@ export default function PDFViewerDialog(props) {
           <Alert severity="error">'Unable to Preview File, no files were found'</Alert>
         </Snackbar>
       }
-      setState({...state,files})
+      setState({...state,files,currentFile})
       return files;
     });
   }
@@ -243,14 +238,9 @@ export default function PDFViewerDialog(props) {
     }
 
     async function getFilesFromAPI() {
-      const temp = await getFiles();
-      console.log(`file: PDFViewerDialog.jsx:247 ~ getFilesFromAPI ~ temp:`, temp);
       const files = await getFilesById(id);
       console.log("🚀 ~ file: PDFViewerDialog.jsx:232 ~ getFilesFromAPI ~ files:", files)
-      const currentFile = files.filter((file) => file.processId === processId);
-      console.log("🚀 ~ file: PDFViewerDialog.jsx:203 ~ useEffect ~ currentFile:", currentFile)
-      setState({...state, currentFile,files });
-      console.log("🚀 ~ file: PDFViewerDialog.jsx:232 ~ files:", files)
+      //setState({...state, currentFile,files });
 
     }
     try{
