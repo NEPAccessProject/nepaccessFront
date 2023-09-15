@@ -136,8 +136,7 @@ export default function MultiPDFViewer(props) {
                   )
                 }))
             })}            
-                
-                { JSON.stringify(files[0]) }
+                              
   </Grid>
         </Grid>
       </Paper>
