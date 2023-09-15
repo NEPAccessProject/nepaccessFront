@@ -69,7 +69,6 @@ import PropTypes from "prop-types";
 import { ThemeProvider } from '@mui/material';
 import MUITheme from './examples/MUITheme';
 import Playground from './examples/Playground';
-import ReactQueryExample from './examples/ReactQuery';
 import ImporterAlignment from './ImporterAlignment';
 import PDFViewerDialog from './search/Dialogs/PDFViewerDialog';
 import theme from './styles/theme';
@@ -366,7 +365,7 @@ class Main extends React.Component {
                     <Route path="/pdf" component={PDFViewerDialog}/>
                     <Route path="/styles" component={MUITheme}/>
                     <Route path="/playground" component={Playground} />
-                    <Route path="/rtk" component={ReactQueryExample}/>
+                    {/* <Route path="/rtk" component={ReactQueryExample}/> */}
 
                     {/* <Route path="/react_query" component={ReactQuery}/> */}
                     <Route path="/" component={Landing}/>
