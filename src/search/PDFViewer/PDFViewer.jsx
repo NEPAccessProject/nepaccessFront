@@ -38,6 +38,7 @@ const PDFViewer = (props) => {
     return (
       <>
         <Box>
+          Viewer Loading: {fileUrl}
           <Worker workerUrl={workerUrl}>
             <Viewer
               initialPage={2}
@@ -48,11 +49,11 @@ const PDFViewer = (props) => {
                     <ProgressBar progress={Math.round(percentages)} />
                 </div>
             )}
-            // onDocumentLoad={(doc) => {
-            //   console.log('PDFViewer - onDocument Load args',doc)
-            //   setState({...state, infoMessage:`Document ${file.title} loaded successfully`})
-            //   setIsLoading(true)
-            // }}
+            onDocumentLoad={(doc) => {
+              console.log('PDFViewer - onDocument Load args',doc)
+              setState({...state, infoMessage:`Document ${file.title} loaded successfully`})
+              setIsLoading(true)
+            }}
             // renderError={(error) => {
             //   setState({...state, errorMessage: `${error.name} - ${error.message}`})
             //   setIsLoading(false);

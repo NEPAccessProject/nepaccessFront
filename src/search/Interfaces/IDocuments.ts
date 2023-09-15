@@ -40,6 +40,7 @@ export interface IFile {
   size?: number;
   filenames: string[];
   eisdoc: IEISDoc;
+  path?: string;
 }
 
 export interface IFiles extends Array<IFile>{}

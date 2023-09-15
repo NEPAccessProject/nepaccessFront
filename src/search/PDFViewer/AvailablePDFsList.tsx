@@ -55,7 +55,7 @@ const useStyles = makeStyles((theme: Theme) =>
 
 
 export default function AvailablePDFsList(props: IProps) {
-	console.log("🚀 ~ file: AvailablePDFsList.tsx:67 ~ AvailablePDFsList ~ props:", props)
+	console.log("🚀 ~ file: AvailablePDFsList.tsx:67 ~ AvailablePDFsList ~ FILE:", props.files);
 	const {files = [],currentFile ,onFileLinkClicked} = props;
   const ctx = React.useContext(SearchContext);
 	const classes = useStyles(theme);
@@ -97,9 +97,11 @@ export default function AvailablePDFsList(props: IProps) {
 						textAlign={'center'}
 						classes={classes.centered}
 						padding={2}>
-						<Typography variant='h4'>#{files.length} Related Files</Typography>
+						<Typography variant='h4'>Related Files</Typography>
 						<Typography variant='h6'>
 							Selected File ID {currentFile.id}{' '}
+              {currentFile.eisdoc.title}
+              Current File {currentFile.eisdoc.filename}
 						</Typography>
 						<Divider />
 					</Grid>
@@ -126,10 +128,10 @@ export default function AvailablePDFsList(props: IProps) {
 															onClick={(evt) =>
 																onFileLinkClicked(evt, idx, file)
 															}
-															variant={currentFile.id === file.id ? 'outlined' : 'text'
-															}>
+															variant={currentFile.filename === file.filename ? 'outlined' : 'contained'}
+															>
 															{file.filename}
-														</Button>
+	+													</Button>
 													</Typography>
 												</>
 									</Typography>

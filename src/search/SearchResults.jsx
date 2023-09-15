@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 
-import { Box, Grid, Paper, Typography } from '@mui/material';
+import { Box, Grid, Paper, Typography, Pagination, TablePagination } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import theme from '../../styles/theme';
 //import Grid from '@mui/material/Grid'; // Grid version 1
@@ -107,6 +107,10 @@ const SearchResults = (props) => {
     })
 
   };
+  const onPaginationChange = (evt)=>{
+    evt.preventDefault();
+    console.log('onPaginationChange',evt)
+  }
   return (
     <Paper id="search-results-root" container={5} sx={{
       border: 2,
@@ -114,6 +118,17 @@ const SearchResults = (props) => {
       <Typography variant="searchResultSubTitle" padding={2}>
         Search Result Group
       </Typography>
+      <Pagination
+        shape='rounded'
+        boundaryCount={2}
+        count={results.length}
+        hideNextButton={false}
+        hidePrevButton={false}
+        onChange={onPaginationChange}
+        showFirstButton={true}
+        showLastButton={true}
+
+      />
       {results && results.length ? (
         results.map((result, index) => {
           return (
@@ -124,6 +139,7 @@ const SearchResults = (props) => {
               } */}
                 </Typography>
                 <Box sx={{ margin: 5 }}>
+
                   <SearchResultCards result={result} />
                   <SearchResultItems result={result} />
                 </Box>
