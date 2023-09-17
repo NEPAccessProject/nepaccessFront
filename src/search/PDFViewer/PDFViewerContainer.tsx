@@ -19,7 +19,7 @@ export default function PDFViewerContainer(props:IProps) {
   // const classes = useStyles();
   const {file} = props;
   let fileUrl = `/docs/${file.folder}/${file.filename}`;
-  fileUrl = '/docs/EisDocuments-249854_Draft/summary.pdf'
+ // fileUrl = '/docs/EisDocuments-249854_Draft/summary.pdf'
   return (
 		<Paper
 			elevation={1}
@@ -32,6 +32,7 @@ export default function PDFViewerContainer(props:IProps) {
 				<Grid
 					item
 					xs={12}
+          alignContent={'center'}
 					id='pdf-viewer-container-grid-item'
           >
             {/* <Typography>File ID: {file.id}</Typography>

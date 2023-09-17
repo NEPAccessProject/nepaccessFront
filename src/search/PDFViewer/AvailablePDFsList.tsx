@@ -46,6 +46,9 @@ const useStyles = makeStyles((theme: Theme) =>
 		input: {
 			display: 'none',
 		},
+    currentFile: {
+      textDecoration: 'underline',
+    },
 		pdfViewer: {
 			height: '100%',
 			width: '100%',
@@ -86,6 +89,7 @@ export default function AvailablePDFsList(props: IProps) {
       });
     }
 	//  const eisDoc: IEISDoc;
+ var s = "string";
 
   return (
 		<>
@@ -114,24 +118,29 @@ export default function AvailablePDFsList(props: IProps) {
 										textAlign={'left'}
 										display={'block'}
 										variant={'caption'}>
+                    
                       {/* {`${file.relativePath}/${file.filename}`} */}
                       
 												<>
 													<Typography
 														key={file.id - file.filename}
 														textAlign='left'
+                            noWrap={false}
                             justifyContent={'flex-start'}
+                            
                             >
 														<Button
 															sx={{ width: '100%', border:0, padding:0,margin:0 }}
 															color='primary'
+                              
+                              className={currentFile.filename === file.filename ? classes.currentFile : ''}
 															onClick={(evt) =>
 																onFileLinkClicked(evt, idx, file)
 															}
-															variant={currentFile.filename === file.filename ? 'outlined' : 'contained'}
+															variant={'text'}
 															>
-															{file.filename}
-	+													</Button>
+                             {(file.filename.length > 30) ? `${file.filename.slice(0,30)}...` : file.filename}
+													</Button>
 													</Typography>
 												</>
 									</Typography>

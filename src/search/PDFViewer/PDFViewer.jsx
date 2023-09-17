@@ -1,4 +1,4 @@
-import { Box, Container, Typography } from '@mui/material';
+import { Container, Grid, Typography } from '@mui/material';
 import { ProgressBar, Viewer, Worker } from '@react-pdf-viewer/core';
 import '@react-pdf-viewer/core/lib/styles/index.css';
 import '@react-pdf-viewer/default-layout/lib/styles/index.css';
@@ -37,7 +37,7 @@ const PDFViewer = (props) => {
   try {
     return (
       <>
-        <Box>
+        <Grid item flex={1} style={{ height: '100%' }} alignContent={'flex-start'} border={1}  >
           Viewer Loading: {fileUrl}
           <Worker workerUrl={workerUrl}>
             <Viewer
@@ -64,7 +64,7 @@ const PDFViewer = (props) => {
             // }}
             />
           </Worker>
-        </Box>
+        </Grid>
       </>
       //     </div>
       // </div>
