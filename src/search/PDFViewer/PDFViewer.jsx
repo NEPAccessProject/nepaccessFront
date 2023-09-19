@@ -15,10 +15,17 @@ const PDFViewer = (props) => {
   const [isLoading, setIsLoading] = React.useState(false);
   console.log(`🚀 ~ file: PDFViewer.jsx:12 ~ PDFViewer ~ props:`, props);
   const { file, fileUrl } = props;
+
+  //const path = file.filenames[0].path;
+  const path = "/docs/EisDocument-UOFA-02048/040070/040070_0001-cprs.pdf";
+
   //const ctx = React.useContext(SearchContext)
   const ctx = React.useContext(PDFViewerContext)
   const _mounted = React.useRef(false);
   const { state, setState } = ctx;
+  Object.keys(file).forEach((key) => {
+    console.log(`file: PDFViewer.jsx:15 ~ PDFViewer ~ key`, key, file[key])
+  })
 
   useEffect(() => {
     _mounted.current = true;
@@ -37,33 +44,23 @@ const PDFViewer = (props) => {
   try {
     return (
       <>
+      PATH: {file.path}
         <Grid item flex={1} style={{ height: '100%' }} alignContent={'flex-start'} border={1}  >
-          {JSON.stringify(file)}
-          {/* <Worker workerUrl={workerUrl}>
+          <h5>Current File</h5>
+          {path}
+          <Worker workerUrl={workerUrl}>
             <Viewer
               initialPage={2}
-              fileUrl={fileUrl}
+              fileUrl={path}
               plugins={[toolbarPlugin]}
               renderLoader={(percentages) => (
                 <div style={{ width: '240px' }}>
                     <ProgressBar progress={Math.round(percentages)} />
                 </div>
             )}
-            onDocumentLoad={(doc) => {
-              console.log('PDFViewer - onDocument Load args',doc)
-              setState({...state, infoMessage:`Document ${file.title} loaded successfully`})
-              setIsLoading(true)
-            }}
-            renderError={(error) => {
-              setState({...state, errorMessage: `${error.name} - ${error.message}`})
-              setIsLoading(false);
-            }}
-            renderPage={(props) => {
-              setState({...state, infoMessage:`Page ${JSON.stringify(props)} is rendered`})
-              setIsLoading(false);
-            }}
+            
             />
-          </Worker> */}
+          </Worker>
         </Grid>
       </>
       //     </div>

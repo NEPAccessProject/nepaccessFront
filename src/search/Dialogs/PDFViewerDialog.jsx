@@ -1,4 +1,5 @@
 import {
+  Alert,
   Box,
   Dialog,
   DialogContent,
@@ -6,6 +7,7 @@ import {
   DialogTitle,
   Divider,
   Grid,
+  Snackbar,
   IconButton,
   Paper,
   Typography
@@ -22,6 +24,10 @@ import Globals from '../../globals';
 import PDFViewerContainer from '../PDFViewer/PDFViewerContainer';
 import PDFViewerContext from '../PDFViewer/PDFViewerContext';
 import { PageNavButtons } from './PageNavButtons';
+//import {dumper} from 'dumper';
+
+//import { dumper } from 'dumper';
+
 // pdfjs.GlobalWorkerOptions.workerSrc = new URL(
 //   'pdfjs-dist/build/pdf.worker.min.js',
 //   import.meta.url,
@@ -71,6 +77,7 @@ export default function PDFViewerDialog(props) {
     onDialogClose = props.onDialogClose;
   }
   const ctx = React.useContext(PDFViewerContext);
+
   console.log("🚀 ~ file: PDFViewerDialog.jsx:73 ~ PDFViewerDialog ~ ctx:", ctx)
   //  const { state, setState } = ctx;
   const params = new URLSearchParams(window.location.search)
@@ -182,9 +189,11 @@ export default function PDFViewerDialog(props) {
     console.log(`🚀 ~ file: PDFViewerDialog.jsx:198 ~ getFiles ~ data:`, data);
     const names = []
 
+    let allFiles = [];
 
-      const files = data.map((f, idx) => {
-      const doc = files.doc;
+    const files = data.map((f, idx) => {
+      const doc = f.doc;
+      console.log('FILE DOCS PDFViewerDialog', doc);
       // const filenames =  file.filenames.map((name, idx) => {
       //   return {
       //     id: idx,
@@ -192,25 +201,32 @@ export default function PDFViewerDialog(props) {
       //     path: `/docs/${doc.folder}/${name.filename}`,
       //   }
       // });
-      const filenames = f.filenames.map((filename, idx) => {
-        return{
-            filename,
-            id: f.id,
-            processId: f.processId,
-            path: `/docs/${f.doc.folder}/${filename}`,
-          }
+        f.filenames.forEach((filename, idx) => {
+        console.log('FILENAME',filename)
+        const _file= {
+          filename,
+          id: doc.id,
+          processId: doc.processId,
+          path: `/docs/${doc.folder}/${filename.filename}`,
+          zipPath: `/doc/${doc.folder}/${doc.filename}`,
+        }
+        allFiles.push(_file)
       });
+      var filenames = new Set(allFiles);
+      console.log(`file: PDFViewerDialog.jsx:211 ~ files ~ filenames:`, filenames);
+
       
-      const file= {
+      const file = {
         ...doc,
         ...f,
-        filenames: filenames,
+        filenames: allFiles,
+        filePath: `/docs/${f.doc.folder}/${doc.filename}`,
         title: doc.title,
         size: doc.size ? Math.round(doc.size / 1024) : 'N/A',
-        zipPath: `/doc/${doc.folder}/${doc.filename}`,
+        zipPath: `/docs/${doc.folder}/${doc.filename}`,
 
       }
-      console.log(`file: PDFViewerDialog.jsx:217 ~ data.map ~ rtn:`, file);
+      console.log(`file: PDFViewerDialog.jsx:217 ~ FILE ~ rtn:`, file);
       return file;
     })
     console.log('PDFVIEWERDialog 220 - FILES', files);
@@ -228,9 +244,9 @@ export default function PDFViewerDialog(props) {
       if (currentFile && Array.isArray(currentFile) && currentFile.length > 0) {
         currentFile = currentFile[0];
       }
-      else{
+      else {
         console.log('PDFViewerDialog.jsx:281 ~ No current file found, setting to first file!')
-        currentFile =  files ? files[0] : null;
+        currentFile = files ? files[0] : null;
       }
       console.log('ADDING FILES TO STATE', files);
       console.log('CURRENT FILE', currentFile);
@@ -328,6 +344,18 @@ export default function PDFViewerDialog(props) {
     evt.preventDefault();
   }
 
+  const onAlertDialogClose = (evt) => {
+    setState((prevState) => {
+      return {
+        ...prevState,
+        infoMessage: '',
+        errorMessage: '',
+      }
+
+    });
+
+
+  };
 
   const onBackdropClicked = (evt) => {
     props.onDialogClose(evt);
@@ -390,12 +418,12 @@ export default function PDFViewerDialog(props) {
                   // alignItems='flex-start'
                   >
 
-                      <AvailablePDFsList
-                        files={state.files}
-                        currentFile={state.currentFile}
-                        onFileLinkClicked={onFileLinkClicked}
-                        onDownloadZip={onDownloadZip}
-                      />
+                    <AvailablePDFsList
+                      files={state.files}
+                      currentFile={state.currentFile}
+                      onFileLinkClicked={onFileLinkClicked}
+                      onDownloadZip={onDownloadZip}
+                    />
                   </Grid>
                   <Grid
                     container
@@ -417,6 +445,17 @@ export default function PDFViewerDialog(props) {
                     </Grid>
                     <Divider />
                     <Grid item flex={1} xs={12} justifyContent={'center'} >
+                      <Snackbar open={state.infoMessage.length} autoHideDuration={1000} onClose={onAlertDialogClose}>
+                        <Alert onClose={onAlertDialogClose} severity="success" sx={{ width: '100%' }}>
+                          {state.infoMessage}
+                        </Alert>
+                      </Snackbar>
+                      <Snackbar open={state.errorMessage.length} autoHideDuration={1000} onClose={onAlertDialogClose}>
+                        <Alert onClose={onAlertDialogClose} severity="success" sx={{ width: '100%' }}>
+                          {state.errorMessage}
+                        </Alert>
+                      </Snackbar>
+
                       {/* <b>Current File Id: </b> {(state.currentFile)? state.currentFile.id : 'NULL'}<br />
                       <b>Current Process ID:</b>{(state.currentFile) ? state.currentFile.processId : 'NULL'} <br />
                       <b>Props ID: </b> {record.id} <br />
@@ -431,12 +470,13 @@ export default function PDFViewerDialog(props) {
                         )
                       })
                       } */}
-                     
-                        {/* <PDFViewerContainer
-                          currentFile={state.currentFile}
-                          files={state.files}
-                          onDownloadZip={onDownloadZip}
-                        />                       */}
+
+                      {JSON.stringify(state.currentFile,null,2)}
+                      <PDFViewerContainer
+                        currentFile={state.currentFile}
+                        files={state.files}
+                        onDownloadZip={onDownloadZip}
+                      />
                     </Grid>
                   </Grid>
                 </Grid>

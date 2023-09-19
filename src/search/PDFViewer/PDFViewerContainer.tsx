@@ -36,11 +36,10 @@ export default function PDFViewerContainer(props:IProps) {
           alignContent={'center'}
 					id='pdf-viewer-container-grid-item'
           >
-            <b>Current Zip Path:</b>{currentFile.zipPath}
-					{/* <PDFViewer
+					<PDFViewer
             file={currentFile}
 						fileUrl={currentFile.zipPath}
-					/>  */}
+					/> 
 
 				</Grid>
 			</Grid>

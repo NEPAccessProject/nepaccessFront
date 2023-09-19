@@ -3,7 +3,7 @@ import {
 	CircularProgress,
 	Divider,
 	Grid,
-  List,
+	List,
 	ListItem,
 	Paper,
 	Typography,
@@ -71,7 +71,7 @@ export default function AvailablePDFsList(props: IProps) {
 	const ctx = React.useContext(SearchContext);
 	const classes = useStyles(theme);
 	const zipPath: string = currentFile?.zipPath;
-
+  console.log('PDFVIEWER ~ zipPath',zipPath);
 	function onDownloadZip(url: string, filename: string) {
 		Axios.get(url, {
 			responseType: 'blob',
@@ -79,46 +79,63 @@ export default function AvailablePDFsList(props: IProps) {
 			fileDownload(res.data, filename);
 		});
 	}
+  if(!files || !currentFile) {
+  return( 
+  <Paper>
+    <Grid container justifyContent='center' alignContent={'center'}>
+      <Typography variant='h4'>Loading...</Typography>
+        <CircularProgress />
+    </Grid>
+  </Paper>
+  )
+}
+  else 
+    return (
+      <>
+        <Paper id='available-pdfs-root-paper-container'>
+          <Grid container id='available-pdfs-list-grid-container'>
+            <Grid
+              item
+              xs={12}
+              textAlign={'center'}
+              classes={classes.centered}
+              padding={2}>
+              <Typography variant='h4'>{files.length} Related Files </Typography>
+              <Typography>{currentFile?.title}</Typography>
+              <Divider />
+            </Grid>
+            <Grid item xs={12} id='available-pdfs-list-file-list-grid'>
+              {/* <FileList currentFile={currentFile} files={files} /> */}
+            </Grid>
+            <Grid item xs={12}>
+              <Button
+                variant='contained'
+                onClick={() =>
+                  onDownloadZip(currentFile.zipPath, currentFile?.title)
+                }>
+                Download All {currentFile.zipPath}
+              </Button>
+            </Grid>
+          </Grid>
+        </Paper>
+      </>
+    );
+}
+
+function FileList(props) {
+	const {currentFile, files} = props;
 	return (
-		<>
-			<Paper>
-				<Grid container>
-					<Grid
-						item
-						xs={12}
-						textAlign={'center'}
-						classes={classes.centered}
-						padding={2}>
-						<Typography variant='h4'>{files.length} Related Files </Typography>
-						<Typography>{currentFile?.title}</Typography>
-						<Divider />
-					</Grid>
-					<Grid item xs={12}>
-              {files.map((file:any)=>{
-                return(
-                    <List>
-                      <b>
-                      {file.filenames.length}
-                      </b>
-                        {file.filenames.map((filename:any)=>{
-                          return(
-                          <ListItem>
-                              (
-                                <Button onClick={()=>onDownloadZip(file.zipPath,file.title)}>{filename.filename}</Button>
-                              )
-                          </ListItem>
-                          )
-                          })}
-                      <ListItem>
-                        <Button onClick={()=>onFileLinkClicked(file)}>{file.title}</Button>
-                      </ListItem>
-                    </List>
-                )
-                })
-              }
-					</Grid>
-				</Grid>
-			</Paper>
-		</>
+		<List id='available-files-list'>
+			{files.map((file: IFile) => {
+				return (
+					<ListItem>
+						{file.filenames.map((filename: string) => {
+							return <Button>{currentFile.filename === filename ? `${filename} - **` : filename }</Button>;
+						})}
+						<Button>{file.title}</Button>
+					</ListItem>
+				);
+			})}
+		</List>
 	);
 }
