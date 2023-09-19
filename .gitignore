@@ -44,3 +44,4 @@ src/NEPAccess.code-workspace
 .history/**
 public/docs**
 src/search/**/*.pdf
+public/example-pdfs.zip

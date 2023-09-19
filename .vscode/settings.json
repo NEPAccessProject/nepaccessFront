@@ -20,5 +20,13 @@
       "username": "root",
       "password": "rsbr220Sql!"
     }
-  ]
+  ],
+  "console-ninja.captureFunctions": true,
+  "console-ninja.output.showLogsFromMultipleRunningToolsTogether": true,
+  "console-ninja.output.showLogsOnlyFromOpenedFiles": true,
+  "console-ninja.toolsToEnableSupportAutomaticallyFor": {
+    "live-server-extension": true,
+    "live-preview-extension": true
+  },
+  "console-ninja.outputMode": "In View"
   }

@@ -109,19 +109,6 @@ export default function MultiPDFViewer(props) {
       marginTop: '125px'
     }}>
       <Paper border={0} elevation={1} backgroundColor="#fff">
-
-        {/* <Typography variant="h4" sx={{ my: 2 }}>
-            {docTitle}
-          </Typography>
-          <Typography variant="h6" sx={{ my: 2 }}>
-            {id}
-          </Typography>
-          <Typography variant="h6" sx={{ my: 2 }}>
-            {docId}
-          </Typography>
-          <Typography variant="h6" sx={{ my: 2 }}>
-          {record.title}
-          </Typography> */}
         <Grid Container>
           <Grid item xs={12}>
             {(files).map((file, index) => {

@@ -3,6 +3,7 @@ import {
   Paper,
   Typography
 } from '@mui/material';
+import { CircularProgress } from '@mui/material';
 import React from 'react';
 import { IEISDoc, IFile } from '../Interfaces';
 import PDFViewer from './PDFViewer';
@@ -17,9 +18,9 @@ export default function PDFViewerContainer(props:IProps) {
 
   console.log(`🚀 ~ file: PDFViewerDialog.jsx:298 ~ PDFContainer ~ props:`, props);
   // const classes = useStyles();
-  const {file} = props;
-  let fileUrl = `/docs/${file.folder}/${file.filename}`;
+  const {currentFile} = props;
  // fileUrl = '/docs/EisDocuments-249854_Draft/summary.pdf'
+ if(currentFile){
   return (
 		<Paper
 			elevation={1}
@@ -35,26 +36,24 @@ export default function PDFViewerContainer(props:IProps) {
           alignContent={'center'}
 					id='pdf-viewer-container-grid-item'
           >
-            {/* <Typography>File ID: {file.id}</Typography>
-            <Typography>Process ID: {file.eisdoc.processId}</Typography>
-            <Typography>Folder: {file.folder}</Typography>
-            <Typography>Relative Path {file.relativePath}</Typography>
-            <Typography>Filename: {file.folder}</Typography>
-            <Typography>File Path: {fileUrl}</Typography> */}
-            {/* <Typography>Title: {(eisdoc.title) ? eisdoc?.title : "N/A"}</Typography>
-            <Typography>Notes: {(eisdoc.notes) ? eisdoc?.notes : "N/A"}</Typography> */}
-          <Typography variant={'h4'}>PROPS FILE?</Typography>
-            PATH: {file.path}
-            FILE URL {fileUrl}
-					<PDFViewer
-						{...props}
-            
-            file={file}
-						fileUrl={fileUrl}
-					/> 
+            <b>Current Zip Path:</b>{currentFile.zipPath}
+					{/* <PDFViewer
+            file={currentFile}
+						fileUrl={currentFile.zipPath}
+					/>  */}
 
 				</Grid>
 			</Grid>
 		</Paper>
 	);
+          }
+          else{
+            return(
+              <Paper>
+                <Grid container display={'flex'} alignContent={'center'} justifyContent={'center'} height={50} width={'100%'}>
+                <CircularProgress/>
+                </Grid>
+              </Paper>
+            )
+          }
 }

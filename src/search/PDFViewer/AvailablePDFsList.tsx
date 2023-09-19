@@ -1,10 +1,12 @@
 import {
-  Button,
-  Divider,
-  Grid,
-  ListItem,
-  Paper,
-  Typography
+	Button,
+	CircularProgress,
+	Divider,
+	Grid,
+  List,
+	ListItem,
+	Paper,
+	Typography,
 } from '@mui/material';
 import theme from '../../styles/theme';
 //import {InboxIcon,MailIcon} from '@mui/icons-material'
@@ -12,7 +14,7 @@ import { Theme } from '@mui/material/styles';
 import { createStyles, makeStyles } from '@mui/styles';
 import Axios from 'axios';
 import fileDownload from 'js-file-download';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { IFile, IFiles } from '../Interfaces';
 import SearchContext from '../SearchContext';
 // pdfjs.GlobalWorkerOptions.workerSrc = new URL(
@@ -27,9 +29,8 @@ interface IStyles {
 }
 interface IProps {
 	files: IFiles;
-  currentFile: IFile;
+	currentFile: IFile;
 	onFileLinkClicked: any; //[TODO][REFACTOR] Set to proper type (React.MouseEvent<React.HTMLElement>:evt,number) => {};
-  
 }
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -46,9 +47,9 @@ const useStyles = makeStyles((theme: Theme) =>
 		input: {
 			display: 'none',
 		},
-    currentFile: {
-      textDecoration: 'underline',
-    },
+		currentFile: {
+			textDecoration: 'underline',
+		},
 		pdfViewer: {
 			height: '100%',
 			width: '100%',
@@ -56,44 +57,31 @@ const useStyles = makeStyles((theme: Theme) =>
 	}),
 );
 
-
 export default function AvailablePDFsList(props: IProps) {
-	console.log("🚀 ~ file: AvailablePDFsList.tsx:67 ~ AvailablePDFsList ~ FILE:", props.files);
-	const {files = [],currentFile ,onFileLinkClicked} = props;
-  const ctx = React.useContext(SearchContext);
+	const _mounted = React.useRef(false);
+
+	useEffect(() => {
+		_mounted.current = true;
+		return () => {
+			_mounted.current = false;
+		};
+	});
+
+	const { currentFile, files, onFileLinkClicked } = props;
+	const ctx = React.useContext(SearchContext);
 	const classes = useStyles(theme);
+	const zipPath: string = currentFile?.zipPath;
 
-  if(!files || !files.length) {
-  return (<>  
-    <Typography variant='h4'>No Files Found</Typography>
-    
-  </>);
-  }
- if(!currentFile) {
-    return (<>  
-      <Typography variant='h4'>No File Selected</Typography>
-      
-    </>);
- }
-
-
-	//  const eisDoc: IEISDoc = file.eisdoc;
-  const downloadLink = `${files[0].folder}${files[0].filename}`;
-  
-  
-  function onDownloadZip(url: string, filename: string) {
-      Axios.get(url, {
-        responseType: 'blob',
-      }).then(res => {
-        fileDownload(res.data, filename);
-      });
-    }
-	//  const eisDoc: IEISDoc;
- var s = "string";
-
-  return (
+	function onDownloadZip(url: string, filename: string) {
+		Axios.get(url, {
+			responseType: 'blob',
+		}).then((res) => {
+			fileDownload(res.data, filename);
+		});
+	}
+	return (
 		<>
-			<Paper sx={{}}>
+			<Paper>
 				<Grid container>
 					<Grid
 						item
@@ -101,70 +89,36 @@ export default function AvailablePDFsList(props: IProps) {
 						textAlign={'center'}
 						classes={classes.centered}
 						padding={2}>
-						<Typography variant='h4'>Related Files</Typography>
-						<Typography variant='h6'>
-							Selected File ID {currentFile.id}{' '}
-              {currentFile.eisdoc.title}
-              Current File {currentFile.eisdoc.filename}
-						</Typography>
+						<Typography variant='h4'>{files.length} Related Files </Typography>
+						<Typography>{currentFile?.title}</Typography>
 						<Divider />
 					</Grid>
 					<Grid item xs={12}>
-						{files &&
-							files.length &&
-						files.map((file: any, idx: number) => (
-								<ListItem key={file.id}>
-									<Typography
-										textAlign={'left'}
-										display={'block'}
-										variant={'caption'}>
-                    
-                      {/* {`${file.relativePath}/${file.filename}`} */}
-                      
-												<>
-													<Typography
-														key={file.id - file.filename}
-														textAlign='left'
-                            noWrap={false}
-                            justifyContent={'flex-start'}
-                            
-                            >
-														<Button
-															sx={{ width: '100%', border:0, padding:0,margin:0 }}
-															color='primary'
-                              
-                              className={currentFile.filename === file.filename ? classes.currentFile : ''}
-															onClick={(evt) =>
-																onFileLinkClicked(evt, idx, file)
-															}
-															variant={'text'}
-															>
-                             {(file.filename.length > 30) ? `${file.filename.slice(0,30)}...` : file.filename}
-													</Button>
-													</Typography>
-												</>
-									</Typography>
-								</ListItem>
-							))}
-						<Divider />
-						<Grid item xs={12}>
-							<Button
-								name='download'
-								variant='contained'
-								color='primary'
-								id='download-zip-button'
-                onClick={() => onDownloadZip(downloadLink, `${(currentFile?.folder) ? currentFile.folder : ""}/${currentFile.filename}`)}
-								sx={{
-									width: '100%',
-                  borderRadius:0
-								}}>
-								  Download All
-							</Button>
-						</Grid>
+              {files.map((file:any)=>{
+                return(
+                    <List>
+                      <b>
+                      {file.filenames.length}
+                      </b>
+                        {file.filenames.map((filename:any)=>{
+                          return(
+                          <ListItem>
+                              (
+                                <Button onClick={()=>onDownloadZip(file.zipPath,file.title)}>{filename.filename}</Button>
+                              )
+                          </ListItem>
+                          )
+                          })}
+                      <ListItem>
+                        <Button onClick={()=>onFileLinkClicked(file)}>{file.title}</Button>
+                      </ListItem>
+                    </List>
+                )
+                })
+              }
 					</Grid>
 				</Grid>
 			</Paper>
 		</>
 	);
 }
-

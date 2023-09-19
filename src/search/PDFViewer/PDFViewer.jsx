@@ -38,8 +38,8 @@ const PDFViewer = (props) => {
     return (
       <>
         <Grid item flex={1} style={{ height: '100%' }} alignContent={'flex-start'} border={1}  >
-          Viewer Loading: {fileUrl}
-          <Worker workerUrl={workerUrl}>
+          {JSON.stringify(file)}
+          {/* <Worker workerUrl={workerUrl}>
             <Viewer
               initialPage={2}
               fileUrl={fileUrl}
@@ -54,16 +54,16 @@ const PDFViewer = (props) => {
               setState({...state, infoMessage:`Document ${file.title} loaded successfully`})
               setIsLoading(true)
             }}
-            // renderError={(error) => {
-            //   setState({...state, errorMessage: `${error.name} - ${error.message}`})
-            //   setIsLoading(false);
-            // }}
-            // renderPage={(props) => {
-            //   setState({...state, infoMessage:`Page ${JSON.stringify(props)} is rendered`})
-            //   setIsLoading(false);
-            // }}
+            renderError={(error) => {
+              setState({...state, errorMessage: `${error.name} - ${error.message}`})
+              setIsLoading(false);
+            }}
+            renderPage={(props) => {
+              setState({...state, infoMessage:`Page ${JSON.stringify(props)} is rendered`})
+              setIsLoading(false);
+            }}
             />
-          </Worker>
+          </Worker> */}
         </Grid>
       </>
       //     </div>

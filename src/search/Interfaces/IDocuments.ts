@@ -31,16 +31,17 @@ export interface IEISDoc {
 
 export interface IFile {
   id: number;
+  title: string;
   processId: number;
   documentType: string; 
   filename: string;
   folder: string;
   relativePath: string;
-  //eisdoc: IEISDoc;
+  doc: IEISDoc;
   size?: number;
-  filenames: string[];
-  eisdoc: IEISDoc;
-  path?: string;
+  filenames: any[];
+  path: string;
+  zipPath: string;
 }
 
 export interface IFiles extends Array<IFile>{}
