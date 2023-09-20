@@ -371,12 +371,12 @@ export default function PDFViewerDialog(props) {
   }
   return (
     <PDFViewerContext.Provider value={value}>
-      <Box sx={{}}>
+      <Box sx={{marginTop: 20}}>
         <Dialog
           id='pdf-viewer-dialog'
           //open={isOpen}
           open={isOpen}
-          fullScreen
+          //fullScreen
           maxWidth='lg'
           maxHeight='lg'
           //				minWidth='md'
@@ -429,6 +429,7 @@ export default function PDFViewerDialog(props) {
                     container
                     xs={9}
                     className={classes.centered}
+                    alignContent={'flex-start'}
                     id='pdf-viewer-grid-container'>
                     <Grid item xs={12}
                       id='pdf-viewer-title-grid-item'>
@@ -471,7 +472,6 @@ export default function PDFViewerDialog(props) {
                       })
                       } */}
 
-                      {JSON.stringify(state.currentFile,null,2)}
                       <PDFViewerContainer
                         currentFile={state.currentFile}
                         files={state.files}
