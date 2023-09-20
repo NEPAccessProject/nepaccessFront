@@ -458,11 +458,11 @@ export default class App extends React.Component {
 
   // Start a brand new search.
   startNewSearch = (searcherState) => {
-    console.log("New search", searcherState);
+    console.log("START NEW SEARCH", searcherState);
 
     // Reset page, page size
-    this._page = 1;
-    this._pageSize = 10;
+    this._page = searcherState.page || 1;
+    this._pageSize = searcherState.limit || 10;
 
     // throw out anything we really don't want to support/include
     searcherState.titleRaw = preProcessTerms(searcherState.titleRaw);
@@ -1779,6 +1779,7 @@ export default class App extends React.Component {
                     informAppPage={this.setPageInfo}
                     gatherSpecificHighlights={this.gatherSpecificHighlights}
                     results={this.state.outputResults}
+                    search={this.startNewSearch}
                     //                        searchResults={this.state.searchResults}
                     geoResults={this.state.geoResults}
                     filtersHidden={this.state.filtersHidden}
