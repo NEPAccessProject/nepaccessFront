@@ -1,7 +1,16 @@
 import React from 'react';
 import axios from 'axios';
-
+import { Autocomplete } from '@mui/material';
 import Globals from './globals.js';
+import { SearchOutlined } from '@mui/icons-material';
+import {
+    Box,
+    Grid,
+    Hidden,
+    IconButton,
+    ListItem,
+    TextField
+} from '@mui/material';
 
 // import FlipNumbers from 'react-flip-numbers';
 
@@ -134,8 +143,69 @@ class SearcherLanding extends React.Component {
     // }
 
 
+    render(){
+        return(
+            <Grid container flex={1}>
+                <Grid
+                    item
+                    xs={12}
+                    border={0}
+                    borderColor={'#DDD'}
+                    md={12}
+                    borderLeft={0}
+                    marginTop={2}
+                    id="search-box-grid-item"
+                >
+                    <Box
+                        id="search-box-box-item"
+                        display={'flex'}
+                        justifyContent={'center'}
+                        justifyItems={'center'}
+                        alignItems={'center'}
+                        alignContent={'center'}
+                        height={60}
+                        paddingLeft={0}
+                        paddingRight={2}
+                        padding={0}
+                        elevation={1}
+                        borderRadius={0}
+                        border={0}
+                        borderColor={'#CCC'}
+                        borderLeft={0}
+                        marginLeft={2}
+                        marginRight={2}
+                        backgroundColor= 'white'
+                    >
+                        {' '}
+                        <TextField
+                            fullWidth
+                            id="main-search-text-field"
+                            //id="landing-search-bar"
+                            name="titleRaw"
+                            variant="filled"
+                            //focused
+                            //onInput={this.onInput}
+                            onKeyUp={this.onKeyUp}
+                            onChange={this.onChangeHandler}
+                            onKeyDown={this.onKeyDown}
+                            placeholder="Search for NEPA documents"
+                            value={this.state.titleRaw ? this.state.titleRaw : ''}
+                            autoFocus
+                            InputProps={{
+                                endAdornment: (
+                                    <IconButton name="titleRaw" value={this.state.titleRaw ? this.state.titleRaw : ""} onClick={this.onIconClick}>
+                                        <SearchOutlined />
+                                    </IconButton>
+                                ),
+                            }}
+                        />
+                    </Box>
+                </Grid>                
+            </Grid>
+        )
+    }
 
-    render () {
+    _render() {
         return (
             <div id="landing-search-box-container">
                 
