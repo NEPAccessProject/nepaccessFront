@@ -61,12 +61,31 @@ import ImporterGeo from './ImporterGeo.js';
 import ImporterGeoLinks from './ImporterGeoLinks.js';
 
 import Globals from './globals.js';
+import Header from './Header'
+import HeaderNav from './HeaderNav';
 
 import { Link, Switch, Route, withRouter } from 'react-router-dom';
 
 import PropTypes from "prop-types";
 
 import ImporterAlignment from './ImporterAlignment';
+import {
+    AppBar,
+    Toolbar,
+    Typography,
+    makeStyles,
+    Button,
+    IconButton,
+    Drawer,
+    MenuItem,
+    Paper,
+    Box,
+    Container,
+    Divider,
+    Grid,
+    useMediaQuery,
+} from '@material-ui/core';
+import MenuIcon from '@material-ui/icons/Menu';
 
 const _ = require('lodash');
 
@@ -267,8 +286,8 @@ class Main extends React.Component {
                         <Link className="top-menu-link" to="/logout">Log out</Link>
                     </span>
                 </div>
-
-                <div id="main-menu">
+                <HeaderNav/>
+                {/* <div id="main-menu">
                     <Link currentpage={(this.state.currentPage==="/search").toString()} className="main-menu-link" to="/search">
                         Search
                     </Link>
@@ -298,16 +317,12 @@ class Main extends React.Component {
                             <Link to="/people">People</Link>
                         </div>
                     </div>
-                    
-                    {/* <Link currentpage={(this.state.currentPage==="/future").toString()} className="main-menu-link" to="/future">
-                        Future
-                    </Link> */}
                     <Link currentpage={(this.state.currentPage==="/contact").toString()} className="main-menu-link" to="/contact">
                         Contact
                     </Link>
 
-                </div>
-                
+                </div> */}
+                {/* <Header/> */}
             </div>
             <Switch>
                 <Route path="/profile" component={UserDetails}/>
@@ -394,6 +409,7 @@ class Main extends React.Component {
         );
     }
 
+    
     
     componentDidMount() {
         // Role config allows admin menu and options to work properly
