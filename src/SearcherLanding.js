@@ -174,7 +174,7 @@ class SearcherLanding extends React.Component {
                         borderLeft={0}
                         marginLeft={2}
                         marginRight={2}
-                        backgroundColor= 'white'
+                        /////backgroundColor= 'white'
                     >
                         {' '}
                         <TextField
@@ -182,7 +182,7 @@ class SearcherLanding extends React.Component {
                             id="main-search-text-field"
                             //id="landing-search-bar"
                             name="titleRaw"
-                            variant="standard"
+                            variant="outlined"
                             color='primary'
                             //focused
                             //onInput={this.onInput}
@@ -192,6 +192,12 @@ class SearcherLanding extends React.Component {
                             placeholder="Search for NEPA documents"
                             value={this.state.titleRaw ? this.state.titleRaw : ''}
                             autoFocus
+                            sx={{
+                                borderRadius:1,
+                                marginLeft: 4,
+                                marginRight: 4,
+                                backgroundColor: '#fff'
+                            }}
                             InputProps={{
                                 endAdornment: (
                                     <IconButton name="titleRaw" value={this.state.titleRaw ? this.state.titleRaw : ""} onClick={this.onIconClick}>
