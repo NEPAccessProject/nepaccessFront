@@ -7,7 +7,7 @@ import './landing.css';
 
 import SearcherLanding from './SearcherLanding.js';
 import './User/login.css';
-
+import MediaQuery from 'react-responsive';
 import IframeResizer from 'iframe-resizer-react';
 
 class Landing extends React.Component {
@@ -44,29 +44,31 @@ class Landing extends React.Component {
                     <link rel="canonical" href="https://nepaccess.org/" />
                 </Helmet>
 
-                <div id="landing-images">
-                    <div id="headline" className="no-select cursor-default">
-                        <div id="landing-headline-container">
-                            <h1 id="landing-headline-left">
-                                <span className="glow">
-                                    Fulfilling NEPA’s Promise Through the Power of Data Science
-                                </span>
-                            </h1>
-                            <h2 id="landing-headline-right">
-                                <span className="glow">
-                                    Help grow our community of knowledge and put our information infrastructure to work for you.
-                                </span>
-                            </h2>
+                <MediaQuery minWidth={1224}>
+                    <div id="landing-images">
+                        <div id="headline" className="no-select cursor-default">
+                            <div id="landing-headline-container">
+                                <h1 id="landing-headline-left">
+                                    <span className="glow">
+                                        Fulfilling NEPA’s Promise Through the Power of Data Science
+                                    </span>
+                                </h1>
+                                <h2 id="landing-headline-right">
+                                    <span className="glow">
+                                        Help grow our community of knowledge and put our information infrastructure to work for you.
+                                    </span>
+                                </h2>
+                            </div>
+                
+                            <SearcherLanding 
+                                id="rawInput"
+                                onChange={this.handleChange}
+                                onClick={this.handleClick}
+                                value={this.state.rawInput}
+                            />
                         </div>
-            
-                        <SearcherLanding 
-                            id="rawInput"
-                            onChange={this.handleChange}
-                            onClick={this.handleClick}
-                            value={this.state.rawInput}
-                        />
                     </div>
-                </div>
+                </MediaQuery>
 
                 <IframeResizer
                     // log
