@@ -259,7 +259,11 @@ class Main extends React.Component {
                 <link rel="canonical" href="https://www.nepaccess.org/" />
             </Helmet>
 
-            <div id="header" className={this.getHeaderCss() + this.state.headerLandingCss}>
+            <div 
+                //id="header" 
+                style={{}} 
+                //className={this.getHeaderCss() + this.state.headerLandingCss}
+            >
 
                 {/* <div id="logo" className="no-select">
                     <Link id="logo-link" to="/">
@@ -269,7 +273,10 @@ class Main extends React.Component {
                     </div>
                 </div> */}
 
-                <div id="top-menu" className="no-select">
+                {/* <div
+                     style={{zIndex: 9999}} 
+                    id="top-menu" 
+                    className="no-select">
                     
                     {this.showMenuItems()}
 
@@ -285,8 +292,12 @@ class Main extends React.Component {
                     <span className={this.state.loggedInDisplay + " right-nav-item logged-in"}>
                         <Link className="top-menu-link" to="/logout">Log out</Link>
                     </span>
-                </div>
-                <HeaderNav titleRaw={this.state.titleRaw} />
+                </div> */}
+                <HeaderNav 
+                loggedInDisplay={this.loggedInDisplay}
+                loggedOutDisplay={this.loggedOutDisplay}
+                showMenuItems={this.showMenuItems} 
+                />
                 {/* <div id="main-menu">
                     <Link currentpage={(this.state.currentPage==="/search").toString()} className="main-menu-link" to="/search">
                         Search
