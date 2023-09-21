@@ -23,6 +23,7 @@ import './index.css';
 import { Helmet } from 'react-helmet';
 import Landing from './Landing';
 import CalloutContainer from './CalloutContainer';
+import SearcherLanding from './SearcherLanding';
 const headersData = [
   {
     label: 'Search',
@@ -117,6 +118,8 @@ const useStyles = makeStyles(() => ({
     // border: '3px solid red',
     justifyContent: 'left',
     backgroundSize: 'contain',
+    marginTop: -50,
+    marginLeft: -20,
   },
   logoBox: {
     // marginLeft: '200px',
@@ -124,7 +127,7 @@ const useStyles = makeStyles(() => ({
     width: '200px',
     // backgroundPosition:'top',
 
-    // backgroundImage: 'url("logo2022.png")',
+    backgroundImage: 'url("logo2022.png")',
     // backgroundRepeat: 'no-repeat',
     // backgroundSize: 'contain',
   },
@@ -149,12 +152,12 @@ const useStyles = makeStyles(() => ({
     color: 'black',
   },
   menuIcon: {
-    color: 'black',
-    border: '1px solid black'
+    color: 'white',
+    border: '1px solid white'
   }
 }));
 
-export default function HeaderNav() {
+export default function HeaderNav(props) {
   const {
     Nav,
     header,
@@ -176,6 +179,30 @@ export default function HeaderNav() {
     mobileView: false,
     drawerOpen: false,
   });
+  const {titleRaw,onInput,onKeyUp,onIconClick,onClearClick,onChangeHandler} = props;
+  
+// onInput = (evt) => {
+//     this.setState({ [evt.target.name]: evt.target.value });
+//     const val = evt.target.value;
+//     this.props.onChange(this.props.id, val);
+// }
+
+// onKeyUp = (evt) => {
+//     if(evt.keyCode ===13){
+//         this.props.onClick("render", "app");
+//     }
+// }
+// onIconClick = (evt) => {
+//     this.props.onClick("render", "app");
+// }
+// onClearClick = (evt) => {
+//     // Custom clear icon not captured by onInput(), so update the relevant props and state here
+//     this.setState({ titleRaw: '' });
+//     this.props.onChange(this.props.id, ''); 
+// }
+// onChangeHandler = (evt) => {
+//     // do nothing
+// }
   // const isMobile = withMediaQuery({ maxWidth: 768 })
   const { mobileView, drawerOpen } = state;
 
@@ -230,7 +257,7 @@ export default function HeaderNav() {
               justifyContent: 'center',
             }}>
 
-            <img src="logo2022.png" height={61} width={150} alt="NEPAccess Mobile Logo" />
+            <img src="/logo2022.png" height={61} width={150} alt="NEPAccess Mobile Logo" />
           </Grid>
 
           <Drawer
@@ -243,6 +270,7 @@ export default function HeaderNav() {
           >
             <div id="drawer-container" className={drawerContainer}>
               {getDrawerChoices()}
+              <SearcherLanding />
             </div>
           </Drawer>
 
@@ -270,14 +298,14 @@ export default function HeaderNav() {
             style: { textDecoration: 'none' },
             key: label,
           }}
-          xs={{
+          sx={{
             color: 'black',
             fontWeight: 600,
           }}
           key={label+idx}
         >
           <MenuItem
-            xs={{
+            sx={{
               color: 'black',
             }}
             className="menu-item"
@@ -313,7 +341,7 @@ export default function HeaderNav() {
         >
           <Box
             id="desktop-logo-box"
-            xs={{
+            sx={{
               height: '50px',
               width: '200px',
               // border: '3px solid red',
@@ -328,26 +356,26 @@ export default function HeaderNav() {
           >
             <img
               id="logo-image"
-                        src="/logo2022.png"
+              src="logo2022.png"
               className={logoImage}
               height={102}
               width={302}
               alt="NEPAccess Logo"
+              style={{}}
             />
           </Box>
-          <Container
+          <Grid container
             id="link-container"
-            xs={{
+            sx={{
               justifyContent: 'flex-start',
+              border:1,
               alignItems: 'left',
-              marginLeft: '350px',
-              backgroundImage: 'url("logo2022.png")',
             }}
           >
             <Container id="menu-container" className={menuContainer}>
               <MenuItem className={navLink}>Search</MenuItem>
               <MenuItem className={navLink}>Search Tips</MenuItem>
-              <MenuItem className={navLink}>Availble Files</MenuItem>
+              <MenuItem className={navLink}>Available Files</MenuItem>
               <MenuItem className={navLink}>About NEPA</MenuItem>
               <MenuItem className={navLink}>About NEPAccess</MenuItem>
               <MenuItem className={navLink}>Contact</MenuItem>
@@ -384,7 +412,7 @@ export default function HeaderNav() {
               </span>
             </Container>
 
-          </Container>
+          </Grid>
         </Toolbar>
         {/* <Landing /> */}
         <Container id='mobile-content-container'>

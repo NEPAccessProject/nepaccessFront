@@ -182,7 +182,8 @@ class SearcherLanding extends React.Component {
                             id="main-search-text-field"
                             //id="landing-search-bar"
                             name="titleRaw"
-                            variant="filled"
+                            variant="standard"
+                            color='primary'
                             //focused
                             //onInput={this.onInput}
                             onKeyUp={this.onKeyUp}

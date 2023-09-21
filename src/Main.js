@@ -261,13 +261,13 @@ class Main extends React.Component {
 
             <div id="header" className={this.getHeaderCss() + this.state.headerLandingCss}>
 
-                <div id="logo" className="no-select">
+                {/* <div id="logo" className="no-select">
                     <Link id="logo-link" to="/">
                     </Link>
                     <div id="logo-box">
 
                     </div>
-                </div>
+                </div> */}
 
                 <div id="top-menu" className="no-select">
                     
@@ -286,7 +286,7 @@ class Main extends React.Component {
                         <Link className="top-menu-link" to="/logout">Log out</Link>
                     </span>
                 </div>
-                <HeaderNav/>
+                <HeaderNav titleRaw={this.state.titleRaw} />
                 {/* <div id="main-menu">
                     <Link currentpage={(this.state.currentPage==="/search").toString()} className="main-menu-link" to="/search">
                         Search
