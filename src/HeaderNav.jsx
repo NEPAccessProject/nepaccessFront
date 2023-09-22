@@ -1,22 +1,24 @@
 import {
   AppBar,
-  Toolbar,
-  Typography,
-  makeStyles,
-  Button,
-  IconButton,
-  Drawer,
-  Link,
-  Menu,
-  MenuItem,
-  Paper,
   Box,
+  Button,
   Container,
   Divider,
+  Drawer,
   Grid,
+  IconButton,
+  Link,
+  makeStyles,
+  MenuItem,
+  MenuList,
+  Paper,
+  Toolbar,
+  Typography,
   useMediaQuery,
 } from '@material-ui/core';
 import theme from './styles/theme';
+//import Grid from '@mui/material/Unstable_Grid2'; // Grid version 2
+
 import MenuIcon from '@material-ui/icons/Menu';
 import { withMediaQuery } from 'react-responsive';
 import React, { useState, useEffect } from 'react';
@@ -27,7 +29,7 @@ import Landing from './Landing';
 import CalloutContainer from './CalloutContainer';
 import SearcherLanding from './SearcherLanding';
 import { withStyles } from '@mui/styles';
-const maxWidth= '1224px'
+const maxWidth = '1224px'
 const headersData = [
   {
     label: 'Search',
@@ -65,6 +67,12 @@ const headersData = [
     label: 'Contact',
     href: '/contact',
   },
+  {
+    label: 'login'
+  },
+  {
+    label:'logout'
+  },
 ];
 
 const useStyles = makeStyles((theme) => ({
@@ -72,9 +80,19 @@ const useStyles = makeStyles((theme) => ({
     borderRadius: 0,
     backgroundColor: "#abbdc4",
     zIndex: 0,
+    flexDirection: 'row'
   },
   abStatic: {
     zIndex: 0,
+  },
+  adminGrid:{
+    display:"flex",
+    height:'100%',
+    border:1,
+    borderColor:'blue',
+    alignItems:'flex-start',
+    alignContent:'flex-start',
+    justifyContent:'flex-start',
   },
   header: {
     backgroundColor: '#abbdc4',
@@ -162,6 +180,8 @@ function HeaderNav(props) {
 
   const { mobileView, drawerOpen } = state;
   const { showMenuItems, loggedInDisplay, loggedOutDisplay } = props;
+  //for Menu anchor
+  const [anchorEl, setAnchorEl] = React.useState(null);
 
   //  const isBigScreen = useMediaQuery({ query: '(min-width: 1824px)' })
   //  const isTabletOrMobile = useMediaQuery({ query: '(max-width: 1224px)' })
@@ -184,9 +204,26 @@ function HeaderNav(props) {
     };
   }, []);
 
+  const prevOpen = React.useRef(open);
+  React.useEffect(() => {
+    if (prevOpen.current === true && drawerOpen === false) {
+      anchorRef.current.focus();
+    }
+
+    prevOpen.current = open;
+  }, [open]);
+  const handleToggle = () => {
+    setOpen((prevOpen) => !prevOpen);
+  };
+
   const displayMobile = () => {
     const handleDrawerOpen = () => setState((prevState) => ({ ...prevState, drawerOpen: true }));
-    const handleDrawerClose = () => setState((prevState) => ({ ...prevState, drawerOpen: false }));
+    const handleDrawerClose = (evt) => {
+        if (anchorRef.current && anchorRef.current.contains(event.target)) {
+          return;
+        }
+      setState((prevState) => ({ ...prevState, drawerOpen: false }))
+    };
 
     return (
       <>
@@ -209,9 +246,6 @@ function HeaderNav(props) {
             id="nav-mobile-toolbar"
             //          className={toolbar}
             color='primary'
-            sx={{
-              backgroundColor: '#abbdc4'
-            }}
           >
             <IconButton
               id="mobile-icon-button"
@@ -234,7 +268,7 @@ function HeaderNav(props) {
                 // justifyContent: 'center',
               }}>
 
-              <img src="/logo2022_mobile.png"  alt="NEPAccess Mobile Logo" />
+              <img src="/logo2022_mobile.png" alt="NEPAccess Mobile Logo" />
             </Grid>
 
             <Drawer
@@ -310,136 +344,150 @@ function HeaderNav(props) {
     const currentPage = ''; //props.currentPage || '';
     return (
       <>
-{!state.mobileView &&
-        <Toolbar
-          id="nav-toolbar"
-          //className={classes.toolbar}
-          color='primary'
-          sx={{
-            backgroundColor: '#abbdc4',
-            display: "flex",
-            justifyContent: 'flex-end',
-            alignItems: "center"
-          }}
-        >
-          <Grid container flex={1}>
-          <Grid item xs={3}
-            justifyContent="flex-start"
-            id="desktop-logo-box"
-
-            sx={{
-              //width: '200px',
+        {/* [TODO] Revist this should not be needed since the parent
+ function should take care of it */}
+        {!state.mobileView &&
+            <Toolbar
+              id="nav-toolbar"
+              //className={classes.toolbar}
+              color='primary'
+              sx={{
+                flexGrow: 1,
+                backgroundColor: '#abbdc4',
+                display: "flex",
+                justifyContent: 'flex-end',
+              }}
+            >
+            {/* <MenuList id="menu-container"
+              anchorEl={anchorEl}
+//            variant='menu'
+            open={true}
+            autoFocusItem={drawerOpen}
+//                position="fixed"
+            PaperProps={{
+              id:"menu-container-paper",
+              top:0,
+              left:0
             }}
-          >
-            <img
-              id="desktop-logo-image"
-              src="logo2022.png"
-              className={classes.logoImage}
-              height={50}
-              width={151}
-              alt="NEPAccess Logo"
-              style={{}}
-            />
-          </Grid>
-          <Grid item
-            xs={9}
-            border={1}
-            id="link-container"
-            display="flex"
-            justifyContent="flex-end"
-            sx={{
-              // // justifyContent: 'flex-start',
-              // // border: 1,
-              // // alignItems: 'left',
-            }}
-          >
-            {/* <Menu id="menu-container"
-              className={classes.menuContainer}
-              height={75}
-              open={true}
-              position="sticky"
-              PaperProps={{
-                style: {
-                  position:"absolute",
-                  top:0,
-                  left:0,
-                  maxHeight: 50, //ITEM_HEIGHT * 4.5,
-                  backgroundColor: 'transparent',
-                  //                  width: '20ch',
-                },
-              }}> */}
-              <MenuItem className={classes.navLink}>Search</MenuItem>
-              <MenuItem className={classes.navLink}>Search Tips</MenuItem>
-              <MenuItem className={classes.navLink}>Available Files</MenuItem>
-              <MenuItem className={classes.navLink}>About NEPA</MenuItem>
-              <MenuItem className={classes.navLink}>About NEPAccess</MenuItem>
-              <MenuItem className={classes.navLink}>Contact</MenuItem>
-              
-                <span
-                  id="admin-span"
-                  hidden={!role || role === 'user'}
-                  className={loggedInDisplay + ' right-nav-item logged-in'}
-                >
-                  <div id="admin-dropdown" className="main-menu-link dropdown">
-                    <Link id="admin-button" className="main-menu-link drop-button" to="/importer">
-                      Admin
-                    </Link>
-                    <i className="fa fa-caret-down"></i>
-                    <div className="dropdown-content">
-                      <Link to="/admin" hidden={!(role === 'admin')}>
-                        Admin Panel
-                      </Link>
-                      <Link to="/importer" hidden={!(role === 'curator' || role === 'admin')}>
-                        Import New Documents
-                      </Link>
-                      <Link to="/adminFiles" hidden={!(role === 'curator' || role === 'admin')}>
-                        Find Missing Files
-                      </Link>
-                      <Link to="/approve">Approve Users</Link>
-                      <Link to="/pre_register">Pre-Register Users</Link>
-                      <Link to="/interaction_logs">Interaction Logs</Link>
-                      <Link to="/search_logs">Search Logs</Link>
-                      <Link to="/abouthelpcontents">Database Contents</Link>
-                      <Link to="/stats">Content Statistics</Link>
-                      <Link to="/stat_counts">Stat Counts</Link>
-                      <Link to="/surveys">Surveys</Link>
-                    </div>
-                  </div>
-                </span>
-              <Box
-                // style={{ zIndex: 9999 }}
-                id="top-menu-admin-links"
-              //width={100}
-              //className="no-select"
-              >
+            > */}
+              <Grid container id="nav-toolbar-grid-container" display="flex" xs={12} border={2} height={100}>
 
-                {/* {showMenuItems()} */}
+                <Grid item  display="flex" flexDirection="row" justifyContent='flex-end' wrap='nowrap'  xs={2} flex={1} 
+                sx={{
+                  width: '100%',
+                  border: 2,
+                }}
+                border={2} id="nav-toolbar-logo-grid-item">
+                  <img
+                    
+                    id="desktop-logo-image"
+                    src="logo2022.png"
+                    className={classes.logoImage}
+                    height={100}
+                    width={302}
+                    alt="NEPAccess Logo"
+                    style={{display: "inline"}}
+                  />
+                </Grid>
 
-                <span 
-                  id="profile-span"
-                  className={loggedInDisplay + " right-nav-item logged-in"}>
-                  <Link
-                    className="top-menu-link"
-                    to="/profile">
-                    Profile
-                  </Link>
-                </span>
-                <span id="login-span" className={loggedOutDisplay + " logged-out"}>
-                  <Link className="top-menu-link" to="/login">Log in</Link>
-                </span>
-                <span id="register-span" className={loggedOutDisplay + " right-nav-item logged-out"}>
-                  <Link className="top-menu-link" to="/register">Register</Link>
-                </span>
-                <span className={loggedInDisplay + " right-nav-item logged-in"}>
-                  <Link className="top-menu-link" to="/logout">Log out</Link>
-                </span>
-              </Box>
-            {/* </Menu> */}
+                {/* <Grid container justifyContent='flex-end' item xs={9} flex={1} border={2} id="nav-toolbar-menuitems-grid-item"> */}
+                  <Grid item id="nav-toolbar-menuitems-grid-item" 
+                    display="flex"
+                     xs={12} 
+                     border={2} 
+                     justifyContent='flex-end'
+                     alignItems='center'
+                     style={{display:'flex', justifyContent:'flex-end'}}
+                    sx={{
+                      width:'100%',
+                      height:'100%'
+                    }}
+                     
+                     >
+                    {/* <Box display={'flex'} justifyContent={'flex-end'} flex={1} id="nav-toolbar-menuitems-box"> */}
+                      <MenuItem className={classes.navLink}>Search</MenuItem>
+                      <MenuItem className={classes.navLink}>Search Tips</MenuItem>
+                      <MenuItem className={classes.navLink}>Available Files</MenuItem>
+                      <MenuItem className={classes.navLink}>About NEPA</MenuItem>
+                      <MenuItem className={classes.navLink}>About NEPAccess</MenuItem>
+                      <MenuItem className={classes.navLink}>Contact</MenuItem>
+                    {/* </Box> */}
+                  {/* </Grid> */}
 
-          </Grid>
-          </Grid>
-        </Toolbar>
-  }
+                  <Grid item id="nav-toolbar-admin-grid" 
+                    flex={1} 
+                    className={classes.adminGrid}
+>
+                    <Box id="nav-toolbar-admin-span-box" display={'flex'}  flex={1} justifyContent={'flex-end'}>
+                      <span
+                        id="admin-span"
+                        hidden={!role || role === 'user'}
+                        className={loggedInDisplay + ' right-nav-item logged-in'}
+                      >
+                        <div id="admin-dropdown" className="main-menu-link dropdown">
+                          <Link id="admin-button" className="main-menu-link drop-button" to="/importer">
+                            Admin
+                          </Link>
+                          <i className="fa fa-caret-down"></i>
+                          <div className="dropdown-content">
+                            <Link to="/admin" hidden={!(role === 'admin')}>
+                              Admin Panel
+                            </Link>
+                            <Link to="/importer" hidden={!(role === 'curator' || role === 'admin')}>
+                              Import New Documents
+                            </Link>
+                            <Link to="/adminFiles" hidden={!(role === 'curator' || role === 'admin')}>
+                              Find Missing Files
+                            </Link>
+                            <Link to="/approve">Approve Users</Link>
+                            <Link to="/pre_register">Pre-Register Users</Link>
+                            <Link to="/interaction_logs">Interaction Logs</Link>
+                            <Link to="/search_logs">Search Logs</Link>
+                            <Link to="/abouthelpcontents">Database Contents</Link>
+                            <Link to="/stats">Content Statistics</Link>
+                            <Link to="/stat_counts">Stat Counts</Link>
+                            <Link to="/surveys">Surveys</Link>
+                          </div>
+                        </div>
+                      </span>
+                    </Box>
+                    <Box
+                      // style={{ zIndex: 9999 }}
+                      display="flex"
+                      justifyContent="flex-end"
+                      id="top-menu-admin-links"
+                    //width={100}
+                    //className="no-select"
+                    >
+
+                      {/* {showMenuItems()} */}
+
+                      <span
+                        id="profile-span"
+                        className={loggedInDisplay + " right-nav-item logged-in"}>
+                        <Link
+                          className="top-menu-link"
+                          to="/profile">
+                          Profile
+                        </Link>
+                      </span>
+                      <span id="login-span" className={loggedOutDisplay + " logged-out"}>
+                        <Link className="top-menu-link" to="/login">Log in</Link>
+                      </span>
+                      <span id="register-span" className={loggedOutDisplay + " right-nav-item logged-out"}>
+                        <Link className="top-menu-link" to="/register">Register</Link>
+                      </span>
+                      <span className={loggedInDisplay + " right-nav-item logged-in"}>
+                        <Link className="top-menu-link" to="/logout">Log out</Link>
+                      </span>
+                    </Box>
+                  </Grid>
+                  </Grid>
+
+                </Grid>
+                  {/* </MenuList> */}
+            </Toolbar>
+        }
         {/* <Landing /> */}
         {/* <Container id='mobile-content-container'>
           <Container id="mobile-search-container">
@@ -476,7 +524,7 @@ function HeaderNav(props) {
   };
   /* RETURN of the main function */
   return (
-    <Paper id="header-root-paper-container" color='#A8B9C0' elevation={0} sx={{
+    <Paper id="header-root-paper-container" color='#A8B9C0' elevation={1} sx={{
       backgroundColor: '#abbdc4'
       // width: '100%',
       // border: 1,
@@ -487,11 +535,11 @@ function HeaderNav(props) {
         position="static"
         style={{}}
         color="primary"
+  
         classes={{ root: classes.abRoot, positionStatic: classes.abStatic }}
       >
         {mobileView ? displayMobile() : displayDesktop()}
       </AppBar>
-      Mobile View ? {mobileView ? "yes" : "nope"}
     </Paper>
   );
 }
