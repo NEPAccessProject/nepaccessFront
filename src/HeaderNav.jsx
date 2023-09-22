@@ -71,7 +71,7 @@ const headersData = [
     label: 'login'
   },
   {
-    label:'logout'
+    label: 'logout'
   },
 ];
 
@@ -85,14 +85,14 @@ const useStyles = makeStyles((theme) => ({
   abStatic: {
     zIndex: 0,
   },
-  adminGrid:{
-    display:"flex",
-    height:'100%',
-    border:1,
-    borderColor:'blue',
-    alignItems:'flex-start',
-    alignContent:'flex-start',
-    justifyContent:'flex-start',
+  adminGrid: {
+    display: "flex",
+    height: '100%',
+    border: 1,
+    borderColor: 'blue',
+    alignItems: 'flex-start',
+    alignContent: 'flex-start',
+    justifyContent: 'flex-start',
   },
   header: {
     backgroundColor: '#abbdc4',
@@ -150,17 +150,43 @@ const useStyles = makeStyles((theme) => ({
     flexDirection: 'row',
     justifyContent: 'center',
   },
-  navLink: {
-    dropShadow: '3px',
-    position: 'relative',
+  mobileNavLink: {
+    // dropShadow: '3px',
+    // position: 'relative',
     fontFamily: 'Open Sans',
-    fontStyle: 'normal',
+    // fontStyle: 'normal',
     fontWeight: 'bold',
     fontSize: '1.1em',
-    lineHeight: '25px',
-    textDecoration: 'none',
+    // lineHeight: '25px',
+    // textDecoration: 'none',
+//    marginLeft:0,
     color: '#000000',
-    textShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)',
+     textShadow: '0px 3px 2px rgba(0, 0, 0, 0.25)',
+     "&:hover": {
+      textDecoration: 'underline'
+     }
+  },
+  navLink: {
+    // dropShadow: '3px',
+    // position: 'relative',
+    fontFamily: 'Open Sans',
+    // fontStyle: 'normal',
+    fontWeight: 'bold',
+    fontSize: '0.9em',
+    // lineHeight: '25px',
+    // textDecoration: 'none',
+    paddingLeft: 2,
+    paddingRight: 2,
+    margin:0,
+    justifyContent: 'center',
+    flex: 1,
+    width:'100%',
+    color: '#000000',
+    textWrap: 'nowrap',
+     textShadow: '0px 3p2 2px rgba(0, 0, 0, 0.25)',
+     "&:hover": {
+      textDecoration: 'underline'
+     }
   },
   mainMenuLink: {
     color: 'black',
@@ -219,9 +245,9 @@ function HeaderNav(props) {
   const displayMobile = () => {
     const handleDrawerOpen = () => setState((prevState) => ({ ...prevState, drawerOpen: true }));
     const handleDrawerClose = (evt) => {
-        if (anchorRef.current && anchorRef.current.contains(event.target)) {
-          return;
-        }
+      if (anchorRef.current && anchorRef.current.contains(event.target)) {
+        return;
+      }
       setState((prevState) => ({ ...prevState, drawerOpen: false }))
     };
 
@@ -332,9 +358,7 @@ function HeaderNav(props) {
     });
   };
 
-  // const logoBackDrop = (
-  //   <img src="url('logo2022.png')" alt="NEPAccess Logo" />
-  // );
+  //[TODO] make ToolBar full width
   const displayDesktop = (props) => {
     const role = 'user';
     const loggedInDisplay = 'none';
@@ -347,17 +371,18 @@ function HeaderNav(props) {
         {/* [TODO] Revist this should not be needed since the parent
  function should take care of it */}
         {!state.mobileView &&
-            <Toolbar
-              id="nav-toolbar"
-              //className={classes.toolbar}
-              color='primary'
-              sx={{
-                flexGrow: 1,
-                backgroundColor: '#abbdc4',
-                display: "flex",
-                justifyContent: 'flex-end',
-              }}
-            >
+          <Toolbar
+            id="nav-toolbar"
+            color="primary"
+            disableGutters={true}
+            style={{border: '3px solid black',width:'100%'}}
+            sx={{
+              flexGrow: 1,
+              backgroundColor: '#abbdc4',
+              display: "flex",
+              justifyContent: 'flex-end',
+            }}
+          >
             {/* <MenuList id="menu-container"
               anchorEl={anchorEl}
 //            variant='menu'
@@ -370,123 +395,106 @@ function HeaderNav(props) {
               left:0
             }}
             > */}
-              <Grid container id="nav-toolbar-grid-container" display="flex" xs={12} border={2} height={100}>
 
-                <Grid item  display="flex" flexDirection="row" justifyContent='flex-end' wrap='nowrap'  xs={2} flex={1} 
+            <Grid container id="nav-toolbar-grid-container" 
+              flexDirection="row" 
+              flex={1} 
+              display="flex"
+              xs={12}
+              style={{border:'1px solid black'}}
+              >
+
+              <Grid item display="flex" flexDirection="row"  wrap='nowrap'
+              xs={2} 
+                style={{ display: 'flex', justifyContent: 'flex-start', border: '1px solid black' }}
+                border={2} id="nav-toolbar-logo-grid-item">
+                <img
+
+                  id="desktop-logo-image"
+                  src="logo2022.png"
+                  className={classes.logoImage}
+                  height={50}
+                  width={151}
+                  alt="NEPAccess Logo"
+                  style={{ display: "inline", border: 1 }}
+                />
+              </Grid>
+
+              {/* <Grid container justifyContent='flex-end' item xs={9} flex={1} border={2} id="nav-toolbar-menuitems-grid-item"> */}
+              <Grid item id="nav-toolbar-menuitems-grid-item"
+                display="flex"
+                xs={8}
+                border={2}
+                justifyContent='flex-end'
+                alignItems='center'
+                style={{ display: 'flex', justifyContent: 'flex-end' }}
                 sx={{
                   width: '100%',
-                  border: 2,
+                  height: '100%'
                 }}
-                border={2} id="nav-toolbar-logo-grid-item">
-                  <img
-                    
-                    id="desktop-logo-image"
-                    src="logo2022.png"
-                    className={classes.logoImage}
-                    height={100}
-                    width={302}
-                    alt="NEPAccess Logo"
-                    style={{display: "inline"}}
-                  />
-                </Grid>
 
-                {/* <Grid container justifyContent='flex-end' item xs={9} flex={1} border={2} id="nav-toolbar-menuitems-grid-item"> */}
-                  <Grid item id="nav-toolbar-menuitems-grid-item" 
-                    display="flex"
-                     xs={12} 
-                     border={2} 
-                     justifyContent='flex-end'
-                     alignItems='center'
-                     style={{display:'flex', justifyContent:'flex-end'}}
-                    sx={{
-                      width:'100%',
-                      height:'100%'
-                    }}
-                     
-                     >
-                    {/* <Box display={'flex'} justifyContent={'flex-end'} flex={1} id="nav-toolbar-menuitems-box"> */}
-                      <MenuItem className={classes.navLink}>Search</MenuItem>
-                      <MenuItem className={classes.navLink}>Search Tips</MenuItem>
-                      <MenuItem className={classes.navLink}>Available Files</MenuItem>
-                      <MenuItem className={classes.navLink}>About NEPA</MenuItem>
-                      <MenuItem className={classes.navLink}>About NEPAccess</MenuItem>
-                      <MenuItem className={classes.navLink}>Contact</MenuItem>
-                    {/* </Box> */}
-                  {/* </Grid> */}
+              >
+                {/* <Box display={'flex'} justifyContent={'flex-end'} flex={1} id="nav-toolbar-menuitems-box"> */}
+                <MenuItem className={classes.navLink}>Search</MenuItem>
+                <MenuItem className={classes.navLink}>Search Tips</MenuItem>
+                <MenuItem className={classes.navLink}>Available Files</MenuItem>
+                <MenuItem className={classes.navLink}>About NEPA</MenuItem>
+                <MenuItem className={classes.navLink}>About NEPAccess</MenuItem>
+                <MenuItem className={classes.navLink}>Contact</MenuItem>
+                {/* </Box> */}
+                {/* </Grid> */}
 
-                  <Grid item id="nav-toolbar-admin-grid" 
-                    flex={1} 
-                    className={classes.adminGrid}
->
-                    <Box id="nav-toolbar-admin-span-box" display={'flex'}  flex={1} justifyContent={'flex-end'}>
-                      <span
-                        id="admin-span"
-                        hidden={!role || role === 'user'}
-                        className={loggedInDisplay + ' right-nav-item logged-in'}
+                <Grid container 
+                  id="nav-toolbar-admin-grid"
+                  hidden={!role || role === 'user'} 
+                  xs={3}
+                  border={2}
+                  borderColor="black"
+                  flex={1}
+                  className={classes.adminGrid}
+                  style={{border: '2px solid red'}}
+                >
+                    <span  
+                    id="admin-span" 
+                    style= {{border: '3px solid red'}}
+                    //hidden={!role || role === 'user'} 
+                      //className={loggedIn ? 'right-nav-item logged-in' : ''}
                       >
-                        <div id="admin-dropdown" className="main-menu-link dropdown">
-                          <Link id="admin-button" className="main-menu-link drop-button" to="/importer">
-                            Admin
-                          </Link>
-                          <i className="fa fa-caret-down"></i>
-                          <div className="dropdown-content">
-                            <Link to="/admin" hidden={!(role === 'admin')}>
-                              Admin Panel
-                            </Link>
-                            <Link to="/importer" hidden={!(role === 'curator' || role === 'admin')}>
-                              Import New Documents
-                            </Link>
-                            <Link to="/adminFiles" hidden={!(role === 'curator' || role === 'admin')}>
-                              Find Missing Files
-                            </Link>
-                            <Link to="/approve">Approve Users</Link>
-                            <Link to="/pre_register">Pre-Register Users</Link>
-                            <Link to="/interaction_logs">Interaction Logs</Link>
-                            <Link to="/search_logs">Search Logs</Link>
-                            <Link to="/abouthelpcontents">Database Contents</Link>
-                            <Link to="/stats">Content Statistics</Link>
-                            <Link to="/stat_counts">Stat Counts</Link>
-                            <Link to="/surveys">Surveys</Link>
-                          </div>
-                        </div>
-                      </span>
-                    </Box>
-                    <Box
-                      // style={{ zIndex: 9999 }}
-                      display="flex"
-                      justifyContent="flex-end"
-                      id="top-menu-admin-links"
-                    //width={100}
-                    //className="no-select"
-                    >
-
-                      {/* {showMenuItems()} */}
-
-                      <span
-                        id="profile-span"
-                        className={loggedInDisplay + " right-nav-item logged-in"}>
-                        <Link
-                          className="top-menu-link"
-                          to="/profile">
-                          Profile
+                      <div id="admin-dropdown" className="main-menu-link dropdown">
+                        <Link id="admin-button" className="main-menu-link drop-button" to="/importer">
+                          Admin
                         </Link>
-                      </span>
-                      <span id="login-span" className={loggedOutDisplay + " logged-out"}>
-                        <Link className="top-menu-link" to="/login">Log in</Link>
-                      </span>
-                      <span id="register-span" className={loggedOutDisplay + " right-nav-item logged-out"}>
-                        <Link className="top-menu-link" to="/register">Register</Link>
-                      </span>
-                      <span className={loggedInDisplay + " right-nav-item logged-in"}>
-                        <Link className="top-menu-link" to="/logout">Log out</Link>
-                      </span>
-                    </Box>
-                  </Grid>
-                  </Grid>
+                        <i className="fa fa-caret-down"></i>
+                        <div className="dropdown-content">
+                          <Link to="/admin" hidden={!(role === 'admin')}>
+                            Admin Panel
+                          </Link>
+                          <Link to="/importer" hidden={!(role === 'curator' || role === 'admin')}>
+                            Import New Documents
+                          </Link>
+                          <Link to="/adminFiles" hidden={!(role === 'curator' || role === 'admin')}>
+                            Find Missing Files
+                          </Link>
+                          <Link to="/approve">Approve Users</Link>
+                          <Link to="/pre_register">Pre-Register Users</Link>
+                          <Link to="/interaction_logs">Interaction Logs</Link>
+                          <Link to="/search_logs">Search Logs</Link>
+                          <Link to="/abouthelpcontents">Database Contents</Link>
+                          <Link to="/stats">Content Statistics</Link>
+                          <Link to="/stat_counts">Stat Counts</Link>
+                          <Link to="/surveys">Surveys</Link>
+                        </div>
+                      </div>
+                    </span>
 
-                </Grid>
-                  {/* </MenuList> */}
-            </Toolbar>
+                    
+                    {showMenuItems()}
+
+                    </Grid>
+                  </Grid>
+              </Grid>
+              {/* </MenuList> */}
+          </Toolbar>
         }
         {/* <Landing /> */}
         {/* <Container id='mobile-content-container'>
@@ -535,7 +543,7 @@ function HeaderNav(props) {
         position="static"
         style={{}}
         color="primary"
-  
+
         classes={{ root: classes.abRoot, positionStatic: classes.abStatic }}
       >
         {mobileView ? displayMobile() : displayDesktop()}
