@@ -67,7 +67,7 @@ import HeaderNav from './HeaderNav';
 import { Link, Switch, Route, withRouter } from 'react-router-dom';
 
 import PropTypes from "prop-types";
-
+import ResponsiveMenu from './examples/ResponsiveMenu';
 import ImporterAlignment from './ImporterAlignment';
 import {
     AppBar,
@@ -384,7 +384,7 @@ class Main extends React.Component {
                 <Route path="/up_geo" component={ImporterGeo} />
                 <Route path="/up_geo_links" component={ImporterGeoLinks} />
                 <Route path="/up_alignment" component={ImporterAlignment} />
-
+                    <Route path="menu" component={ResponsiveMenu} />
                 <Route path="/" component={Landing}/>
             </Switch>
         </div>
@@ -392,7 +392,7 @@ class Main extends React.Component {
     }
 
     showMenuItems = () => {
-
+        console.log(`showMenuItems role: ${this.state.role} logged In Displayed: ${this.state.loggedInDisplay}`);
         return (
             <span id="admin-span" hidden={(!this.state.role || this.state.role === 'user')} className={this.state.loggedInDisplay + " right-nav-item logged-in"}>
                 
