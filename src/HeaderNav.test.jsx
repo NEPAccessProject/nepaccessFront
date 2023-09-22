@@ -364,4 +364,84 @@ describe('HeaderNav', () => {
     });
 
 
+    // Renders the AppBar component with the correct props
+    it('should render the AppBar component with the correct props', () => {
+      // Test code goes here
+    });
+
+
+    // Displays the correct menu items for mobile view
+    it('should display the correct menu items for mobile view', () => {
+      // Mock props
+      const props = {
+        showMenuItems: true,
+        loggedInDisplay: 'none',
+        loggedOutDisplay: '',
+      };
+
+      // Render HeaderNav component
+      const wrapper = shallow(<HeaderNav {...props} />);
+
+      // Set mobileView state to true
+      wrapper.setState({ mobileView: true });
+
+      // Find the menu items in the rendered component
+      const menuItems = wrapper.find(MenuItem);
+
+      // Assert that the correct number of menu items are rendered
+      expect(menuItems).toHaveLength(headersData.length);
+
+      // Assert that each menu item has the correct label
+      menuItems.forEach((menuItem, index) => {
+        expect(menuItem.text()).toBe(headersData[index].label);
+      });
+    });
+
+
+    // Hides the admin dropdown link when the user is not an admin
+    it('should hide the admin dropdown link when the user is not an admin', () => {
+      // Mock the props
+      const props = {
+        showMenuItems: true,
+        loggedInDisplay: 'none',
+        loggedOutDisplay: '',
+      };
+
+      // Render the HeaderNav component
+      const wrapper = shallow(<HeaderNav {...props} />);
+
+      // Check if the admin dropdown link is hidden
+      const adminDropdown = wrapper.find('#admin-dropdown');
+      expect(adminDropdown.exists()).toBe(false);
+    });
+
+
+    // Displays the correct menu items for desktop view
+    it('should display the correct menu items for desktop view', () => {
+      // Mock props
+      const props = {
+        showMenuItems: true,
+        loggedInDisplay: 'none',
+        loggedOutDisplay: '',
+      };
+
+      // Render HeaderNav component
+      const wrapper = shallow(<HeaderNav {...props} />);
+
+      // Find the menu items
+      const menuItems = wrapper.find('.navLink');
+
+      // Assert that the correct number of menu items are rendered
+      expect(menuItems).toHaveLength(6);
+
+      // Assert that the menu items have the correct labels
+      expect(menuItems.at(0).text()).toEqual('Search');
+      expect(menuItems.at(1).text()).toEqual('Search Tips');
+      expect(menuItems.at(2).text()).toEqual('Available Files');
+      expect(menuItems.at(3).text()).toEqual('About NEPA');
+      expect(menuItems.at(4).text()).toEqual('About NEPAccess');
+      expect(menuItems.at(5).text()).toEqual('Contact');
+    });
+
+
 });
