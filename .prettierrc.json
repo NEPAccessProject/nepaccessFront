@@ -4,6 +4,10 @@
   "singleQuote": true,
   "endOfLine": "lf",
   "tabWidth": 2,
-  "printWidth": 100
+  "printWidth": 100,
+  "arrowParens": "always",
+  "bracketSpacing": true,
+  "useTabs": true,
+  "singleAttributePerLine": true
   
 }

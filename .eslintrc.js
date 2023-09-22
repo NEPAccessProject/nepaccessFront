@@ -19,6 +19,7 @@ module.exports = {
         "react",
         ],
     "rules": {
+        "react/no-deprecated": 0,
         "react/jsx-no-bind": 0,
         "no-unused-vars" : 0,
         "react/no-unused-vars": 0,
