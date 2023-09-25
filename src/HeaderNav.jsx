@@ -22,14 +22,14 @@ import theme from './styles/theme';
 import MenuIcon from '@material-ui/icons/Menu';
 import { withMediaQuery } from 'react-responsive';
 import React, { useState, useEffect } from 'react';
-import { Link as RouterLink,NavLink } from 'react-router-dom';
+import { Link as RouterLink, NavLink } from 'react-router-dom';
 import './index.css';
 import { Helmet } from 'react-helmet';
 import Landing from './Landing';
 import CalloutContainer from './CalloutContainer';
 import SearcherLanding from './SearcherLanding';
 import { withStyles } from '@mui/styles';
-const maxWidth = '1224px'
+const _MAX_WIDTH = '768px'
 const headersData = [
   {
     label: 'Search',
@@ -88,8 +88,6 @@ const useStyles = makeStyles((theme) => ({
   adminGrid: {
     display: "flex",
     height: '100%',
-    border: 1,
-    borderColor: 'blue',
     alignItems: 'flex-start',
     alignContent: 'flex-start',
     justifyContent: 'flex-start',
@@ -151,10 +149,6 @@ const useStyles = makeStyles((theme) => ({
     justifyContent: 'center',
   },
   mobileNavLink: {
-    // dropShadow: '3px',
-    // position: 'relative',
-    fontFamily: 'Open Sans',
-    // fontStyle: 'normal',
     fontWeight: 'bold',
     fontSize: '1.1em',
     // lineHeight: '25px',
@@ -164,12 +158,17 @@ const useStyles = makeStyles((theme) => ({
     display: 'flex',
     alignContent: 'center',
     color: '#000000',
+    width: '100%',
+    minWidth: 300,
+    textAlign: 'right',
     textShadow: '0px 3px 2px rgba(0, 0, 0, 0.25)',
     "&:hover": {
       textDecoration: 'underline'
     }
   },
   accountNavLink: {
+    paddingLeft: 3,
+    //paddingRight: 3,
     // dropShadow: '3px',
     // position: 'relative',
     fontFamily: 'Open Sans',
@@ -178,15 +177,24 @@ const useStyles = makeStyles((theme) => ({
     // lineHeight: '25px',
     // textDecoration: 'none',
     //    marginLeft:0,
-    padding: 0,
-    margin: 0,
-    textAlign: 'center',
-    display: 'flex',
-    alignContent: 'center',
-    justifyContent: 'flex-start',
-    alignItems:'flex-end',
+    // paddingLeft: 1,
+    // paddingRight: 1,
+    // margin: 0,
+    // textAlign: 'center',
+    // display: 'flex',
+    // alignContent: 'center',
+    // justifyContent: 'flex-start',
+    // alignItems:'flex-end',
     color: '#000000',
-    borderLeft: 1
+    borderRight: '2px solid black',
+    paddingRight: 4,
+    "&:hover": {
+      textDecoration: 'underline',
+      cursor: 'pointer'
+    }
+  },
+  accountNavGrid: {
+    padding: 0,
   },
 
   navLink: {
@@ -200,7 +208,7 @@ const useStyles = makeStyles((theme) => ({
     // textDecoration: 'none',
     paddingLeft: 2,
     paddingRight: 2,
-    padding:2,
+    padding: 2,
     margin: 0,
     justifyContent: 'center',
     flex: 1,
@@ -214,11 +222,10 @@ const useStyles = makeStyles((theme) => ({
   },
   mainMenuLink: {
     color: 'black',
-    fontSize:1.1
+    fontSize: 1.1
   },
   menuIcon: {
     color: 'white',
-    border: '1px solid white'
   }
 }));
 
@@ -235,13 +242,13 @@ function HeaderNav(props) {
   const [anchorEl, setAnchorEl] = React.useState(null);
 
   //  const isBigScreen = useMediaQuery({ query: '(min-width: 1824px)' })
-  //  const isTabletOrMobile = useMediaQuery({ query: '(max-width: 1224px)' })
+  //  const isTabletOrMobile = useMediaQuery({ query: '(max-width: 768px)' })
   //  const isPortrait = useMediaQuery({ query: '(orientation: portrait)' })
   //  const isRetina = useMediaQuery({ query: '(min-resolution: 2dppx)' })
   useEffect(() => {
     const setResponsiveness = () => {
       console.log('set responsive', window.innerHeight);
-      return window.innerWidth < 1224
+      return window.innerWidth < 1024
         ? setState((prevState) => ({ ...prevState, mobileView: true }))
         : setState((prevState) => ({ ...prevState, mobileView: false }));
     };
@@ -308,82 +315,68 @@ function HeaderNav(props) {
       setState((prevState) => ({ ...prevState, drawerOpen: false }))
     };
 
-    return (
-      <>
-        <AppBar elevation={0}
-
+  return (
+    <>
+        <AppBar elevation={1}
           id="header-mobile-appbar"
           position="static"
-          style={{}}
+
+          style={{
+          }}
           color="primary"
+
           classes={{ root: classes.abRoot, positionStatic: classes.abStatic }}
-        // sx={{
-        //   zIndex: 0,
-        //   backgroundColor: '#abbdc4 !important',
-        //   border: 3,
-        //   boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)',
-        // }}
         >
 
-          <Toolbar
-            id="nav-mobile-toolbar"
-            //          className={toolbar}
-            color='primary'
-          >
-<Grid container alignItems='flex-end' justifyContent='flex-end'>
+          <Grid container flex={1} id="toolbar-grid-container">
+            <Grid item xs={2} justifyContent='flex-end'>
+              <img src="/logo2022_mobile.png" alt="NEPAccess Mobile Logo" />
+            </Grid>
+            <Grid item xs={9} marginRight={6} justifyContent='flex-start'>
+              <Toolbar
+                id="nav-mobile-toolbar"
+                color='primary'
+                style={{
+
+                  justifyContent: 'flex-end',
+                  width: '100%'
+                }}
+              >  
               <IconButton
-                
                 id="mobile-icon-button"
                 size="large"
-                edge="start"
+                edge="end"
                 color="inherit"
                 aria-label="menu"
                 onClick={handleDrawerOpen}
-              //sx={{ mr: 2 }}
               >
-                <MenuIcon color="#fff" className={classes.menuIcon}  />
-              </IconButton>
-</Grid>
-            <Grid container
-              id="mobile-logo-container"
-              justifyContent='flex-start'
-              sx={{
-                // alignItems: 'center',
-                // height: '50px',
-                // display: 'flex',
-                // alignItems: 'center',
-                // justifyContent: 'center',
-              }}>
+                  <MenuIcon color="#fff" className={classes.menuIcon} />
+                </IconButton>
+                <Drawer
+                  id="drawer"
+                  {...{
+                    anchor: 'right',
+                    open: drawerOpen,
+                    onClose: handleDrawerClose,
+                  }}
+                  paperProps={{
+                      backgroundColor: "#DDD",
+                      border:2,
+                      elevation:1,
+                  }}
+                >
+                  <div id="drawer-container" className={classes.drawerContainer}>
+                    {getDrawerChoices()}
+                    <SearcherLanding />
+                  </div>
+                </Drawer>
 
-              <img src="/logo2022_mobile.png" alt="NEPAccess Mobile Logo" />
+              </Toolbar>
             </Grid>
-
-            <Drawer
-              id="drawer"
-              {...{
-                anchor: 'left',
-                open: drawerOpen,
-                onClose: handleDrawerClose,
-              }}
-            >
-              <div id="drawer-container" className={classes.drawerContainer}>
-                {getDrawerChoices()}
-                <SearcherLanding />
-              </div>
-            </Drawer>
-
-            {/* <div>{getMenuButtons()}</div> */}
-
-          </Toolbar>
+          </Grid>
         </AppBar>
-        {/* [TODO] Work in cards since the WP layout is well... dated */}
-        {/* <div id="callout-card-container">
-          <>
-            <CalloutContainer />
-          </>
-        </div> */}
-      </>
-    );
+    </>
+  );
   };
 
   const getDrawerChoices = () => {
@@ -420,7 +413,7 @@ function HeaderNav(props) {
   };
 
   //[TODO] make ToolBar full width
-  const displayDesktop = (props) => {
+  const DesktopNav = (props) => {
     const role = 'user';
     const loggedInDisplay = 'none';
     const loggedOutDisplay = '';
@@ -429,15 +422,13 @@ function HeaderNav(props) {
     const currentPage = ''; //props.currentPage || '';
     return (
       <>
-        {/* [TODO] Revist this should not be needed since the parent
- function should take care of it */}
         {!mobileView &&
           <Toolbar
             id="nav-toolbar"
             color="primary"
-          
+
             disableGutters={true}
-            style={{width: '100%' }}
+            style={{ width: '100%' }}
             sx={{
               flexGrow: 1,
               backgroundColor: '#abbdc4',
@@ -445,200 +436,177 @@ function HeaderNav(props) {
               justifyContent: 'flex-end',
             }}
           >
-            {/* <MenuList id="menu-container"
-              anchorEl={anchorEl}
-//            variant='menu'
-            open={true}
-            autoFocusItem={drawerOpen}
-//                position="fixed"
-            PaperProps={{
-              id:"menu-container-paper",
-              top:0,
-              left:0
-            }}
-            > */}
+            <Grid id="top-nav-grid-container" xs={12} container flex={1} >
+              {/* Start Logo and Main Menu */}
+              <Grid container xs={12} flex={1}
+                style={{
 
-            <Grid container id="nav-toolbar-grid-container"
-              flexDirection="row"
-              flex={1}
-              display="flex"
-              xs={12}
-              //style={{ border: '1px solid black' }}
-            >
-
-              <Grid item 
-                display="flex" 
-                flexDirection="row" 
-                wrap='nowrap'
-                id="nav-toolbar-logo-grid-item"
-                xs={2}
-                style={{ display: 'flex', justifyContent: 'flex-start'}}
-                >
-                <img
-
-                  id="desktop-logo-image"
-                  src="logo2022.png"
-                  className={classes.logoImage}
-                  height={102}
-                  width={304}
-                  alt="NEPAccess Logo"
-                  style={{ display: "inline", border: 0 }}
-                />
-              </Grid>
-
-              {/* <Grid container justifyContent='flex-end' item xs={9} flex={1} border={2} id="nav-toolbar-menuitems-grid-item"> */}
-              <Grid item id="nav-toolbar-menuitems-grid-item"
-                display="flex"
-                xs={10}
-                border={0}
-                justifyContent='flex-end'
-                alignItems='center'
-                style={{ display: 'flex', justifyContent: 'flex-end' }}
-                sx={{
-                  width: '100%',
-                  height: '100%'
                 }}
-
               >
-                {/* <Box display={'flex'} justifyContent={'flex-end'} flex={1} id="nav-toolbar-menuitems-box"> */}
-                {/* <MenuItem className={classes.navLink}>Search</MenuItem>
-                <MenuItem className={classes.navLink}>Search Tips</MenuItem>
-                <MenuItem className={classes.navLink}>Available Files</MenuItem>
-                <MenuItem className={classes.navLink}>About NEPA</MenuItem>
-                <MenuItem className={classes.navLink}>About NEPAccess</MenuItem>
-                <MenuItem className={classes.navLink}>Contact</MenuItem> */}
-                <NavLinks />
-                {/* </Box> */}
-                {/* </Grid> */}
-
-                <Grid container
-                  id="nav-toolbar-admin-grid"
-                  hidden={!role || role === 'user'}
-                  xs={3}
-                  border={2}
-                  borderColor="black"
-                  flex={1}
-                  className={classes.adminGrid}
-                  style={{ border: '2px solid red' }}
-                >
-                  <span
-                    id="admin-span"
-                    style={{ border: '3px solid red' }}
-                  //hidden={!role || role === 'user'} 
-                  //className={loggedIn ? 'right-nav-item logged-in' : ''}
-                  >
-                    <div id="admin-dropdown" className="main-menu-link dropdown">
-                      <Link id="admin-button" className="main-menu-link drop-button" to="/importer">
-                        Admin
-                      </Link>
-                      <i className="fa fa-caret-down"></i>
-                      <div className="dropdown-content">
-                        <Link to="/admin" hidden={!(role === 'admin')}>
-                          Admin Panel
-                        </Link>
-                        <Link to="/importer" hidden={!(role === 'curator' || role === 'admin')}>
-                          Import New Documents
-                        </Link>
-                        <Link to="/adminFiles" hidden={!(role === 'curator' || role === 'admin')}>
-                          Find Missing Files
-                        </Link>
-                        <Link to="/approve">Approve Users</Link>
-                        <Link to="/pre_register">Pre-Register Users</Link>
-                        <Link to="/interaction_logs">Interaction Logs</Link>
-                        <Link to="/search_logs">Search Logs</Link>
-                        <Link to="/abouthelpcontents">Database Contents</Link>
-                        <Link to="/stats">Content Statistics</Link>
-                        <Link to="/stat_counts">Stat Counts</Link>
-                        <Link to="/surveys">Surveys</Link>
-                      </div>
-                    </div>
-                  </span>
-
-
-
+                {/* Start Logo */}
+                {/* Start Main Menu */}
+                <Grid container xs={2}>
+                  <DesktopLogo {...props} />
                 </Grid>
-
-                <Grid
-                  container
-                  xs={2}
-                  id="top-menu-grid-container"
-                  justifyContent='center'
-                  alignContent='center'
-                  style={{ 
-                    display:'flex',
-                    flexDirection:'column',
-                    zIndex: 9999, 
-                  }}
-                  className="no-select">
-                  {/*                     
-                    {this.showMenuItems()} */}
-
+                {/* End Logo */}
+                <Grid id="main-nav-grid-container" container xs={10} justifyContent='flex-end'
+                  style={{
+                  }}>
                   <Grid
                     item
-                    flex={1}
-                    xs={2}
-                    id="profile-grid-item"
-                    //className={loggedInDisplay + " right-nav-item logged-in"} 
-                    textAlign={'center'}
+                    id="main-menu-grid-container"
+                    xs={12}
+                    display='flex'
+                    alignItems='center'
+                    justifyContent='flex-end'
+                    marginTop={25}
                   >
-                    <Link id="profile-link"
-                      className={classes.accountNavLink}
-                      to="/profile">
-                      Profile
-                    </Link>
-                  </Grid>
-                  <Grid flex={1} xs={3}
-                    //className={loggedInDisplay + " right-nav-item logged-in"} 
-                    textAlign={'center'} id="login-grid-item">
-                    <Link
-                      className={classes.accountNavLink}
-
-                      to="/login">Log In</Link>
-                  </Grid>
-                  <Grid item xs={3} flex={1} id="register-grid-item"
-                    //className={loggedOutDisplay + " right-nav-item logged-out"} 
-                    textAlign={'center'}>
-                    <Link
-                      id='register-link'
-                      className={classes.accountNavLink}
-                      to="/register">
-                      Register
-                    </Link>
-                  </Grid>
-                  <Grid item
-                    flex={1}
-                    xs={3}
-                    style={{ paddingLeft: 2 }}
-                    //className={loggedInDisplay + " right-nav-item logged-in"} 
-                    textAlign={'center'}>
-                    <Link
-                      id="logout-link"
-                      className={classes.accountNavLink}
-                      style={{ paddingLeft: 2 }}
-                      to="/logout">
-                      Log out
-                    </Link>
+                    {/* Start Top Menu */}
+                    <DesktopNavLinks {...props} />
+                    {/* End Top Menu */}
                   </Grid>
                 </Grid>
+                {/* End Main Menu */}
               </Grid>
+              {/* END Logo and Main Menu */}
             </Grid>
-            {/* </MenuList> */}
           </Toolbar>
         }
-        {/* <Landing /> */}
-        {/* <Container id='mobile-content-container'>
-          <Container id="mobile-search-container">
-            <SearcherLanding />
-          </Container>
-
-          <Container id="mobile-call-out-container">
-            <CalloutContainer />
-          </Container>
-        </Container> */}
       </>
     );
   };
 
+  const DesktopLogo = (props) => {
+    const classes = useStyles(theme);
+    const { loggedInDisplay, loggedOutDisplay, role } = props;
+    return (
+      <>
+        <Grid item
+          display="flex"
+          flexDirection="row"
+          wrap='nowrap'
+          id="nav-toolbar-logo-grid-item"
+          xs={2}
+          style={{
+            display: 'flex',
+            justifyContent: 'flex-start',
+            alignContent: 'flex-end',
+          }}
+        >
+          <img
+
+            id="desktop-logo-image"
+            src="logo2022.png"
+            className={classes.logoImage}
+            height={102}
+            width={304}
+            alt="NEPAccess Logo"
+            style={{
+              display: "block",
+            }}
+          />
+        </Grid>
+      </>
+    )
+  }
+  const DesktopNavLinks = (props) => {
+    const classes = useStyles(theme);
+    const { loggedInDisplay, loggedOutDisplay, role } = props;
+    return (
+      <>
+        <Grid container id="nav-toolbar-grid-container"
+          flexDirection="row"
+          flex={1}
+          display="flex"
+          xs={12}
+          style={{
+          }}
+        >
+          <Grid
+            item
+            id="nav-toolbar-top-nav-links-grid-item"
+            xs={12}
+            display='flex'
+            justifyContent='flex-end'
+            style={{
+              display: 'flex',
+              justifyContent: 'flex-end',
+            }}
+          >
+            <TopNavLinks />
+          </Grid>
+          <Grid item id="nav-toolbar-main-nav-links-grid-item"
+            display="flex"
+            xs={12}
+            style={{
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
+              width: '100%',
+              height: '100%',
+              marginTop: 20,
+
+            }}
+          >
+            <NavLinks />
+            <Grid container
+              id="nav-toolbar-admin-grid"
+              hidden={!role || role === 'user'}
+              xs={2}
+              flex={1}
+              className={classes.adminGrid}
+              marginLeft={10}
+              justifyContent='flex-end'
+              style={{
+              }}
+            >
+              <span
+                id="admin-span"
+                style={{
+
+                }}
+              //hidden={!role || role === 'user'} 
+              //className={loggedIn ? 'right-nav-item logged-in' : ''}
+              >
+                <div id="admin-dropdown"
+                  className="main-menu-link dropdown"
+                >
+                  <Link id="admin-button"
+                    className="main-menu-link drop-button"
+                    to="/importer"
+                  >
+                    Admin
+                  </Link>
+                  <i className="fa fa-caret-down"></i>
+                  <div
+                    className="dropdown-content"
+                  >
+                    <Link to="/admin" hidden={!(role === 'admin')}>
+                      Admin Panel
+                    </Link>
+                    <Link to="/importer" hidden={!(role === 'curator' || role === 'admin')}>
+                      Import New Documents
+                    </Link>
+                    <Link to="/adminFiles" hidden={!(role === 'curator' || role === 'admin')}>
+                      Find Missing Files
+                    </Link>
+                    <Link to="/approve">Approve Users</Link>
+                    <Link to="/pre_register">Pre-Register Users</Link>
+                    <Link to="/interaction_logs">Interaction Logs</Link>
+                    <Link to="/search_logs">Search Logs</Link>
+                    <Link to="/abouthelpcontents">Database Contents</Link>
+                    <Link to="/stats">Content Statistics</Link>
+                    <Link to="/stat_counts">Stat Counts</Link>
+                    <Link to="/surveys">Surveys</Link>
+                  </div>
+                </div>
+              </span>
+            </Grid>
+          </Grid>
+        </Grid>
+      </>
+    )
+  }
 
   const getMenuButtons = () => {
     return headersData.map(({ label, href }) => {
@@ -664,7 +632,6 @@ function HeaderNav(props) {
     <Paper id="header-root-paper-container" color='#A8B9C0' elevation={1} sx={{
       backgroundColor: '#abbdc4'
       // width: '100%',
-      // border: 1,
       // height: 50
     }}>
       <AppBar elevation={1}
@@ -675,12 +642,85 @@ function HeaderNav(props) {
 
         classes={{ root: classes.abRoot, positionStatic: classes.abStatic }}
       >
-        {mobileView ? displayMobile() : displayDesktop()}
+        {mobileView ? displayMobile() : DesktopNav()}
       </AppBar>
     </Paper>
   );
 }
 export default HeaderNav;
+
+export function TopNavLinks(props) {
+  const { loggedInDisplay, loggedOutDisplay, role } = props;
+  const classes = useStyles(theme);
+  return (
+    <>
+      <Grid
+        container
+        xs={3}
+        display="flex"
+        flex={1}
+        id="top-menu-grid-container"
+        style={{
+        }}
+        className="no-select">
+        {/*                     
+                    {this.showMenuItems()} */}
+
+
+        <Grid
+          item
+          flex={1}
+          xs={3}
+          id="profile-grid-item"
+          className={loggedInDisplay + " right-nav-item logged-in"}
+          textAlign={'center'}
+        >
+          <Link id="profile-link"
+            className={classes.accountNavLink}
+            to="/profile">
+            Profile
+          </Link>
+        </Grid>
+        <Grid
+          item
+          flex={1}
+          xs={3}
+          className={loggedInDisplay + " right-nav-item logged-in"}
+          textAlign={'center'} id="login-grid-item">
+          <Link
+            className={classes.accountNavLink}
+
+            to="/login">Log In</Link>
+        </Grid>
+        <Grid item xs={3} flex={1} id="register-grid-item"
+          className={loggedOutDisplay + " right-nav-item logged-out"}
+          textAlign={'center'}>
+          <Link
+            id='register-link'
+            className={classes.accountNavLink}
+            to="/register">
+            Register
+          </Link>
+        </Grid>
+        <Grid item
+          flex={1}
+          xs={3}
+          style={{ paddingLeft: 2 }}
+          className={loggedInDisplay + " right-nav-item logged-in"}
+          classes={{...classes}}
+          textAlign={'center'}>
+          <Link
+            id="logout-link"
+            className={classes.accountNavLink}
+            style={{ paddingRight: 3, borderRight:0, }}
+            to="/logout">
+            Log out
+          </Link>
+        </Grid>
+      </Grid>
+    </>
+  )
+}
 
 export function DesktopNavLinks() {
   const [currentPage, setCurrentPage] = useState();
@@ -700,7 +740,8 @@ export function DesktopNavLinks() {
 }
 
 const
-  showMenuItems = () => {
+  AdminMenuItems = (props) => {
+    const { role } = props;
     console.log(`showMenuItems role: ${role} logged In Displayed: ${loggedInDisplay}`);
     return (
       <span id="admin-span" hidden={(!role || role === 'user')} className={loggedInDisplay + " right-nav-item logged-in"}>
@@ -728,10 +769,6 @@ const
       </span>
     );
   }
-
-
-  
-
 export function NavLinks() {
   const [headerLandingCss, setHeaderLandingCss] = useState();
   const [currentPage, setCurrentPage] = useState();
@@ -745,7 +782,7 @@ export function NavLinks() {
   };
 
   return (
-    <div id="">
+    <div id="nav-links-root">
       <Helmet>
         <meta charSet="utf-8" />
         <title>NEPAccess</title>
@@ -756,7 +793,7 @@ export function NavLinks() {
         <link rel="canonical" href="https://www.localhost:8808/" />
       </Helmet>
 
-      <div 
+      <div
         //id="header" 
         className={getHeaderCss() + headerLandingCss}
       >
