@@ -29,6 +29,7 @@ class SearcherLanding extends React.Component {
     }
 
     onInput = (evt) => {
+        console.log(`file: SearcherLanding.js:32 ~ SearcherLanding ~ evt - target: ${evt.target.name} value: ${evt.target.value}`, evt);
         this.setState({ [evt.target.name]: evt.target.value });
         const val = evt.target.value;
         this.props.onChange(this.props.id, val);
@@ -149,7 +150,7 @@ class SearcherLanding extends React.Component {
                 <Grid
                     item
                     xs={12}
-                    border={0}
+                    border={2}
                     borderColor={'#DDD'}
                     md={12}
                     borderLeft={0}
@@ -158,22 +159,18 @@ class SearcherLanding extends React.Component {
                 >
                     <Box
                         id="search-box-box-item"
-                        display={'flex'}
-                        justifyContent={'center'}
-                        justifyItems={'center'}
-                        alignItems={'center'}
-                        alignContent={'center'}
+                        display={'flex'}                        
                         height={60}
                         paddingLeft={0}
-                        paddingRight={2}
+                        //paddingRight={2}
                         padding={0}
                         elevation={1}
                         borderRadius={0}
                         border={0}
                         borderColor={'#CCC'}
                         borderLeft={0}
-                        marginLeft={2}
-                        marginRight={2}
+                        // marginLeft={2}
+                        // marginRight={2}
                         /////backgroundColor= 'white'
                     >
                         {' '}
@@ -190,7 +187,7 @@ class SearcherLanding extends React.Component {
                             onChange={this.onChangeHandler}
                             onKeyDown={this.onKeyDown}
                             placeholder="Search for NEPA documents"
-                            value={this.state.titleRaw ? this.state.titleRaw : ''}
+                            value={this.state.titleRaw}
                             autoFocus
                             sx={{
                                 borderRadius:1,
@@ -200,7 +197,7 @@ class SearcherLanding extends React.Component {
                             }}
                             InputProps={{
                                 endAdornment: (
-                                    <IconButton name="titleRaw" value={this.state.titleRaw ? this.state.titleRaw : ""} onClick={this.onIconClick}>
+                                    <IconButton name="titleRaw" value={this.state.titleRaw} onClick={this.onIconClick}>
                                         <SearchOutlined />
                                     </IconButton>
                                 ),

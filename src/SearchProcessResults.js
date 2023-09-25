@@ -1,5 +1,5 @@
 import React from 'react';
-
+import { Typography } from '@material-ui/core';
 import ResultsHeader from './ResultsHeader.js';
 import SearchProcessResult from './SearchProcessResult.js';
 
@@ -7,8 +7,7 @@ import SearchResultsMap from './SearchResultsMap.js';
 
 import Globals from './globals.js';
 
-import { ReactTabulator } from 'react-tabulator';
-import { reactFormatter } from "react-tabulator";
+import { ReactTabulator,reactFormatter } from 'react-tabulator';
 import 'react-tabulator/lib/styles.css'; // required styles
 import 'react-tabulator/lib/css/tabulator_site.min.css'; // theme
 
@@ -295,7 +294,9 @@ export default class SearchProcessResults extends React.Component {
                             />
                             
                             {/* {this.props.searching ? <>Please wait...</> : <></>} */}
-
+                            <Typography>
+                                # of Results: {this.props.results}
+                            </Typography>
                             <ReactTabulator
                                 ref={ref => (this.ref = ref)}
                                 data={this.props.results}

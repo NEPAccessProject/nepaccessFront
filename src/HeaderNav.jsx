@@ -5,7 +5,7 @@ import {
   Container,
   Divider,
   Drawer,
-  Grid,
+  //Grid,
   IconButton,
   Link,
   makeStyles,
@@ -18,7 +18,7 @@ import {
 } from '@material-ui/core';
 import theme from './styles/theme';
 //import Grid from '@mui/material/Unstable_Grid2'; // Grid version 2
-
+import Grid from '@mui/material/Unstable_Grid2';
 import MenuIcon from '@material-ui/icons/Menu';
 import { withMediaQuery } from 'react-responsive';
 import React, { useState, useEffect } from 'react';
@@ -74,13 +74,15 @@ const headersData = [
     label: 'logout'
   },
 ];
+/* #region Styles  */
 
 const useStyles = makeStyles((theme) => ({
   abRoot: {
     borderRadius: 0,
     backgroundColor: "#abbdc4",
     zIndex: 0,
-    flexDirection: 'row'
+    flexDirection: 'row',
+    elevation:1,
   },
   abStatic: {
     zIndex: 0,
@@ -138,6 +140,9 @@ const useStyles = makeStyles((theme) => ({
     backgroundRepeat: 'no-repeat',
     justifyContent: 'left',
     backgroundSize: 'contain',
+    height:102,
+    width:304,
+    display: "block",
   },
   logoBox: {
     //width: '200px',
@@ -159,53 +164,41 @@ const useStyles = makeStyles((theme) => ({
     alignContent: 'center',
     color: '#000000',
     width: '100%',
-    minWidth: 300,
     textAlign: 'right',
     textShadow: '0px 3px 2px rgba(0, 0, 0, 0.25)',
+    maxWidth: 'fit-content',
     "&:hover": {
       textDecoration: 'underline'
     }
   },
   accountNavLink: {
-    paddingLeft: 3,
-    //paddingRight: 3,
-    // dropShadow: '3px',
-    // position: 'relative',
     fontFamily: 'Open Sans',
-    // fontStyle: 'normal',
     fontSize: '0.7em',
-    // lineHeight: '25px',
-    // textDecoration: 'none',
-    //    marginLeft:0,
-    // paddingLeft: 1,
-    // paddingRight: 1,
-    // margin: 0,
-    // textAlign: 'center',
-    // display: 'flex',
-    // alignContent: 'center',
-    // justifyContent: 'flex-start',
-    // alignItems:'flex-end',
-    color: '#000000',
-    borderRight: '2px solid black',
-    paddingRight: 4,
     "&:hover": {
       textDecoration: 'underline',
       cursor: 'pointer'
     }
   },
-  accountNavGrid: {
+  accountNavLinkGridItem: {
+    display: 'flex',
+    paddingRight: 4,
+    maxWidth: '55px',
+    justifyContent: 'flex-end', //horizontal aligmnent
+    alignItems: 'center', //verical aligment
+    alignContent: '',
+    borderRight: '2px solid black'
+    
+  },
+  accountNavLinksContainer: {
     padding: 0,
+    justifyContent: 'flex-end',
   },
 
   navLink: {
-    // dropShadow: '3px',
-    // position: 'relative',
     fontFamily: 'Open Sans',
-    // fontStyle: 'normal',
     fontWeight: 'bold',
     fontSize: '1.0em',
     lineHeight: '25px',
-    // textDecoration: 'none',
     paddingLeft: 2,
     paddingRight: 2,
     padding: 2,
@@ -228,14 +221,15 @@ const useStyles = makeStyles((theme) => ({
     color: 'white',
   }
 }));
+/* #endregion */
 
-function HeaderNav(props) {
+export default function HeaderNav(props) {
   const classes = useStyles(theme)
   const [state, setState] = useState({
     mobileView: false,
     drawerOpen: false,
   });
-
+ 
   const { mobileView, drawerOpen } = state;
   const { loggedInDisplay, loggedOutDisplay, role } = props;
   //for Menu anchor
@@ -246,16 +240,20 @@ function HeaderNav(props) {
   //  const isPortrait = useMediaQuery({ query: '(orientation: portrait)' })
   //  const isRetina = useMediaQuery({ query: '(min-resolution: 2dppx)' })
   useEffect(() => {
-    const setResponsiveness = () => {
-      console.log('set responsive', window.innerHeight);
-      return window.innerWidth < 1024
-        ? setState((prevState) => ({ ...prevState, mobileView: true }))
-        : setState((prevState) => ({ ...prevState, mobileView: false }));
-    };
+    
+      const setResponsiveness = () => {
+        console.log('set responsive', window.innerHeight);
+        return window.innerWidth < 1024
+          ? setState((prevState) => ({ ...prevState, mobileView: true }))
+          : setState((prevState) => ({ ...prevState, mobileView: false }));
+      };
+        
+      setResponsiveness();
 
-    setResponsiveness();
-
-    window.addEventListener('resize', () => setResponsiveness());
+    window.addEventListener('resize', (evt) => {
+      console.log(`Setting innerHeight: ${window.innerHeight} - innerWidth: ${window.innerWidth}`, evt,)
+      setResponsiveness();
+    });
 
     return () => {
       window.removeEventListener('resize', () => setResponsiveness());
@@ -264,18 +262,18 @@ function HeaderNav(props) {
 
   const prevOpen = React.useRef(open);
   React.useEffect(() => {
-    // if (anchorRef.current && prevOpen.current === true && drawerOpen === false) {
-    //   anchorRef.current.focus();
-    // }
+    if (anchorRef.current && prevOpen.current === true && drawerOpen === false) {
+      anchorRef.current.focus();
+    }
 
     prevOpen.current = open;
-  }, [open]);
+  },);
   const handleToggle = () => {
     setOpen((prevOpen) => !prevOpen);
   };
 
 
-  const showMenuItems = () => {
+  const AdminMenu = () => {
     console.log(`showMenuItems role: ${role} logged In Displayed: ${loggedInDisplay}`);
     return (
       <span
@@ -306,7 +304,7 @@ function HeaderNav(props) {
       </span>
     );
   }
-  const displayMobile = () => {
+  const MobileNav = () => {
     const handleDrawerOpen = () => setState((prevState) => ({ ...prevState, drawerOpen: true }));
     const handleDrawerClose = (evt) => {
       if (anchorEl && anchorRef.current && anchorRef.current.contains(event.target)) {
@@ -315,8 +313,8 @@ function HeaderNav(props) {
       setState((prevState) => ({ ...prevState, drawerOpen: false }))
     };
 
-  return (
-    <>
+    return (
+      <>
         <AppBar elevation={1}
           id="header-mobile-appbar"
           position="static"
@@ -327,10 +325,13 @@ function HeaderNav(props) {
 
           classes={{ root: classes.abRoot, positionStatic: classes.abStatic }}
         >
-
           <Grid container flex={1} id="toolbar-grid-container">
-            <Grid item xs={2} justifyContent='flex-end'>
-              <img src="/logo2022_mobile.png" alt="NEPAccess Mobile Logo" />
+            <Grid it="mobile-nav-logo-grid-item" 
+              item xs={2} 
+              justifyContent='flex-end'
+              paddingLeft={3}
+            >
+              <img src="/logo2022.png" width={200} alt="NEPAccess Mobile Logo" />
             </Grid>
             <Grid item xs={9} marginRight={6} justifyContent='flex-start'>
               <Toolbar
@@ -341,16 +342,19 @@ function HeaderNav(props) {
                   justifyContent: 'flex-end',
                   width: '100%'
                 }}
-              >  
-              <IconButton
-                id="mobile-icon-button"
-                size="large"
-                edge="end"
-                color="inherit"
-                aria-label="menu"
-                onClick={handleDrawerOpen}
               >
-                  <MenuIcon color="#fff" className={classes.menuIcon} />
+                <IconButton
+                  id="mobile-icon-button"
+                  size="medium"
+                  edge="end"
+                  aria-label="menu"
+                  style= {{
+                    border: '1px solid white',
+                    borderRadius:1
+                  }}
+                  onClick={handleDrawerOpen}
+                >
+                  <MenuIcon border='1px solid white' color="#fff" className={classes.menuIcon} />
                 </IconButton>
                 <Drawer
                   id="drawer"
@@ -360,9 +364,8 @@ function HeaderNav(props) {
                     onClose: handleDrawerClose,
                   }}
                   paperProps={{
-                      backgroundColor: "#DDD",
-                      border:2,
-                      elevation:1,
+                    backgroundColor: "#DDD",
+                    elevation: 1,
                   }}
                 >
                   <div id="drawer-container" className={classes.drawerContainer}>
@@ -375,8 +378,8 @@ function HeaderNav(props) {
             </Grid>
           </Grid>
         </AppBar>
-    </>
-  );
+      </>
+    );
   };
 
   const getDrawerChoices = () => {
@@ -436,19 +439,16 @@ function HeaderNav(props) {
               justifyContent: 'flex-end',
             }}
           >
+            {/* #region Start Logo and Main Menu Container */}
             <Grid id="top-nav-grid-container" xs={12} container flex={1} >
-              {/* Start Logo and Main Menu */}
-              <Grid container xs={12} flex={1}
-                style={{
-
-                }}
-              >
-                {/* Start Logo */}
-                {/* Start Main Menu */}
+              <Grid container xs={12} flex={1}>
+                {/* #region Start Main Menu */}
+                {/* #region*/}
                 <Grid container xs={2}>
                   <DesktopLogo {...props} />
                 </Grid>
-                {/* End Logo */}
+                {/* #endregion Logo Container */}
+                {/* #region Main Menu Nav Container */}
                 <Grid id="main-nav-grid-container" container xs={10} justifyContent='flex-end'
                   style={{
                   }}>
@@ -461,15 +461,15 @@ function HeaderNav(props) {
                     justifyContent='flex-end'
                     marginTop={25}
                   >
-                    {/* Start Top Menu */}
+                    {/* #region Desktop Nav Links */}
                     <DesktopNavLinks {...props} />
-                    {/* End Top Menu */}
+                    {/* #endregion */}
                   </Grid>
                 </Grid>
-                {/* End Main Menu */}
+                {/* #endregion*/}
               </Grid>
-              {/* END Logo and Main Menu */}
             </Grid>
+            {/* #endregion*/}
           </Toolbar>
         }
       </>
@@ -498,12 +498,7 @@ function HeaderNav(props) {
             id="desktop-logo-image"
             src="logo2022.png"
             className={classes.logoImage}
-            height={102}
-            width={304}
             alt="NEPAccess Logo"
-            style={{
-              display: "block",
-            }}
           />
         </Grid>
       </>
@@ -535,6 +530,9 @@ function HeaderNav(props) {
           >
             <TopNavLinks />
           </Grid>
+
+
+          {/* #region Start Main Menu */}
           <Grid item id="nav-toolbar-main-nav-links-grid-item"
             display="flex"
             xs={12}
@@ -603,6 +601,9 @@ function HeaderNav(props) {
               </span>
             </Grid>
           </Grid>
+          {/* #endregion */}
+          {/* END TOP NAV  */}
+
         </Grid>
       </>
     )
@@ -642,12 +643,11 @@ function HeaderNav(props) {
 
         classes={{ root: classes.abRoot, positionStatic: classes.abStatic }}
       >
-        {mobileView ? displayMobile() : DesktopNav()}
+        {mobileView ? MobileNav() : DesktopNav()}
       </AppBar>
     </Paper>
   );
 }
-export default HeaderNav;
 
 export function TopNavLinks(props) {
   const { loggedInDisplay, loggedOutDisplay, role } = props;
@@ -657,23 +657,18 @@ export function TopNavLinks(props) {
       <Grid
         container
         xs={3}
-        display="flex"
-        flex={1}
         id="top-menu-grid-container"
         style={{
         }}
-        className="no-select">
-        {/*                     
-                    {this.showMenuItems()} */}
-
-
+        //className="no-select"
+        className={classes.accountNavLinksContainer}
+        >
         <Grid
           item
           flex={1}
-          xs={3}
+          xs={2}
           id="profile-grid-item"
-          className={loggedInDisplay + " right-nav-item logged-in"}
-          textAlign={'center'}
+          className={classes.accountNavLinkGridItem}
         >
           <Link id="profile-link"
             className={classes.accountNavLink}
@@ -685,16 +680,21 @@ export function TopNavLinks(props) {
           item
           flex={1}
           xs={3}
-          className={loggedInDisplay + " right-nav-item logged-in"}
-          textAlign={'center'} id="login-grid-item">
+          //className={loggedInDisplay + " right-nav-item logged-in"}
+          className={classes.accountNavLinkGridItem}
+          id="login-grid-item">
           <Link
             className={classes.accountNavLink}
 
             to="/login">Log In</Link>
         </Grid>
-        <Grid item xs={3} flex={1} id="register-grid-item"
-          className={loggedOutDisplay + " right-nav-item logged-out"}
-          textAlign={'center'}>
+          <Grid 
+            item 
+            className={classes.accountNavLinkGridItem}
+            id="register-grid-item"
+            xs={3} 
+            flex={1} 
+          >
           <Link
             id='register-link'
             className={classes.accountNavLink}
@@ -702,17 +702,16 @@ export function TopNavLinks(props) {
             Register
           </Link>
         </Grid>
-        <Grid item
+        <Grid 
+          item
+          className={classes.accountNavLinkGridItem}
           flex={1}
           xs={3}
-          style={{ paddingLeft: 2 }}
-          className={loggedInDisplay + " right-nav-item logged-in"}
-          classes={{...classes}}
-          textAlign={'center'}>
+        >
           <Link
             id="logout-link"
             className={classes.accountNavLink}
-            style={{ paddingRight: 3, borderRight:0, }}
+            style={{ paddingRight: 3, borderRight: 0, }}
             to="/logout">
             Log out
           </Link>
@@ -720,23 +719,6 @@ export function TopNavLinks(props) {
       </Grid>
     </>
   )
-}
-
-export function DesktopNavLinks() {
-  const [currentPage, setCurrentPage] = useState();
-  const [loggedInDisplay, setLoggedInDisplay] = useState('display-none');
-  const [loggedOutDisplay, setLoggedOutDisplay] = useState(true);
-  //const {mainMenuLink} = useStyles();
-  const [loggedIn, setLoggedIn] = useState(false);
-  const [role, setRole] = useState('user');
-  return (
-    <>
-      <div id="desktop-landing-container">
-        {/* <h1>Landing</h1>
-        <Landing /> */}
-      </div>
-    </>
-  );
 }
 
 const
@@ -782,19 +764,9 @@ export function NavLinks() {
   };
 
   return (
-    <div id="nav-links-root">
-      <Helmet>
-        <meta charSet="utf-8" />
-        <title>NEPAccess</title>
-        <meta
-          name="description"
-          content="Bringing NEPA into the 21st Century through the power of data science. Find and engage with data from thousands of environmental review documents."
-        />
-        <link rel="canonical" href="https://www.localhost:8808/" />
-      </Helmet>
-
+    <div id="header-nav-root">
       <div
-        //id="header" 
+        id="header-nav" 
         className={getHeaderCss() + headerLandingCss}
       >
         <div id="">
