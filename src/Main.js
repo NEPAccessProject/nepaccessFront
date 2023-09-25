@@ -218,7 +218,7 @@ class Main extends React.Component {
         }
     }
     onRouteChanged() {
-        // console.log("Route changed",this.props.location.pathname);
+        console.log("Route changed",this.props.location.pathname,'PROPS:',this.props);
         this.setState({
             currentPage: this.props.location.pathname
         });
@@ -261,81 +261,16 @@ class Main extends React.Component {
             </Helmet>
 
             <div 
-                //id="header" 
+                id="header-root" 
                 style={{}} 
                 //className={this.getHeaderCss() + this.state.headerLandingCss}
             >
-
-                {/* <div id="logo" className="no-select">
-                    <Link id="logo-link" to="/">
-                    </Link>
-                    <div id="logo-box">
-
-                    </div>
-                </div> */}
-
-                {/* <div
-                     style={{zIndex: 9999}} 
-                    id="top-menu" 
-                    className="no-select">
-                    
-                    {this.showMenuItems()}
-
-                    <span id="profile-span" className={this.state.loggedInDisplay + " right-nav-item logged-in"}>
-                        <Link className="top-menu-link" to="/profile">Profile</Link>
-                    </span>
-                    <span id="login-span" className={this.state.loggedOutDisplay + " logged-out"}>
-                        <Link className="top-menu-link" to="/login">Log in</Link>
-                    </span>
-                    <span id="register-span" className={this.state.loggedOutDisplay + " right-nav-item logged-out"}>
-                        <Link className="top-menu-link" to="/register">Register</Link>
-                    </span>
-                    <span className={this.state.loggedInDisplay + " right-nav-item logged-in"}>
-                        <Link className="top-menu-link" to="/logout">Log out</Link>
-                    </span>
-                </div> */}
                 <HeaderNav 
                 loggedInDisplay={this.loggedInDisplay}
                 loggedOutDisplay={this.loggedOutDisplay}
                 showMenuItems={this.showMenuItems}
                 role={this.state.role}
-                />
-                {/* <div id="main-menu">
-                    <Link currentpage={(this.state.currentPage==="/search").toString()} className="main-menu-link" to="/search">
-                        Search
-                    </Link>
-                    <div id="about-dropdown-2" className="main-menu-link dropdown">
-                        <Link currentpage={(this.state.currentPage==="/search-tips" || this.state.currentPage==="/available-documents").toString()} id="about-button-2" className="main-menu-link drop-button" to="/search-tips">
-                            Search Tips
-                        </Link>
-                        <i className="fa fa-caret-down"></i>
-                        <div className="dropdown-content">
-                            <Link to="/search-tips">Search Tips</Link>
-                            <Link to="/available-documents">Available Files</Link>
-                        </div>
-                    </div>
-                    <Link currentpage={(this.state.currentPage==="/about-nepa").toString()} className="main-menu-link" to="/about-nepa">
-                        About NEPA
-                    </Link>
-                    <div id="about-dropdown" className="main-menu-link dropdown">
-                        <Link currentpage={(this.state.currentPage==="/about-nepaccess" || this.state.currentPage==="/people" || this.state.currentPage==="/media").toString()} id="about-button" className="main-menu-link drop-button" to="/about-nepaccess">
-                            About NEPAccess
-                        </Link>
-                        <i className="fa fa-caret-down"></i>
-                        <div className="dropdown-content">
-                            <Link to="/about-nepaccess">About NEPAccess</Link>
-                            <Link to="/media">
-                                Media
-                            </Link>
-                            <Link to="/people">People</Link>
-                        </div>
-                    </div>
-                    <Link currentpage={(this.state.currentPage==="/contact").toString()} className="main-menu-link" to="/contact">
-                        Contact
-                    </Link>
-
-                </div> */}
-                {/* <Header/> */}
+                />               
             </div>
             <Switch>
                 <Route path="/profile" component={UserDetails}/>
