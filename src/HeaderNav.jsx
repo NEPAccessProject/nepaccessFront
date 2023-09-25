@@ -22,7 +22,7 @@ import theme from './styles/theme';
 import MenuIcon from '@material-ui/icons/Menu';
 import { withMediaQuery } from 'react-responsive';
 import React, { useState, useEffect } from 'react';
-import { Link as RouterLink } from 'react-router-dom';
+import { Link as RouterLink,NavLink } from 'react-router-dom';
 import './index.css';
 import { Helmet } from 'react-helmet';
 import Landing from './Landing';
@@ -159,37 +159,62 @@ const useStyles = makeStyles((theme) => ({
     fontSize: '1.1em',
     // lineHeight: '25px',
     // textDecoration: 'none',
-//    marginLeft:0,
+    //    marginLeft:0,
+    textAlign: 'center',
+    display: 'flex',
+    alignContent: 'center',
     color: '#000000',
-     textShadow: '0px 3px 2px rgba(0, 0, 0, 0.25)',
-     "&:hover": {
+    textShadow: '0px 3px 2px rgba(0, 0, 0, 0.25)',
+    "&:hover": {
       textDecoration: 'underline'
-     }
+    }
   },
+  accountNavLink: {
+    // dropShadow: '3px',
+    // position: 'relative',
+    fontFamily: 'Open Sans',
+    // fontStyle: 'normal',
+    fontSize: '0.7em',
+    // lineHeight: '25px',
+    // textDecoration: 'none',
+    //    marginLeft:0,
+    padding: 0,
+    margin: 0,
+    textAlign: 'center',
+    display: 'flex',
+    alignContent: 'center',
+    justifyContent: 'flex-start',
+    alignItems:'flex-end',
+    color: '#000000',
+    borderLeft: 1
+  },
+
   navLink: {
     // dropShadow: '3px',
     // position: 'relative',
     fontFamily: 'Open Sans',
     // fontStyle: 'normal',
     fontWeight: 'bold',
-    fontSize: '0.9em',
-    // lineHeight: '25px',
+    fontSize: '1.0em',
+    lineHeight: '25px',
     // textDecoration: 'none',
     paddingLeft: 2,
     paddingRight: 2,
-    margin:0,
+    padding:2,
+    margin: 0,
     justifyContent: 'center',
     flex: 1,
-    width:'100%',
+    minWidth: '120px',
     color: '#000000',
     textWrap: 'nowrap',
-     textShadow: '0px 3p2 2px rgba(0, 0, 0, 0.25)',
-     "&:hover": {
+    textShadow: '0px 3p2 2px rgba(0, 0, 0, 0.25)',
+    "&:hover": {
       textDecoration: 'underline'
-     }
+    }
   },
   mainMenuLink: {
     color: 'black',
+    fontSize:1.1
   },
   menuIcon: {
     color: 'white',
@@ -205,7 +230,7 @@ function HeaderNav(props) {
   });
 
   const { mobileView, drawerOpen } = state;
-  const { showMenuItems, loggedInDisplay, loggedOutDisplay } = props;
+  const { loggedInDisplay, loggedOutDisplay, role } = props;
   //for Menu anchor
   const [anchorEl, setAnchorEl] = React.useState(null);
 
@@ -232,9 +257,9 @@ function HeaderNav(props) {
 
   const prevOpen = React.useRef(open);
   React.useEffect(() => {
-    if (prevOpen.current === true && drawerOpen === false) {
-      anchorRef.current.focus();
-    }
+    // if (anchorRef.current && prevOpen.current === true && drawerOpen === false) {
+    //   anchorRef.current.focus();
+    // }
 
     prevOpen.current = open;
   }, [open]);
@@ -242,10 +267,42 @@ function HeaderNav(props) {
     setOpen((prevOpen) => !prevOpen);
   };
 
+
+  const showMenuItems = () => {
+    console.log(`showMenuItems role: ${role} logged In Displayed: ${loggedInDisplay}`);
+    return (
+      <span
+        id="admin-span"
+        //hidden={(!role || role === 'user')} 
+        className={loggedInDisplay + " right-nav-item logged-in"}>
+
+        <div id="admin-dropdown" className="main-menu-link dropdown">
+          <Link id="admin-button" className="main-menu-link drop-button" to="/importer">
+            Admin
+          </Link>
+          <i className="fa fa-caret-down"></i>
+          <div className="dropdown-content">
+            <Link to="/admin" hidden={!(role === 'admin')}>Admin Panel</Link>
+            <Link to="/importer" hidden={!(role === 'curator' || role === 'admin')}>Import New Documents</Link>
+            <Link to="/adminFiles" hidden={!(role === 'curator' || role === 'admin')}>Find Missing Files</Link>
+            <Link to="/approve">Approve Users</Link>
+            <Link to="/pre_register">Pre-Register Users</Link>
+            <Link to="/interaction_logs">Interaction Logs</Link>
+            <Link to="/search_logs">Search Logs</Link>
+            <Link to="/abouthelpcontents">Database Contents</Link>
+            <Link to="/stats">Content Statistics</Link>
+            <Link to="/stat_counts">Stat Counts</Link>
+            <Link to="/surveys">Surveys</Link>
+          </div>
+        </div>
+
+      </span>
+    );
+  }
   const displayMobile = () => {
     const handleDrawerOpen = () => setState((prevState) => ({ ...prevState, drawerOpen: true }));
     const handleDrawerClose = (evt) => {
-      if (anchorRef.current && anchorRef.current.contains(event.target)) {
+      if (anchorEl && anchorRef.current && anchorRef.current.contains(event.target)) {
         return;
       }
       setState((prevState) => ({ ...prevState, drawerOpen: false }))
@@ -273,16 +330,20 @@ function HeaderNav(props) {
             //          className={toolbar}
             color='primary'
           >
-            <IconButton
-              id="mobile-icon-button"
-              size="large"
-              edge="start"
-              color="inherit"
-              aria-label="menu"
-            //sx={{ mr: 2 }}
-            >
-              <MenuIcon color="#fff" className={classes.menuIcon} />
-            </IconButton>
+<Grid container alignItems='flex-end' justifyContent='flex-end'>
+              <IconButton
+                
+                id="mobile-icon-button"
+                size="large"
+                edge="start"
+                color="inherit"
+                aria-label="menu"
+                onClick={handleDrawerOpen}
+              //sx={{ mr: 2 }}
+              >
+                <MenuIcon color="#fff" className={classes.menuIcon}  />
+              </IconButton>
+</Grid>
             <Grid container
               id="mobile-logo-container"
               justifyContent='flex-start'
@@ -370,12 +431,13 @@ function HeaderNav(props) {
       <>
         {/* [TODO] Revist this should not be needed since the parent
  function should take care of it */}
-        {!state.mobileView &&
+        {!mobileView &&
           <Toolbar
             id="nav-toolbar"
             color="primary"
+          
             disableGutters={true}
-            style={{border: '3px solid black',width:'100%'}}
+            style={{width: '100%' }}
             sx={{
               flexGrow: 1,
               backgroundColor: '#abbdc4',
@@ -396,35 +458,39 @@ function HeaderNav(props) {
             }}
             > */}
 
-            <Grid container id="nav-toolbar-grid-container" 
-              flexDirection="row" 
-              flex={1} 
+            <Grid container id="nav-toolbar-grid-container"
+              flexDirection="row"
+              flex={1}
               display="flex"
               xs={12}
-              style={{border:'1px solid black'}}
-              >
+              //style={{ border: '1px solid black' }}
+            >
 
-              <Grid item display="flex" flexDirection="row"  wrap='nowrap'
-              xs={2} 
-                style={{ display: 'flex', justifyContent: 'flex-start', border: '1px solid black' }}
-                border={2} id="nav-toolbar-logo-grid-item">
+              <Grid item 
+                display="flex" 
+                flexDirection="row" 
+                wrap='nowrap'
+                id="nav-toolbar-logo-grid-item"
+                xs={2}
+                style={{ display: 'flex', justifyContent: 'flex-start'}}
+                >
                 <img
 
                   id="desktop-logo-image"
                   src="logo2022.png"
                   className={classes.logoImage}
-                  height={50}
-                  width={151}
+                  height={102}
+                  width={304}
                   alt="NEPAccess Logo"
-                  style={{ display: "inline", border: 1 }}
+                  style={{ display: "inline", border: 0 }}
                 />
               </Grid>
 
               {/* <Grid container justifyContent='flex-end' item xs={9} flex={1} border={2} id="nav-toolbar-menuitems-grid-item"> */}
               <Grid item id="nav-toolbar-menuitems-grid-item"
                 display="flex"
-                xs={8}
-                border={2}
+                xs={10}
+                border={0}
                 justifyContent='flex-end'
                 alignItems='center'
                 style={{ display: 'flex', justifyContent: 'flex-end' }}
@@ -435,65 +501,128 @@ function HeaderNav(props) {
 
               >
                 {/* <Box display={'flex'} justifyContent={'flex-end'} flex={1} id="nav-toolbar-menuitems-box"> */}
-                <MenuItem className={classes.navLink}>Search</MenuItem>
+                {/* <MenuItem className={classes.navLink}>Search</MenuItem>
                 <MenuItem className={classes.navLink}>Search Tips</MenuItem>
                 <MenuItem className={classes.navLink}>Available Files</MenuItem>
                 <MenuItem className={classes.navLink}>About NEPA</MenuItem>
                 <MenuItem className={classes.navLink}>About NEPAccess</MenuItem>
-                <MenuItem className={classes.navLink}>Contact</MenuItem>
+                <MenuItem className={classes.navLink}>Contact</MenuItem> */}
+                <NavLinks />
                 {/* </Box> */}
                 {/* </Grid> */}
 
-                <Grid container 
+                <Grid container
                   id="nav-toolbar-admin-grid"
-                  hidden={!role || role === 'user'} 
+                  hidden={!role || role === 'user'}
                   xs={3}
                   border={2}
                   borderColor="black"
                   flex={1}
                   className={classes.adminGrid}
-                  style={{border: '2px solid red'}}
+                  style={{ border: '2px solid red' }}
                 >
-                    <span  
-                    id="admin-span" 
-                    style= {{border: '3px solid red'}}
-                    //hidden={!role || role === 'user'} 
-                      //className={loggedIn ? 'right-nav-item logged-in' : ''}
-                      >
-                      <div id="admin-dropdown" className="main-menu-link dropdown">
-                        <Link id="admin-button" className="main-menu-link drop-button" to="/importer">
-                          Admin
+                  <span
+                    id="admin-span"
+                    style={{ border: '3px solid red' }}
+                  //hidden={!role || role === 'user'} 
+                  //className={loggedIn ? 'right-nav-item logged-in' : ''}
+                  >
+                    <div id="admin-dropdown" className="main-menu-link dropdown">
+                      <Link id="admin-button" className="main-menu-link drop-button" to="/importer">
+                        Admin
+                      </Link>
+                      <i className="fa fa-caret-down"></i>
+                      <div className="dropdown-content">
+                        <Link to="/admin" hidden={!(role === 'admin')}>
+                          Admin Panel
                         </Link>
-                        <i className="fa fa-caret-down"></i>
-                        <div className="dropdown-content">
-                          <Link to="/admin" hidden={!(role === 'admin')}>
-                            Admin Panel
-                          </Link>
-                          <Link to="/importer" hidden={!(role === 'curator' || role === 'admin')}>
-                            Import New Documents
-                          </Link>
-                          <Link to="/adminFiles" hidden={!(role === 'curator' || role === 'admin')}>
-                            Find Missing Files
-                          </Link>
-                          <Link to="/approve">Approve Users</Link>
-                          <Link to="/pre_register">Pre-Register Users</Link>
-                          <Link to="/interaction_logs">Interaction Logs</Link>
-                          <Link to="/search_logs">Search Logs</Link>
-                          <Link to="/abouthelpcontents">Database Contents</Link>
-                          <Link to="/stats">Content Statistics</Link>
-                          <Link to="/stat_counts">Stat Counts</Link>
-                          <Link to="/surveys">Surveys</Link>
-                        </div>
+                        <Link to="/importer" hidden={!(role === 'curator' || role === 'admin')}>
+                          Import New Documents
+                        </Link>
+                        <Link to="/adminFiles" hidden={!(role === 'curator' || role === 'admin')}>
+                          Find Missing Files
+                        </Link>
+                        <Link to="/approve">Approve Users</Link>
+                        <Link to="/pre_register">Pre-Register Users</Link>
+                        <Link to="/interaction_logs">Interaction Logs</Link>
+                        <Link to="/search_logs">Search Logs</Link>
+                        <Link to="/abouthelpcontents">Database Contents</Link>
+                        <Link to="/stats">Content Statistics</Link>
+                        <Link to="/stat_counts">Stat Counts</Link>
+                        <Link to="/surveys">Surveys</Link>
                       </div>
-                    </span>
+                    </div>
+                  </span>
 
-                    
-                    {showMenuItems()}
 
-                    </Grid>
+
+                </Grid>
+
+                <Grid
+                  container
+                  xs={2}
+                  id="top-menu-grid-container"
+                  justifyContent='center'
+                  alignContent='center'
+                  style={{ 
+                    display:'flex',
+                    flexDirection:'column',
+                    zIndex: 9999, 
+                  }}
+                  className="no-select">
+                  {/*                     
+                    {this.showMenuItems()} */}
+
+                  <Grid
+                    item
+                    flex={1}
+                    xs={2}
+                    id="profile-grid-item"
+                    //className={loggedInDisplay + " right-nav-item logged-in"} 
+                    textAlign={'center'}
+                  >
+                    <Link id="profile-link"
+                      className={classes.accountNavLink}
+                      to="/profile">
+                      Profile
+                    </Link>
                   </Grid>
+                  <Grid flex={1} xs={3}
+                    //className={loggedInDisplay + " right-nav-item logged-in"} 
+                    textAlign={'center'} id="login-grid-item">
+                    <Link
+                      className={classes.accountNavLink}
+
+                      to="/login">Log In</Link>
+                  </Grid>
+                  <Grid item xs={3} flex={1} id="register-grid-item"
+                    //className={loggedOutDisplay + " right-nav-item logged-out"} 
+                    textAlign={'center'}>
+                    <Link
+                      id='register-link'
+                      className={classes.accountNavLink}
+                      to="/register">
+                      Register
+                    </Link>
+                  </Grid>
+                  <Grid item
+                    flex={1}
+                    xs={3}
+                    style={{ paddingLeft: 2 }}
+                    //className={loggedInDisplay + " right-nav-item logged-in"} 
+                    textAlign={'center'}>
+                    <Link
+                      id="logout-link"
+                      className={classes.accountNavLink}
+                      style={{ paddingLeft: 2 }}
+                      to="/logout">
+                      Log out
+                    </Link>
+                  </Grid>
+                </Grid>
               </Grid>
-              {/* </MenuList> */}
+            </Grid>
+            {/* </MenuList> */}
           </Toolbar>
         }
         {/* <Landing /> */}
@@ -538,7 +667,7 @@ function HeaderNav(props) {
       // border: 1,
       // height: 50
     }}>
-      <AppBar elevation={0}
+      <AppBar elevation={1}
         id="header-desktop-appbar"
         position="static"
         style={{}}
@@ -556,7 +685,7 @@ export default HeaderNav;
 export function DesktopNavLinks() {
   const [currentPage, setCurrentPage] = useState();
   const [loggedInDisplay, setLoggedInDisplay] = useState('display-none');
-  const [loggedOutDisplay, setLoggedOutDisplay] = useState();
+  const [loggedOutDisplay, setLoggedOutDisplay] = useState(true);
   //const {mainMenuLink} = useStyles();
   const [loggedIn, setLoggedIn] = useState(false);
   const [role, setRole] = useState('user');
@@ -567,5 +696,132 @@ export function DesktopNavLinks() {
         <Landing /> */}
       </div>
     </>
+  );
+}
+
+const
+  showMenuItems = () => {
+    console.log(`showMenuItems role: ${role} logged In Displayed: ${loggedInDisplay}`);
+    return (
+      <span id="admin-span" hidden={(!role || role === 'user')} className={loggedInDisplay + " right-nav-item logged-in"}>
+
+        <div id="admin-dropdown" className="main-menu-link dropdown">
+          <Link id="admin-button" className="main-menu-link drop-button" to="/importer">
+            Admin
+          </Link>
+          <i className="fa fa-caret-down"></i>
+          <div className="dropdown-content">
+            <Link to="/admin" hidden={!(role === 'admin')}>Admin Panel</Link>
+            <Link to="/importer" hidden={!(role === 'curator' || role === 'admin')}>Import New Documents</Link>
+            <Link to="/adminFiles" hidden={!(role === 'curator' || role === 'admin')}>Find Missing Files</Link>
+            <Link to="/approve">Approve Users</Link>
+            <Link to="/pre_register">Pre-Register Users</Link>
+            <Link to="/interaction_logs">Interaction Logs</Link>
+            <Link to="/search_logs">Search Logs</Link>
+            <Link to="/abouthelpcontents">Database Contents</Link>
+            <Link to="/stats">Content Statistics</Link>
+            <Link to="/stat_counts">Stat Counts</Link>
+            <Link to="/surveys">Surveys</Link>
+          </div>
+        </div>
+
+      </span>
+    );
+  }
+
+
+  
+
+export function NavLinks() {
+  const [headerLandingCss, setHeaderLandingCss] = useState();
+  const [currentPage, setCurrentPage] = useState();
+  const [loggedInDisplay, setLoggedInDisplay] = useState('display-none');
+  const getHeaderCss = () => {
+    let headerCss = 'no-select';
+    if (!currentPage || currentPage === '/') {
+      headerCss += ' landing-header';
+    }
+    return headerCss;
+  };
+
+  return (
+    <div id="">
+      <Helmet>
+        <meta charSet="utf-8" />
+        <title>NEPAccess</title>
+        <meta
+          name="description"
+          content="Bringing NEPA into the 21st Century through the power of data science. Find and engage with data from thousands of environmental review documents."
+        />
+        <link rel="canonical" href="https://www.localhost:8808/" />
+      </Helmet>
+
+      <div 
+        //id="header" 
+        className={getHeaderCss() + headerLandingCss}
+      >
+        <div id="">
+          <NavLink
+            currentpage={(currentPage === '/contact').toString()}
+            className="main-menu-link"
+            to="/search"
+          >
+            Search
+          </NavLink>
+          <div id="about-dropdown-2" className="main-menu-link dropdown">
+            <NavLink
+              currentpage={(
+                currentPage === '/search-tips' || currentPage === '/available-documents'
+              ).toString()}
+              id="about-button-2"
+              className="main-menu-link drop-button"
+              to="/search-tips"
+            >
+              Search Tips
+            </NavLink>
+            <i className="fa fa-caret-down"></i>
+            <div className="dropdown-content">
+              <Link to="/search-tips">Search Tips</Link>
+              <Link to="/available-documents">Available Files</Link>
+            </div>
+          </div>
+          <NavLink
+            currentpage={(currentPage === '/about-nepa').toString()}
+            className="main-menu-link"
+            to="/about-nepa"
+          >
+            About NEPA
+          </NavLink>
+          <div id="about-dropdown" className="main-menu-link dropdown">
+            <NavLink
+              currentpage={(
+                currentPage === '/about-nepaccess' ||
+                currentPage === '/people' ||
+                currentPage === '/media'
+              ).toString()}
+              id="about-button"
+              className="main-menu-link drop-button"
+              to="/about-nepaccess"
+            >
+              About NEPAccess
+            </NavLink>
+            <i className="fa fa-caret-down"></i>
+            <div className="dropdown-content">
+              <Link to="/about-nepaccess">About NEPAccess</Link>
+              <Link to="/media">Media</Link>
+              <Link to="/people">People</Link>
+            </div>
+          </div>
+
+          <NavLink
+            currentpage={(currentPage === '/contact').toString()}
+            className="main-menu-link"
+            to="/contact"
+          >
+            Contact
+          </NavLink>
+        </div>
+      </div>
+    </div>
   );
 }

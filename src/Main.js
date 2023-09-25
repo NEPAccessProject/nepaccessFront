@@ -86,6 +86,7 @@ import {
     useMediaQuery,
 } from '@material-ui/core';
 import MenuIcon from '@material-ui/icons/Menu';
+import ThemePreview from './examples/ThemePreview';
 
 const _ = require('lodash');
 
@@ -296,7 +297,8 @@ class Main extends React.Component {
                 <HeaderNav 
                 loggedInDisplay={this.loggedInDisplay}
                 loggedOutDisplay={this.loggedOutDisplay}
-                showMenuItems={this.showMenuItems} 
+                showMenuItems={this.showMenuItems}
+                role={this.state.role}
                 />
                 {/* <div id="main-menu">
                     <Link currentpage={(this.state.currentPage==="/search").toString()} className="main-menu-link" to="/search">
@@ -384,7 +386,8 @@ class Main extends React.Component {
                 <Route path="/up_geo" component={ImporterGeo} />
                 <Route path="/up_geo_links" component={ImporterGeoLinks} />
                 <Route path="/up_alignment" component={ImporterAlignment} />
-                    <Route path="menu" component={ResponsiveMenu} />
+                    <Route path="/menu" component={ResponsiveMenu} />
+                    <Route path="/theme" component={ThemePreview} />
                 <Route path="/" component={Landing}/>
             </Switch>
         </div>

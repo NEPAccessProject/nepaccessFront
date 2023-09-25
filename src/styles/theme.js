@@ -6,12 +6,15 @@ import { ThemeOptions } from '@mui/material/styles';
 		palette: {
 			mode: 'light',
 			primary: {
-				main: '#3D669C',
-				contrastText: common.white,
+				main: '#053B50',
+				contrastText: '#EEEEEE',
 			},
 			secondary: {
 				main: '#abbdc4',
 				contrastText: common.white,
+			},
+			tertiary: {
+				main: '#64CCC5'
 			},
 			error: {
 				main: red.A400,
