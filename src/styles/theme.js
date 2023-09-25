@@ -3,6 +3,11 @@ import { common, grey, orange, red } from '@mui/material/colors';
 import { ThemeOptions } from '@mui/material/styles';
 
  const theme = createMuiTheme({
+	zIndex: {
+		appBar: 99,
+		button: 109,
+		map: 999,
+	},
 		palette: {
 			mode: 'light',
 			primary: {
