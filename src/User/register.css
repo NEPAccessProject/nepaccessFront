@@ -1,7 +1,7 @@
 #register-form {
     min-width: 700px;
     overflow: hidden;
-    margin-top: 102px;
+    /* margin-top: 102px; */
 }
 
 #register-form #affiliation {
