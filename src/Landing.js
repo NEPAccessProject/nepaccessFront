@@ -44,7 +44,7 @@ class Landing extends React.Component {
                     <link rel="canonical" href="https://nepaccess.org/" />
                 </Helmet>
 
-                <MediaQuery minWidth={1224}>
+                <MediaQuery minWidth={768}>
                     <div id="landing-images">
                         <div id="headline" className="no-select cursor-default">
                             <div id="landing-headline-container">
