@@ -95,7 +95,7 @@ export default class AdminFileSetDeduplicator extends React.Component {
 
                 <br />
                 <label>Server response</label>
-                <div><textarea value={this.state.server_response} readonly /></div>
+                <div><textarea value={this.state.server_response} readOnly /></div>
 
             </div>
         );

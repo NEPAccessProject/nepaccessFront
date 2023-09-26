@@ -23,20 +23,18 @@ body {
   flex-direction: column;
 }
 
-
+/* 
 #home-page {
   position: relative;
   margin: auto;
-
-  /* background: #FBFBF6; */
   background: #F8F9FA;
-}
+} */
 
 #header {
   position: fixed;
   width: 100%;
   min-width: 700px;
-  height: 102px;
+  /* height: 102px; */
   left: 0px;
   top: 0px;
 

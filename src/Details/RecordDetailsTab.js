@@ -617,7 +617,7 @@ export default class RecordDetailsTab extends React.Component {
                 } else if (key==='cooperatingAgency') {
                     keyName = 'Cooperating agencies';
                     const coops = cellData[key].split(';').map(coop => {
-                        return <div className="cooperating"><b>{coop}</b></div>;
+                        return <div key={`${key}-${coop}`} className="cooperating"><b>{coop}</b></div>;
                     })
                     return (<p key={i} className='modal-line'><span className='modal-title'>{keyName}:</span> {coops}</p>);
                 } else if (key==='noiDate') {

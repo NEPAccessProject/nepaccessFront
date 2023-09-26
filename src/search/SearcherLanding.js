@@ -1,7 +1,17 @@
-import axios from 'axios';
 import React from 'react';
-
-import Globals from '../globals.js';
+import axios from 'axios';
+import { Autocomplete } from '@mui/material';
+import Globals from './globals.js';
+import { SearchOutlined } from '@mui/icons-material';
+import {
+    Box,
+    Grid,
+    Hidden,
+    IconButton,
+    ListItem,
+    TextField
+} from '@mui/material';
+import MediaQuery from 'react-responsive';
 
 // import FlipNumbers from 'react-flip-numbers';
 
@@ -19,26 +29,32 @@ class SearcherLanding extends React.Component {
         this.getTitles = this.getTitles.bind(this);
     }
 
-    onInput = (evt) => {
+    onInput = (evt) => {       
+        //console.log(`OnInput  - file: SearcherLanding.js:32 ~ OnInput ~ SearcherLanding ~ evt - target: ${evt.target.name} value: ${evt.target.value}`, evt);
         this.setState({ [evt.target.name]: evt.target.value });
         const val = evt.target.value;
+        console.log(`onInput Id : ${this.props.id} - value: ${val}`)
         this.props.onChange(this.props.id, val);
     }
 
     onKeyUp = (evt) => {
+        //console.log(`OnKeyUp file: SearcherLanding.js:40 ~ onKeyUp ~ SearcherLanding ~ evt - keyCode: ${evt.keyCode}  - target: ${evt.target.name} value: ${evt.target.value}`, evt);
         if(evt.keyCode ===13){
             this.props.onClick("render", "app");
         }
     }
     onIconClick = (evt) => {
+        console.log(`onIconClick:`,evt)
         this.props.onClick("render", "app");
     }
     onClearClick = (evt) => {
         // Custom clear icon not captured by onInput(), so update the relevant props and state here
+        //console.log(`onClearClick Event Handler ${evt.target.name} - value : ${evt.target.value}`)
         this.setState({ titleRaw: '' });
         this.props.onChange(this.props.id, ''); 
     }
     onChangeHandler = (evt) => {
+        //console.log(`onChange Event Handler ${evt.target.name} - value : ${evt.target.value}`)
         // do nothing
     }
 
@@ -134,73 +150,105 @@ class SearcherLanding extends React.Component {
     // }
 
 
-
-    render () {
-        return (
-<>
-                <h2>Landing Search Box here</h2>
-                <div id="landing-search-box-container">
-                    
-                    <div id="landing-search-holder">
-                    
-                            
-                        
-                        <div id="landing-search-bar-holder">
-                            {/* <h3 id="landing-search-header">
-                                <span className="glow">
-                                    Begin with a simple keyword search:
-                                </span>
-                            </h3> */}
-                            <input id="landing-search-bar"
-                                name="titleRaw" 
-                                placeholder="Search for NEPA documents" 
-                                value={this.state.titleRaw}
-                                autoFocus 
-                                onChange={this.onChangeHandler}
-                                onInput={this.onInput} onKeyUp={this.onKeyUp}
-                            />
-                            <svg id="landing-search-icon" onClick={this.onIconClick} className="search-icon" width="39" height="38" viewBox="0 0 39 38" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path fillRule="evenodd" clipRule="evenodd" d="M26.4582 24.1397H28.2356L37.7751 33.3063C38.6976 34.1886 38.6976 35.6303 37.7751 36.5125C36.8526 37.3947 35.3452 37.3947 34.4228 36.5125L24.8607 27.3674V25.6675L24.2533 25.065C21.1034 27.6471 16.8061 28.9813 12.2388 28.2496C5.98416 27.2383 0.989399 22.2462 0.224437 16.2212C-0.945506 7.11911 7.0641 -0.541243 16.5811 0.577685C22.8808 1.30929 28.1006 6.08626 29.158 12.0682C29.923 16.4363 28.5281 20.5463 25.8282 23.5588L26.4582 24.1397ZM4.61171 14.4567C4.61171 19.8146 9.13399 24.1397 14.7362 24.1397C20.3384 24.1397 24.8607 19.8146 24.8607 14.4567C24.8607 9.09875 20.3384 4.77366 14.7362 4.77366C9.13399 4.77366 4.61171 9.09875 4.61171 14.4567Z" fill="black" fillOpacity="1"/>
-                            </svg>
-                            <svg onClick={this.onClearClick} className="cancel-icon" width="24" height="24" viewBox="0 0 24 26" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path className="circle" d="M12.2689 1.92334C5.63289 1.92334 0.26889 7.28734 0.26889 13.9233C0.26889 20.5593 5.63289 25.9233 12.2689 25.9233C18.9049 25.9233 24.2689 20.5593 24.2689 13.9233C24.2689 7.28734 18.9049 1.92334 12.2689 1.92334Z" fill="#DADADA"
-                                />
-                                <path d="M17.4289 19.0834C16.9609 19.5514 16.2049 19.5514 15.7369 19.0834L12.2689 15.6154L8.80089 19.0834C8.33289 19.5514 7.57689 19.5514 7.10889 19.0834C6.88418 18.8592 6.7579 18.5548 6.7579 18.2374C6.7579 17.9199 6.88418 17.6155 7.10889 17.3914L10.5769 13.9234L7.10889 10.4554C6.88418 10.2312 6.7579 9.92677 6.7579 9.60935C6.7579 9.29193 6.88418 8.98755 7.10889 8.76335C7.57689 8.29535 8.33289 8.29535 8.80089 8.76335L12.2689 12.2314L15.7369 8.76335C16.2049 8.29535 16.9609 8.29535 17.4289 8.76335C17.8969 9.23135 17.8969 9.98735 17.4289 10.4554L13.9609 13.9234L17.4289 17.3914C17.8849 17.8474 17.8849 18.6154 17.4289 19.0834Z" fill="#737272"/>
-                            </svg>
-                            
-                        </div>
-    
-                    </div>
-    
-    
-                    {/* {this.showFlipNum()} */}
-                </div>
-    
-</>        )
+    render(){
+        return(
+            <Grid container flex={1} style={{marginTop:10}}>
+                <Grid
+                    item
+                    xs={12}
+                    md={12}
+                    id="search-box-grid-item"
+                >
+                    {/* <Box
+                        id="search-box-box-item"
+                        display={'flex'}                        
+                        paddingLeft={0}
+                        //paddingRight={2}
+                        padding={0}
+                        elevation={1}
+                        borderRadius={0}
+                        border={0}
+                        borderColor={'#CCC'}
+                        borderLeft={0}
+                        // marginLeft={2}
+                        // marginRight={2}
+                        /////backgroundColor= 'white'
+                    > */}
+                        {' '}
+                        Title Raw ? {this.state.titleRaw}
+                        <TextField
+                            fullWidth
+                            zIndex={9999}
+                            id="main-search-text-field"
+                            //id="landing-search-bar"
+                            name="titleRaw"
+                            variant="outlined"
+                            color='primary'
+                            //focused
+                            //onInput={this.onInput}
+                            onKeyUp={this.onKeyUp}
+                            onChange={this.props.onChangeHandler}
+                            onKeyDown={this.onKeyDown}
+                            onInput= {this.onInput}
+                            placeholder="Search for NEPA documents"
+                            value={this.state.titleRaw}
+                            autoFocus
+                            sx={{
+                                borderRadius:1,
+                                marginLeft: 4,
+                                marginRight: 4,
+                                backgroundColor: '#fff',
+                                zIndex: 9999,
+                            }}
+                            InputProps={{
+                                endAdornment: (
+                                    <IconButton name="titleRaw" value={this.state.titleRaw} onClick={this.onIconClick} {...this.props}>
+                                        <SearchOutlined />
+                                    </IconButton>
+                                ),
+                            }}
+                        />
+                    {/* </Box> */}
+                </Grid>                
+            </Grid>
+        )
     }
-    
-    // componentDidMount() {
-    //     this.getCounts();
 
-    //     this.timer = setInterval(() => {
-    //         if(this.state.num < this.state.total) {
-    //             let increment = 1;
-    //             if(this.state.total - this.state.num > 1000) {
-    //                 increment = 111;
-    //             } else if(this.state.total - this.state.num > 100) {
-    //                 increment = 11;
-    //             }
+    _render() {
+        return (
+            <div id="landing-search-box-container" style={{
+                border: '2px solid red',
+            }}>                
+                <div id="landing-search-holder" className={this.getClassName()}>
+                    <div id="landing-search-bar-holder">
+                        {/* <h3 id="landing-search-header">
+                            <span className="glow">
+                                Begin with a simple keyword search:
+                            </span>
+                        </h3> */}
+                        <input id="landing-search-bar"
+                            name="titleRaw" 
+                            placeholder="Search for NEPA documents" 
+                            value={this.state.titleRaw}
+                            autoFocus 
+                            onChange={this.onChangeHandler}
+                            onInput={this.onInput} onKeyUp={this.onKeyUp}
+                        />
+                        <svg id="landing-search-icon" onClick={this.onIconClick} className="search-icon" width="39" height="38" viewBox="0 0 39 38" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path fillRule="evenodd" clipRule="evenodd" d="M26.4582 24.1397H28.2356L37.7751 33.3063C38.6976 34.1886 38.6976 35.6303 37.7751 36.5125C36.8526 37.3947 35.3452 37.3947 34.4228 36.5125L24.8607 27.3674V25.6675L24.2533 25.065C21.1034 27.6471 16.8061 28.9813 12.2388 28.2496C5.98416 27.2383 0.989399 22.2462 0.224437 16.2212C-0.945506 7.11911 7.0641 -0.541243 16.5811 0.577685C22.8808 1.30929 28.1006 6.08626 29.158 12.0682C29.923 16.4363 28.5281 20.5463 25.8282 23.5588L26.4582 24.1397ZM4.61171 14.4567C4.61171 19.8146 9.13399 24.1397 14.7362 24.1397C20.3384 24.1397 24.8607 19.8146 24.8607 14.4567C24.8607 9.09875 20.3384 4.77366 14.7362 4.77366C9.13399 4.77366 4.61171 9.09875 4.61171 14.4567Z" fill="black" fillOpacity="1"/>
+                        </svg>
+                        <svg onClick={this.onClearClick} className="cancel-icon" width="24" height="24" viewBox="0 0 24 26" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path className="circle" d="M12.2689 1.92334C5.63289 1.92334 0.26889 7.28734 0.26889 13.9233C0.26889 20.5593 5.63289 25.9233 12.2689 25.9233C18.9049 25.9233 24.2689 20.5593 24.2689 13.9233C24.2689 7.28734 18.9049 1.92334 12.2689 1.92334Z" fill="#DADADA"
+                            />
+                            <path d="M17.4289 19.0834C16.9609 19.5514 16.2049 19.5514 15.7369 19.0834L12.2689 15.6154L8.80089 19.0834C8.33289 19.5514 7.57689 19.5514 7.10889 19.0834C6.88418 18.8592 6.7579 18.5548 6.7579 18.2374C6.7579 17.9199 6.88418 17.6155 7.10889 17.3914L10.5769 13.9234L7.10889 10.4554C6.88418 10.2312 6.7579 9.92677 6.7579 9.60935C6.7579 9.29193 6.88418 8.98755 7.10889 8.76335C7.57689 8.29535 8.33289 8.29535 8.80089 8.76335L12.2689 12.2314L15.7369 8.76335C16.2049 8.29535 16.9609 8.29535 17.4289 8.76335C17.8969 9.23135 17.8969 9.98735 17.4289 10.4554L13.9609 13.9234L17.4289 17.3914C17.8849 17.8474 17.8849 18.6154 17.4289 19.0834Z" fill="#737272"/>
+                        </svg>
+                        
+                    </div>
 
-    //             this.setState({
-    //                 num: this.state.num + increment
-    //             });
-    //         }
-    //     }, 10);
-    // }
-    
-    // componentWillUnmount() {
-    //     clearInterval(this.timer);
-    // }
+                </div>
+            </div>
+        )
+    }
 }
 
 export default SearcherLanding;

@@ -27,7 +27,7 @@
     line-height: 140%;
     font-weight: 700;
 
-    margin-top: 102px;
+    /* margin-top: 102px; */
 }
 
 span.glow {
@@ -78,7 +78,7 @@ span.glow {
     max-width: 1120px;
     margin: 0 auto;
 
-    padding-top: 140px;
+    padding-top: 20px;
 
     -webkit-column-count: 2; /* Chrome, Safari, Opera */
     -moz-column-count: 2; /* Firefox */

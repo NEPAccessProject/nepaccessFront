@@ -14,6 +14,7 @@ class Login extends React.Component {
     
     constructor(props) {
         super(props);
+        console.log(`file: Login.js:17 ~ Login ~ constructor ~ props:`, props);
 		// this.state = {
         //     username: '',
         //     password: '',
@@ -38,6 +39,7 @@ class Login extends React.Component {
     
 
     onChange = (evt) => {
+        console.log(`file: Login.js:42 ~ Login ~ evt:`, evt);
         const name = evt.target.name;
         const value = evt.target.value;
 
@@ -53,6 +55,7 @@ class Login extends React.Component {
 
     // Backend now strips surrounding whitespace from username on register
     onUsernameChange = (evt) => {
+        console.log(`file: Login.js:58 ~ Login ~ evt:`, evt);
         const value = evt.target.value.trim();
         
         this.setState( prevState => {
