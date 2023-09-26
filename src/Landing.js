@@ -46,7 +46,7 @@ class Landing extends React.Component {
                 <MediaQuery minWidth={1024}>
                     <div id="landing-images">
                         <div id="headline" className="no-select cursor-default">
-                        {window.innerHeight} - {window.innerWidth}
+                            Width: {window.innerHeight} - Height: {window.innerWidth}
                             <div id="landing-headline-container">
                                 <h1 id="landing-headline-left">
                                     <span className="glow">
@@ -60,27 +60,30 @@ class Landing extends React.Component {
                                 </h2>
                             </div>
                         </div>
-                    </div>
-                </MediaQuery>
-                <MediaQuery maxWidth={1024}>
-                width: {window.innerWidth} - height: {window.innerHeight} 
-                    <SearcherLanding
-                        id="rawInput"
-                        onChange={this.handleChange}
-                        onClick={this.handleClick}
-                        value={this.state.rawInput} />
-                </MediaQuery>
-                <CalloutContainer />
-                width: {window.innerWidth} - height: {window.innerHeight} 
 
-                <IframeResizer
-                    log={true}
-                    data-nosnippet
-                    checkOrigin={false}
-                    id="iframe-landing-container"
-                    src="https://about.nepaccess.org/"
-                    style={{ width: '1px', minWidth: '100%' }}
-                />
+                        <SearcherLanding
+                            id="rawInput"
+                            onChange={this.handleChange}
+                            onClick={this.handleClick}
+                            value={this.state.rawInput} />
+                    </div>
+                    </MediaQuery>
+                    <MediaQuery maxWidth={1024}>
+                    <SearcherLanding
+                            id="rawInput"
+                            onChange={this.handleChange}
+                            onClick={this.handleClick}
+                            value={this.state.rawInput} />
+                    </MediaQuery>
+                    <CalloutContainer />
+                    <IframeResizer
+                        log={true}
+                        data-nosnippet
+                        checkOrigin={false}
+                        id="iframe-landing-container"
+                        src="https://about.nepaccess.org/"
+                        style={{ width: '1px', minWidth: '100%' }}
+                    />
             </div>
         );
     }
