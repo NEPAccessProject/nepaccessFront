@@ -4,6 +4,7 @@
   "singleQuote": true,
   "endOfLine": "lf",
   "tabWidth": 2,
+  "quoteProps": "as-needed",
   "printWidth": 100,
   "arrowParens": "always",
   "bracketSpacing": true,

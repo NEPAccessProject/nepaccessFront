@@ -33,10 +33,9 @@ const draftTypeLabelsLower = ["draft",
     "draft supplemental",
     "second draft supplemental",
     "third draft supplemental"];
-
 const Globals = {
     currentHost: new URL('http://localhost:8080/'),
-
+    mobileBreakPointWidth : 992,
     listeners: {},
 
     registerListener(key, listenerFunction) {
