@@ -29,6 +29,7 @@ import Landing from './Landing';
 import CalloutContainer from './CalloutContainer';
 import SearcherLanding from './SearcherLanding';
 import { withStyles } from '@mui/styles';
+import globals from './globals';
 const _MAX_WIDTH = '768px'
 const anchorRef = React.createRef();
 const headersData = [
@@ -235,15 +236,19 @@ export default function HeaderNav(props) {
   //for Menu anchor
   const [anchorEl, setAnchorEl] = React.useState(null);
   const anchorRef = React.useRef(null);
-  //  const isBigScreen = useMediaQuery({ query: '(min-width: 1824px)' })
-  //  const isTabletOrMobile = useMediaQuery({ query: '(max-width: 768px)' })
-  //  const isPortrait = useMediaQuery({ query: '(orientation: portrait)' })
-  //  const isRetina = useMediaQuery({ query: '(min-resolution: 2dppx)' })
+
+  const isBigScreen = useMediaQuery('(min-width: 1824px)')
+  const isTabletOrMobile = useMediaQuery('(max-width: 768px)')
+  const isPortrait = useMediaQuery("(orientation: portrait)")
+  const isRetina = useMediaQuery('(min-resolution: 2dppx)')
+
+
   useEffect(() => {
 
     const setResponsiveness = () => {
       console.log('set responsive', window.innerHeight);
-      return window.innerWidth < 1024
+      console.log(`set responsive isBigScreen ${isBigScreen} - Tablet or Mobile? ${isTabletOrMobile} - Portrait? ${isPortrait} - Retina? ${isRetina}`);
+      return window.innerWidth < globals.mobileBreakPointWidth
         ? setState((prevState) => ({ ...prevState, mobileView: true }))
         : setState((prevState) => ({ ...prevState, mobileView: false }));
     };
