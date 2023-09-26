@@ -11,6 +11,7 @@ import {
     ListItem,
     TextField
 } from '@mui/material';
+import MediaQuery from 'react-responsive';
 
 // import FlipNumbers from 'react-flip-numbers';
 
@@ -28,27 +29,32 @@ class SearcherLanding extends React.Component {
         this.getTitles = this.getTitles.bind(this);
     }
 
-    onInput = (evt) => {
-        console.log(`file: SearcherLanding.js:32 ~ SearcherLanding ~ evt - target: ${evt.target.name} value: ${evt.target.value}`, evt);
+    onInput = (evt) => {       
+        //console.log(`OnInput  - file: SearcherLanding.js:32 ~ OnInput ~ SearcherLanding ~ evt - target: ${evt.target.name} value: ${evt.target.value}`, evt);
         this.setState({ [evt.target.name]: evt.target.value });
         const val = evt.target.value;
+        console.log(`onInput Id : ${this.props.id} - value: ${val}`)
         this.props.onChange(this.props.id, val);
     }
 
     onKeyUp = (evt) => {
+        //console.log(`OnKeyUp file: SearcherLanding.js:40 ~ onKeyUp ~ SearcherLanding ~ evt - keyCode: ${evt.keyCode}  - target: ${evt.target.name} value: ${evt.target.value}`, evt);
         if(evt.keyCode ===13){
             this.props.onClick("render", "app");
         }
     }
     onIconClick = (evt) => {
+        console.log(`onIconClick:`,evt)
         this.props.onClick("render", "app");
     }
     onClearClick = (evt) => {
         // Custom clear icon not captured by onInput(), so update the relevant props and state here
+        //console.log(`onClearClick Event Handler ${evt.target.name} - value : ${evt.target.value}`)
         this.setState({ titleRaw: '' });
         this.props.onChange(this.props.id, ''); 
     }
     onChangeHandler = (evt) => {
+        //console.log(`onChange Event Handler ${evt.target.name} - value : ${evt.target.value}`)
         // do nothing
     }
 
@@ -146,19 +152,16 @@ class SearcherLanding extends React.Component {
 
     render(){
         return(
-            <Grid container flex={1}>
+            <Grid container flex={1} style={{marginTop:10}}>
                 <Grid
                     item
                     xs={12}
                     md={12}
-                    borderLeft={0}
-                    marginTop={2}
                     id="search-box-grid-item"
                 >
-                    <Box
+                    {/* <Box
                         id="search-box-box-item"
                         display={'flex'}                        
-                        height={60}
                         paddingLeft={0}
                         //paddingRight={2}
                         padding={0}
@@ -170,10 +173,12 @@ class SearcherLanding extends React.Component {
                         // marginLeft={2}
                         // marginRight={2}
                         /////backgroundColor= 'white'
-                    >
+                    > */}
                         {' '}
+                        Title Raw ? {this.state.titleRaw}
                         <TextField
                             fullWidth
+                            zIndex={9999}
                             id="main-search-text-field"
                             //id="landing-search-bar"
                             name="titleRaw"
@@ -182,8 +187,9 @@ class SearcherLanding extends React.Component {
                             //focused
                             //onInput={this.onInput}
                             onKeyUp={this.onKeyUp}
-                            onChange={this.onChangeHandler}
+                            onChange={this.props.onChangeHandler}
                             onKeyDown={this.onKeyDown}
+                            onInput= {this.onInput}
                             placeholder="Search for NEPA documents"
                             value={this.state.titleRaw}
                             autoFocus
@@ -191,17 +197,18 @@ class SearcherLanding extends React.Component {
                                 borderRadius:1,
                                 marginLeft: 4,
                                 marginRight: 4,
-                                backgroundColor: '#fff'
+                                backgroundColor: '#fff',
+                                zIndex: 9999,
                             }}
                             InputProps={{
                                 endAdornment: (
-                                    <IconButton name="titleRaw" value={this.state.titleRaw} onClick={this.onIconClick}>
+                                    <IconButton name="titleRaw" value={this.state.titleRaw} onClick={this.onIconClick} {...this.props}>
                                         <SearchOutlined />
                                     </IconButton>
                                 ),
                             }}
                         />
-                    </Box>
+                    {/* </Box> */}
                 </Grid>                
             </Grid>
         )
@@ -209,12 +216,10 @@ class SearcherLanding extends React.Component {
 
     _render() {
         return (
-            <div id="landing-search-box-container">
-                
-                <div id="landing-search-holder">
-                
-                        
-                    
+            <div id="landing-search-box-container" style={{
+                border: '2px solid red',
+            }}>                
+                <div id="landing-search-holder" className={this.getClassName()}>
                     <div id="landing-search-bar-holder">
                         {/* <h3 id="landing-search-header">
                             <span className="glow">
@@ -241,35 +246,9 @@ class SearcherLanding extends React.Component {
                     </div>
 
                 </div>
-
-
-                {/* {this.showFlipNum()} */}
             </div>
         )
     }
-    
-    // componentDidMount() {
-    //     this.getCounts();
-
-    //     this.timer = setInterval(() => {
-    //         if(this.state.num < this.state.total) {
-    //             let increment = 1;
-    //             if(this.state.total - this.state.num > 1000) {
-    //                 increment = 111;
-    //             } else if(this.state.total - this.state.num > 100) {
-    //                 increment = 11;
-    //             }
-
-    //             this.setState({
-    //                 num: this.state.num + increment
-    //             });
-    //         }
-    //     }, 10);
-    // }
-    
-    // componentWillUnmount() {
-    //     clearInterval(this.timer);
-    // }
 }
 
 export default SearcherLanding;
