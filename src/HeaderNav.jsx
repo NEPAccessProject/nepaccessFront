@@ -27,10 +27,8 @@ import './index.css';
 import { Helmet } from 'react-helmet';
 import Landing from './Landing';
 import CalloutContainer from './CalloutContainer';
-import SearcherLanding from './SearcherLanding';
 import { withStyles } from '@mui/styles';
 import globals from './globals';
-const _MAX_WIDTH = '768px'
 const anchorRef = React.createRef();
 const headersData = [
   {

@@ -53,7 +53,7 @@ import Pairs from './Pairs.js';
 import Pairs2 from './Pairs2';
 import Pairs3 from './Pairs3';
 
-import SearchLogs from './SearchLogs.js';
+//import SearchLogs from './SearchLogs.js';
 import Surveys from './Surveys.js';
 
 import Excel from './Excel.js';
@@ -67,7 +67,6 @@ import HeaderNav from './HeaderNav';
 import { Link, Switch, Route, withRouter } from 'react-router-dom';
 
 import PropTypes from "prop-types";
-import ResponsiveMenu from './examples/ResponsiveMenu';
 import ImporterAlignment from './ImporterAlignment';
 import {
     AppBar,
@@ -310,7 +309,7 @@ class Main extends React.Component {
                 <Route path="/pairs" component={Pairs}></Route>
                 <Route path="/pairs2" component={Pairs2}></Route>
                 <Route path="/pairs3" component={Pairs3}></Route>
-                <Route path="/search_logs" component={SearchLogs}></Route>
+                {/* <Route path="/search_logs" component={SearchLogs}></Route> */}
                 <Route path="/interaction_logs" component={InteractionLogs}></Route>
                 <Route path="/stat_counts" component={StatCounts}></Route>
                 <Route path="/surveys" component={Surveys}></Route>
@@ -321,7 +320,7 @@ class Main extends React.Component {
                 <Route path="/up_geo" component={ImporterGeo} />
                 <Route path="/up_geo_links" component={ImporterGeoLinks} />
                 <Route path="/up_alignment" component={ImporterAlignment} />
-                    <Route path="/menu" component={ResponsiveMenu} />
+                    {/* <Route path="/menu" component={ResponsiveMenu} /> */}
                     <Route path="/theme" component={ThemePreview} />
                 <Route path="/" component={Landing}/>
             </Switch>

@@ -1,7 +1,7 @@
 import React from 'react';
 import axios from 'axios';
 import { Autocomplete } from '@mui/material';
-import Globals from './globals.js';
+import globals from '../globals';
 import { SearchOutlined } from '@mui/icons-material';
 import {
     Box,
@@ -61,7 +61,7 @@ class SearcherLanding extends React.Component {
     // TODO: Get shortlist of title suggestions ordered by relevance from backend using NLM, alphanumeric only, maybe use
     // autocomplete library to fill selectables
     getTitles() {
-        let titlesUrl = new URL('test/titles', Globals.currentHost);
+        let titlesUrl = new URL('test/titles', globals.currentHost);
         //Send the AJAX call to the server
 			axios({
 				method: 'POST', 
@@ -89,7 +89,7 @@ class SearcherLanding extends React.Component {
 
 
     get = (url, stateName) => {
-        const _url = new URL(url, Globals.currentHost);
+        const _url = new URL(url, globals.currentHost);
         axios({
             url: _url,
             method: 'GET',
