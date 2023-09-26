@@ -4599,7 +4599,7 @@
     "@babel/parser" "^7.1.0"
     "@babel/types" "^7.0.0"
 
-"@types/babel__traverse@*", "@types/babel__traverse@^7.0.4", "@types/babel__traverse@^7.0.6":
+"@types/babel__traverse@*", "@types/babel__traverse@^7.0.4", "@types/babel__traverse@^7.0.6", "@types/babel__traverse@^7.17.1":
   version "7.20.2"
   resolved "https://registry.yarnpkg.com/@types/babel__traverse/-/babel__traverse-7.20.2.tgz#4ddf99d95cfdd946ff35d2b65c978d9c9bf2645d"
   integrity sha512-ojlGK1Hsfce93J0+kn3H5R73elidKUaZonirN33GSmgTUMpzI/MIFfSpF3haANe3G1bEBS9/9/QEqwTzwqFsKw==
@@ -7754,11 +7754,6 @@ date-fns@^2.30.0:
   dependencies:
     "@babel/runtime" "^7.21.0"
 
-date-fns@v2.0.0-alpha.25:
-  version "2.0.0-alpha.25"
-  resolved "https://registry.yarnpkg.com/date-fns/-/date-fns-2.0.0-alpha.25.tgz#651a5d1f59a01af6cf0371e39b2ae29df5d521ee"
-  integrity sha512-iQzJkHF0L4wah9Ae9PkvwemwFz6qmRLuNZcghmvf2t+ptLs1qXzONLiGtjmPQzL6+JpC01JjlTopY2AEy4NFAg==
-
 dayjs@^1.10.4, dayjs@^1.11.8:
   version "1.11.10"
   resolved "https://registry.yarnpkg.com/dayjs/-/dayjs-1.11.10.tgz#68acea85317a6e164457d6d6947564029a6a16a0"
@@ -8198,15 +8193,10 @@ dotenv@^10.0.0:
   resolved "https://registry.yarnpkg.com/dotenv/-/dotenv-10.0.0.tgz#3d4227b8fb95f81096cdd2b66653fb2c7085ba81"
   integrity sha512-rlBi9d8jpv9Sf1klPjNfFAuWDjKLwTIJJ/VxtoTwIR6hnZxcEOQCZg2oIL3MWBYw5GpUDKOEnND7LXTbIpQ03Q==
 
-dotenv@^16.0.0, dotenv@^16.0.1:
+dotenv@^16.0.0, dotenv@^16.0.1, dotenv@^16.3.1:
   version "16.3.1"
   resolved "https://registry.yarnpkg.com/dotenv/-/dotenv-16.3.1.tgz#369034de7d7e5b120972693352a3bf112172cc3e"
   integrity sha512-IPzF4w4/Rd94bA9imS68tZBaYyBWSCE47V1RGuMrB94iyTOIEwRmVL2x/4An+6mETpLrKJ5hQkB8W4kFAadeIQ==
-
-dotenv@^6.1.0:
-  version "6.2.0"
-  resolved "https://registry.yarnpkg.com/dotenv/-/dotenv-6.2.0.tgz#941c0410535d942c8becf28d3f357dbd9d476064"
-  integrity sha512-HygQCKUBSFl8wKQZBSemMywRWcEDNidvNbjGVyZu3nbZ8qq9ubiPoGLMdRDpfSrpkkm9BXYFkpKxxFX38o/76w==
 
 duplexer@^0.1.2:
   version "0.1.2"
@@ -8500,6 +8490,11 @@ es-to-primitive@^1.2.1:
     is-callable "^1.1.4"
     is-date-object "^1.0.1"
     is-symbol "^1.0.2"
+
+es6-promise@^4.2.8:
+  version "4.2.8"
+  resolved "https://registry.yarnpkg.com/es6-promise/-/es6-promise-4.2.8.tgz#4eb21594c972bc40553d276e510539143db53e0a"
+  integrity sha512-HJDGx5daxeIvxdBxvG2cb9g4tEvwIk3i8+nhX0yGrYmZUzbkdg8QbDevheDB8gd0//uPj4c1EQua8Q+MViT0/w==
 
 esbuild-plugin-alias@^0.2.1:
   version "0.2.1"
@@ -15161,17 +15156,18 @@ react-style-singleton@^2.2.1:
     invariant "^2.2.4"
     tslib "^2.0.0"
 
-react-tabulator@^0.9.6:
-  version "0.9.6"
-  resolved "https://registry.yarnpkg.com/react-tabulator/-/react-tabulator-0.9.6.tgz#a9db728382783f0e941fcad65233402cdcdfcf3e"
-  integrity sha512-zsZkpqeShv521UQBdx6arCnCt7CNBWZgsLlXZp6Vam7V/1LECgILzBrv0MlgBhW58kt2m560pDMAfrKV1esv0w==
+react-tabulator@^0.19.0:
+  version "0.19.0"
+  resolved "https://registry.yarnpkg.com/react-tabulator/-/react-tabulator-0.19.0.tgz#d1f3bb57dff2e03ede7782673e55f4b50843c55b"
+  integrity sha512-I9cHN9Iblnda2TBG9xLgWnQ3MW5GoZJLgy+Knjab28Zt+4UHeDc5eblLr8nypP8b2t7eFK9TRz9GVvwIxIRqpQ==
   dependencies:
+    "@types/babel__traverse" "^7.17.1"
     "@types/react-tag-autocomplete" "^5.6.0"
-    date-fns v2.0.0-alpha.25
-    dotenv "^6.1.0"
+    dotenv "^16.3.1"
+    es6-promise "^4.2.8"
     pick-react-known-prop "^0.1.5"
     react-tag-autocomplete "^5.7.1"
-    tabulator-tables "^4.4.1"
+    tabulator-tables "5.5.2"
 
 react-tag-autocomplete@^5.7.1:
   version "5.13.1"
@@ -16698,10 +16694,10 @@ synchronous-promise@^2.0.15:
   resolved "https://registry.yarnpkg.com/synchronous-promise/-/synchronous-promise-2.0.17.tgz#38901319632f946c982152586f2caf8ddc25c032"
   integrity sha512-AsS729u2RHUfEra9xJrE39peJcc2stq2+poBXX8bcM08Y6g9j/i/PUzwNQqkaJde7Ntg1TO7bSREbR5sdosQ+g==
 
-tabulator-tables@^4.4.1:
-  version "4.9.3"
-  resolved "https://registry.yarnpkg.com/tabulator-tables/-/tabulator-tables-4.9.3.tgz#89ea8f9bffc11ba9a789369b5165ac82da26f4f0"
-  integrity sha512-iwwQqAEGGxlgrBpcmJJvMJrfjGLcCXOB3AOb/DGkXqBy1YKoYA36hIl7qXGp6Jo8dSkzFAlDT6pKLZgyhs9OnQ==
+tabulator-tables@5.5.2, tabulator-tables@^5.5.2:
+  version "5.5.2"
+  resolved "https://registry.yarnpkg.com/tabulator-tables/-/tabulator-tables-5.5.2.tgz#2d0830363127e47bddbdda7725db5771a7f74095"
+  integrity sha512-GlzUPXeH9Rw1iPXcl3uBLJk6Sz51xdwscZ5RrsKxDQDQ+t2g31hGq/0xjaj6ea62wHgl8vzVsHuwap0jKzsUNg==
 
 tailwindcss@^3.0.2:
   version "3.3.3"

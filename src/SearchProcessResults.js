@@ -8,6 +8,7 @@ import SearchResultsMap from './SearchResultsMap.js';
 import Globals from './globals.js';
 
 import { ReactTabulator,reactFormatter } from 'react-tabulator';
+import Tabulator  from 'tabulator-tables';
 import 'react-tabulator/lib/styles.css'; // required styles
 import 'react-tabulator/lib/css/tabulator_site.min.css'; // theme
 
@@ -293,11 +294,7 @@ export default class SearchProcessResults extends React.Component {
                                 exportToSpreadsheet={this.props.exportToSpreadsheet}
                             />
                             
-                            {/* {this.props.searching ? <>Please wait...</> : <></>} */}
-                            <Typography>
-                                # of Results: {this.props.results}
-                            </Typography>
-                            <ReactTabulator
+                            <Tabulator
                                 ref={ref => (this.ref = ref)}
                                 data={this.props.results}
                                 columns={this._columns}
