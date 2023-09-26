@@ -7,7 +7,7 @@ import theme from './styles/theme';
 import Main from './Main.js';
 
 import * as serviceWorker from './serviceWorker';
-import { MuiThemeProvider } from '@material-ui/core';
+import { ThemeProvider } from '@material-ui/core';
 import * as Sentry from '@sentry/browser';
 Sentry.init({
     dsn: "https://de8e659cc5086223380e30e385e62907@o4505920810778624.ingest.sentry.io/4505920813400064",
@@ -27,9 +27,9 @@ Sentry.init({
 
 ReactDOM.render(
     <BrowserRouter>
-        <MuiThemeProvider theme={theme}>
+        <ThemeProvider theme={theme}>
         <Main />
-        </MuiThemeProvider>
+        </ThemeProvider>
     </BrowserRouter>
     , document.getElementById('root')
 );
