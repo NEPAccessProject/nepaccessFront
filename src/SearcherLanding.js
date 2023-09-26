@@ -150,8 +150,6 @@ class SearcherLanding extends React.Component {
                 <Grid
                     item
                     xs={12}
-                    border={2}
-                    borderColor={'#DDD'}
                     md={12}
                     borderLeft={0}
                     marginTop={2}
