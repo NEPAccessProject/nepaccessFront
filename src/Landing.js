@@ -1,6 +1,6 @@
 import React from 'react';
 
-import {Helmet} from 'react-helmet';
+import { Helmet } from 'react-helmet';
 
 import './index.css';
 import './landing.css';
@@ -9,7 +9,7 @@ import SearcherLanding from './SearcherLanding.js';
 import './User/login.css';
 import MediaQuery from 'react-responsive';
 import IframeResizer from 'iframe-resizer-react';
-
+import CalloutContainer from './CalloutContainer';
 class Landing extends React.Component {
 
     constructor(props) {
@@ -22,19 +22,18 @@ class Landing extends React.Component {
         this.handleClick = this.handleClick.bind(this);
     }
 
-    handleChange(inputId, inputValue){
+    handleChange(inputId, inputValue) {
         this.setState({ [inputId]: inputValue });
     }
 
-    handleClick(id, val){
-      this.setState({ [id]: val }, () =>
-        {
-          this.props.history.push('search?q='+this.state.rawInput);
+    handleClick(id, val) {
+        this.setState({ [id]: val }, () => {
+            this.props.history.push('search?q=' + this.state.rawInput);
         });
     }
 
 
-    render(){
+    render() {
         return (
             <div id="landing">
                 <Helmet>
@@ -44,9 +43,10 @@ class Landing extends React.Component {
                     <link rel="canonical" href="https://nepaccess.org/" />
                 </Helmet>
 
-                <MediaQuery minWidth={768}>
+                <MediaQuery minWidth={1024}>
                     <div id="landing-images">
                         <div id="headline" className="no-select cursor-default">
+                        {window.innerHeight} - {window.innerWidth}
                             <div id="landing-headline-container">
                                 <h1 id="landing-headline-left">
                                     <span className="glow">
@@ -59,23 +59,27 @@ class Landing extends React.Component {
                                     </span>
                                 </h2>
                             </div>
-                
-                            <SearcherLanding 
-                                id="rawInput"
-                                onChange={this.handleChange}
-                                onClick={this.handleClick}
-                                value={this.state.rawInput}
-                            />
                         </div>
                     </div>
                 </MediaQuery>
+                <MediaQuery maxWidth={1024}>
+                width: {window.innerWidth} - height: {window.innerHeight} 
+                    <SearcherLanding
+                        id="rawInput"
+                        onChange={this.handleChange}
+                        onClick={this.handleClick}
+                        value={this.state.rawInput} />
+                </MediaQuery>
+                <CalloutContainer />
+                width: {window.innerWidth} - height: {window.innerHeight} 
 
                 <IframeResizer
-                    // log
+                    log={true}
                     data-nosnippet
+                    checkOrigin={false}
                     id="iframe-landing-container"
                     src="https://about.nepaccess.org/"
-                    style={{ width: '1px', minWidth: '100%'}}
+                    style={{ width: '1px', minWidth: '100%' }}
                 />
             </div>
         );
