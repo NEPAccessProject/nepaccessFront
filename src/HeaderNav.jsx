@@ -174,6 +174,7 @@ const useStyles = makeStyles((theme) => ({
   accountNavLink: {
     fontFamily: 'Open Sans',
     fontSize: '0.7em',
+    paddingLeft:2,
     "&:hover": {
       textDecoration: 'underline',
       cursor: 'pointer'
@@ -183,7 +184,7 @@ const useStyles = makeStyles((theme) => ({
     display: 'flex',
     paddingRight: 4,
     maxWidth: '55px',
-    justifyContent: 'flex-end', //horizontal aligmnent
+    justifyContent: 'center', //horizontal aligmnent
     alignItems: 'center', //verical aligment
     alignContent: '',
     borderRight: '2px solid black'
@@ -364,12 +365,14 @@ export default function HeaderNav(props) {
               style={{
                 display: 'flex',
                 justifyContent: 'flex-end',
+                alignContent: 'center',
+                alignItems: 'center',
               }} 
             >
 
               <IconButton
                 id="mobile-icon-button"
-                size="medium"
+                size="large"
                 edge="end"
                 aria-label="menu"
                 style={{
