@@ -143,6 +143,11 @@ class Search extends React.Component {
 		this.myRef = React.createRef();
 	}
 
+  	handleChange(inputId, inputValue) {
+		  console.log(`SearchLanding - Line 27 - HandleChanger() inputId: ${inputId} - inputValue: ${inputValue}`)
+		  this.setState({ [inputId]: inputValue });
+	  }
+
 	doSearch = (terms) => {
 		this._lastSearchTerms = terms;
 		this.setState(
@@ -312,6 +317,7 @@ class Search extends React.Component {
 	};
 
 	onInput = (evt) => {
+//		console.log(`file: Search.js:320 ~ OnInput  ~ evt target name: ${evt.target.name} - value: ${evt.target.value}`, evt);
 		let userInput = evt.target.value;
 
 		let proximityValues = this.handleProximityValues(userInput);
@@ -325,7 +331,7 @@ class Search extends React.Component {
 				inputMessage: proximityValues._inputMessage,
 			},
 			() => {
-				// auto-searching is currently too expensive until asynchronous results
+  			// auto-searching is currently too expensive until asynchronous results
 				// this.debouncedSearch(this.state);
 				// autocomplete/suggest/other functionality fires, starting here
 				// TODO: May want to take out any special characters that never appear in titles or are otherwise unnecessary
@@ -389,6 +395,7 @@ class Search extends React.Component {
 	};
 
 	onAgencyChange = (evt) => {
+		console.log(`file: Search.js:398 ~ Search ~ evt:`, evt);
 		var agencyLabels = [];
 		for (var i = 0; i < evt.length; i++) {
 			agencyLabels.push(evt[i].label.replace(/ \([A-Z]*\)/gi, ""));
@@ -834,6 +841,9 @@ class Search extends React.Component {
 											<ResultsHeader 
                         handleProximityValues={this.handleProximityValues}
                         onInput={this.onInput}
+                        onKeyUp={this.onKeyUp}
+                        onKeyDown={this.onKeyDown}
+                        onIconClick={this.onIconClick}
                         titleRaw= {this.state.titleRaw}
 												results={this.state.results}
 												total={this.state.total}
