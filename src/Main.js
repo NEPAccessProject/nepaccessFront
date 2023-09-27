@@ -1,5 +1,5 @@
 import React from 'react';
-import {Helmet} from 'react-helmet';
+import { Helmet } from 'react-helmet';
 import axios from 'axios';
 
 import './index.css';
@@ -53,7 +53,7 @@ import Pairs from './Pairs.js';
 import Pairs2 from './Pairs2';
 import Pairs3 from './Pairs3';
 
-//import SearchLogs from './SearchLogs.js';
+import SearchLogs from './search/SearchLogs.js';
 import Surveys from './Surveys.js';
 
 import Excel from './Excel.js';
@@ -67,22 +67,23 @@ import HeaderNav from './HeaderNav';
 import { Link, Switch, Route, withRouter } from 'react-router-dom';
 
 import PropTypes from "prop-types";
+//import ResponsiveMenu from './examples/ResponsiveMenu';
 import ImporterAlignment from './ImporterAlignment';
 import {
-    AppBar,
-    Toolbar,
-    Typography,
-    makeStyles,
-    Button,
-    IconButton,
-    Drawer,
-    MenuItem,
-    Paper,
-    Box,
-    Container,
-    Divider,
-    Grid,
-    useMediaQuery,
+  AppBar,
+  Toolbar,
+  Typography,
+  makeStyles,
+  Button,
+  IconButton,
+  Drawer,
+  MenuItem,
+  Paper,
+  Box,
+  Container,
+  Divider,
+  Grid,
+  useMediaQuery,
 } from '@material-ui/core';
 import MenuIcon from '@material-ui/icons/Menu';
 import ThemePreview from './examples/ThemePreview';
@@ -90,300 +91,299 @@ import ThemePreview from './examples/ThemePreview';
 const _ = require('lodash');
 
 class Main extends React.Component {
-    
-    static propTypes = {
-        location: PropTypes.object.isRequired
-    }
 
-    constructor(props){
-        super(props);
+  static propTypes = {
+    location: PropTypes.object.isRequired
+  }
 
-        this.state = {
-            displayUsername: '',
-            loggedIn: false,
-            loggedInDisplay: 'display-none',
-            loggedOutDisplay: '',
-            loaderClass: 'loadDefault',
-            role: null,
-            currentPage: "",
-            anonymous: false,
-            headerLandingCss: ""
-        };
+  constructor(props) {
+    super(props);
 
-        this.refresh = this.refresh.bind(this);
-        this.refreshNav = this.refreshNav.bind(this);
-        this.getRoleDebounced = _.debounce(this.getRole, 500);
-        Globals.setUp();
+    this.state = {
+      displayUsername: '',
+      loggedIn: false,
+      loggedInDisplay: 'display-none',
+      loggedOutDisplay: '',
+      loaderClass: 'loadDefault',
+      role: null,
+      currentPage: "",
+      anonymous: false,
+      headerLandingCss: ""
+    };
 
-        window.addEventListener("scroll", this.handleScroll);
-    }
+    this.refresh = this.refresh.bind(this);
+    this.refreshNav = this.refreshNav.bind(this);
+    this.getRoleDebounced = _.debounce(this.getRole, 500);
+    Globals.setUp();
 
-    /** This effectively replaces the original purpose of check(), especially with anonymous user support */
-    getRole = () => {
+    window.addEventListener("scroll", this.handleScroll);
+  }
 
-        const checkURL = new URL('user/get_role', Globals.currentHost);
-        axios.post(checkURL)
-        .then(response => {
-            const verified = response && response.status === 200;
-            if(verified) {
-                localStorage.role = response.data.toLowerCase();
-                this.setState({ role: response.data.toLowerCase(), loggedIn: true, anonymous: false }, () => {
-                    this.refreshNav();
-                });
-            } else {
-                localStorage.clear();
-                this.setState({ role: undefined, loggedIn: false, anonymous: true });
-            }
-        })
-        .catch((err) => { // Token expired or invalid, or server is down
-            console.log(err);
-            if(err.message === "Network Error") {
-                // do nothing
-            } else { // token problem
-                localStorage.clear();
-                this.setState({ role: undefined, loggedIn: false, anonymous: true });
-            }
-        });
-    }
+  /** This effectively replaces the original purpose of check(), especially with anonymous user support */
+  getRole = () => {
 
-
-    check = () => { // check if logged in (JWT is valid and not expired)
-        // let verified = false;
-        // let checkURL = new URL('test/check', Globals.currentHost);
-        
-        // axios.post(checkURL)
-        // .then(response => {
-        //     verified = response && response.status === 200;
-        //     this.setState({
-        //         loggedIn: verified
-        //     }, () => {
-                this.getRoleDebounced();
-                // this.refreshNav();
-        //     });
-        // })
-        // .catch((err) => { // Token expired or invalid, or server is down
-
-        //     localStorage.removeItem("role");
-        //     this.setState({
-        //         loggedIn: false,
-        //         role: null
-        //     });
-        // });
-        // console.log("Main check");
-        
-    }
-
-    // refresh() has a global listener so as to change the loggedIn state and then update the navbar
-    // as needed, from child components
-    refresh(verified) { 
-        this.setState({
-            loggedIn: verified.loggedIn
-        }, () => {
-            this.getRoleDebounced();
+    const checkURL = new URL('user/get_role', Globals.currentHost);
+    axios.post(checkURL)
+      .then(response => {
+        const verified = response && response.status === 200;
+        if (verified) {
+          localStorage.role = response.data.toLowerCase();
+          this.setState({ role: response.data.toLowerCase(), loggedIn: true, anonymous: false }, () => {
             this.refreshNav();
-        });
-    }
-
-    refreshNav() {
-        this.setState({
-            loggedOutDisplay: 'display-none',
-            loggedInDisplay: 'display-none'
-        });
-        if(this.state.loggedIn){
-            // console.log("Logout etc. displaying");
-            this.setState({
-                loggedInDisplay: '',
-            });
+          });
         } else {
-            // console.log("Login button displaying");
-            this.setState({
-                loggedOutDisplay: '',
-                role: null
-            });
+          localStorage.clear();
+          this.setState({ role: undefined, loggedIn: false, anonymous: true });
         }
-        
-        if(localStorage.username){
-            this.setState({
-                displayUsername: localStorage.username
-            });
+      })
+      .catch((err) => { // Token expired or invalid, or server is down
+        console.log(err);
+        if (err.message === "Network Error") {
+          // do nothing
+        } else { // token problem
+          localStorage.clear();
+          this.setState({ role: undefined, loggedIn: false, anonymous: true });
         }
+      });
+  }
+
+
+  check = () => { // check if logged in (JWT is valid and not expired)
+    // let verified = false;
+    // let checkURL = new URL('test/check', Globals.currentHost);
+
+    // axios.post(checkURL)
+    // .then(response => {
+    //     verified = response && response.status === 200;
+    //     this.setState({
+    //         loggedIn: verified
+    //     }, () => {
+    this.getRoleDebounced();
+    // this.refreshNav();
+    //     });
+    // })
+    // .catch((err) => { // Token expired or invalid, or server is down
+
+    //     localStorage.removeItem("role");
+    //     this.setState({
+    //         loggedIn: false,
+    //         role: null
+    //     });
+    // });
+    // console.log("Main check");
+
+  }
+
+  // refresh() has a global listener so as to change the loggedIn state and then update the navbar
+  // as needed, from child components
+  refresh(verified) {
+    this.setState({
+      loggedIn: verified.loggedIn
+    }, () => {
+      this.getRoleDebounced();
+      this.refreshNav();
+    });
+  }
+
+  refreshNav() {
+    this.setState({
+      loggedOutDisplay: 'display-none',
+      loggedInDisplay: 'display-none'
+    });
+    if (this.state.loggedIn) {
+      // console.log("Logout etc. displaying");
+      this.setState({
+        loggedInDisplay: '',
+      });
+    } else {
+      // console.log("Login button displaying");
+      this.setState({
+        loggedOutDisplay: '',
+        role: null
+      });
     }
 
-
-    componentDidUpdate(prevProps) {
-        // console.log("Main update");
-        if (this.props.location !== prevProps.location) {
-            this.onRouteChanged();
-        }
+    if (localStorage.username) {
+      this.setState({
+        displayUsername: localStorage.username
+      });
     }
-    onRouteChanged() {
-        console.log("Route changed",this.props.location.pathname,'PROPS:',this.props);
-        this.setState({
-            currentPage: this.props.location.pathname
-        });
+  }
+
+
+  componentDidUpdate(prevProps) {
+    // console.log("Main update");
+    if (this.props.location !== prevProps.location) {
+      this.onRouteChanged();
     }
+  }
+  onRouteChanged() {
+    console.log("Route changed", this.props.location.pathname, 'PROPS:', this.props);
+    this.setState({
+      currentPage: this.props.location.pathname
+    });
+  }
 
-    getHeaderCss = () => {
-        let headerCss = "no-select";
-        if(!this.state.currentPage || this.state.currentPage === '/') {
-            headerCss += " landing-header";
-        }
-        return headerCss;
+  getHeaderCss = () => {
+    let headerCss = "no-select";
+    if (!this.state.currentPage || this.state.currentPage === '/') {
+      headerCss += " landing-header";
     }
-    handleScroll = (e) => {
-        // For landing only
-        if(this.state.currentPage && this.state.currentPage === '/') {
-            let landingStyle = "";
+    return headerCss;
+  }
+  handleScroll = (e) => {
+    // For landing only
+    if (this.state.currentPage && this.state.currentPage === '/') {
+      let landingStyle = "";
 
-            const position = window.pageYOffset;
+      const position = window.pageYOffset;
 
-            if (position > 100) {
-                // console.log("Transition header background", position);
-                landingStyle = " transition";
-            }
+      if (position > 100) {
+        // console.log("Transition header background", position);
+        landingStyle = " transition";
+      }
 
-            this.setState({
-                headerLandingCss: landingStyle
-            });
-        }
+      this.setState({
+        headerLandingCss: landingStyle
+      });
     }
+  }
 
 
-    render() {
-        return (
-        <div id="home-page">
-            <Helmet>
-                <meta charSet="utf-8" />
-                <title>NEPAccess</title>
-                <meta name="description" content="Bringing NEPA into the 21st Century through the power of data science. Find and engage with data from thousands of environmental review documents." />
-                <link rel="canonical" href="https://www.nepaccess.org/" />
-            </Helmet>
+  render() {
+    return (
+      <div id="home-page">
+        <Helmet>
+          <meta charSet="utf-8" />
+          <title>NEPAccess</title>
+          <meta name="description" content="Bringing NEPA into the 21st Century through the power of data science. Find and engage with data from thousands of environmental review documents." />
+          <link rel="canonical" href="https://www.nepaccess.org/" />
+        </Helmet>
 
-            <div 
-                id="header-root" 
-                style={{}} 
-                //className={this.getHeaderCss() + this.state.headerLandingCss}
-            >
-                <HeaderNav 
-                loggedInDisplay={this.loggedInDisplay}
-                loggedOutDisplay={this.loggedOutDisplay}
-                showMenuItems={this.showMenuItems}
-                role={this.state.role}
-                />               
-            </div>
-            <Switch>
-                <Route path="/profile" component={UserDetails}/>
-                {/* <Route path="/opt_out" component={OptOut}/> */}
-                <Route path="/login" component={Login}/>
-                <Route path="/register" component={Register}/>
-                <Route path="/pre_register" component={PreRegister}/>
-                <Route path="/forgotPassword" component={ForgotPassword}/>
-                <Route path="/reset" component={Reset}/>
-                <Route path="/logout" component={Logout}/>
-
-                <Route path="/search" component={App}/>
-                <Route path="/about-nepa" component={AboutNepa}/>
-                <Route path="/about-nepaccess" component={AboutNepaccess}/>
-                <Route path="/people" component={People}/>
-                <Route path="/search-tips" component={SearchTips}/>
-                <Route path="/available-documents" component={AvailableDocuments}/>
-                <Route path="/abouthelpcontents" component={AboutHelpContents}/>
-                <Route path="/stats" component={AboutStats}/>
-                <Route path="/media" component={Media}/>
-
-                <Route path="/contact" component={Contact}/>
-                <Route path="/future" component={Future}/>
-
-                <Route path="/record-details" component={RecordDetailsTab}/>
-                <Route path="/process-details" component={ProcessDetailsTab}/>
-                
-                <Route path="/importer" component={Importer}/>
-                <Route path="/adminFiles" component={AdminFiles}/>
-
-                <Route path="/iframes" component={Iframes} />
-                <Route path="/privacy-policy" component={PrivacyPolicy} />
-                <Route path="/disclaimer-terms-of-use" component={DisclaimerTermsOfUse} />
-                <Route path="/verify" component={Verify} />
-                <Route path="/approve" component={Approve} />
-                <Route path="/admin" component={Admin} />
-                <Route path="/pairs" component={Pairs}></Route>
-                <Route path="/pairs2" component={Pairs2}></Route>
-                <Route path="/pairs3" component={Pairs3}></Route>
-                {/* <Route path="/search_logs" component={SearchLogs}></Route> */}
-                <Route path="/interaction_logs" component={InteractionLogs}></Route>
-                <Route path="/stat_counts" component={StatCounts}></Route>
-                <Route path="/surveys" component={Surveys}></Route>
-                <Route path="/excel" component={Excel}></Route>
-                
-                <Route path="/test" component={Test} />
-                <Route path="/search_test" component={SearchTest} />
-                <Route path="/up_geo" component={ImporterGeo} />
-                <Route path="/up_geo_links" component={ImporterGeoLinks} />
-                <Route path="/up_alignment" component={ImporterAlignment} />
-                    {/* <Route path="/menu" component={ResponsiveMenu} /> */}
-                    <Route path="/theme" component={ThemePreview} />
-                <Route path="/" component={Landing}/>
-            </Switch>
+        <div
+          id="header-root"
+          style={{}}
+        //className={this.getHeaderCss() + this.state.headerLandingCss}
+        >
+          <HeaderNav
+            loggedInDisplay={this.loggedInDisplay}
+            loggedOutDisplay={this.loggedOutDisplay}
+            showMenuItems={this.showMenuItems}
+            role={this.state.role}
+          />
         </div>
-        )
+        <Switch>
+          <Route path="/profile" component={UserDetails} />
+          {/* <Route path="/opt_out" component={OptOut}/> */}
+          <Route path="/login" component={Login} />
+          <Route path="/register" component={Register} />
+          <Route path="/pre_register" component={PreRegister} />
+          <Route path="/forgotPassword" component={ForgotPassword} />
+          <Route path="/reset" component={Reset} />
+          <Route path="/logout" component={Logout} />
+
+          <Route path="/search" component={App} />
+          <Route path="/about-nepa" component={AboutNepa} />
+          <Route path="/about-nepaccess" component={AboutNepaccess} />
+          <Route path="/people" component={People} />
+          <Route path="/search-tips" component={SearchTips} />
+          <Route path="/available-documents" component={AvailableDocuments} />
+          <Route path="/abouthelpcontents" component={AboutHelpContents} />
+          <Route path="/stats" component={AboutStats} />
+          <Route path="/media" component={Media} />
+
+          <Route path="/contact" component={Contact} />
+          <Route path="/future" component={Future} />
+
+          <Route path="/record-details" component={RecordDetailsTab} />
+          <Route path="/process-details" component={ProcessDetailsTab} />
+
+          <Route path="/importer" component={Importer} />
+          <Route path="/adminFiles" component={AdminFiles} />
+
+          <Route path="/iframes" component={Iframes} />
+          <Route path="/privacy-policy" component={PrivacyPolicy} />
+          <Route path="/disclaimer-terms-of-use" component={DisclaimerTermsOfUse} />
+          <Route path="/verify" component={Verify} />
+          <Route path="/approve" component={Approve} />
+          <Route path="/admin" component={Admin} />
+          <Route path="/pairs" component={Pairs}></Route>
+          <Route path="/pairs2" component={Pairs2}></Route>
+          <Route path="/pairs3" component={Pairs3}></Route>
+          <Route path="/search_logs" component={SearchLogs}></Route>
+          <Route path="/interaction_logs" component={InteractionLogs}></Route>
+          <Route path="/stat_counts" component={StatCounts}></Route>
+          <Route path="/surveys" component={Surveys}></Route>
+          <Route path="/excel" component={Excel}></Route>
+
+          <Route path="/test" component={Test} />
+          <Route path="/search_test" component={SearchTest} />
+          <Route path="/up_geo" component={ImporterGeo} />
+          <Route path="/up_geo_links" component={ImporterGeoLinks} />
+          <Route path="/up_alignment" component={ImporterAlignment} />
+          <Route path="/theme" component={ThemePreview} />
+          <Route path="/" component={Landing} />
+        </Switch>
+      </div>
+    )
+  }
+
+  showMenuItems = () => {
+    console.log(`showMenuItems role: ${this.state.role} logged In Displayed: ${this.state.loggedInDisplay}`);
+    return (
+      <span id="admin-span" hidden={(!this.state.role || this.state.role === 'user')} className={this.state.loggedInDisplay + " right-nav-item logged-in"}>
+
+        <div id="admin-dropdown" className="main-menu-link dropdown">
+          <Link id="admin-button" className="main-menu-link drop-button" to="/importer">
+            Admin
+          </Link>
+          <i className="fa fa-caret-down"></i>
+          <div className="dropdown-content">
+            <Link to="/admin" hidden={!(this.state.role === 'admin')}>Admin Panel</Link>
+            <Link to="/importer" hidden={!(this.state.role === 'curator' || this.state.role === 'admin')}>Import New Documents</Link>
+            <Link to="/adminFiles" hidden={!(this.state.role === 'curator' || this.state.role === 'admin')}>Find Missing Files</Link>
+            <Link to="/approve">Approve Users</Link>
+            <Link to="/pre_register">Pre-Register Users</Link>
+            <Link to="/interaction_logs">Interaction Logs</Link>
+            <Link to="/search_logs">Search Logs</Link>
+            <Link to="/abouthelpcontents">Database Contents</Link>
+            <Link to="/stats">Content Statistics</Link>
+            <Link to="/stat_counts">Stat Counts</Link>
+            <Link to="/surveys">Surveys</Link>
+          </div>
+        </div>
+
+      </span>
+    );
+  }
+
+
+
+  componentDidMount() {
+    // Role config allows admin menu and options to work properly
+    if (!this.state.role) {
+      if (localStorage.role) {
+        this.setState({ role: localStorage.role });
+      } else if (this.state.anonymous) {
+      } else {
+        this.getRoleDebounced();
+      }
     }
 
-    showMenuItems = () => {
-        console.log(`showMenuItems role: ${this.state.role} logged In Displayed: ${this.state.loggedInDisplay}`);
-        return (
-            <span id="admin-span" hidden={(!this.state.role || this.state.role === 'user')} className={this.state.loggedInDisplay + " right-nav-item logged-in"}>
-                
-                <div id="admin-dropdown" className="main-menu-link dropdown">
-                    <Link id="admin-button" className="main-menu-link drop-button" to="/importer">
-                        Admin
-                    </Link>
-                    <i className="fa fa-caret-down"></i>
-                    <div className="dropdown-content">
-                        <Link to="/admin" hidden={!(this.state.role === 'admin')}>Admin Panel</Link>
-                        <Link to="/importer" hidden={!(this.state.role === 'curator' || this.state.role === 'admin')}>Import New Documents</Link>
-                        <Link to="/adminFiles" hidden={!(this.state.role === 'curator' || this.state.role === 'admin')}>Find Missing Files</Link>
-                        <Link to="/approve">Approve Users</Link>
-                        <Link to="/pre_register">Pre-Register Users</Link>
-                        <Link to="/interaction_logs">Interaction Logs</Link>
-                        <Link to="/search_logs">Search Logs</Link>
-                        <Link to="/abouthelpcontents">Database Contents</Link>
-                        <Link to="/stats">Content Statistics</Link>
-                        <Link to="/stat_counts">Stat Counts</Link>
-                        <Link to="/surveys">Surveys</Link>
-                    </div>
-                </div>
+    Globals.registerListener('refresh', this.refresh);
+    this.setState({
+      currentPage: window.location.pathname
+    });
+    this.check();
 
-            </span>
-        );
-    }
+    // if(navigator.userAgent.toLowerCase ().match (/mobile/i)) {
+    //     console.log("Mobile device");
+    // }
+  }
 
-    
-    
-    componentDidMount() {
-        // Role config allows admin menu and options to work properly
-        if(!this.state.role) {
-            if(localStorage.role) {
-                this.setState({ role: localStorage.role });
-            } else if(this.state.anonymous) {
-            } else {
-                this.getRoleDebounced();
-            }
-        }
-
-        Globals.registerListener('refresh', this.refresh);
-        this.setState({
-            currentPage: window.location.pathname
-        });
-        this.check();
-
-        // if(navigator.userAgent.toLowerCase ().match (/mobile/i)) {
-        //     console.log("Mobile device");
-        // }
-    }
-
-    componentWillUnmount() {
-        window.removeEventListener("scroll", this.handleScroll);
-    }
+  componentWillUnmount() {
+    window.removeEventListener("scroll", this.handleScroll);
+  }
 }
 
 export default withRouter(Main);
