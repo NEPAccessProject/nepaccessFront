@@ -9,6 +9,7 @@ import 'react-tabulator/lib/css/tabulator_site.min.css'; // theme
 import 'react-tabulator/lib/styles.css'; // required styles
 
 import '../card.css';
+import { Typography } from '@mui/material';
 
 // const _ = require('lodash');
 
@@ -241,6 +242,7 @@ class SearchResults extends React.Component {
                                 // page={this.state.page}
                             />
                             {/* <button className="link margin" onClick={() => this.onClearFiltersClick()}>Clear filters</button> */}
+                            <Typography variant="h2">{this.props.results.length} Results found for '{titleRaw}'</Typography>
                             <ReactTabulator
                                 ref={this.my_table}
                                 data={[]}
