@@ -1,5 +1,6 @@
 import {
 	Button,
+  Box,
 	CircularProgress,
 	Divider,
 	Grid,
@@ -128,9 +129,9 @@ function FileList(props) {
 		<List id='available-files-list'>
 			{files.map((file: IFile) => {
 				return (
-					<ListItem>
+					<ListItem key={file.id}>
 						{file.filenames.map((filename: string) => {
-							return <Button>{currentFile.filename === filename ? `${filename} - **` : filename }</Button>;
+							return <Box key={filename}><Button>{currentFile.filename === filename ? `${filename} - **` : filename }</Button></Box>;
 						})}
 						<Button>{file.title}</Button>
 					</ListItem>
