@@ -1750,7 +1750,6 @@ export default class App extends React.Component {
                     href="https://www.nepaccess.org/search"
                   />
                 </Helmet>
-                <Typography varian='h4'>Themed?</Typography>
                 <Search
                   results={this.state.outputResults}
                   searchResults={this.state.searchResults}
