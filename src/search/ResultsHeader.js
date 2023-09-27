@@ -26,7 +26,7 @@ export default class ResultsHeader extends React.Component {
 
   constructor(props) {
     super(props);
-    const {onInput,handleProximityValues,state,results,titleRaw} = props;
+    const { onInput, handleProximityValues, state, results, titleRaw } = props;
     console.log("🚀 ~ file: ResultsHeader.js:30 ~ ResultsHeader ~ constructor ~ props:", props)
 
     this.state = {
@@ -35,7 +35,7 @@ export default class ResultsHeader extends React.Component {
     };
   }
 
-  
+
   toggleSearchTipsDialog = (evt) => {
     console.log(
       "🚀 ~ file: ResultsHeader.js:22 ~ toggleSearchTipsDialog ~ evt:",
@@ -109,7 +109,7 @@ export default class ResultsHeader extends React.Component {
     this.setState({
       ...this.state,
       state,
-    },() => {
+    }, () => {
       console.log('Result Header state', this.state)
     });
     // this.setState = this.context
@@ -157,7 +157,7 @@ export default class ResultsHeader extends React.Component {
               item
               xs={12}
               border={0}
-//              borderColor={"#DDD"}
+              //              borderColor={"#DDD"}
               md={12}
               borderLeft={0}
               marginTop={2}
@@ -182,7 +182,6 @@ export default class ResultsHeader extends React.Component {
                 marginLeft={0}
                 marginRight={0}
               >
-                {" "}
                 <TextField
                   fullWidth
                   backgroundColor={"white"}
@@ -190,18 +189,18 @@ export default class ResultsHeader extends React.Component {
                   name="titleRaw"
                   variant="outlined"
                   focused
-                  onInput={(evt)=>this.onInput(evt)}
+                  onInput={(evt) => this.props.onInput(evt)}
                   // onKeyUp={onKeyUp}
                   // onKeyDown={onKeyDown}
                   placeholder="Search for NEPA documents"
-                  value={this.state.titleRaw ? this.state.titleRaw : ""}
+                  value={this.props.titleRaw ? this.props.titleRaw : ""}
                   autoFocus
                   InputProps={{
                     endAdornment: (
                       <IconButton
                         name="titleRaw"
-                        value={this.state.titleRaw ? this.state.titleRaw : ""}
-                        onClick={this.onIconClick}
+                        value={this.props.titleRaw ? this.props.titleRaw : ""}
+                        onClick={this.props.onIconClick}
                       >
                         <SearchOutlined />
                       </IconButton>
