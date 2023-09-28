@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import React, { useEffect, useRef, useState } from 'react';
 
 import { Box, Grid, Paper, Typography, Pagination, TablePagination } from '@mui/material';
@@ -7,7 +8,7 @@ import theme from '../../styles/theme';
 import { makeStyles } from '@mui/styles';
 import SearchResultItems from './SearchResultsItems';
 import SearchTips from './SearchTips';
-
+import SearchContext from './SearchContext';
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
   ...theme.typography.body2,
@@ -79,6 +80,8 @@ const SearchResults = (props) => {
   console.log("🚀 ~ file: SearchResults.jsx:75 ~ SearchResults ~ records:", records)
   const [sortedResults, setSortedResults] = useState([]);
   const _mounted = useRef(false);
+  const ctx = React.useContext(SearchContext);
+  console.log('STATE ??? CTX TITLE RAW',ctx.titleRaw,'CTX:',ctx)
   useEffect(() => {
     _mounted.current = true;
   }, () => {
@@ -115,9 +118,6 @@ const SearchResults = (props) => {
     <Paper id="search-results-root" container={5} sx={{
       border: 2,
     }}>
-      <Typography variant="searchResultSubTitle" padding={2}>
-        Search Result Group
-      </Typography>
       <Pagination
         shape='rounded'
         boundaryCount={2}
@@ -132,15 +132,12 @@ const SearchResults = (props) => {
       {results && results.length ? (
         results.map((result, index) => {
           return (
-              <Paper elevation={10}>
-                <Typography variant="h2" padding={2}>
-                  {/* {(result.records && result.records[0].title) &&
-                <a href="#">{result.records[0].title} - {result.records[0].id}</a>
-              } */}
-                </Typography>
+              <Paper key={result.id} elevation={10}>
+                <Typography>{results.length} - {ctx.state.titleRaw}</Typography>
+               
                 <Box sx={{ margin: 5 }}>
-
-                  <SearchResultCards result={result} />
+{/* 
+                  <SearchResultCards result={result} /> */}
                   <SearchResultItems result={result} />
                 </Box>
               </Paper>
@@ -152,6 +149,19 @@ const SearchResults = (props) => {
             </Paper>
   );
 }
+SearchResults.propTypes = {
+  results: PropTypes.arrayOf(
+    PropTypes.shape({
+      id: PropTypes.string.isRequired,
+      title: PropTypes.string,
+      processId: PropTypes.number.isRequired,
+      decisionType: PropTypes.string.isRequired,
+      filename: PropTypes.string.isRequired,
+      folder: PropTypes.string.isRequired,
+  })),
+};
+const { results } = props;
+const { records, docs } = results;
       export default React.memo(SearchResults);
  
       //useMemo(()=>SearchResults,[results]);
@@ -282,4 +292,15 @@ const SearchResults = (props) => {
       )} */}
       </Grid>
       );
+}
+//[TODO] abstract to reusable type since many components use similar shapes
+SearchResultCards.propTypes = {
+  result : PropTypes.shape({
+    id: PropTypes.string.isRequired,
+    title: PropTypes.string,
+    processId: PropTypes.number.isRequired,
+    decisionType: PropTypes.string.isRequired,
+    filename: PropTypes.string.isRequired,
+    folder: PropTypes.string.isRequired,
+})
 }
