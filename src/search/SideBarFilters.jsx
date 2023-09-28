@@ -21,10 +21,10 @@ import SearchDatePickers from "./SearchDatePickers";
 import {
   actionOptions,
   agencyOptions,
-  decisionOptions
+  decisionOptions,
+  countyOptions,
 } from "./options";
 const stateOptions = Globals.locations;
-const countyOptions = Globals.counties;
 
 const Item = styled(Box)(({ theme }) => ({
   backgroundColor: theme.palette.mode === "dark" ? "#1A2027" : "#fff",
@@ -50,6 +50,8 @@ const Item = styled(Box)(({ theme }) => ({
 
 const SideBarFilters = (props) => {
   const { state, setState } = useContext(SearchContext);
+  console.log(`🚀 ~ file: SideBarFilters.jsx:53 ~ SideBarFilters ~ CONTEXT state:`, state);
+
   const {
     filtersHidden,
     onActionChange,
@@ -130,20 +132,38 @@ const SideBarFilters = (props) => {
                     name="agency"
                     fullWidth
                     autoComplete={true}
-                    // autoHighlight={true}
-                    tabIndex={11}
+                    autoHighlight={true}
+                    tabIndex={3}
                     className={"classes.autocomplete"}
                     options={agencyOptions}
                     disablePortal={true}
-                    // value={searchState.agencyRaw}
+                    value={state.agencyRaw}
+                    disablePortal={true}
+
+                    //groupBy={(option) => option.label}
                     variant="standard"
+                    // filterOptions={(options, state) => {
+                    //   console.log(`🚀 ~ file: SideBarFilters.jsx:144 ~ SideBarFilters ~ options, state:`, options, state);
+
+                    //   const displayOptions = options.filter((option) =>
+                    //     option.label
+                    //       .toLowerCase()
+                    //       .trim()
+                    //       .includes((state.value ? state.value.toLowerCase().trim() : '')
+                    //   ));
+                    //   console.log(`🚀 ~ file: SideBarFilters.jsx:152 ~ SideBarFilters ~ displayOptions:`, displayOptions);
+
+
+                    //   return displayOptions;
+                    // }}
                     // menuIsOpen={true}
-                    onChange={onAgencyChange}
-                    //getOptionLabel={(agencyOptions) => 'agencyOptions.label'}
-                    renderInput={(params) => (
+                    onChange={(evt,value)=>onAgencyChange(evt,value)}
+                    //getOptionLabel={(agencyOptions) => agencyOptions.label}
+                    renderInput={(params) => {
+                      return(
                       <TextField
                         {...params}
-                        //value={state.agencyRaw}
+                        value={state.agencyRaw}
                         variant="outlined"
                         sx={{
                           width: "100%",
@@ -151,7 +171,8 @@ const SideBarFilters = (props) => {
                         }}
                         placeholder="Type or Select Lead Agencies"
                       />
-                    )}
+                    )
+                    }}
                   />
                 </FormControl>
                 {/* #endregion */}
@@ -179,9 +200,9 @@ const SideBarFilters = (props) => {
                     //                styles={customStyles}
                     tabIndex="4"
                     options={agencyOptions}
-                    onChange={onCooperatingAgencyChange}
+                    onChange={(evt,value)=>onCooperatingAgencyChange(evt,value)}
                     //value={state.cooperatingAgencyRaw}
-                    placeholder="Type or select agencies"
+                    placeholder="Type or select cooperating agencies"
                     fullWidth
                     autoComplete={true}
                     // autoHighlight={true}
@@ -190,8 +211,7 @@ const SideBarFilters = (props) => {
                     // value={searchState.agencyRaw}
                     variant="standard"
                     // menuIsOpen={true}
-
-                    getOptionLabel={(agencyOptions) => `${agencyOptions.label}`}
+                    //getOptionLabel={(agencyOptions) => `??? ${agencyOptions.label}`}
                     renderInput={(params) => (
                       <TextField
                         {...params}
@@ -201,7 +221,6 @@ const SideBarFilters = (props) => {
                           width: "100%",
                           p: 0,
                         }}
-                        placeholder="Type or Select Cooperating Agencies"
                       />
                     )}
                   />
@@ -226,7 +245,7 @@ const SideBarFilters = (props) => {
                   //                value={state.agencyRaw}
                   variant="standard"
                   // menuIsOpen={true}
-                  onChange={onLocationChange}
+                  onChange={(evt,value)=>onLocationChange(evt,value)}
                   placeholder={`Type or Select a State`}
                   //getOptionLabel={(stateOptions) => `${stateOptions.label}`}
                   // value={stateOptions.filter((stateObj) =>
@@ -261,7 +280,7 @@ const SideBarFilters = (props) => {
                   // value={searchState.agencyRaw}
                   variant="standard"
                   // menuIsOpen={true}
-                  onChange={onCountyChange}
+                  onChange={(evt,value)=>onCountyChange(evt,value)}
                   // getOptionLabel={(countyOptions) => `${countyOptions.label}`}
                   renderInput={(params) => (
                     <TextField
@@ -297,9 +316,9 @@ const SideBarFilters = (props) => {
                       //styles={customStyles}
                       tabIndex="7"
                       options={actionOptions}
-                      onChange={onActionChange}
+                      onChange={(evt,value)=>onActionChange(evt,value)}
                       //value={state.actionRaw}
-                      placeholder="Type or select action type"
+                      placeholder="Type or select action type(s)"
                       renderInput={(params) => (
                         <TextField
                           {...params}
@@ -309,7 +328,7 @@ const SideBarFilters = (props) => {
                             width: "100%",
                             p: 0,
                           }}
-                          placeholder="Type or Select Cooperating Agencies"
+                          placeholder="Type or select action type(s)"
                         />
                       )}
                     />
@@ -334,9 +353,9 @@ const SideBarFilters = (props) => {
                     //styles={customStyles}
                     tabIndex="8"
                     options={decisionOptions}
-                    onChange={onDecisionChange}
+                    onChange={(evt,value)=>onDecisionChange(evt,value)}
                     //value={state.decisionRaw}
-                    placeholder="Type or select decision"
+                    placeholder="Type or select decision type(s)"
                     // getOptionLabel={(stateOptions) => `${stateOptions.label}`}
                     renderInput={(params) => (
                       <TextField
@@ -346,7 +365,7 @@ const SideBarFilters = (props) => {
                           width: "100%",
                           p: 0,
                         }}
-                        placeholder={`Type or Select a State`}
+                        placeholder={`Type or Select a decision type(s)`}
                       />
                     )}
                   />
@@ -366,8 +385,8 @@ const SideBarFilters = (props) => {
                   justifyItems={"center"}
                 >
                   <SearchDatePickers
-                    onStartDateChange={onStartDateChange}
-                    onEndDateChange={onEndDateChange}
+                    onStartDateChange={(evt)=>onStartDateChange(evt)}
+                    onEndDateChange={(evt)=>onEndDateChange(evt)}
                     startDate={state.startDate}
                     endDate={Date.now - 1}
                   />
@@ -387,7 +406,7 @@ const SideBarFilters = (props) => {
                           id="typeFinal"
                           tabIndex="12"
                           checked={state.typeFinal}
-                          onChange={onTypeChecked}
+                          onChange={(evt)=>onTypeChecked(evt)}
                         />
                       }
                       label={"Draft EIS " + (props.draftCount) ? props.draftCount : ''}
@@ -402,7 +421,7 @@ const SideBarFilters = (props) => {
                           className="sidebar-checkbox"
                           tabIndex="13"
                           checked={state.typeEA}
-                          onChange={onTypeChecked}
+                          onChange={(evt)=>onTypeChecked(evt)}
                         />
                       }
                       label={"EA " + (props.eaCount) ? props.eaCount : ''}
@@ -415,7 +434,7 @@ const SideBarFilters = (props) => {
                           name="typeNOI"
                           tabIndex="14"
                           checked={state.typeNOI}
-                          onChange={onTypeChecked}
+                          onChange={(evt)=>onTypeChecked(evt)}
                         />
                       }
                       label={`NOI ` + (props.noiCount) ? props.noiCount : ''}
@@ -429,7 +448,7 @@ const SideBarFilters = (props) => {
                           //                      className="sidebar-checkbox"
                           tabIndex="15"
                           checked={state.typeROD}
-                          onChange={onTypeChecked}
+                          onChange={(evt)=>onTypeChecked(evt)}
                         />
                       }
                       label={"ROD " + (props.rodCount) ? props.rodCount : ''}
@@ -457,7 +476,7 @@ const SideBarFilters = (props) => {
                           //className="sidebar-checkbox"
                           tabIndex="16"
                           checked={state.typeScoping}
-                          onChange={onTypeChecked}
+                          onChange={(evt)=>onTypeChecked(evt)}
                         />
                       }
                       label={`Scoping Report   ` + props.typeScopingCount}
@@ -475,7 +494,7 @@ const SideBarFilters = (props) => {
                     type="checkbox"
                     name="typeFinal"
                     checked={props.useOptions}
-                    onChange={onUseOptionsChecked}
+                    onChange={(evt)=>onUseOptionsChecked(evt)}
                   />
                   <label className="checkbox-text" htmlFor="typeFinal">
                     Apply filters to search query
@@ -484,7 +503,7 @@ const SideBarFilters = (props) => {
               </div>
             </Item>
             <Item hidden={state.hideOrganization} id="agency-svg-holder">
-              <button onClick={orgClick}>x</button>
+              <button onClick={(evt)=>orgClick(evt)}>x</button>
             </Item>
           </Grid>
         </>
