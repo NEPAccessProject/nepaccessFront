@@ -311,18 +311,18 @@ export default class SearchProcessResults extends React.Component {
       return (
         <>
           <ResultsLayoutSkeleton />
-            <Divider/>
+          <Divider />
           <ResultsLayoutSkeleton />
-            <Divider/>
+          <Divider />
           <ResultsLayoutSkeleton />
         </>
       )
     //Search was attempted but got no results, display search tips
     else if ((this.props.titleRaw && ctxState.hasSearched) && (!this.props.results.length && !this.props.searching)) {
       return (
-        <> 
+        <>
           <Typography variant="h4">
-            {results.length} Results Found for "{this.props.titleRaw}"
+            {results.length} Results Found for "{ctxState.titleRaw}"
           </Typography>
           <SearchTips />
         </>
@@ -333,13 +333,19 @@ export default class SearchProcessResults extends React.Component {
 
       return (
         <>
+          {Object.keys(ctxState).map(key => {
+            return (
+              <div key={key}><b>{key}:</b> {typeof(ctxState[key]) != "array" && typeof(ctxState[key]) != "object" ? ctxState[key] : typeof (ctxState[key])}</div>
+            )
+          })}
+          <Typography padding={1}>{results.length} results found for "<b>{ctxState.titleRaw}</b>" </Typography>
           {results.map((result, index) => {
             return (
               <Paper key={result.id}>
-                <Box id="search-results-parent-container-box" border={1} borderColor={"#eee"} paddingTop={1} paddingBottom={1} >           
-                <Typography paddingLeft={2} color={'primary'} variant='h4'>
-                  <Link  onClick={this.onDetailLink(result.processId)}>{result.title}</Link>
-                </Typography>
+                <Box id="search-results-parent-container-box" border={1} borderColor={"#eee"} paddingTop={1} paddingBottom={1} >
+                  <Typography paddingLeft={2} color={'primary'} variant='h4'>
+                    <Link onClick={this.onDetailLink(result.processId)}>{result.title}</Link>
+                  </Typography>
                   <Box id="search-results-cards-container-box">
                     <SearchResultCards result={result} />
                   </Box>
