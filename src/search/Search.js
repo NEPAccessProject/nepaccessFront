@@ -387,13 +387,23 @@ class Search extends React.Component {
 		});
 	};
 
-	onAgencyChange = (evt,value) => {
-		console.log(`file: Search.js:398 ~ Search ~ evt:`, evt,'VALUE!',value);
+	onAgencyChange = (evt,selected) => {
+
+		console.log(`file: Search.js:398 ~ Search ~ evt:`, evt,'VALUE!',selected);
+    console.log('currently selected agencies',this.state.agency)
 		var agencyLabels = [];
     //[TODO] Remove if value works
 		for (var i = 0; i < evt.length; i++) {
 			agencyLabels.push(evt[i].label.replace(/ \([A-Z]*\)/gi, ""));
 		}
+
+    const agencies = this.state.agency || [];
+    agencies.push(selected.label);
+    console.log(`file: Search.js:400 ~ Search ~ agencies:`, agencies);
+
+    this.setState({
+      agency: agencies
+    });
 		// this.setState(prevState => {
 		//     let inputs = { ...prevState.inputs };  // creating copy of state variable inputs
 		//     inputs.agency = agencyLabels;                     // update the name property, assign a new value
@@ -403,10 +413,11 @@ class Search extends React.Component {
 		// });
 		this.setState(
 			{
-				agency: value,
+				agency: agencies,
 				agencyRaw: evt,
 			},
 			() => {
+        console.log('Updated Agency in state?',this.state.agency)
 				this.filterResultsBy(this.state);
 			}
 		);
@@ -461,19 +472,18 @@ class Search extends React.Component {
 			}
 		);
 	};
-	onLocationChange = (evt, value) => {
-    console.log(`🚀 ~ file: Search.js:460 ~ Search ~ evt, item:`, evt, value);
+	onLocationChange = (evt, selected) => {
+    console.log(`🚀 ~ file: Search.js:460 ~ Search ~ evt, item:`, evt, selected);
 
 		var stateValues = [];
 		for (var i = 0; i < evt.length; i++) {
 			stateValues.push(evt[i].value);
 		}
-
 		this.setState(
 			{
-        state: value,
+        state: selected,
 				stateRaw: evt,
-        countyOptions: this.narrowCountyOptions(value),
+        countyOptions: this.narrowCountyOptions(selected),
 			},
 			() => {
 				// this.filterBy(this.state);

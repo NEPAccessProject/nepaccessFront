@@ -514,6 +514,7 @@ export default class App extends React.Component {
 
   /** Just get the top results quickly before launching the "full" search with initialSearch() */
   startSearch = (searcherState) => {
+    console.log(`file: App.js:517 ~ App ~ searcherState - startSearch():`, searcherState);
     Globals.emitEvent("new_search");
     if (!this._mounted) {
       // User navigated away or reloaded
@@ -569,6 +570,7 @@ export default class App extends React.Component {
         };
 
         // OPTION: If we restore a way to use search options for faster searches, we'll assign here
+        console.log(`file: App.js:574 ~ App ~ this.state.useSearchOptions:`, this.state.useSearchOptions);
         if (this.state.useSearchOptions) {
           dataToPass = {
             title: this.state.searcherInputs.titleRaw,

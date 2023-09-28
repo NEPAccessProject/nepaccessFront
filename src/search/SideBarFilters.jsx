@@ -137,9 +137,8 @@ const SideBarFilters = (props) => {
                     className={"classes.autocomplete"}
                     options={agencyOptions}
                     disablePortal={true}
-                    value={state.agencyRaw}
-                    disablePortal={true}
-
+                    //value={state.agencyRaw}
+                    //value={state.agency}
                     //groupBy={(option) => option.label}
                     variant="standard"
                     // filterOptions={(options, state) => {
