@@ -24,12 +24,10 @@ import persist from "../persist.js";
 import theme from "../styles/theme";
 import SearchContext from "./SearchContext.js";
 import SideBarFilters from './SideBarFilters';
-
+import PropTypes  from "prop-types";
 import ResultsHeader from "./ResultsHeader";
-const useStyles = makeStyles((theme) => ({
-	formControl: {},
-}));
 const counties = Globals.counties;
+
 
 // import PropTypes from "prop-types";
 
@@ -44,28 +42,23 @@ const FULLSTYLE = {
 	marginBottom: "20px",
 	background: "rgba(240, 239, 237, 1)",
 };
-const Item = styled(Box)(({ theme }) => ({
-	backgroundColor: theme.palette.mode === "dark" ? "#1A2027" : "#fff",
-	...theme.typography.body2,
-	padding: theme.spacing(1),
-	// textAlign: 'center',
-	color: theme.palette.text.secondary,
-	elevation: 0,
-	border: 0,
-	borderRadius: 0,
-	mt: 2,
-	mb: 2,
-	pl: 0,
-	pr: 0,
-	"&:hover": {
-		//           backgroundColor: //theme.palette.grey[200],
-		boxShadow: "0px 4px 8px rgba(0.5, 0.5, 0.5, 0.15)",
-		cursor: "pointer",
-		"& .addIcon": {
-			color: "purple",
-		},
-	},
+const useStyles = makeStyles((theme) => ({
+  resultItem: {
+    mt: 2,
+    mb: 2,
+    pl: 0,
+    pr: 0,
+    "&:hover": {
+      //           backgroundColor: theme.palette.grey[200],
+      boxShadow: "0px 4px 8px rgba(0.5, 0.5, 0.5, 0.15)",
+      cursor: "pointer",
+      "& .addIcon": {
+        color: "purple",
+      },
+    },
+  }
 }));
+
 
 class Search extends React.Component {
 	static contextType = SearchContext;
@@ -131,12 +124,11 @@ class Search extends React.Component {
 			surveyDone: true,
 			surveyResult: "Haven't searched yet",
 			filtersHidden: false,
-
-			countyOptions: Globals.counties,
 		};
 		this.debouncedSearch = _.debounce(this.props.search, 300);
-		this.filterBy = this.props.filterResultsBy;
+		this.filterResultsBy = this.props.filterResultsBy;
 		// this.filterBy = _.debounce(this.props.filterResultsBy, 200);
+    this.countyOptions = Globals.counties;
 
 		this.debouncedSuggest = _.debounce(this.props.suggest, 300);
 
@@ -149,11 +141,13 @@ class Search extends React.Component {
 	  }
 
 	doSearch = (terms) => {
-		this._lastSearchTerms = terms;
+		console.log(`🚀 ~ file: Search.js:148 ~ Search ~ terms:`, terms);
+
+    //[TODO][BUG] Look into why last search term is being set as the same as the current one?
 		this.setState(
 			{
 				titleRaw: parseTerms(terms),
-				lastSearchedTerm: parseTerms(terms),
+        lastSearchedTerm: parseTerms(terms),
 				surveyChecked: false,
 				surveyDone: false,
 				isDirty: true,
@@ -276,10 +270,9 @@ class Search extends React.Component {
 				needsDocument: false,
 				optionsChecked: true,
 
-				countyOptions: Globals.counties,
 			},
 			() => {
-				this.filterBy(this.state);
+				this.filterResultsBy(this.state);
 			}
 		);
 	};
@@ -394,9 +387,10 @@ class Search extends React.Component {
 		});
 	};
 
-	onAgencyChange = (evt) => {
-		console.log(`file: Search.js:398 ~ Search ~ evt:`, evt);
+	onAgencyChange = (evt,value) => {
+		console.log(`file: Search.js:398 ~ Search ~ evt:`, evt,'VALUE!',value);
 		var agencyLabels = [];
+    //[TODO] Remove if value works
 		for (var i = 0; i < evt.length; i++) {
 			agencyLabels.push(evt[i].label.replace(/ \([A-Z]*\)/gi, ""));
 		}
@@ -409,45 +403,50 @@ class Search extends React.Component {
 		// });
 		this.setState(
 			{
-				agency: agencyLabels,
+				agency: value,
 				agencyRaw: evt,
 			},
 			() => {
-				this.filterBy(this.state);
+				this.filterResultsBy(this.state);
 			}
 		);
 	};
-	onCooperatingAgencyChange = (evt) => {
+	onCooperatingAgencyChange = (evt,value) => {
+		console.log(`🚀 ~ file: Search.js:415 ~ Search ~ evt,value:`, evt,value);
+
 		var agencyLabels = [];
 		for (var i = 0; i < evt.length; i++) {
 			agencyLabels.push(evt[i].label.replace(/ \([A-Z]*\)/gi, ""));
 		}
 		this.setState(
 			{
-				cooperatingAgency: agencyLabels,
+				cooperatingAgency: value,
 				cooperatingAgencyRaw: evt,
 			},
 			() => {
-				this.filterBy(this.state);
+				this.filterResultsBy(this.state);
 			}
 		);
 	};
-	onActionChange = (evt) => {
+	onActionChange = (evt,value) => {
+		console.log(`🚀 ~ file: Search.js:432 ~ Search ~ evt,value:`, evt,value);
+
 		var actionLabels = [];
+    //[TODO] remove these from event handlers once the value arg is passed consistently
 		for (var i = 0; i < evt.length; i++) {
 			actionLabels.push(evt[i].label.replace(/ \([A-Z]*\)/gi, ""));
 		}
 		this.setState(
 			{
-				action: actionLabels,
+        action: value.replace(/ \([A-Z]*\)/gi, ""),
 				actionRaw: evt,
 			},
 			() => {
-				this.filterBy(this.state);
+				this.filterResultsBy(this.state);
 			}
 		);
 	};
-	onDecisionChange = (evt) => {
+	onDecisionChange = (evt,value) => {
 		var decisionLabels = [];
 		for (var i = 0; i < evt.length; i++) {
 			decisionLabels.push(evt[i].label.replace(/ \([A-Z]*\)/gi, ""));
@@ -458,11 +457,13 @@ class Search extends React.Component {
 				decisionRaw: evt,
 			},
 			() => {
-				this.filterBy(this.state);
+				this.filterResultsBy(this.state);
 			}
 		);
 	};
-	onLocationChange = (evt, item) => {
+	onLocationChange = (evt, value) => {
+    console.log(`🚀 ~ file: Search.js:460 ~ Search ~ evt, item:`, evt, value);
+
 		var stateValues = [];
 		for (var i = 0; i < evt.length; i++) {
 			stateValues.push(evt[i].value);
@@ -470,9 +471,9 @@ class Search extends React.Component {
 
 		this.setState(
 			{
-				state: stateValues,
+        state: value,
 				stateRaw: evt,
-				countyOptions: this.narrowCountyOptions(stateValues),
+        countyOptions: this.narrowCountyOptions(value),
 			},
 			() => {
 				// this.filterBy(this.state);
@@ -521,7 +522,7 @@ class Search extends React.Component {
 				countyRaw: evt,
 			},
 			() => {
-				this.filterBy(this.state);
+				this.filterResultsBy(this.state);
 			}
 		);
 	};
@@ -573,7 +574,7 @@ class Search extends React.Component {
 				needsDocument: !this.state.needsDocument,
 			},
 			() => {
-				this.filterBy(this.state);
+				this.filterResultsBy(this.state);
 			}
 		);
 	};
@@ -593,7 +594,7 @@ class Search extends React.Component {
 					typeOther: false,
 				},
 				() => {
-					this.filterBy(this.state);
+					this.filterResultsBy(this.state);
 					/**this.debouncedSearch(this.state);*/
 				}
 			);
@@ -605,7 +606,7 @@ class Search extends React.Component {
 					typeAll: false,
 				},
 				() => {
-					this.filterBy(this.state);
+					this.filterResultsBy(this.state);
 					// this.debouncedSearch(this.state);
 				}
 			);
@@ -618,7 +619,7 @@ class Search extends React.Component {
 
 	onStartDateChange = (date) => {
 		this.setState({ startPublish: date }, () => {
-			this.filterBy(this.state);
+			this.filterResultsBy(this.state);
 			// this.debouncedSearch(this.state);
 		});
 	};
@@ -646,20 +647,20 @@ class Search extends React.Component {
 		// } else {
 
 		this.setState({ endPublish: date }, () => {
-			this.filterBy(this.state);
+			this.filterResultsBy(this.state);
 			// this.debouncedSearch(this.state);
 		});
 		// }
 	};
 	onStartCommentChange = (date) => {
 		this.setState({ startComment: date }, () => {
-			this.filterBy(this.state);
+			this.filterResultsBy(this.state);
 			// this.debouncedSearch(this.state);
 		});
 	};
 	onEndCommentChange = (date) => {
 		this.setState({ endComment: date }, () => {
-			this.filterBy(this.state);
+			this.filterResultsBy(this.state);
 			// this.debouncedSearch(this.state);
 		});
 	};
@@ -857,6 +858,7 @@ class Search extends React.Component {
 												onActionChange={this.onActionChange}
 												onAgencyChange={this.onAgencyChange}
 												onCountyChange={this.onCountyChange}
+                      onLocationChange={this.onLocationChange}
 												onDecisionChange={this.onDecisionChange}
 												onTypeChecked={this.onTypeChecked}
 												filtersHidden={this.state.filtersHidden}
@@ -941,7 +943,7 @@ class Search extends React.Component {
 			rehydrate.surveyDone = true;
 			this.setState(rehydrate);
 		} catch (e) {
-			console.error('Error in Search.js componentDidMount(): ', e);
+			console.warn('Error rehydrating appState in Search.js componentDidMount(): ', e);
 			
 			// do nothing
 		}
@@ -1020,6 +1022,35 @@ class Search extends React.Component {
 const styles = theme => ({
 	...theme,
 })
+Search.propTypes = {
+  results: PropTypes.arrayOf(
+    PropTypes.shape({
+    id: PropTypes.string.isRequired,
+    title: PropTypes.string,
+    processId: PropTypes.number.isRequired
+  })),
+  onSearch: PropTypes.func.isRequired,
+  onSort: PropTypes.func.isRequired,
+  onFilter: PropTypes.func.isRequired,
+  searchParams: PropTypes.object.isRequired,
+  setSearchParams: PropTypes.func.isRequired,
+  titleRaw: PropTypes.string,
+  agencyRaw: PropTypes.string,
+  stateRaw: PropTypes.string,
+  countyRaw: PropTypes.string,
+  startDateRaw: PropTypes.string,
+  endDateRaw: PropTypes.string,
+  documentTypeRaw: PropTypes.string,
+  decisionTypeRaw: PropTypes.string,
+  sort: PropTypes.string.isRequired,
+  order: PropTypes.bool.isRequired,
+  page: PropTypes.number.isRequired,
+  pageSize: PropTypes.number.isRequired,
+  facets: PropTypes.array.isRequired,
+  suggestions: PropTypes.array,
+  isLoading: PropTypes.bool.isRequired,
+  error: PropTypes.object,
+};
 
 export default withRouter(Search);
 
