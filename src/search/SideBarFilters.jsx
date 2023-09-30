@@ -6,7 +6,9 @@ import {
   FormControl,
   FormLabel,
   TextField,
-  Typography
+  Typography,
+  Stack,
+  Chip
 } from "@mui/material";
 import Grid from '@mui/material/Unstable_Grid2';
 import { styled } from "@mui/styles";
@@ -51,7 +53,7 @@ const Item = styled(Box)(({ theme }) => ({
 const SideBarFilters = (props) => {
   const { state, setState } = useContext(SearchContext);
   console.log(`🚀 ~ file: SideBarFilters.jsx:53 ~ SideBarFilters ~ CONTEXT state:`, state);
-
+  console.log(`STATE AGENCY???!!!!`, state.agency);
   const {
     filtersHidden,
     onActionChange,
@@ -74,6 +76,9 @@ const SideBarFilters = (props) => {
     toggleFiltersHidden,
   } = props;
 
+  console.log('COUNTY!',state.county)
+  console.log('STATE!',state.state)
+  console.log('AGENCY!',state.agency)
   return (
     <>
       <ThemeProvider theme={theme}>
@@ -121,6 +126,7 @@ const SideBarFilters = (props) => {
               <Divider />
               <Item>
                 {/* #region Lead Agencies Filter */}
+                {JSON.stringify(state.agency)}
                 <FormControl
                   fullWidth
                 >
@@ -131,17 +137,27 @@ const SideBarFilters = (props) => {
                     id="searchAgency"
                     name="agency"
                     fullWidth
+                    multiple
                     autoComplete={true}
                     autoHighlight={true}
                     tabIndex={3}
                     className={"classes.autocomplete"}
                     options={agencyOptions}
                     disablePortal={true}
-                    value={state.agencyRaw}
-                    disablePortal={true}
-
+                    value={agencyOptions.filter((v) => state.agency.includes(v.label))}
+                    //value={state.agency}
                     //groupBy={(option) => option.label}
                     variant="standard"
+                    // renderTags={(value, getTagProps) =>
+                    //   (value.map((option, index) => {
+                    //     return(
+                    //     <Box key={option.value}>
+                    //       <Chip variant="outlined" 
+                    //         label={option} 
+                    //         {...getTagProps({ index })} />
+                    //       </Box>
+                    //       )
+                    //   }))}
                     // filterOptions={(options, state) => {
                     //   console.log(`🚀 ~ file: SideBarFilters.jsx:144 ~ SideBarFilters ~ options, state:`, options, state);
 
@@ -157,21 +173,21 @@ const SideBarFilters = (props) => {
                     //   return displayOptions;
                     // }}
                     // menuIsOpen={true}
-                    onChange={(evt,value)=>onAgencyChange(evt,value)}
+                    onChange={(evt, value) => onAgencyChange(evt, value)}
                     //getOptionLabel={(agencyOptions) => agencyOptions.label}
                     renderInput={(params) => {
-                      return(
-                      <TextField
-                        {...params}
-                        value={state.agencyRaw}
-                        variant="outlined"
-                        sx={{
-                          width: "100%",
-                          p: 0,
-                        }}
-                        placeholder="Type or Select Lead Agencies"
-                      />
-                    )
+                      return (
+                        <TextField
+                          {...params}
+                          value={state.agencyRaw}
+                          variant="outlined"
+                          sx={{
+                            width: "100%",
+                            p: 0,
+                          }}
+                          placeholder="Type or Select Lead Agencies"
+                        />
+                      )
                     }}
                   />
                 </FormControl>
@@ -186,114 +202,113 @@ const SideBarFilters = (props) => {
                     mt: 1,
                   }}
                 >
+                  {JSON.stringify(state.cooperatingAgency)}
                   <FormLabel htmlFor="searchAgency">
                     Cooperating Agencies:
                   </FormLabel>
                   <Autocomplete
-                    id="searchAgency"
-                    // className="multi"
-                    // classNamePrefix="react-select"
-                    isMulti
+                    id="cooperatingAgency"
                     name="cooperatingAgency"
-                    isSearchable
-                    isClearable
-                    //                styles={customStyles}
-                    tabIndex="4"
-                    options={agencyOptions}
-                    onChange={(evt,value)=>onCooperatingAgencyChange(evt,value)}
-                    //value={state.cooperatingAgencyRaw}
-                    placeholder="Type or select cooperating agencies"
                     fullWidth
+                    multiple
                     autoComplete={true}
-                    // autoHighlight={true}
-                    //className={classes.autocomplete}
+                    autoHighlight={true}
+                    tabIndex={4}
+                    className={"classes.autocomplete"}
+                    options={agencyOptions}
                     disablePortal={true}
-                    // value={searchState.agencyRaw}
+                    value={agencyOptions.filter((v) => state.cooperatingAgency.includes(v.label))}
                     variant="standard"
-                    // menuIsOpen={true}
-                    //getOptionLabel={(agencyOptions) => `??? ${agencyOptions.label}`}
-                    renderInput={(params) => (
+                    onChange={(evt, value) => onCooperatingAgencyChange(evt, value)}
+                    //getOptionLabel={(agencyOptions) => agencyOptions.label}
+                    renderInput={(params) => {
+                      return (
+                        <TextField
+                          {...params}
+                          value={state.agencyRaw}
+                          variant="outlined"
+                          sx={{
+                            width: "100%",
+                            p: 0,
+                          }}
+                          placeholder="Type or Select Cooperating Agencies"
+                        />
+                      )
+                    }}
+                  />
+
+                </FormControl>
+              </Item>
+              <Divider />
+              <Item>
+                    {JSON.stringify(state.state)}
+                <FormLabel htmlFor="state">
+                  State(s) and Location(s):
+                </FormLabel>
+                <Autocomplete
+                  id="state"
+                  name="state"
+                  fullWidth
+                  multiple
+                  autoComplete={true}
+                  autoHighlight={true}
+                  tabIndex={4}
+                  className={"classes.autocomplete"}
+                  options={stateOptions}
+                  disablePortal={true}
+                  // value={stateOptions.filter((v) => state.state.includes(v.label))}
+                  variant="standard"
+                  onChange={(evt, value) => onLocationChange(evt, value)}
+                  //getOptionLabel={(agencyOptions) => agencyOptions.label}
+                  renderInput={(params) => {
+                    return (
                       <TextField
                         {...params}
-                        //value={state.agencyRaw}
+                        value={state.agencyRaw}
                         variant="outlined"
                         sx={{
                           width: "100%",
                           p: 0,
                         }}
+                        placeholder="Type or Select a State"
                       />
-                    )}
-                  />
-                </FormControl>
-              </Item>
-              <Divider />
-              <Item>
-                <FormLabel htmlFor="state-select">
-                  State(s) or location(s):
-                </FormLabel>
-                <Autocomplete
-                  id="state-select"
-                  name="state"
-                  fullWidth
-                  autoComplete={true}
-                  // autoHighlight={true}
-                  //              styles={customStyles}
-                  tabIndex="5"
-                  options={stateOptions}
-                  //className={classes.autocomplete}
-                  disablePortal={true}
-                  //                value={state.agencyRaw}
-                  variant="standard"
-                  // menuIsOpen={true}
-                  onChange={(evt,value)=>onLocationChange(evt,value)}
-                  placeholder={`Type or Select a State`}
-                  //getOptionLabel={(stateOptions) => `${stateOptions.label}`}
-                  // value={stateOptions.filter((stateObj) =>
-                  //   state.state.includes(stateObj.value)
-                  // )}
-                  renderInput={(params) => (
-                    <TextField
-                      {...params}
-                      variant="outlined"
-                      sx={{
-                        width: "100%",
-                        p: 0,
-                      }}
-                      placeholder={`Type or Select a State`}
-                    />
-                  )}
+                    )
+                  }}
                 />
               </Item>
               <Item>
                 <FormLabel Label htmlFor="county-select">
                   County/counties:
                 </FormLabel>
+                {JSON.stringify(state.state)}
                 <Autocomplete
-                  id="county-select"
+                  id="county"
+                  name="county"
                   fullWidth
+                  multiple
                   autoComplete={true}
-                  // autoHighlight={true}
-                  tabIndex={11}
-                  //className={classes.autocomplete}
+                  autoHighlight={true}
+                  tabIndex={5}
+                  className={"classes.autocomplete"}
                   options={countyOptions}
                   disablePortal={true}
-                  // value={searchState.agencyRaw}
+                  value={countyOptions.filter((v) => state.county.includes(v.label))}
                   variant="standard"
-                  // menuIsOpen={true}
-                  onChange={(evt,value)=>onCountyChange(evt,value)}
-                  // getOptionLabel={(countyOptions) => `${countyOptions.label}`}
-                  renderInput={(params) => (
-                    <TextField
-                      {...params}
-                      // value= {countyOptions.filter = (countyObj) => counties.includes(countyObj.value)}
-                      variant="outlined"
-                      sx={{
-                        width: "100%",
-                        p: 0,
-                      }}
-                      placeholder={`Type or Select a County`}
-                    />
-                  )}
+                  onChange={(evt, value) => onCountyChange(evt, value)}
+                  //getOptionLabel={(agencyOptions) => agencyOptions.label}
+                  renderInput={(params) => {
+                    return (
+                      <TextField
+                        {...params}
+                        variant="outlined"
+                        sx={{
+                          width: "100%",
+                          p: 0,
+                        }}
+                        placeholder="Type or Select a County"
+                      />
+                    )
+                  }}
                 />
               </Item>
               <div hidden={!Globals.authorized()}>
@@ -304,39 +319,44 @@ const SideBarFilters = (props) => {
 
                 <div hidden={!Globals.authorized()}>
                   <Item>
+                    {JSON.stringify(state.action)}
                     <FormLabel htmlFor="searchAction">Action Type:</FormLabel>
-                    <Autocomplete
-                      id="searchAction"
-                      className="multi"
-                      classNamePrefix="react-select"
-                      isMulti
-                      name="action"
-                      isSearchable
-                      isClearable
-                      //styles={customStyles}
-                      tabIndex="7"
-                      options={actionOptions}
-                      onChange={(evt,value)=>onActionChange(evt,value)}
-                      //value={state.actionRaw}
-                      placeholder="Type or select action type(s)"
-                      renderInput={(params) => (
-                        <TextField
-                          {...params}
-                          value={state.agencyRaw}
-                          variant="outlined"
-                          sx={{
-                            width: "100%",
-                            p: 0,
-                          }}
-                          placeholder="Type or select action type(s)"
-                        />
-                      )}
-                    />
+                                        <Autocomplete
+                  id="searchAction"
+                  name="searchAction"
+                  fullWidth
+                  multiple
+                  autoComplete={true}
+                  autoHighlight={true}
+                  tabIndex={7}
+                  className={"classes.autocomplete"}
+                  options={actionOptions}
+                  disablePortal={true}
+                  value={actionOptions.filter((v) => state.action.includes(v.label))}
+                  variant="standard"
+                  onChange={(evt, value) => onActionChange(evt, value)}
+                  //getOptionLabel={(agencyOptions) => agencyOptions.label}
+                  placeholder="Type or Select a Action Type(s)"
+                  renderInput={(params) => {
+                    return (
+                      <TextField
+                        {...params}
+                        variant="outlined"
+                        sx={{
+                          width: "100%",
+                          p: 0,
+                        }}
+                       
+                      />
+                    )
+                  }}
+                />
                   </Item>
                 </div>
               </div>
               <div hidden={!Globals.authorized()}>
                 <Item>
+                  {JSON.stringify(state.decision)}
                   <FormLabel htmlFor="searchDecision"></FormLabel>
                   <Typography variant="filterLabel">
                     Decision Type
@@ -346,17 +366,18 @@ const SideBarFilters = (props) => {
                     id="searchDecision"
                     className="multi"
                     classNamePrefix="react-select"
-                    isMulti
+                    multiple
                     name="decision"
                     isSearchable
                     isClearable
                     //styles={customStyles}
                     tabIndex="8"
                     options={decisionOptions}
-                    onChange={(evt,value)=>onDecisionChange(evt,value)}
+                    onChange={(evt, value) => onDecisionChange(evt, value)}
                     //value={state.decisionRaw}
                     placeholder="Type or select decision type(s)"
                     // getOptionLabel={(stateOptions) => `${stateOptions.label}`}
+                    value={decisionOptions.filter((v) => state.decision.includes(v.label))}
                     renderInput={(params) => (
                       <TextField
                         {...params}
@@ -365,7 +386,7 @@ const SideBarFilters = (props) => {
                           width: "100%",
                           p: 0,
                         }}
-                        placeholder={`Type or Select a decision type(s)`}
+                       
                       />
                     )}
                   />
@@ -385,8 +406,8 @@ const SideBarFilters = (props) => {
                   justifyItems={"center"}
                 >
                   <SearchDatePickers
-                    onStartDateChange={(evt)=>onStartDateChange(evt)}
-                    onEndDateChange={(evt)=>onEndDateChange(evt)}
+                    onStartDateChange={(evt) => onStartDateChange(evt)}
+                    onEndDateChange={(evt) => onEndDateChange(evt)}
                     startDate={state.startDate}
                     endDate={Date.now - 1}
                   />
@@ -406,7 +427,7 @@ const SideBarFilters = (props) => {
                           id="typeFinal"
                           tabIndex="12"
                           checked={state.typeFinal}
-                          onChange={(evt)=>onTypeChecked(evt)}
+                          onChange={(evt) => onTypeChecked(evt)}
                         />
                       }
                       label={"Draft EIS " + (props.draftCount) ? props.draftCount : ''}
@@ -421,7 +442,7 @@ const SideBarFilters = (props) => {
                           className="sidebar-checkbox"
                           tabIndex="13"
                           checked={state.typeEA}
-                          onChange={(evt)=>onTypeChecked(evt)}
+                          onChange={(evt) => onTypeChecked(evt)}
                         />
                       }
                       label={"EA " + (props.eaCount) ? props.eaCount : ''}
@@ -434,7 +455,7 @@ const SideBarFilters = (props) => {
                           name="typeNOI"
                           tabIndex="14"
                           checked={state.typeNOI}
-                          onChange={(evt)=>onTypeChecked(evt)}
+                          onChange={(evt) => onTypeChecked(evt)}
                         />
                       }
                       label={`NOI ` + (props.noiCount) ? props.noiCount : ''}
@@ -448,7 +469,7 @@ const SideBarFilters = (props) => {
                           //                      className="sidebar-checkbox"
                           tabIndex="15"
                           checked={state.typeROD}
-                          onChange={(evt)=>onTypeChecked(evt)}
+                          onChange={(evt) => onTypeChecked(evt)}
                         />
                       }
                       label={"ROD " + (props.rodCount) ? props.rodCount : ''}
@@ -476,7 +497,7 @@ const SideBarFilters = (props) => {
                           //className="sidebar-checkbox"
                           tabIndex="16"
                           checked={state.typeScoping}
-                          onChange={(evt)=>onTypeChecked(evt)}
+                          onChange={(evt) => onTypeChecked(evt)}
                         />
                       }
                       label={`Scoping Report   ` + props.typeScopingCount}
@@ -494,7 +515,7 @@ const SideBarFilters = (props) => {
                     type="checkbox"
                     name="typeFinal"
                     checked={props.useOptions}
-                    onChange={(evt)=>onUseOptionsChecked(evt)}
+                    onChange={(evt) => onUseOptionsChecked(evt)}
                   />
                   <label className="checkbox-text" htmlFor="typeFinal">
                     Apply filters to search query
@@ -503,7 +524,7 @@ const SideBarFilters = (props) => {
               </div>
             </Item>
             <Item hidden={state.hideOrganization} id="agency-svg-holder">
-              <button onClick={(evt)=>orgClick(evt)}>x</button>
+              <button onClick={(evt) => orgClick(evt)}>x</button>
             </Item>
           </Grid>
         </>

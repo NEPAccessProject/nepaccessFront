@@ -333,11 +333,11 @@ export default class SearchProcessResults extends React.Component {
 
       return (
         <>
-          {Object.keys(ctxState).map(key => {
+          {/* {Object.keys(ctxState).map(key => {
             return (
               <div key={key}><b>{key}:</b> {typeof(ctxState[key]) != "array" && typeof(ctxState[key]) != "object" ? ctxState[key] : JSON.stringify(ctxState[key])}</div>
             )
-          })}
+          })} */}
           <Typography padding={1}>{results.length} results found for "<b>{ctxState.titleRaw}</b>" </Typography>
           {results.map((result, index) => {
             return (
