@@ -797,7 +797,7 @@ class Search extends React.Component {
 					<span
 						id="clear-filters"
 						className="link"
-						onClick={() => this.onClearFiltersClick()}
+						onClick={(evt) => this.onClearFiltersClick(evt)}
 					>
 						Clear filters
 					</span>
