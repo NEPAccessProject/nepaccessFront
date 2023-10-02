@@ -210,6 +210,7 @@ export default class App extends React.Component {
    * Sorts by existing sort/asc values before updating state for a more responsive UX.
    * Gets highlights for current page whenever it's called. */
   filterResultsBy = (searcherState) => {
+    console.log(`file: App.js:213 ~ App ~ searcherState:`, searcherState);
     // console.log("Filtering");
     this._searcherState = searcherState; // for live filtering
     // Only filter if there are any results to filter
@@ -358,6 +359,7 @@ export default class App extends React.Component {
    * using Object.keys(), Object.values(), or Object.entries()
    */
   buildData = (data) => {
+    console.log(`file: App.js:362 ~ App ~ data:`, data);
     // console.log("Building",data);
     let processResults = {};
     let newUniqueKey = -1;
@@ -1340,6 +1342,7 @@ export default class App extends React.Component {
   };
 
   gatherPageHighlights = (searchId, _inputs, currentResults) => {
+    console.log(`file: App.js:1345 ~ App ~ searchId, _inputs, currentResults:`, searchId, _inputs, currentResults);
     if (!_inputs) {
       if (this.state.searcherInputs) {
         _inputs = this.state.searcherInputs;
@@ -1879,7 +1882,12 @@ export default class App extends React.Component {
 
     // Option: Rehydrate only if not interrupting a search?
     // if(!this.state.searching){
-    persist.setItem("results", JSON.stringify(this.state));
+    try{
+      persist.setItem("results", JSON.stringify(this.state));
+      }
+      catch(err){
+        console.warn('Error while unmounting appState in Search.js: ', err);
+      }
     // }
   }
 }

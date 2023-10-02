@@ -55,6 +55,7 @@ function SearchResultOptions() {
 	} = useContext(SearchContext);
 	// Debug vars
 	//const { sortBy, sortDirection, limit, showContext, snippetsDisabled } = state;
+  console.log('CONTEXT STATE', state);
 	//set static values while props / context is debuged
 	const sortBy = 'relevance';
 	const sortDirection = 'ASC';
@@ -68,9 +69,10 @@ function SearchResultOptions() {
 	}
 
 	const onCheckboxChange = (evt) => {
-		this.setState({
+		console.log(`file: SearchResultOptions.jsx:72 ~ onCheckboxChange ~ evt:`, evt);
+		setState({
 			...state,
-			hidden: !this.state.hidden,
+			hidden: !state.hidden,
 			showContext: evt.target.checked,
 		});
 	};

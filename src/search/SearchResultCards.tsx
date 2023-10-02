@@ -30,12 +30,19 @@ interface IProps {
 }
 
 export default function SearchResultCards(props: IProps) {
+	console.log(`file: SearchResultCards.tsx:33 ~ props:`, props);
 	///const classes = useStyles(theme);
 
 	const { result } = props;
 	return (
 		<div>
 			<Grid container padding={2} xs={12} flexDirection={'row'} flex={1}>
+      <CardItem sx={{ padding:1, margin:0.5}}>
+					Agency: <b>{result.agency ? result.agency : 'N/A'}</b>
+				</CardItem>
+        <CardItem sx={{ padding:1, margin:0.5}}>
+         Cooperating Agency: <b>{result.cooperatingAgency ? result.cooperatingAgency : 'N/A'}</b>
+        </CardItem>
 				<CardItem sx={{ padding:1, margin:0.5}}>
 					Status: <b>{result.decision ? result.decision : 'N/A'}</b>
 				</CardItem>

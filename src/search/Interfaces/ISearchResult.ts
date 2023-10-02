@@ -41,6 +41,7 @@ export interface ISearchResult {
   action?: string;
   decision?: string;
   relevance?: number;
-  agency?: string;
+  agency?: string | string[];
   state?: string;
+  cooperatingAgency: string | string[] | null
 }

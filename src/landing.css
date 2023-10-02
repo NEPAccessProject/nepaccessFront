@@ -44,8 +44,6 @@ span.glow {
     margin-block-end: 0.5em;
     letter-spacing: .5px;
 }
-
-#headline,
 #subhead {
     display: block;
     font-family: "Open Sans";
@@ -60,9 +58,9 @@ span.glow {
     /* min-height: 400px;
     height: 50%;
     width: 100%; */
-    height: calc(100vh - 350px);
+    height: calc(65vh - 300px);
     min-width: 800px;
-    min-height: 600px;
+    min-height: 400px; 
 
     background-position: top;
     background-repeat: no-repeat;

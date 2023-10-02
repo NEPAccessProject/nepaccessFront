@@ -1,4 +1,4 @@
-import { Box, Divider, Link, Paper, Skeleton, Typography } from "@mui/material";
+import { Box, Divider, Link, Grid, Paper, Skeleton, Typography } from "@mui/material";
 import { styled } from "@mui/styles";
 import React from "react";
 import { reactFormatter } from "react-tabulator";
@@ -16,7 +16,7 @@ import SearchTips from './SearchTips.jsx';
 //import SearchResultItems from "./SearchResultsItems.jsx";
 import ResultsLayoutSkeleton from './ResultsLayoutSkeleton';
 import SearchResultCards from './SearchResultCards';
-
+import SearchResultsMap from './SearchResultsMap';
 const _ = require("lodash");
 
 const FULLSTYLE = {
@@ -51,52 +51,6 @@ const Item = styled(Paper)(({ theme }) => ({
   },
 }));
 
-const SkeletonItem = styled(Skeleton)(({ theme }) => ({
-  ...theme,
-  //backgroundColor: theme.palette.mode === "dark" ? "#1A2027" : "#fff",
-  //backgroundColor:"#ccc",
-  //...theme.typography.body2,
-  padding: 2,//theme.spacing(1),
-  // textAlign: 'center',
-  color: "#ccc", //theme.palette.text.secondary,
-  elevation: 1,
-  borderRadius: 1,
-  fontColor: '#000',
-  "&:hover": {
-    //           backgroundColor: //theme.palette.grey[200],
-    boxShadow: "0px 4px 8px rgba(0.5, 0.5, 0.5, 0.15)",
-    cursor: "pointer",
-    "& .addIcon": {
-      color: "purple",
-    },
-    fontFamily: "open sans",
-    width: 75,
-    height: 50,
-  },
-}));
-
-const CardItem = styled(Paper)(({ theme }) => ({
-  //backgroundColor: theme.palette.mode === "dark" ? "#1A2027" : "#fff",
-  //...theme.typography.body2,
-  //...theme,
-  padding: 2,//theme.spacing(1),
-  // textAlign: 'center',
-  fontColor: "#000", //theme.palette.text.secondary,
-  elevation: 1,
-
-  borderRadius: 0,
-  // mt: 2,
-  // mb: 2,
-  margin: 2,
-  "&:hover": {
-    //           backgroundColor: //theme.palette.grey[200],
-    boxShadow: "0px 4px 8px rgba(0.5, 0.5, 0.5, 0.15)",
-    cursor: "pointer",
-    "& .addIcon": {
-      color: "purple",
-    },
-  },
-}));
 export default class SearchProcessResults extends React.Component {
   static contextType = SearchContext;
   _size = 0;
@@ -339,6 +293,15 @@ export default class SearchProcessResults extends React.Component {
             )
           })} */}
           <Typography padding={1}>{results.length} results found for "<b>{ctxState.titleRaw}</b>" </Typography>
+          <Grid item xs={12}>
+            <SearchResultsMap
+              toggleMapHide={this.props.toggleMapHide}
+              isHidden={this.props.isMapHidden}
+              docList={this.props.geoResults}
+              results={this.props.results}
+            // searcherState={this.props.searcherState}
+            />
+          </Grid>
           {results.map((result, index) => {
             return (
               <Paper key={result.id}>

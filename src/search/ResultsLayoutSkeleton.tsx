@@ -246,7 +246,6 @@ export default function ResultsLayoutSkeleton() {
             className={classes.card}
             xs={4}>
             <Skeleton
-              classes={classes}
               animation='pulse'
               variant='rectangular'
               height={50}
