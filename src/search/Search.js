@@ -407,9 +407,6 @@ class Search extends React.Component {
         return agencies.push(s.value);
       });
     }
-    else {
-      agencies: []
-    }
     this.setState(
       {
         agency: agencies,//selected,
@@ -423,16 +420,13 @@ class Search extends React.Component {
   };
   onCooperatingAgencyChange = (evt, selected, reason) => {
     console.log(`file: Search.js:423 ~ evt, selected, reason:`, evt, selected, reason);
-    
+    let agencies = [];
     if (reason === "selectOption") {
-      let agencies = this.state.cooperatingAgency || [];
+      agencies = this.state.cooperatingAgency || [];
       selected.map(s => {
         console.log(`file: Search.js:424 ~ Search ~ v:`, s);
         return agencies.push(s.value);
       });
-    }
-    else {
-      agencies: []
     }
 
     this.setState(
@@ -490,10 +484,10 @@ class Search extends React.Component {
     //    console.log(`🚀 ~ file: Search.js:475 ~ Search ~ evt, item:`, evt, selected);
     let states = [];
     if (reason === 'selectOption')
-       states = state.state || [];
-      selected.map(s => {
-        states.push(s.value)
-      })
+      states = state.state || [];
+    selected.map(s => {
+      states.push(s.value)
+    })
 
     this.setState(
       {
@@ -522,6 +516,7 @@ class Search extends React.Component {
     console.log(`file: Search.js:506 ~ Search ~ stateValues:`, stateValues);
     /** Filter logic for county array of specific label/value format given array of state abbreviations  */
     function countyFilter(_stateValues) {
+      console.log(`file: Search.js:522 ~ Search ~ countyFilter ~ _stateValues:`, _stateValues);
       return function (a) {
         let returnValue = false;
         _stateValues.forEach((item) => {
@@ -543,25 +538,34 @@ class Search extends React.Component {
     return filteredCounties;
   };
   onCountyChange = (evt, selected, reason) => {
+    console.log(`file: Search.js:544 ~ Search ~ reason:`, reason);
+    console.log(`file: Search.js:544 ~ Search ~ selected:`, selected);
     let counties = [];
-    if (reason === 'selectOptions') {
+    if (reason === 'selectOption') {
       counties = this.state.county || [];
-      selected.map(s => {
-        counties.push(s.value)
-      })
-    }
-
-    this.setState(
-      {
-        county: counties,
-        countyRaw: evt,
-      },
-      () => {
-        this.filterResultsBy(this.state);
+      if (_.isArray(selected)) {
+        selected.map(s => {
+          counties.push(s.value)
+        })
       }
-    );
-  };
-  onProximityChange = (evt, selected,reason) => {
+      else {
+        counties.push(selected.value)
+        console.log(`file: Search.js:556 ~ Search ~ counties:`, counties);
+      }
+
+
+      this.setState(
+        {
+          county: counties,
+          countyRaw: evt,
+        },
+        () => {
+          this.filterResultsBy(this.state);
+        }
+      );
+    }
+  }
+  onProximityChange = (evt, selected, reason) => {
     console.log(`file: Search.js:568 ~ Search ~ reason:`, reason);
     console.log(`file: Search.js:545 ~ Search ~ evt,selected:`, evt, selected);
     if (evt.value === -1) {

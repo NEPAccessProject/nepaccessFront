@@ -30,9 +30,6 @@ interface IProps {
 }
 
 export default function SearchResultCards(props: IProps) {
-	console.log(`file: SearchResultCards.tsx:33 ~ props:`, props);
-	///const classes = useStyles(theme);
-
 	const { result } = props;
 	return (
 		<div>

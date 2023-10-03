@@ -440,6 +440,7 @@ export default class App extends React.Component {
       if (!processResults[key].state) {
         processResults[key].state = datum.state;
       }
+      console.log(`file: App.js:442 ~ App ~ data.forEach ~ processResults:`, processResults);
 
       // titles change, which makes everything harder.
       // This logic just assigns the first final type's title as the title.
