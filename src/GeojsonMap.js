@@ -253,12 +253,12 @@ const GeojsonMap = (props) => {
                     // style={"button"} // css/style problems out of the box
                     style={"bar"}
                     showMarker={true}
-                    showPopup={false}
+                    showPopup={true}
                     maxMarkers={3}
                     retainZoomLevel={false}
                     animateZoom={true}
                     autoClose={false}
-                    searchLabel={"Search for any location"}
+                    //searchLabel={"Search for any location"}
                     keepResult={false}
                     popupFormat={({ query, result }) => result.label}
 

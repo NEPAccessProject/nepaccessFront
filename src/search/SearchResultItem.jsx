@@ -201,8 +201,6 @@ export default function SearchResultItem(props) {
 								flex={1}
 							>
 								<Typography id="snippets-title" variant='h5' >{(title) ? title : ''}</Typography>
-                <Typography>Process ID {record.processId}</Typography>
-                <Typography>Record ID {record.id}</Typography>
 
 								{/* <RenderSnippets record={record} /> */}
 							</Grid>

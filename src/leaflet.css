@@ -1,3 +1,6 @@
+.reset {
+  display: none;
+}
 .map-top-container {
     /** seems to fix anomalous fragments "escaping" container and also keeps the page width stable while this happens */
     overflow: hidden;

@@ -46,7 +46,9 @@ import { ThemeOptions } from '@mui/material/styles';
 			fontSize: 14,
 
 			filterLabel: {
-				fontSize: '0.9rem',
+				fontSize: '0.8rem',
+        color: 'blue',
+        lineHeigth: '0.9rem'
 			},
 			// resultsTitle: {
 			//   fontSize: "1.6rem",
@@ -105,7 +107,8 @@ import { ThemeOptions } from '@mui/material/styles';
         styleOverrides: {
           root: {
             fontSize: 14,
-            color: grey.A700
+            color: 'black',
+            lineHeight: '24px'
           }
         }
       },
