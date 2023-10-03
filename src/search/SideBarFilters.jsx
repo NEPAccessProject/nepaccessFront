@@ -79,7 +79,7 @@ const SideBarFilters = (props) => {
   } = props;
 
   //Common Settings used by all autocomplete filters
-
+  let tabIndex=1;
   const filterProps = {
     fullWidth: true,
     multiple: true,
@@ -88,7 +88,7 @@ const SideBarFilters = (props) => {
     limitTags: 3,
     disablePortal: true,
     variant: "standard",
-    getOptionLabel: (options) => options.label.length > 15 ? options.label.slice(0, 15) + "..." : options.label,
+    getOptionLabel: (options) => options.label.length > 20 ? options.label.slice(0, 20) + "..." : options.label,
     //getOptionLabel: (options) => `? ${options.label}`,
   }
 
@@ -126,7 +126,7 @@ const SideBarFilters = (props) => {
                 <FormLabel
                   control={
                     <Checkbox
-                      tabIndex="3"
+                      tabIndex={tabIndex++}
                       checked={state.searchOption === "C"}
                       onChange={onTitleOnlyChecked}
                     />
@@ -150,7 +150,7 @@ const SideBarFilters = (props) => {
                     id="searchAgency"
                     name="agency"
                     {...filterProps}
-                    tabIndex={3}
+                    tabIndex={tabIndex++}
                     options={agencyOptions}
                     value={agencyOptions.filter((v) => state.agency.includes(v.value))}
                     onChange={(evt, value, tag) => onAgencyChange(evt, value, tag)}
@@ -188,7 +188,7 @@ const SideBarFilters = (props) => {
                     id="searchAgency"
                     name="agency"
                     {...filterProps}
-                    tabIndex={3}
+                    tabIndex={tabIndex++}
                     options={agencyOptions}
                     value={agencyOptions.filter((v) => state.cooperatingAgency.includes(v.value))}
                     onChange={(evt, value, tag) => onCooperatingAgencyChange(evt, value, tag)}
@@ -196,7 +196,7 @@ const SideBarFilters = (props) => {
                       return (
                         <TextField
                           {...params}
-                          placeholder="Type or Select Lead Agencies"
+                          placeholder="Type or Select Cooperating Agencies"
                           variant="outlined"
                           sx={{
                             width: "100%",
@@ -220,6 +220,7 @@ const SideBarFilters = (props) => {
                   id="state"
                   name="state"
                   {...filterProps}
+                  tabIndex={tabIndex++}                  
                   options={stateOptions}
                   value={stateOptions.filter((v) => state.state.includes(v.value))}
                   onChange={(evt, value) => onLocationChange(evt, value)}
@@ -244,9 +245,10 @@ const SideBarFilters = (props) => {
                 </FormLabel>
                 {JSON.stringify(state.state)}
                 <Autocomplete
+                {...filterProps}
                   id="county"
                   name="county"
-                  tabIndex={5}
+                  tabIndex={tabIndex++}                  
                   options={countyOptions}
                   value={countyOptions.filter((v) => state.county.includes(v.value))}
                   onChange={(evt, value,reason) => onCountyChange(evt, value,reason)}
@@ -280,17 +282,18 @@ const SideBarFilters = (props) => {
                     <Autocomplete
                       id="searchAction"
                       name="searchAction"
-                      tabIndex={10}
-                      className={"classes.autocomplete"}
+                      {...filterProps}
+                      tabIndex={tabIndex++}
                       options={actionOptions}
                       value={actionOptions.filter((v) => state.action.includes(v.value))}
-                      onChange={(evt, value) => onActionChange(evt, value)}
-                      getOptionLabel={(actionOptions) => actionOptions.label}
+                      onChange={(evt, value,reason) => onActionChange(evt, value,reason)}
+                       //? actionOptions.label : "Please Select an Action Type"}
                       placeholder="Type or Select a Action Type(s)"
                       renderInput={(params) => {
                         return (
                           <TextField
                             {...params}
+                            placeholder="Type or Select a Action Type(s)"
                             variant="outlined"
                             sx={{
                               width: "100%",
@@ -314,13 +317,14 @@ const SideBarFilters = (props) => {
                   <Autocomplete
                     id="searchDecision"
                     name="decision"
-                    tabIndex="11"
+                    {...filterProps}
+                    tabIndex={tabIndex++}
                     options={decisionOptions}
                     placeholder="Type or select decision type(s)"
 
                     onChange={(evt, value,reason) => onDecisionChange(evt, value,reason)}
-                    getOptionLabel={(decisionOptions) => decisionOptions.label}
-                    value={decisionOptions ?? decisionOptions.filter((v) => state.decision.includes(v.value))}
+                    getOptionLabel={opt => opt.label} //(decisionOptions.label ? decisionOptions.label : `Please Select a Decision Type ${JSON.stringify(state.decision)}`)}
+                    value={decisionOptions && decisionOptions.filter((v) => state.decision.includes(v.value))}
                     renderInput={(params) => (
                       <TextField
                         {...params}
