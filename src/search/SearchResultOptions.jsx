@@ -43,16 +43,18 @@ const useStyles = makeStyles(theme => (
             textAlign: 'center',
             color: 'black' //theme.palette.text.secondary,
         }}));
-function SearchResultOptions() {
+function SearchResultOptions(props) {
+console.log(`file: SearchResultOptions.jsx:47 ~ SearchResultOptions ~ props:`, props);
+
 	const {
 		state,
-		setState,
-		// onSortByChangeHandler,
-		// onLimitChangeHandler,
-		// onSortDirectionChangeHandler,
-		// onDownloadClick,
-		// onSaveSearchResultsClick,
-	} = useContext(SearchContext);
+    onCheckboxChange,
+		onLimitChangeHandler,
+		onSortDirectionChangeHandler,
+		onDownloadClick,
+		onSaveSearchResultsClick,
+    onSortByChangeHandler,
+	} = props;
 	// Debug vars
 	//const { sortBy, sortDirection, limit, showContext, snippetsDisabled } = state;
   console.log('CONTEXT STATE', state);
@@ -63,19 +65,20 @@ function SearchResultOptions() {
 	const showContext = true;
 	const snippetsDisabled = false;
 	const classes = useStyles(theme);
+  const {  setState } = useContext(SearchContext);
 
-	const onSortDirectionChangeHandler = (evt) => {
-		console.log('Dummy Sort Change Dir Function',evt);
-	}
+	// const onSortDirectionChangeHandler = (evt) => {
+	// 	console.log('Dummy Sort Change Dir Function',evt);
+	// }
 
-	const onCheckboxChange = (evt) => {
-		console.log(`file: SearchResultOptions.jsx:72 ~ onCheckboxChange ~ evt:`, evt);
-		setState({
-			...state,
-			hidden: !state.hidden,
-			showContext: evt.target.checked,
-		});
-	};
+	// const onCheckboxChange = (evt) => {
+	// 	console.log(`file: SearchResultOptions.jsx:72 ~ onCheckboxChange ~ evt:`, evt);
+	// 	setState({
+	// 		...state,
+	// 		hidden: !state.hidden,
+	// 		showContext: evt.target.checked,
+	// 	});
+	// };
 	return (
 		<>
 			<Grid
@@ -103,7 +106,7 @@ function SearchResultOptions() {
 									<Checkbox
 										// checked={searchOptions}
 										checked={showContext}
-										onChange={onCheckboxChange}
+										onChange={(evt)=>onUseOptionsChecked(evt)}
 										disabled={snippetsDisabled}
 									/>
 								}
@@ -145,8 +148,8 @@ function SearchResultOptions() {
 											Sort By:
 										</Typography>
 									}
-									defaultValue={25}
-									onChange={onSortDirectionChangeHandler}
+									defaultValue={ state.limit || "relevance"}
+									onChange={(evt)=>onSortByChangeHandler(evt)}
 								>
 									<MenuItem value='relevance'>Relevance</MenuItem>
 									<MenuItem value='title'>Title</MenuItem>
@@ -183,8 +186,8 @@ function SearchResultOptions() {
 									<Select
 										id='search-result-options-sort-by-select'
 										value={state.limit}
-										defaultValue={25}
-										onChange={onSortDirectionChangeHandler}
+										defaultValue={state.limit || 10}
+										onChange={(evt,value,reason)=>onSortDirectionChangeHandler(evt,value,reason)}
 										label='Page Size'
 									>
 										<MenuItem value={10}>10</MenuItem>
@@ -230,8 +233,8 @@ function SearchResultOptions() {
 						</Item>
 					</Grid>
 					<Grid
-						xs={6}
-						md={3}
+						xs={12}
+						md={6}
 						flex={1}
 						id='search-result-options-grid-container'
 					>
@@ -249,12 +252,12 @@ function SearchResultOptions() {
 						>
 							<CloudDownloadIcon
 								value={sortDirection}
-								onChange={onSortDirectionChangeHandler}
+								onChange={onDownloadClick}
 							/>
 						</Item>
 					</Grid>
 
-					<Grid xs={6} md={3}>
+					{/* <Grid xs={6} md={3}>
 						<Item
 							elevation={0}
 							sx={{
@@ -270,7 +273,7 @@ function SearchResultOptions() {
 								onChange={onSortDirectionChangeHandler}
 							/>
 						</Item>
-					</Grid>
+					</Grid> */}
 				</Grid>
 			</Grid>
 		</>

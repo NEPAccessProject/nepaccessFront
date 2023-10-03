@@ -29,7 +29,7 @@ export default class App extends React.Component {
       state: [],
       needsComments: false,
       needsDocument: true,
-      limit: 100,
+      limit: 25,
     },
     searchResults: [],
     outputResults: [],

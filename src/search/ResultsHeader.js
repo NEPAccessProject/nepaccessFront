@@ -216,7 +216,15 @@ export default class ResultsHeader extends React.Component {
               borderLeft={0}
               id="search-box-result-options-container"
             >
-              <SearchResultOptions />
+              <SearchResultOptions
+                state={this.state}
+                onCheckboxChange={this.onCheckboxChange}
+                onLimitChangeHandler={this.onLimitChangeHandler}
+                onSortDirectionChangeHandler={this.onSortOrderChange}
+                onDownloadClick={this.onDownloadClick}
+                onSortByChangeHandler={this.onSortChange}
+                onSortOrderChange={this.onSortOrderChange}
+              />
             </Grid>
           </Grid>
         </Grid>

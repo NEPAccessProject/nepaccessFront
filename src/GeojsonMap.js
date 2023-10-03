@@ -249,7 +249,7 @@ const GeojsonMap = (props) => {
                 />
                 <CustomSearchControl
                     // provider={prov} // required but defined in CustomSearchControl.js
-                    // position={"topleft"}
+                    position={"topleft"}
                     // style={"button"} // css/style problems out of the box
                     style={"bar"}
                     showMarker={true}

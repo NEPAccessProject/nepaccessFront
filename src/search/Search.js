@@ -583,8 +583,19 @@ class Search extends React.Component {
       );
     }
   };
+  onSortByChangeHandler = (evt)=>{
+    console.log(`file: Search.js:577 ~ Search ~ evt.target:`, evt.target);
+    this.setState({
+      searcherInputs: {
+        sortBy: evt.target.value,
+      }
+    }, () => {
+      console.log('SORT BY NEW STATE', this.state.searcherInputs);
+    })
+  }
 
   onTitleOnlyChecked = (evt) => {
+    console.log(`file: Search.js:584 ~ Search ~ evt:`, evt);
     if (evt.target.checked) {
       this.setState({
         searchOption: "C", // Title only
@@ -606,6 +617,7 @@ class Search extends React.Component {
   };
 
   onUseOptionsChecked = (evt) => {
+    console.log(`file: Search.js:605 ~ Search ~ evt:`, evt);
     this.props.optionsChanged(evt.target.checked);
   };
 
@@ -881,6 +893,8 @@ class Search extends React.Component {
               <Grid id="result-header-grid-container" container>{''}
                 <Grid container xs={12} flex={1} flexGrow={1} id="results-header-grid-container">
                   <ResultsHeader
+                    {...this.props}
+                    state={this.state}
                     handleProximityValues={this.handleProximityValues}
                     onInput={this.onInput}
                     onKeyUp={this.onKeyUp}
@@ -889,6 +903,9 @@ class Search extends React.Component {
                     titleRaw={this.state.titleRaw}
                     results={this.state.results}
                     total={this.state.total}
+                    onSortByChangeHandler={this.onSortByChangeHandler}
+                    onLimitChangeHandler={this.onLimitChangeHandler}
+                    onDownloadClick={this.onDownloadClick}
                   />
                 </Grid>
                 <Grid container xs={12} flex={1} id="filters-grid-container">

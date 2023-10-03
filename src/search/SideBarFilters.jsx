@@ -86,6 +86,7 @@ const SideBarFilters = (props) => {
 		onClearFilter,
 	} = props;
 
+
 	//Common Settings used by all autocomplete filters
 
 	const filterProps = {
@@ -103,6 +104,19 @@ const SideBarFilters = (props) => {
 		getOptionLabel: (v) =>
 			v.label.length > 15 ? `${v.label.slice(0, 15)}...` : `${v.label}`,
 	};
+  //Common Settings used by all autocomplete filters
+  let tabIndex=1;
+  const filterProps = {
+    fullWidth: true,
+    multiple: true,
+    autoComplete: true,
+    autoHighlight: true,
+    limitTags: 3,
+    disablePortal: true,
+    variant: "standard",
+    getOptionLabel: (options) => options.label.length > 20 ? options.label.slice(0, 20) + "..." : options.label,
+    //getOptionLabel: (options) => `? ${options.label}`,
+  }
 
 	const getValue = (options, stateValue) => {
 		console.log(
