@@ -44,7 +44,7 @@ const useStyles = makeStyles(theme => (
             color: 'black' //theme.palette.text.secondary,
         }}));
 function SearchResultOptions(props) {
-console.log(`file: SearchResultOptions.jsx:47 ~ SearchResultOptions ~ props:`, props);
+
 
 	const {
 		state,
@@ -57,7 +57,7 @@ console.log(`file: SearchResultOptions.jsx:47 ~ SearchResultOptions ~ props:`, p
 	} = props;
 	// Debug vars
 	//const { sortBy, sortDirection, limit, showContext, snippetsDisabled } = state;
-  console.log('CONTEXT STATE', state);
+  
 	//set static values while props / context is debuged
 	const sortBy = 'relevance';
 	const sortDirection = 'ASC';
@@ -68,11 +68,11 @@ console.log(`file: SearchResultOptions.jsx:47 ~ SearchResultOptions ~ props:`, p
   const {  setState } = useContext(SearchContext);
 
 	// const onSortDirectionChangeHandler = (evt) => {
-	// 	console.log('Dummy Sort Change Dir Function',evt);
+	// 	
 	// }
 
 	// const onCheckboxChange = (evt) => {
-	// 	console.log(`file: SearchResultOptions.jsx:72 ~ onCheckboxChange ~ evt:`, evt);
+	// 	
 	// 	setState({
 	// 		...state,
 	// 		hidden: !state.hidden,
