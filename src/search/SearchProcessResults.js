@@ -305,7 +305,7 @@ export default class SearchProcessResults extends React.Component {
           {results.map((result, index) => {
             return (
               <Paper key={result.id}>
-                <Box id="search-results-parent-container-box" border={1} borderColor={"#eee"} paddingTop={1} paddingBottom={1} >
+                <Box id="search-results-parent-container-box" Border={0} borderColor={"#eee"} paddingTop={1} paddingBottom={1} >
                   <Typography paddingLeft={2} color={'primary'} variant='h4'>
                     <Link onClick={this.onDetailLink(result.processId)}>{result.title}</Link>
                   </Typography>

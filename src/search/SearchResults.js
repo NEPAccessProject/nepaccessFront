@@ -233,6 +233,7 @@ class SearchResults extends React.Component {
                         <div className="tabulator-holder">
                             <ResultsHeader 
                                 sort={this.props.sort}
+                                setPageInfo={this.props.setPageInfo}
                                 resultsText={this.props.resultsText} 
                                 searching={this.props.searching}
                                 snippetsDisabled={this.props.snippetsDisabled} 

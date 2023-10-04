@@ -14,7 +14,7 @@
   "requirePragma": false,
   "semi": true,
   "semicolons": true,
-  "singleAttributePerLine": false,
+  "singleAttributePerLine": true,
   "singleQuote": true,
   "tabWidth": 2,
   "trailingComma": "all",

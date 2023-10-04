@@ -45,7 +45,7 @@ const PDFViewer = (props) => {
     return (
       <>
       PATH: {file.path}
-        <Grid item flex={1} style={{ height: '100%' }} alignContent={'flex-start'} border={1}  >
+        <Grid item flex={1} style={{ height: '100%' }} alignContent={'flex-start'} Border={0}  >
           <h5>Current File</h5>
           {path}
           <Worker workerUrl={workerUrl}>

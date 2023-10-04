@@ -55,7 +55,6 @@ export default class App extends React.Component {
 
   constructor(props) {
     super(props);
-    //        console.log("🚀 ~ file: App.js:56 ~ App ~ constructor ~ props:", props)
     this.endRef = React.createRef();
     // this.getGeoDebounced = _.debounce(this.getGeoData,1000);
     this.getGeoDebounced = _.debounce(this.getAllGeoData, 1000);
@@ -108,17 +107,18 @@ export default class App extends React.Component {
     });
   };
 
-  setPageInfo = (page, pageSize) => {
+  setPageInfo = (page = 0, pageSize = 10) => {
+    console.log(`file: App.js:111 ~ App ~ page = 0, pageSize = 10:`, page, pageSize);
     this._page = page;
     this._pageSize = pageSize;
-    // console.log("page, pageSize",this._page,this._pageSize);
+    
     this._searchId = this._searchId + 1;
     this.gatherPageHighlightsDebounced(
       this._searchId,
       this._searcherState,
       this.state.outputResults
     );
-  };
+  }
 
   countTypes = () => {
     let finals = 0;
@@ -163,7 +163,7 @@ export default class App extends React.Component {
       axios.get(url).then((response) => {
         if (response.data && response.data[0]) {
           for (let i = 0; i < response.data.length; i++) {
-            // console.log(response.data[i].count); // TODO: use count
+            
             let json = JSON.parse(response.data[i]["geojson"]);
             json.style = {};
             json.sortPriority = 0;
@@ -191,7 +191,7 @@ export default class App extends React.Component {
             (a, b) => parseInt(a.sortPriority) - parseInt(b.sortPriority)
           );
 
-          // console.log("Called for geodata", sortedData);
+          
           this.setState({
             geoResults: sortedData,
             geoLoading: false,
@@ -210,8 +210,8 @@ export default class App extends React.Component {
    * Sorts by existing sort/asc values before updating state for a more responsive UX.
    * Gets highlights for current page whenever it's called. */
   filterResultsBy = (searcherState) => {
-    console.log(`file: App.js:213 ~ App ~ searcherState:`, searcherState);
-    // console.log("Filtering");
+    
+    
     this._searcherState = searcherState; // for live filtering
     // Only filter if there are any results to filter
     if (this.state.searchResults && this.state.searchResults.length > 0) {
@@ -259,7 +259,7 @@ export default class App extends React.Component {
 
   /** Sort, then highlight */
   sortDataByFieldThenHighlight = (field, ascending) => {
-    // console.log("Sorting");
+    
     this.setState(
       {
         // searchResults: this.state.searchResults.sort((a, b) => (a[field] > b[field]) ? 1 : -1)
@@ -313,9 +313,9 @@ export default class App extends React.Component {
 
   /** Assign any existing highlights from the first-page highlight pass, which is now done before full record population */
   mergeHighlights = (data) => {
-    // console.log("Merge highlights",data, this.state.searchResults);
+    
     if (!this.state.searchResults || !this.state.searchResults[0]) {
-      // console.log("Nothing here yet");
+      
       return data;
     }
 
@@ -331,14 +331,14 @@ export default class App extends React.Component {
             let same =
               data[i].records[j].id ===
               this.state.searchResults[i].records[j].id;
-            // console.log("Same?", same, data[i].records[j].id, this.state.searchResults[i].records[j].id);
+            
             if (same) {
               data[i].records[j].plaintext =
                 this.state.searchResults[i].records[j].plaintext;
-              // console.log("Assigned plaintext", this.state.searchResults[i].records[j].plaintext);
+              
             }
           } else {
-            // console.log("Doesn't exist");
+            
           }
         }
       }
@@ -359,8 +359,8 @@ export default class App extends React.Component {
    * using Object.keys(), Object.values(), or Object.entries()
    */
   buildData = (data) => {
-    console.log(`file: App.js:362 ~ App ~ data:`, data);
-    // console.log("Building",data);
+    
+    
     let processResults = {};
     let newUniqueKey = -1;
     let i = 0;
@@ -440,8 +440,6 @@ export default class App extends React.Component {
       if (!processResults[key].state) {
         processResults[key].state = datum.state;
       }
-      console.log(`file: App.js:442 ~ App ~ data.forEach ~ processResults:`, processResults);
-
       // titles change, which makes everything harder.
       // This logic just assigns the first final type's title as the title.
       // if(!processResults[key].title) {
@@ -461,7 +459,7 @@ export default class App extends React.Component {
 
   // Start a brand new search.
   startNewSearch = (searcherState) => {
-    console.log("START NEW SEARCH", searcherState);
+    
 
     // Reset page, page size
     this._page = searcherState.page || 1;
@@ -517,14 +515,14 @@ export default class App extends React.Component {
 
   /** Just get the top results quickly before launching the "full" search with initialSearch() */
   startSearch = (searcherState) => {
-    console.log(`file: App.js:517 ~ App ~ searcherState - startSearch():`, searcherState);
+    
     Globals.emitEvent("new_search");
     if (!this._mounted) {
       // User navigated away or reloaded
       return;
     }
 
-    // console.log("Start search");
+    
 
     this.setState(
       {
@@ -573,7 +571,7 @@ export default class App extends React.Component {
         };
 
         // OPTION: If we restore a way to use search options for faster searches, we'll assign here
-        console.log(`file: App.js:574 ~ App ~ this.state.useSearchOptions:`, this.state.useSearchOptions);
+        
         if (this.state.useSearchOptions) {
           dataToPass = {
             title: this.state.searcherInputs.titleRaw,
@@ -613,7 +611,7 @@ export default class App extends React.Component {
         //Send the AJAX call to the server
         let shouldContinue = true;
 
-        // console.log("Search init");
+        
         axios({
           method: "POST", // or 'PUT'
           url: searchUrl,
@@ -621,9 +619,9 @@ export default class App extends React.Component {
         })
           .then((response) => {
             let responseOK = response && response.status === 200;
-            console.log(`${searchUrl} returned ${response.data.length} results`)
+            
             if (responseOK) {
-              // console.log("Initial search results returned");
+              
               return response.data;
             } else if (response.status === 204) {
               // Probably invalid query due to misuse of *, "
@@ -640,16 +638,16 @@ export default class App extends React.Component {
               shouldContinue = false; // found all results already
               return response.data;
             } else {
-              console.log(response.status);
+              console.warn(response.status);
               return null;
             }
           })
           .then((currentResults) => {
-            console.log(`🚀 ~ file: App.js:643 ~ App ~ .then ~ currentResults length:`, currentResults.length);
+            
 
             let _data = [];
             if (currentResults && currentResults[0] && currentResults[0].doc) {
-              // console.log("Raw results",currentResults);
+              
 
               _data = currentResults
                 // .filter((result) => { // Soft rollout logic
@@ -694,9 +692,9 @@ export default class App extends React.Component {
               let processResults = {};
               processResults = this.buildData(_data);
               _data = processResults;
-              console.log(`🚀 ~ file: App.js:692 ~ App ~ .then ~ _data length:`, _data.length);
+              
 
-              // console.log("Process oriented results flattened",_data);
+              
 
               // At this point we don't need the hashmap design anymore, it's just very fast for its purpose.
               // Now we have to iterate through all of it anyway, and it makes sense to put it in an array.
@@ -709,7 +707,7 @@ export default class App extends React.Component {
                   results: _data,
                 },
                 () => {
-                  // console.log("All results", _data);
+                  
 
                   // title-only (or blank search===no text search at all): return
                   if (
@@ -726,13 +724,12 @@ export default class App extends React.Component {
                       shouldUpdate: true,
                     });
                   } else if (!shouldContinue) {
-                    console.log("First pass got everything");
+                    console.info("First pass got everything");
                     // got all results already, so stop searching and start highlighting.
                     this.filterResultsBy(this.state.searcherInputs);
                     this.countTypes();
                   } else {
                     // Highlight first page using function which then gets the rest of the metadata
-                    console.log("Gather first page highlights");
                     this.gatherFirstPageHighlightsThenFinishSearch(
                       this._searchId,
                       this.state.searcherInputs,
@@ -742,7 +739,7 @@ export default class App extends React.Component {
                 }
               );
             } else {
-              // console.log("No results");
+              
               this.setState({
                 searching: false,
                 searchResults: [],
@@ -800,7 +797,7 @@ export default class App extends React.Component {
       return;
     }
 
-    // console.log("initialSearch");
+    
 
     let searchUrl = new URL("text/search_no_context", Globals.currentHost);
 
@@ -847,7 +844,7 @@ export default class App extends React.Component {
 
     //Send the AJAX call to the server
 
-    // console.log("Search init");
+    
 
     axios({
       method: "POST", // or 'PUT'
@@ -856,7 +853,7 @@ export default class App extends React.Component {
     })
       .then((response) => {
         let responseOK = response && response.status === 200;
-        console.log(`🚀 ~ file: App.js:854 ~ App ~ .then ~ response length`, response.length);
+        
 
         if (responseOK) {
           return response.data;
@@ -927,13 +924,13 @@ export default class App extends React.Component {
             },
             () => {
               this.filterResultsBy(this._searcherState);
-              // console.log("Mapped data",_data);
+              
 
               this.countTypes();
             }
           );
         } else {
-          // console.log("No results");
+          
           this.setState({
             searching: false,
             searchResults: [],
@@ -990,7 +987,7 @@ export default class App extends React.Component {
           terms: _terms,
         },
       }).then((response) => {
-        // console.log("Suggester response", response);
+        
 
         this.setState({
           // lookupResult: response.data
@@ -1012,15 +1009,15 @@ export default class App extends React.Component {
    * which we can use to skip having to loop through everything.
    */
   gatherSpecificHighlights = (_index, record) => {
-    console.log("gatherSpecificHighlights");
+    
     if (!this._mounted) {
       // User navigated away or reloaded
-      console.log("Cancel specific highlighting");
+      
       return; // cancel search
     }
 
     if (!this.state.outputResults) {
-      console.log("Nothing here right now to highlight specifically");
+      console.warn("Nothing here right now to highlight specifically");
       return;
     }
 
@@ -1053,12 +1050,12 @@ export default class App extends React.Component {
 
         if (_unhighlighted.length === 0) {
           // nothing to do
-          console.log("Specific record already highlighted fully.");
+          console.info("Specific record already highlighted fully.");
           this.endEarly();
           return;
         }
 
-        // console.log("terms, last", this._searchTerms, this.state.lastSearchedTerm);
+        
 
         if (!this._searchTerms) {
           this._searchTerms = this.state.lastSearchedTerm;
@@ -1087,7 +1084,7 @@ export default class App extends React.Component {
           })
           .then((parsedJson) => {
             if (parsedJson) {
-              // console.log("Adding highlights", parsedJson);
+              
               let allResults = this.state.searchResults;
 
               // Iterate through records until we find the correct one (sort/filter could change index within card)
@@ -1119,7 +1116,7 @@ export default class App extends React.Component {
                   // Run our filter + sort which will intelligently populate outputResults from updated searchResults
                   // and update the table
                   this.filterResultsBy(this._searcherState);
-                  // console.log("All done with page highlights: all results, displayed results",
+                  
                   //     allResults, currentResults);
                 }
               );
@@ -1156,7 +1153,6 @@ export default class App extends React.Component {
     _inputs,
     currentResults
   ) => {
-    console.log("gatherFirstPageHighlightsThenFinishSearch");
     if (!_inputs) {
       if (this.state.searcherInputs) {
         _inputs = this.state.searcherInputs;
@@ -1164,7 +1160,7 @@ export default class App extends React.Component {
         _inputs = { titleRaw: Globals.getParameterByName("q") };
       }
     }
-    // console.log("Gathering page highlights", searchId, this._page, this._pageSize);
+    
     if (!this._mounted) {
       // User navigated away or reloaded
       return; // cancel search
@@ -1205,7 +1201,7 @@ export default class App extends React.Component {
             // For each record in result card
             // Push first lucene ID and filename
             if (!Globals.isEmptyOrSpaces(currentResults[i].records[j].name)) {
-              // console.log("Pushing",i,j,currentResults[i].records[j].id);
+              
 
               // Need to skip this entry on both sides if it already has plaintext.
               // If it has any, then skip here - we can get more on demand elsewhere, in separate logic.
@@ -1218,7 +1214,7 @@ export default class App extends React.Component {
                   currentResults[i].records[j].name.split(">")[0];
                 let firstLuceneId = [currentResults[i].records[j].luceneIds[0]];
 
-                // console.log("First filename, record ID and lucene ID",
+                
                 //     firstFilename, currentResults[i].records[j].id, firstLuceneId);
 
                 _unhighlighted.push({
@@ -1226,7 +1222,7 @@ export default class App extends React.Component {
                   filename: firstFilename,
                 });
               } else {
-                // console.log("Adding skip ID " + [currentResults[i].records[j].id]);
+                
                 mustSkip[currentResults[i].records[j].id] = true;
               }
             }
@@ -1235,7 +1231,7 @@ export default class App extends React.Component {
 
         // If nothing to highlight, nothing to do on this page
         if (_unhighlighted.length === 0 || searchId < this._searchId) {
-          console.log("nothing to highlight: finish search");
+          console.info("nothing to highlight: finish search");
           this.initialSearch(_inputs);
           return;
         }
@@ -1247,7 +1243,7 @@ export default class App extends React.Component {
           fragmentSizeValue: _inputs.fragmentSizeValue,
         };
 
-        // console.log("For backend",dataToPass);
+        
 
         //Send the AJAX call to the server
         axios({
@@ -1265,7 +1261,7 @@ export default class App extends React.Component {
           })
           .then((parsedJson) => {
             if (parsedJson) {
-              // console.log("Adding highlights", parsedJson);
+              
 
               let allResults = this.state.searchResults;
 
@@ -1280,11 +1276,11 @@ export default class App extends React.Component {
                   if (
                     !Globals.isEmptyOrSpaces(currentResults[i].records[j].name)
                   ) {
-                    // console.log("Assigning",i,j,currentResults[i].records[j].name);
+                    
 
                     if (mustSkip[currentResults[i].records[j].id]) {
                       // do nothing; skip
-                      // console.log("Skipping ID " + [currentResults[i].records[j].id]);
+                      
                     } else {
                       // Instead of currentResults[i].records[j].id, use the stored index
                       //     currentResults[i].originalIndex for record j);
@@ -1332,7 +1328,6 @@ export default class App extends React.Component {
                   shouldUpdate: true,
                 },
                 () => {
-                  console.log("Error, finish search");
                   this.initialSearch(_inputs);
                 }
               );
@@ -1343,7 +1338,7 @@ export default class App extends React.Component {
   };
 
   gatherPageHighlights = (searchId, _inputs, currentResults) => {
-    console.log(`file: App.js:1345 ~ App ~ searchId, _inputs, currentResults:`, searchId, _inputs, currentResults);
+    
     if (!_inputs) {
       if (this.state.searcherInputs) {
         _inputs = this.state.searcherInputs;
@@ -1351,7 +1346,7 @@ export default class App extends React.Component {
         _inputs = { titleRaw: Globals.getParameterByName("q") };
       }
     }
-    // console.log("Gathering page highlights", searchId, this._page, this._pageSize);
+    // 
     if (!this._mounted) {
       // User navigated away or reloaded
       return; // cancel search
@@ -1387,7 +1382,7 @@ export default class App extends React.Component {
       for (let j = 0; j < currentResults[i].records.length; j++) {
         // Push first lucene ID and filename
         if (!Globals.isEmptyOrSpaces(currentResults[i].records[j].name)) {
-          // console.log("Pushing",i,j,currentResults[i].records[j].id);
+          
 
           // Need to skip this entry on both sides if it already has plaintext.
           // If it has any, then skip here - we can get more on demand elsewhere, in separate logic.
@@ -1399,7 +1394,7 @@ export default class App extends React.Component {
             let firstFilename = currentResults[i].records[j].name.split(">")[0];
             let firstLuceneId = [currentResults[i].records[j].luceneIds[0]];
 
-            // console.log("First filename, record ID and lucene ID",
+            
             //     firstFilename, currentResults[i].records[j].id, firstLuceneId);
 
             _unhighlighted.push({
@@ -1407,7 +1402,7 @@ export default class App extends React.Component {
               filename: firstFilename,
             });
           } else {
-            // console.log("Adding skip ID " + [currentResults[i].records[j].id]);
+            
             mustSkip[currentResults[i].records[j].id] = true;
           }
         }
@@ -1435,7 +1430,7 @@ export default class App extends React.Component {
           fragmentSizeValue: _inputs.fragmentSizeValue,
         };
 
-        // console.log("For backend",dataToPass);
+        
 
         //Send the AJAX call to the server
         axios({
@@ -1453,7 +1448,7 @@ export default class App extends React.Component {
           })
           .then((parsedJson) => {
             if (parsedJson) {
-              // console.log("Adding highlights", parsedJson);
+              
 
               // TODO: If we want to avoid checking every ID until we run out of highlights,
               // data structures and a lot more must be changed
@@ -1471,10 +1466,10 @@ export default class App extends React.Component {
                   if (
                     !Globals.isEmptyOrSpaces(currentResults[i].records[j].name)
                   ) {
-                    // console.log("Assigning",i,j,currentResults[i].records[j].name);
+                    
 
                     if (mustSkip[currentResults[i].records[j].id]) {
-                      // console.log("Skipping ID " + [currentResults[i].records[j].id]);
+                      
                     } else {
                       currentResults[i].records[j].plaintext = parsedJson[x];
                       allResults[currentResults[i].originalIndex].records[
@@ -1489,7 +1484,7 @@ export default class App extends React.Component {
               // Verify one last time we want this before we actually commit to these results,
               // otherwise it could be jarring UX to setState here
               if (searchId < this._searchId) {
-                // console.log("There's another search call happening");
+                
                 return;
               } else {
                 // Fin
@@ -1504,7 +1499,7 @@ export default class App extends React.Component {
                     shouldUpdate: true,
                   },
                   () => {
-                    // console.log("All done with page highlights: all results, displayed results",
+                    
                     //     allResults, currentResults);
                   }
                 );
@@ -1570,9 +1565,9 @@ export default class App extends React.Component {
       })
       .finally(() => {
         this.setState({ loaded: true });
-        // console.log("Returning... " + result);
+        
       });
-    // console.log("App check");
+    
   };
 
   /** Scroll to bottom on page change and populate full table with latest results */
@@ -1591,7 +1586,7 @@ export default class App extends React.Component {
         }
       );
     } catch (e) {
-      console.log("Scroll error", e);
+      console.error("Scroll error", e);
     }
   };
 
@@ -1599,16 +1594,16 @@ export default class App extends React.Component {
     try {
       window.scrollTo({ top: 0, behavior: "smooth" });
     } catch (e) {
-      console.log("Scroll error", e);
+      console.error("Scroll error", e);
     }
   };
 
   displayedRowsUnpopulated = () => {
-    // console.log("Checking displayed rows...");
+    
     for (let i = 0; i < this.state.displayRows.length; i++) {
-      // console.log(this.state.displayRows[i].data);
+      
       if (this.state.displayRows[i].data.plaintext.length === 0) {
-        console.log("No text.  Should populate.");
+        console.error("No text.  Should populate.");
         return true;
       }
     }
@@ -1757,48 +1752,49 @@ export default class App extends React.Component {
                   />
                 </Helmet>
                 <Search
-                  results={this.state.outputResults}
-                  searchResults={this.state.searchResults}
-                  outputResults={this.state.outputResults}
-                  search={this.startNewSearch}
-                  suggest={this.suggestFromTerms}
-                  lookupResult={this.state.lookupResult}
-                  filterResultsBy={this.filterResultsBy}
-                  searching={this.state.searching}
-                  useOptions={this.state.useSearchOptions}
-                  optionsChanged={this.optionsChanged}
                   count={this.state.searchResults.length}
-                  filterToggle={this.filterToggle}
-                  networkError={this.state.networkError}
-                  parseError={this.state.parseError}
-                  finalCount={this._finalCount}
                   draftCount={this._draftCount}
                   eaCount={this._eaCount}
+                  filterResultsBy={this.filterResultsBy}
+                  filterToggle={this.filterToggle}
+                  finalCount={this._finalCount}
+                  lookupResult={this.state.lookupResult}
+                  networkError={this.state.networkError}
                   noiCount={this._noiCount}
+                  optionsChanged={this.optionsChanged}
+                  outputResults={this.state.outputResults}
+                  parseError={this.state.parseError}
+                  results={this.state.outputResults}
                   rodCount={this._rodCount}
                   scopingCount={this._scopingCount}
+                  search={this.startNewSearch}
+                  searching={this.state.searching}
+                  searchResults={this.state.searchResults}
+                  setPageInfo={this.setPageInfo}
+                  sort={this.sort}
+                  suggest={this.suggestFromTerms}
+                  useOptions={this.state.useSearchOptions}
                 >
                   <SearchProcessResults
                     {...this.props}
-                    sort={this.sort}
-                    informAppPage={this.setPageInfo}
-                    gatherSpecificHighlights={this.gatherSpecificHighlights}
-                    results={this.state.outputResults}
-                    search={this.startNewSearch}
-                    //                        searchResults={this.state.searchResults}
-                    geoResults={this.state.geoResults}
-                    filtersHidden={this.state.filtersHidden}
-                    // searcherState={this._searcherState}
-                    geoLoading={this.state.geoLoading}
-                    resultsText={this.state.resultsText}
-                    searching={this.state.searching}
-                    snippetsDisabled={this.state.snippetsDisabled}
-                    scrollToBottom={this.scrollToBottom}
-                    scrollToTop={this.scrollToTop}
-                    shouldUpdate={this.state.shouldUpdate}
                     download={this.downloadCurrentAsTSV}
                     exportToSpreadsheet={this.exportToCSV}
+                    filtersHidden={this.state.filtersHidden}
+                    gatherSpecificHighlights={this.gatherSpecificHighlights}
+                    geoLoading={this.state.geoLoading}
+                    geoResults={this.state.geoResults}
+                    informAppPage={this.setPageInfo}
                     isMapHidden={this.state.isMapHidden}
+                    results={this.state.outputResults}
+                    resultsText={this.state.resultsText}
+                    scrollToBottom={this.scrollToBottom}
+                    scrollToTop={this.scrollToTop}
+                    search={this.startNewSearch}
+                    searching={this.state.searching}
+                    setPageInfo={this.setPageInfo}
+                    shouldUpdate={this.state.shouldUpdate}
+                    snippetsDisabled={this.state.snippetsDisabled}
+                    sort={this.sort}
                     toggleMapHide={this.toggleMapHide}
                   />
                 </Search>
@@ -1870,7 +1866,7 @@ export default class App extends React.Component {
     // Option: Rehydrate old search results and everything?
     try {
       const rehydrate = JSON.parse(persist.getItem("results"));
-      // console.log("Old results", rehydrate);
+      
       this.setState(rehydrate);
     } catch (e) {
       // do nothing
@@ -1878,7 +1874,7 @@ export default class App extends React.Component {
   }
 
   async componentWillUnmount() {
-    // console.log("Unmount app");
+    
     this._mounted = false;
 
     // Option: Rehydrate only if not interrupting a search?

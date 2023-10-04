@@ -285,6 +285,7 @@ export default class SearchProcessResults extends React.Component {
                             />
 
                             <ResultsHeader 
+                                setPageInfo={this.props.setPageInfo}
                                 sort={this.props.sort}
                                 searching={this.props.searching}
                                 snippetsDisabled={this.props.snippetsDisabled} 

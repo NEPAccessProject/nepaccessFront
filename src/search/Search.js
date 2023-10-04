@@ -72,6 +72,7 @@ class Search extends React.Component {
 
   constructor(props) {
     super(props);
+    console.log(`file: Search.js:75 ~ Search ~ constructor ~ props:`, props);
     
 
     this.state = {
@@ -585,7 +586,7 @@ function countyFilter(stateValues) {
     }
   };
   onSortByChangeHandler = (evt)=>{
-    
+    console.log(`onSortByChangeHandler Event`,evt);
     this.setState({
       searcherInputs: {
         sortBy: evt.target.value,
@@ -889,13 +890,20 @@ function countyFilter(stateValues) {
         <ThemeProvider theme={theme}>
           <SearchContext.Provider value={value}>
             <Paper sx={{
-              marginTop: 10
+              marginTop: 0
             }}>
-              <Grid columnSpacing={2} id="result-header-grid-container" container>{''}
-                <Grid container xs={12} flex={1} flexGrow={1} id="results-header-grid-container">
+              <Grid Border={0} columnSpacing={0} id="result-header-grid-container" container>{''}
+                <Grid 
+                  container 
+                  xs={12} 
+                  id="results-header-grid-container"
+                  flex={1} 
+                  flexGrow={1}>
                   <ResultsHeader
                     {...this.props}
+                    sort={this.props.sort}
                     state={this.state}
+                    setPageInfo={this.props.setPageInfo}
                     handleProximityValues={this.handleProximityValues}
                     onInput={this.onInput}
                     onKeyUp={this.onKeyUp}
@@ -909,8 +917,17 @@ function countyFilter(stateValues) {
                     onDownloadClick={this.onDownloadClick}
                   />
                 </Grid>
-                <Grid container xs={12} flex={1} id="filters-grid-container">
-                  <Grid item xs={3} id="filters-grid-item">
+                <Grid 
+                  columnSpacing={2} 
+                  Border={0} 
+                  borderColor={'blue'} 
+                  container 
+                  xs={12} 
+                  flex={1}
+                  margin={0}
+                  padding={0}
+                  id="filters-grid-container">
+                  <Grid Border={0} item xs={3} id="filters-grid-item">
                     {!this.state.filtersHidden &&
                       //[TODO] it would probably be simpler showing these into context
                       <SideBarFilters
@@ -936,7 +953,7 @@ function countyFilter(stateValues) {
                       />
                     }
                   </Grid>
-                  <Grid item xs={9} >
+                  <Grid item xs={9} pl={2}>
                     {this.props.children}
                   </Grid>
                 </Grid>
@@ -1091,9 +1108,9 @@ const styles = theme => ({
 Search.propTypes = {
   results: PropTypes.arrayOf(
     PropTypes.shape({
-      id: PropTypes.string.isRequired,
+      id: PropTypes.number,
       title: PropTypes.string,
-      processId: PropTypes.number.isRequired
+      processId: PropTypes.number
     })),
   onSearch: PropTypes.func.isRequired,
   onSort: PropTypes.func.isRequired,

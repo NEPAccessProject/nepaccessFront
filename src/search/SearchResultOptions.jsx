@@ -32,53 +32,48 @@ const Item = styled(Paper)(({ theme }) => ({
 	borderColor: theme.palette.divider,
 }));
 // height: 75,
-const useStyles = makeStyles(theme => (
-	{ 
-        root: {
-            flexGrow: 1,
-			backgroundColor:"#000",
-        },
-        paper: {
-            padding:1, //theme.spacing(2),
-            textAlign: 'center',
-            color: 'black' //theme.palette.text.secondary,
-        }}));
+const useStyles = makeStyles((theme) => ({
+	root: {
+		flexGrow: 1,
+		backgroundColor: '#000',
+	},
+	paper: {
+		padding: 1, //theme.spacing(2),
+		textAlign: 'center',
+		color: 'black', //theme.palette.text.secondary,
+	},
+}));
 function SearchResultOptions(props) {
-
-
+	console.log(`file: SearchResultOptions.jsx:47 ~ SearchResultOptions ~ props:`, props);
 	const {
-		state,
-    onCheckboxChange,
+    setPageInfo,
+		onCheckboxChange,
 		onLimitChangeHandler,
 		onSortDirectionChangeHandler,
 		onDownloadClick,
 		onSaveSearchResultsClick,
-    onSortByChangeHandler,
+		onSortByChangeHandler,
+		sort,
 	} = props;
+  const ctx = useContext(SearchContext)
+  const {state} = ctx;
+   console.log(`file: SearchResultOptions.jsx:61 ~ SearchResultOptions ~ state:`, state);
+   
+	console.log(
+		`file: SearchResultOptions.jsx:59 ~ SearchResultOptions ~ props:`,
+		props,
+	);
 	// Debug vars
 	//const { sortBy, sortDirection, limit, showContext, snippetsDisabled } = state;
-  
-	//set static values while props / context is debuged
+
+	//set static values while props / context is debugged
 	const sortBy = 'relevance';
 	const sortDirection = 'ASC';
 	const limit = 50;
 	const showContext = true;
 	const snippetsDisabled = false;
 	const classes = useStyles(theme);
-  const {  setState } = useContext(SearchContext);
-
-	// const onSortDirectionChangeHandler = (evt) => {
-	// 	
-	// }
-
-	// const onCheckboxChange = (evt) => {
-	// 	
-	// 	setState({
-	// 		...state,
-	// 		hidden: !state.hidden,
-	// 		showContext: evt.target.checked,
-	// 	});
-	// };
+	const { setState } = useContext(SearchContext);
 	return (
 		<>
 			<Grid
@@ -86,9 +81,10 @@ function SearchResultOptions(props) {
 				flex={1}
 				spacing={0}
 				border={0}
-				justifyContent={'flex-start'}
-			>
-				<Grid xs={4} md={4}>
+				justifyContent={'flex-start'}>
+				<Grid
+					xs={4}
+					md={4}>
 					<Item
 						elevation={0}
 						justifyContent='center'
@@ -98,15 +94,14 @@ function SearchResultOptions(props) {
 							display: 'flex',
 							borderRight: 1,
 							borderColor: 'lightgray',
-						}}
-					>
+						}}>
 						<FormControl>
 							<FormControlLabel
 								control={
 									<Checkbox
 										// checked={searchOptions}
 										checked={showContext}
-										onChange={(evt)=>onUseOptionsChecked(evt)}
+										onChange={(evt) => onUseOptionsChecked(evt)}
 										disabled={snippetsDisabled}
 									/>
 								}
@@ -115,7 +110,9 @@ function SearchResultOptions(props) {
 						</FormControl>
 					</Item>
 				</Grid>
-				<Grid xs={6} md={3}>
+				<Grid
+					xs={6}
+					md={3}>
 					<Item
 						justifyContent='center'
 						elevation={0}
@@ -125,14 +122,15 @@ function SearchResultOptions(props) {
 							display: 'flex',
 							borderRight: 1,
 							borderColor: 'lightgray',
-						}}
-					>
+						}}>
 						<FormControlLabel
 							itemID='sort'
 							id='sort-by-select-label'
 							labelPlacement='start'
 							label={
-								<Typography variant='formContolLabel' sx={{ marginRight: 2 }}>
+								<Typography
+									variant='formContolLabel'
+									sx={{ marginRight: 2 }}>
 									Sort by:
 								</Typography>
 							}
@@ -143,24 +141,23 @@ function SearchResultOptions(props) {
 									label={
 										<Typography
 											variant='formContolLabel'
-											sx={{ marginRight: 2 }}
-										>
+											sx={{ marginRight: 2 }}>
 											Sort By:
 										</Typography>
 									}
-									defaultValue={ state.limit || "relevance"}
-									onChange={(evt)=>onSortByChangeHandler(evt)}
-								>
+									defaultValue={'relevance'}
+									onChange={(evt) => onSortByChangeHandler(evt)}>
 									<MenuItem value='relevance'>Relevance</MenuItem>
 									<MenuItem value='title'>Title</MenuItem>
 									<MenuItem value='date'>Date</MenuItem>
 									<MenuItem value='distance'>Distance</MenuItem>
 								</Select>
-							}
-						></FormControlLabel>
+							}></FormControlLabel>
 					</Item>
 				</Grid>
-				<Grid xs={6} md={3}>
+				<Grid
+					xs={6}
+					md={3}>
 					<Item
 						justifyContent='center'
 						elevation={0}
@@ -170,33 +167,39 @@ function SearchResultOptions(props) {
 							display: 'flex',
 							borderRight: 1,
 							borderColor: 'lightgray',
-						}}
-					>
+						}}>
 						<FormControl>
 							<FormControlLabel
 								itemID='search-result-options-pagesize-select'
 								id='sort-by-select-label'
 								labelPlacement='start'
+                name="sortby"
 								label={
-									<Typography variant='formContolLabel' sx={{ marginRight: 2 }}>
+									<Typography
+										variant='formContolLabel'
+										sx={{ marginRight: 2 }}>
 										Page Size:
 									</Typography>
 								}
 								control={
 									<Select
+                    name="limit"
 										id='search-result-options-sort-by-select'
-										value={state.limit}
-										defaultValue={state.limit || 10}
-										onChange={(evt,value,reason)=>onSortDirectionChangeHandler(evt,value,reason)}
-										label='Page Size'
-									>
+										value={state.limit || 10}
+										defaultValue={10}
+										onChange={(evt) =>
+                      //[TODO] need to pass the current page vs just 0
+											setPageInfo(0, evt.target.value)
+										}
+										label='Page Size'>
+										<MenuItem value={1}>1</MenuItem>
+										<MenuItem value={5}>5</MenuItem>
 										<MenuItem value={10}>10</MenuItem>
 										<MenuItem value={25}>25</MenuItem>
 										<MenuItem value={50}>50</MenuItem>
 										<MenuItem value={100}>100</MenuItem>
 									</Select>
-								}
-							></FormControlLabel>
+								}></FormControlLabel>
 						</FormControl>
 					</Item>
 				</Grid>
@@ -210,9 +213,11 @@ function SearchResultOptions(props) {
 					id='search-result-options-icon-container'
 					alignItems={'center'}
 					alignContent={'Center'}
-					justifyContent={'center'}
-				>
-					<Grid xs={6} flex={1} id='search-result-options-icon-items'>
+					justifyContent={'center'}>
+					<Grid
+						xs={6}
+						flex={1}
+						id='search-result-options-icon-items'>
 						<Item
 							id='search-result-options-icon-item'
 							justifyContent='center'
@@ -224,8 +229,7 @@ function SearchResultOptions(props) {
 								display: 'flex',
 								borderRight: 1,
 								borderColor: 'lightgray',
-							}}
-						>
+							}}>
 							<SortOutlined
 								value={sortDirection}
 								onChange={onSortDirectionChangeHandler}
@@ -236,8 +240,7 @@ function SearchResultOptions(props) {
 						xs={12}
 						md={6}
 						flex={1}
-						id='search-result-options-grid-container'
-					>
+						id='search-result-options-grid-container'>
 						<Item
 							id='search-result-sort-item'
 							justifyContent='center'
@@ -248,8 +251,7 @@ function SearchResultOptions(props) {
 								display: 'flex',
 								borderRight: 0,
 								borderColor: 'lightgray',
-							}}
-						>
+							}}>
 							<CloudDownloadIcon
 								value={sortDirection}
 								onChange={onDownloadClick}

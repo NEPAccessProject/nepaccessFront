@@ -26,7 +26,7 @@ export default class ResultsHeader extends React.Component {
 
   constructor(props) {
     super(props);
-    const { onInput, handleProximityValues, state, results, titleRaw } = props;
+    const { onInput, handleProximityValues, state, results, titleRaw,sort } = props;
     console.log("🚀 ~ file: ResultsHeader.js:30 ~ ResultsHeader ~ constructor ~ props:", props)
 
     this.state = {
@@ -55,29 +55,31 @@ export default class ResultsHeader extends React.Component {
     );
   };
 
-  onSortChange = (value_label, event) => {
-    if (event.action === "select-option") {
+  onSortChange = (event) => {
+    console.log(`file: ResultsHeader.js:59 ~ ResultsHeader ~ event:`, event);
+    //if (event.action === "select-option") {
       this.setState(
         {
-          sort: value_label,
+          sort: event.target.value,
         },
         () => {
           this.props.sort(this.state.sort.value, this.state.order.value);
         }
       );
-    }
+    //}
   };
-  onSortOrderChange = (value_label, event) => {
-    if (event.action === "select-option") {
+  onSortOrderChange = (event) => {
+  console.log(`file: ResultsHeader.js:72 ~ ResultsHeader ~ event:`, event);
+//    if (event.action === "select-option") {
       this.setState(
         {
-          order: value_label,
+          order: event.target.value,
         },
         () => {
           this.props.sort(this.state.sort.value, this.state.order.value);
         }
       );
-    }
+  //  }
   };
 
   showDownloadButton = () => {
@@ -218,6 +220,7 @@ export default class ResultsHeader extends React.Component {
             >
               <SearchResultOptions
                 state={this.state}
+                setPageInfo={this.props.setPageInfo}
                 onCheckboxChange={this.onCheckboxChange}
                 onLimitChangeHandler={this.onLimitChangeHandler}
                 onSortDirectionChangeHandler={this.onSortOrderChange}
