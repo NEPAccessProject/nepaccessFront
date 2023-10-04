@@ -13,7 +13,7 @@ import {
   Chip,
 } from '@mui/material';
 import Grid from '@mui/material/Unstable_Grid2';
-import { styled } from '@mui/styles';
+import { styled,makeStyles } from '@mui/styles';
 import React, { useContext } from 'react';
 //import { ThemeProvider, createUseStyles } from "react-jss";
 import SearchContext from './SearchContext';
@@ -28,7 +28,6 @@ import {
   decisionOptions as decisions,
   countyOptions as counties,
 } from './options';
-import { useStyles } from './Dialogs/PDFViewerDialog';
 //filter out duplicates
 const actionOptions = Array.from(new Set(actions));
 const agencyOptions = Array.from(new Set(agencies));
@@ -57,14 +56,16 @@ const Item = styled(Box)(({ theme }) => ({
   },
 }));
 
+const useStyles = makeStyles((theme) => ({
+  checkbox: {
+    padding: 0,
+    margin: 0,
+  }
+}))
+
 const SideBarFilters = (props) => {
   const { state, setState } = useContext(SearchContext);
   const classes = useStyles(theme);
-  console.log(
-    `🚀 ~ file: SideBarFilters.jsx:53 ~ SideBarFilters ~ CONTEXT state:`,
-    state,
-  );
-  console.log(`STATE AGENCY???!!!!`, state.agency);
   const {
     filtersHidden,
     onActionChange,
@@ -98,21 +99,13 @@ const SideBarFilters = (props) => {
     limitTags: 3,
     disablePortal: true,
     variant: 'standard',
+    maxWidth: '270px',
     getLimitTagsText: (options) =>
       options.label.length > 10
         ? options.label.slice(0, 10) + '...'
         : options.label,
     getOptionLabel: (v) =>
       v.label.length > 15 ? `${v.label.slice(0, 15)}...` : `${v.label}`,
-  };
-
-  const getValue = (options, stateValue) => {
-    console.log(
-      `file: SideBarFilters.jsx:103 ~ getValue ~ stateValue:`,
-      stateValue,
-    );
-    console.log(`file: SideBarFilters.jsx:103 ~ getValue ~ options:`, options);
-    return 'This is a label';
   };
 
   return (
@@ -158,8 +151,8 @@ const SideBarFilters = (props) => {
                       onAgencyChange(evt, value, tag)
                     }
                     getOptionLabel={(v) =>
-                      v.label.length > 15
-                        ? `${v.label.slice(0, 15)}...`
+                      v.label.length > 25
+                        ? `${v.label.slice(0, 25)}...`
                         : `${v.label}`
                     }
                     ListboxProps={{
@@ -238,7 +231,7 @@ const SideBarFilters = (props) => {
                   value={stateOptions.filter((v) =>
                     state.state.includes(v.value),
                   )}
-                  onChange={(evt, value) => onLocationChange(evt, value)}
+                  onChange={(evt, value, reason) => onLocationChange(evt, value,reason)}
                   getOptionLabel={(v) =>
                     v.label.length > 15
                       ? `${v.label.slice(0, 15)}...`
@@ -267,8 +260,8 @@ const SideBarFilters = (props) => {
                   id='county'
                   name='county'
                   tabIndex={5}
-                  options={countyOptions}
-                  value={countyOptions.filter((v) =>
+                  options={state.countyOptions}
+                  value={state.countyOptions && state.countyOptions.filter((v) =>
                     state.county.includes(v.value),
                   )}
                   onChange={(evt, value, reason) =>
@@ -305,7 +298,7 @@ const SideBarFilters = (props) => {
                       className={'classes.autocomplete'}
                       options={actionOptions}
                       //                      value={getValue(actionOptions, state.action)}
-                      onChange={(evt, value) => onActionChange(evt, value)}
+                      onChange={(evt, value,reason) => onActionChange(evt, value,reason)}
                       getOptionLabel={(v) =>
                         v.label.length > 15
                           ? `${v.label.slice(0, 15)}...`
@@ -389,64 +382,65 @@ const SideBarFilters = (props) => {
               <Item>
                 {/* <Typography var="filterLabel">Document Type</Typography>              */}
                 <Box>
-                  <Item>
-
-                    <Checkbox
-                      name='typeFinal'
-                      id='typeFinal'
-                      tabIndex='12'
-                      checked={state.typeFinal}
-                      onChange={(evt) => onTypeChecked(evt)}
-                    />                     
-                                          <FormLabel>
-                        <Typography variant='filterLabel'>
-                          Draft EIS {props.draftCount ? props.draftCount : ''}
-                        </Typography>
-                      </FormLabel>
- 
-                  </Item>
-                  <Item>
+                  <Checkbox
+                    name='typeFinal'
+                    id='typeFinal'
+                    tabIndex='12'
+                    checked={state.typeFinal}
+                    onChange={(evt) => onTypeChecked(evt)}
+                    className={classes.checkbox}
+                  />
+                  <FormLabel>
+                    <Typography variant='filterLabel'>
+                      Draft EIS {props.draftCount ? props.draftCount : ''}
+                    </Typography>
+                  </FormLabel>
+                  <Box>
                     <Checkbox
                       name='typeEA'
                       id='typeEA'
-                      className='sidebar-checkbox'
+                      className={classes.checkbox}
                       tabIndex='13'
                       checked={state.typeEA}
                       onChange={(evt) => onTypeChecked(evt)}
+
                     />
                     <label htmlFor="typeEa">
                       <Typography variant="filterLabel">
-                       EA {props.eaCount ? props.eaCount : ''}
+                        EA {props.eaCount ? props.eaCount : ''}
                       </Typography>
-                      </label>
+                    </label>
 
-                  </Item>
-                  <Item>
-                        <Checkbox
-                          name='typeNOI'
-                          tabIndex='14'
-                          checked={state.typeNOI}
-                          onChange={(evt) => onTypeChecked(evt)}
-                        />
-                      <label htmlFor='typeNOI'>
-                        <Typography variant="filterLabel">NOI {props.noiCount ? props.noiCount : ''} </Typography>
-                      </label>
-                  </Item>
-                  <Item>
-                        <Checkbox
-                          name='typeROD'
-                          id='typeROD'
-                          //                      className="sidebar-checkbox"
-                          tabIndex='15'
-                          checked={state.typeROD}
-                          onChange={(evt) => onTypeChecked(evt)}
-                        />
-                        <label htmlFor="typeROD">
-                        <Typography variant="filterLabel">
+                  </Box>
+                  <Box>
+                    <Checkbox
+                      name='typeNOI'
+                      tabIndex='14'
+                      checked={state.typeNOI}
+                      onChange={(evt) => onTypeChecked(evt)}
+                      className={classes.checkbox}
+                    />
+                    <label htmlFor='typeNOI'>
+                      <Typography variant="filterLabel">NOI {props.noiCount ? props.noiCount : ''} </Typography>
+                    </label>
+                  </Box>
+                  <Box>
+                    <Checkbox
+                      name='typeROD'
+                      id='typeROD'
+                      //                      className="sidebar-checkbox"
+                      tabIndex='15'
+                      checked={state.typeROD}
+                      onChange={(evt) => onTypeChecked(evt)}
+                      className={classes.checkbox}
+
+                    />
+                    <label htmlFor="typeROD">
+                      <Typography variant="filterLabel">
                         ROD {props.rodCount ? props.rodCount : ''}
-                        </Typography>
-                        </label>
-                  </Item>
+                      </Typography>
+                    </label>
+                  </Box>
                   {/* <div className="checkbox-container">
                             <label className="clickable checkbox-text">
                               <Checkbox
@@ -461,23 +455,23 @@ const SideBarFilters = (props) => {
                               </span>
                             </label>
                           </div> */}
-                  <Item>
+                  <Box>
 
-                        <Checkbox
-                          name='typeScoping'
-                          id='typeScoping'
-                          //className="sidebar-checkbox"
-                          tabIndex='16'
-                          checked={state.typeScoping}
-                          onChange={(evt) => onTypeChecked(evt)}
-                        />
-                      
+                    <Checkbox
+                      name='typeScoping'
+                      id='typeScoping'
+                      //className="sidebar-checkbox"
+                      tabIndex='16'
+                      checked={state.typeScoping}
+                      onChange={(evt) => onTypeChecked(evt)}
+                    />
 
-                      <Typography variant='filterLabel' color='black'>
+
+                    <Typography variant='filterLabel' color='black'>
                       Scoping Report {props.typeScopingCount}
-                      </Typography>
-                    
-                  </Item>
+                    </Typography>
+
+                  </Box>
                 </Box>
               </Item>
 
@@ -487,6 +481,7 @@ const SideBarFilters = (props) => {
                 <Typography variant='h6'>Advanced</Typography>
                 <div className='sidebar-checkboxes'>
                   <Checkbox
+
                     type='checkbox'
                     name='typeFinal'
                     checked={props.useOptions}

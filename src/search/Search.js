@@ -72,10 +72,8 @@ class Search extends React.Component {
 
   constructor(props) {
     super(props);
-    console.log(
-      "🚀 ~ file: Search.js:49 ~ Search ~ constructor ~ props:",
-      props
-    );
+    
+
     this.state = {
       titleRaw: "",
       startPublish: null,
@@ -136,12 +134,12 @@ class Search extends React.Component {
   }
 
   handleChange(inputId, inputValue) {
-    console.log(`SearchLanding - Line 27 - HandleChanger() inputId: ${inputId} - inputValue: ${inputValue}`)
+    
     this.setState({ [inputId]: inputValue });
   }
 
   doSearch = (terms) => {
-    console.log(`🚀 ~ file: Search.js:148 ~ Search ~ terms:`, terms);
+    
 
     //[TODO][BUG] Look into why last search term is being set as the same as the current one?
     this.setState(
@@ -159,8 +157,8 @@ class Search extends React.Component {
   };
 
   doSearchFromParams = () => {
-    // console.log("Stored terms", this._lastSearchTerms);
-    // console.log("State.", this.state);
+    // 
+    // 
 
     var queryString = Globals.getParameterByName("q");
     this.setState({
@@ -168,7 +166,7 @@ class Search extends React.Component {
     })
     if (!this.props.count && (queryString === null || queryString === "")) {
       // No query param/blank terms: Launch no-term search - Only if we have no results saved here already
-      // console.log("No query parameters, doing blank search.", this.props.count);
+      // 
       this.doSearch("");
     } else if (queryString) {
       // Query terms: Handle proximity dropdown logic, launch search
@@ -186,7 +184,7 @@ class Search extends React.Component {
         },
         () => {
           if (this.state.titleRaw) {
-            console.log(`Firing search with titleRaw: ${this.state.titleRaw}`);
+            
             this.debouncedSearch(this.state);
           }
         }
@@ -239,9 +237,9 @@ class Search extends React.Component {
   };
 
   onClearFilter = (evt, reason) => {
-    console.log(`file: Search.js:242 ~ Search ~ evt,reason:`, evt, reason);
+    
     this.setState({ [evt.target.name]: [] }, () => {
-      console.log(`Resetting state key ${evt.target.name}`)
+      
       // this.debouncedSearch(this.state);
     });
 
@@ -319,7 +317,7 @@ class Search extends React.Component {
   };
 
   onInput = (evt) => {
-    //		console.log(`file: Search.js:320 ~ OnInput  ~ evt target name: ${evt.target.name} - value: ${evt.target.value}`, evt);
+    //		
     let userInput = evt.target.value;
 
     let proximityValues = this.handleProximityValues(userInput);
@@ -348,7 +346,7 @@ class Search extends React.Component {
   };
 
   geoFilter = (geodata) => {
-    // console.log(geodata.name, geodata.abbrev);
+    // 
     if (geodata.geoType === Globals.geoType.STATE) {
       // Assuming Search and SearchResultsMap talk to each other, we'll want two-way interaction.
       // So if it's sending us a state, we may want to enable or disable it.
@@ -389,7 +387,7 @@ class Search extends React.Component {
   };
 
   onFragmentSizeChange = (evt) => {
-    console.log("Val", evt.value);
+    
     this.setState({
       fragmentSizeValue: evt.value,
       fragmentSize: evt,
@@ -397,13 +395,13 @@ class Search extends React.Component {
   };
 
   onAgencyChange = (evt, selected, reason) => {
-    console.log(`file: Search.js:400 ~ Search ~ reason:`, reason);
-    console.log(`file: Search.js:5400 ~ Search ~ evt, selected, reason:`, evt, selected);
+    
+    
     let agencies = [];
     if (reason === "selectOption") {
       agencies = this.state.agency || [];
       selected.map(s => {
-        console.log(`file: Search.js:395 ~ Search ~ v:`, s);
+        
         return agencies.push(s.value);
       });
     }
@@ -413,18 +411,18 @@ class Search extends React.Component {
         agencyRaw: evt,
       },
       () => {
-        console.log(`file: Search.js:413 ~ Search ~ this.state:`, this.state);
+        
         this.filterResultsBy(this.state);
       }
     );
   };
   onCooperatingAgencyChange = (evt, selected, reason) => {
-    console.log(`file: Search.js:423 ~ evt, selected, reason:`, evt, selected, reason);
+    
     let agencies = [];
     if (reason === "selectOption") {
       agencies = this.state.cooperatingAgency || [];
       selected.map(s => {
-        console.log(`file: Search.js:424 ~ Search ~ v:`, s);
+        
         return agencies.push(s.value);
       });
     }
@@ -440,8 +438,8 @@ class Search extends React.Component {
     );
   }
   onActionChange = (evt, selected, reason) => {
-    console.log(`file: Search.js:452 ~ reason:`, reason);
-    console.log(`🚀 ~ file: Search.js:432 ~ Search ~ evt,value:`, evt, selected);
+    
+    
 
     let actions = [];
     if (reason === "selectOption") {
@@ -481,19 +479,22 @@ class Search extends React.Component {
     );
   };
   onLocationChange = (evt, selected, reason) => {
-    //    console.log(`🚀 ~ file: Search.js:475 ~ Search ~ evt, item:`, evt, selected);
+    //    
     let states = [];
     if (reason === 'selectOption')
       states = state.state || [];
     selected.map(s => {
       states.push(s.value)
     })
-
+    const countyOptions = this.narrowCountyOptions(selected);
+    console.log(`file: Search.js:490 ~ Search ~ # OF COUNTIES:`, countyOptions.length);
+    
+    
     this.setState(
       {
         state: states,
         stateRaw: evt,
-        countyOptions: this.narrowCountyOptions(selected),
+        countyOptions: countyOptions,
       },
       () => {
         this.filterResultsBy(this.state);
@@ -502,10 +503,13 @@ class Search extends React.Component {
         //[TODO] FIX THIS 
         this.onCountyChange(
           this.state.countyOptions.filter((countyObj) => {
-            console.log(`file: Search.js:496 ~ Search ~ countyObj:`, countyObj);
-            return this.state.county.includes(countyObj.value)
+            
+            const matches =  this.state.county.includes(countyObj.value)
+            console.log(`file: Search.js:507 ~ Search ~ this.state.countyOptions.filter ~ matches:`, matches);
+            return matches;
           }),
-          selected
+          selected,
+          reason,
         );
       }
     );
@@ -513,36 +517,33 @@ class Search extends React.Component {
   /** Helper method for onLocationChange limits county options to selected states in filter,
    * or resets to all counties if no states selected */
   narrowCountyOptions = (stateValues) => {
-    console.log(`file: Search.js:506 ~ Search ~ stateValues:`, stateValues);
-    /** Filter logic for county array of specific label/value format given array of state abbreviations  */
-    function countyFilter(_stateValues) {
-      console.log(`file: Search.js:522 ~ Search ~ countyFilter ~ _stateValues:`, _stateValues);
-      return function (a) {
-        let returnValue = false;
-        _stateValues.forEach((item) => {
-          if (a.label.split(":")[0] === item) {
-            // a.label.split(':')[0] gets 'AZ' from expected 'AZ: Arizona'
-            returnValue = true;
-          }
-        });
-        return returnValue;
-      };
-    }
+    console.log(`file: Search.js:517 ~ Search ~ stateValues:`, stateValues.length,stateValues[0]);
+    
+/** Filter logic for county array of specific label/value format given array of state abbreviations  */
+function countyFilter(stateValues) {
+  console.log(`file: Search.js:521 ~ Search ~ countyFilter ~ stateValues:`, stateValues);
+  return function (a) {
+    const matches = stateValues.some(item => a.label.split(":")[0] === item.value);
+    return matches;
+  };
+}
 
     let filteredCounties = Globals.counties;
     if (stateValues && stateValues.length > 0) {
       filteredCounties = filteredCounties.filter(countyFilter(stateValues));
     }
-    console.log(`file: Search.js:524 ~ Search ~ filteredCounties:`, filteredCounties);
+    console.log(`file: Search.js:535 ~ Search ~ filteredCounties:`, filteredCounties);
+    
 
     return filteredCounties;
   };
   onCountyChange = (evt, selected, reason) => {
-    console.log(`file: Search.js:544 ~ Search ~ reason:`, reason);
-    console.log(`file: Search.js:544 ~ Search ~ selected:`, selected);
+    
+    
     let counties = [];
     if (reason === 'selectOption') {
-      counties = this.state.county || [];
+      //[TODO] Debuging only reseting state
+      //counties = this.state.county || [];
       if (_.isArray(selected)) {
         selected.map(s => {
           counties.push(s.value)
@@ -550,7 +551,7 @@ class Search extends React.Component {
       }
       else {
         counties.push(selected.value)
-        console.log(`file: Search.js:556 ~ Search ~ counties:`, counties);
+        
       }
 
 
@@ -566,8 +567,8 @@ class Search extends React.Component {
     }
   }
   onProximityChange = (evt, selected, reason) => {
-    console.log(`file: Search.js:568 ~ Search ~ reason:`, reason);
-    console.log(`file: Search.js:545 ~ Search ~ evt,selected:`, evt, selected);
+    
+    
     if (evt.value === -1) {
       this.setState({
         proximityOption: null,
@@ -578,24 +579,24 @@ class Search extends React.Component {
           proximityOption: evt,
         },
         () => {
-          // console.log(this.state.proximityOption);
+          // 
         }
       );
     }
   };
   onSortByChangeHandler = (evt)=>{
-    console.log(`file: Search.js:577 ~ Search ~ evt.target:`, evt.target);
+    
     this.setState({
       searcherInputs: {
         sortBy: evt.target.value,
       }
     }, () => {
-      console.log('SORT BY NEW STATE', this.state.searcherInputs);
+      
     })
   }
 
   onTitleOnlyChecked = (evt) => {
-    console.log(`file: Search.js:584 ~ Search ~ evt:`, evt);
+    
     if (evt.target.checked) {
       this.setState({
         searchOption: "C", // Title only
@@ -617,7 +618,7 @@ class Search extends React.Component {
   };
 
   onUseOptionsChecked = (evt) => {
-    console.log(`file: Search.js:605 ~ Search ~ evt:`, evt);
+    
     this.props.optionsChanged(evt.target.checked);
   };
 
@@ -683,8 +684,8 @@ class Search extends React.Component {
     // if(evt && evt.target && evt.target.value && /^\d{4}$/.test(evt.target.value)) {
     //     // TODO: Is there a way to change the month/day focused without filling in those text values?
     //     // Goal is to focus Dec 31 of year instead of Jan 1 (defaults to 01 01 if nothing provided)
-    //     console.log(new Date('12 31 ' + evt.target.value));
-    //     console.log(this.datePickerEnd);
+    //     
+    //     
     //     this.datePickerEnd.value = new Date('12 31 ' + evt.target.value);
     //     this.datePickerEnd.state.preSelection = new Date('12 31 ' + evt.target.value);
     //     this.datePickerEnd.calendar.instanceRef.state.date = new Date('12 31 ' + evt.target.value);
@@ -693,7 +694,7 @@ class Search extends React.Component {
     //     this.setState( { endPublish: new Date('12 31 ' + evt.target.value) }, () => {
     //         this.datePickerEnd.value = this.state.endPublish;
     //         this.filterBy(this.state);
-    //         console.log(this.state.endPublish);
+    //         
     //         this.datePickerEnd.forceUpdate();
     //         // this.debouncedSearch(this.state);
     //     });
@@ -890,7 +891,7 @@ class Search extends React.Component {
             <Paper sx={{
               marginTop: 10
             }}>
-              <Grid id="result-header-grid-container" container>{''}
+              <Grid columnSpacing={2} id="result-header-grid-container" container>{''}
                 <Grid container xs={12} flex={1} flexGrow={1} id="results-header-grid-container">
                   <ResultsHeader
                     {...this.props}
@@ -993,8 +994,8 @@ class Search extends React.Component {
         this._lastSearchTerms = rehydrate.lastSearchedTerm;
       }
 
-      // console.log(rehydrate.startPublish);
-      // console.log(new Date(rehydrate.startPublish));
+      // 
+      // 
 
       if (typeof rehydrate.startPublish === "string") {
         rehydrate.startPublish = Globals.getCorrectDate(rehydrate.startPublish);
@@ -1016,7 +1017,7 @@ class Search extends React.Component {
     this.getCounts();
 
     // Get search params on mount and run search on them (implies came from landing page)
-    // console.log("Search mounted, doing search from parameters.");
+    // 
     this.doSearchFromParams();
   }
 
@@ -1038,7 +1039,7 @@ class Search extends React.Component {
             server_response: rsp,
           },
           () => {
-            console.log(this.state.server_response);
+            
           }
         );
         // let responseOK = response && response.status === 200;
