@@ -47,7 +47,7 @@ import { ThemeOptions } from '@mui/material/styles';
 
 			filterLabel: {
 				fontSize: '0.8rem',
-        color: 'blue',
+        color: 'black',
         lineHeigth: '0.9rem'
 			},
 			// resultsTitle: {
@@ -124,10 +124,10 @@ import { ThemeOptions } from '@mui/material/styles';
 			},
 	 MuiAppBar: {
 		colorPrimary:{
-			backgroundColor:'red'
+//			backgroundColor:'red'
 		},
 		colorDefault: {
-			backgroundColor: 'green'
+//			backgroundColor: 'green'
 		}
 	 },
       MuiFormControlLabel: {
