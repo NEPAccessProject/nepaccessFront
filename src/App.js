@@ -467,36 +467,10 @@ export default class App extends React.Component {
 
     // throw out anything we really don't want to support/include
     searcherState.titleRaw = preProcessTerms(searcherState.titleRaw);
-
-    // Parse terms, set to what Lucene will actually use for full transparency.  Disabled on request
-    // const oldTerms = searcherState.titleRaw;
-
-    // axios({
-    //     method: 'GET',
-    //     url: Globals.currentHost + 'text/test_terms',
-    //     params: {
-    //         terms: searcherState.titleRaw
-    //     }
-    // }).then(response => {
-
-    //     if(response.data !== oldTerms && "\""+response.data+"\"" !== oldTerms) {
-    //         searcherState.titleRaw = response.data; // escape terms
-
-    //         this.setState({
-    //             parseError: 'Special characters were escaped to avoid parsing error.  Old search terms: ' + oldTerms
-    //         })
-    //     } else {
-    //         this.setState({
-    //             parseError: ''
-    //         })
-    //     }
-
     // reset sort
     this._sortVal = "relevance";
     this._ascVal = true;
-
     this._searcherState = searcherState; // for live filtering
-
     this.resetTypeCounts();
 
     // 0: Get top 100 results
@@ -521,9 +495,6 @@ export default class App extends React.Component {
       // User navigated away or reloaded
       return;
     }
-
-    
-
     this.setState(
       {
         // Fresh search, fresh results
@@ -1646,7 +1617,7 @@ export default class App extends React.Component {
             .flat() // have to flatten from process structure
             .sort((a, b) => a.title.localeCompare(b.title)) // just sort by title?
         ),
-        "csv"
+        "csv",
       );
     }
   };
