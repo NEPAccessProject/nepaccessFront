@@ -53,23 +53,19 @@ function SearchResultOptions(props) {
 		onDownloadClick,
 		onSaveSearchResultsClick,
 		onSortByChangeHandler,
+    onUseOptionsChecked,
 		sort,
 	} = props;
   const ctx = useContext(SearchContext)
   const {state} = ctx;
-   console.log(`file: SearchResultOptions.jsx:61 ~ SearchResultOptions ~ state:`, state);
+   console.log(`file:CONTEXT STATE SearchResultOptions.jsx:61 ~ SearchResultOptions ~ STATE:`, state);
    
-	console.log(
-		`file: SearchResultOptions.jsx:59 ~ SearchResultOptions ~ props:`,
-		props,
-	);
 	// Debug vars
 	//const { sortBy, sortDirection, limit, showContext, snippetsDisabled } = state;
 
 	//set static values while props / context is debugged
 	const sortBy = 'relevance';
 	const sortDirection = 'ASC';
-	const limit = 50;
 	const showContext = true;
 	const snippetsDisabled = false;
 	const classes = useStyles(theme);
@@ -99,8 +95,9 @@ function SearchResultOptions(props) {
 							<FormControlLabel
 								control={
 									<Checkbox
+                    name="showContext"
 										// checked={searchOptions}
-										checked={showContext}
+										checked={state.useSearchOptions}
 										onChange={(evt) => onUseOptionsChecked(evt)}
 										disabled={snippetsDisabled}
 									/>
@@ -137,7 +134,7 @@ function SearchResultOptions(props) {
 							control={
 								<Select
 									id='search-result-options-sort-by-select'
-									value={sortBy}
+									value={state.sortBy}
 									label={
 										<Typography
 											variant='formContolLabel'
@@ -145,7 +142,9 @@ function SearchResultOptions(props) {
 											Sort By:
 										</Typography>
 									}
+                  name='sort'
 									defaultValue={'relevance'}
+                  placeholder='Select...'
 									onChange={(evt) => onSortByChangeHandler(evt)}>
 									<MenuItem value='relevance'>Relevance</MenuItem>
 									<MenuItem value='title'>Title</MenuItem>
