@@ -23,34 +23,34 @@ const _ = require("lodash");
 export default class App extends React.Component {
   state = {
     searcherInputs: {
-      startPublish: "",
-      endPublish: "",
       agency: [],
-      state: [],
+      endPublish: "",
+      limit: 25,
       needsComments: false,
       needsDocument: true,
-      limit: 25,
+      startPublish: "",
+      state: [],
     },
-    searchResults: [],
-    outputResults: [],
-    displayRows: [],
-    geoResults: null,
-    geoLoading: true,
     count: 0,
-    resultsText: "Results",
-    networkError: "",
-    parseError: "",
-    verified: false,
-    searching: false,
-    useSearchOptions: false,
-    snippetsDisabled: false,
-    shouldUpdate: false,
-    loaded: false,
+    displayRows: [],
     down: false,
-    isMapHidden: false,
     filtersHidden: false,
-    lookupResult: null,
+    geoLoading: true,
+    geoResults: null,
+    isMapHidden: false,
     lastSearchedTerm: "",
+    loaded: false,
+    lookupResult: null,
+    networkError: "",
+    outputResults: [],
+    parseError: "",
+    resultsText: "Results",
+    searching: false,
+    searchResults: [],
+    shouldUpdate: false,
+    snippetsDisabled: false,
+    useSearchOptions: false,
+    verified: false,
   };
 
   constructor(props) {
@@ -214,6 +214,7 @@ export default class App extends React.Component {
     
     this._searcherState = searcherState; // for live filtering
     // Only filter if there are any results to filter
+    console.log(`file: App.js:218 ~ App ~ this.state.searchResults.length:`, this.state.searchResults.length);
     if (this.state.searchResults && this.state.searchResults.length > 0) {
       const filtered = Globals.doFilter(
         searcherState,
@@ -221,14 +222,17 @@ export default class App extends React.Component {
         this.state.searchResults.length,
         false
       );
+      console.log(`file: App.js:225 ~ App ~ filtered:`, filtered);
 
       // Even if there are no filters active we still need to update to reflect this,
       // because if there are no filters the results must be updated to the full unfiltered set
+      const sortedResults = filtered.filteredResults.sort(
+        this.alphabetically(this._sortVal, this._ascVal)
+      );
+      console.log(`file: App.js:232 ~ App ~ sortedResults:`, sortedResults);
       this.setState(
         {
-          outputResults: filtered.filteredResults.sort(
-            this.alphabetically(this._sortVal, this._ascVal)
-          ),
+          outputResults: sortedResults,
           resultsText: filtered.textToUse,
           searching: true,
           shouldUpdate: true,
@@ -245,6 +249,9 @@ export default class App extends React.Component {
           );
         }
       );
+    }
+    else{
+      console.error('UNEXPECTED RESULT: NO RESULTS from searcherState',th);
     }
   };
 
@@ -824,8 +831,21 @@ export default class App extends React.Component {
     })
       .then((response) => {
         let responseOK = response && response.status === 200;
-        
-
+networkError
+        /* sometimes the backend will return 200 even if the requested failed, if the server has an error.
+          this can result in the filenames returning a string such as "org.hibernate.exception.GenericJDBCException: could not extract ResultSet"
+          [TODO] Fix the backend so the proper HTTP codes are returned.
+        */
+       const errorTest =  response[0].filename.toLowerCase();
+        if(responseOk && (errorTest.contains('error') || errorTest.contains('exception'))){
+          this.setState({
+            resultsText: "Error: " + response.filename,
+            networkError: "Error: " + response.filename
+            
+          });
+          return null;
+          
+        }
         if (responseOK) {
           return response.data;
         } else if (response.status === 204) {

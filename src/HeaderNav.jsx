@@ -57,7 +57,7 @@ const headersData = [
     href: '/about-nepaccess',
   },
   {
-    label: 'Media',
+    label: 'News',
     href: '/media',
   },
   {
@@ -245,8 +245,6 @@ export default function HeaderNav(props) {
   useEffect(() => {
 
     const setResponsiveness = () => {
-      console.log('set responsive', window.innerHeight);
-      console.log(`set responsive isBigScreen ${isBigScreen} - Tablet or Mobile? ${isTabletOrMobile} - Portrait? ${isPortrait} - Retina? ${isRetina}`);
       return window.innerWidth < globals.mobileBreakPointWidth
         ? setState((prevState) => ({ ...prevState, mobileView: true }))
         : setState((prevState) => ({ ...prevState, mobileView: false }));
@@ -263,6 +261,7 @@ export default function HeaderNav(props) {
   }, []);
 
   const prevOpen = React.useRef(drawerOpen);
+  
   React.useEffect(() => {
     if (anchorRef.current && prevOpen.current === true && drawerOpen === false) {
       anchorRef.current.focus();
@@ -852,7 +851,7 @@ export function NavLinks() {
             <i className="fa fa-caret-down"></i>
             <div className="dropdown-content">
               <Link to="/about-nepaccess">About NEPAccess</Link>
-              <Link to="/media">Media</Link>
+              <Link to="/media">News</Link>
               <Link to="/people">People</Link>
             </div>
           </div>

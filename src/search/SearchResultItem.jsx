@@ -177,7 +177,7 @@ export default function SearchResultItem(props) {
 								item
 								id="status-document-type-grid-item"
 								display={'flex'}
-								xs={1}
+								xs={2}
 								alignContent={'center'}
 								justifyContent="center"
 								alignItems={'center'}
@@ -210,14 +210,14 @@ export default function SearchResultItem(props) {
 								borderColor={'#ccc'}
 								borderLeft={0}
 								id="button-grid-container"
-								xs={3}
+								xs={2}
 								flex={1}
 							//       className={classes.centeredContent}
 							>
 								<Grid
 									id="pdf-button-grid-item"
 									item
-									xs={6}
+									xs={12}
 									display={'flex'}
 									alignContent={'center'}
 									justifyContent="center"
@@ -238,7 +238,7 @@ export default function SearchResultItem(props) {
                     modal={modalOpen} />
 									</Grid>
 								</Grid>
-								<Grid
+								{/* <Grid
 									id="preview-button-grid-item"
 									item
 									//         display={'flex'}
@@ -256,7 +256,7 @@ export default function SearchResultItem(props) {
 									>
 										Download
 									</Button>
-								</Grid>
+								</Grid> */}
 							</Grid>
 							<Grid item xs={12}>
 								<RenderSnippets record={record} />

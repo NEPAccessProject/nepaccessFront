@@ -44,7 +44,6 @@ const useStyles = makeStyles((theme) => ({
 	},
 }));
 function SearchResultOptions(props) {
-	console.log(`file: SearchResultOptions.jsx:47 ~ SearchResultOptions ~ props:`, props);
 	const {
     setPageInfo,
 		onCheckboxChange,
@@ -58,18 +57,8 @@ function SearchResultOptions(props) {
 	} = props;
   const ctx = useContext(SearchContext)
   const {state} = ctx;
-   console.log(`file:CONTEXT STATE SearchResultOptions.jsx:61 ~ SearchResultOptions ~ STATE:`, state);
-   
-	// Debug vars
-	//const { sortBy, sortDirection, limit, showContext, snippetsDisabled } = state;
-
-	//set static values while props / context is debugged
-	const sortBy = 'relevance';
-	const sortDirection = 'ASC';
-	const showContext = true;
-	const snippetsDisabled = false;
-	const classes = useStyles(theme);
-	const { setState } = useContext(SearchContext);
+  //assign default values to args
+  const { sortBy='relevance', sortDirection='ASC', limit=100, showContext=true, snippetsDisabled = false } = state;   
 	return (
 		<>
 			<Grid

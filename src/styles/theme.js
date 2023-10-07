@@ -1,8 +1,8 @@
-import { createTheme,createMuiTheme, Theme } from '@mui/material';
+import { createTheme, Theme } from '@mui/material';
 import { common, grey, orange, red } from '@mui/material/colors';
 import { ThemeOptions } from '@mui/material/styles';
 
- const theme = createMuiTheme({
+ const theme = createTheme({
 	zIndex: {
 		appBar: 99,
 		button: 109,

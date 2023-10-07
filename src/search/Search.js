@@ -73,7 +73,7 @@ class Search extends React.Component {
   constructor(props) {
     super(props);
     console.log(`file: Search.js:75 ~ Search ~ constructor ~ props:`, props);
-    
+
 
     this.state = {
       titleRaw: "",
@@ -135,12 +135,12 @@ class Search extends React.Component {
   }
 
   handleChange(inputId, inputValue) {
-    
+
     this.setState({ [inputId]: inputValue });
   }
 
   doSearch = (terms) => {
-    
+
 
     //[TODO][BUG] Look into why last search term is being set as the same as the current one?
     this.setState(
@@ -185,7 +185,7 @@ class Search extends React.Component {
         },
         () => {
           if (this.state.titleRaw) {
-            
+
             this.debouncedSearch(this.state);
           }
         }
@@ -238,9 +238,9 @@ class Search extends React.Component {
   };
 
   onClearFilter = (evt, reason) => {
-    
+
     this.setState({ [evt.target.name]: [] }, () => {
-      
+
       // this.debouncedSearch(this.state);
     });
 
@@ -352,6 +352,7 @@ class Search extends React.Component {
       // Assuming Search and SearchResultsMap talk to each other, we'll want two-way interaction.
       // So if it's sending us a state, we may want to enable or disable it.
       const indexIfExists = this.state.state.indexOf(geodata.abbrev);
+      console.log(`file: Search.js:355 ~ Search ~ indexIfExists:`, indexIfExists);
       let _stateRaw = this.state.stateRaw;
       try {
         if (indexIfExists === -1) {
@@ -364,7 +365,8 @@ class Search extends React.Component {
       } catch (e) {
         console.error(e);
       } finally {
-        this.onLocationChange(_stateRaw);
+        console.log(`file: Search.js:368 ~ Search ~ _stateRaw:`, _stateRaw);
+        this.onMapLocationChange(_stateRaw);
       }
     } else if (geodata.geoType === Globals.geoType.COUNTY) {
       const indexIfExists = this.state.county.indexOf(geodata.abbrev);
@@ -388,7 +390,7 @@ class Search extends React.Component {
   };
 
   onFragmentSizeChange = (evt) => {
-    
+
     this.setState({
       fragmentSizeValue: evt.value,
       fragmentSize: evt,
@@ -396,13 +398,13 @@ class Search extends React.Component {
   };
 
   onAgencyChange = (evt, selected, reason) => {
-    
-    
+
+
     let agencies = [];
     if (reason === "selectOption") {
       agencies = this.state.agency || [];
       selected.map(s => {
-        
+
         return agencies.push(s.value);
       });
     }
@@ -412,18 +414,18 @@ class Search extends React.Component {
         agencyRaw: evt,
       },
       () => {
-        
+
         this.filterResultsBy(this.state);
       }
     );
   };
   onCooperatingAgencyChange = (evt, selected, reason) => {
-    
+
     let agencies = [];
     if (reason === "selectOption") {
       agencies = this.state.cooperatingAgency || [];
       selected.map(s => {
-        
+
         return agencies.push(s.value);
       });
     }
@@ -439,8 +441,8 @@ class Search extends React.Component {
     );
   }
   onActionChange = (evt, selected, reason) => {
-    
-    
+
+
 
     let actions = [];
     if (reason === "selectOption") {
@@ -491,13 +493,15 @@ class Search extends React.Component {
     console.log(`file: Search.js:490 ~ Search ~ # OF COUNTIES:`, countyOptions.length);
     
     
+    console.log(`file: Search.js:499 ~ Search ~ states:`, states);
     this.setState(
       {
         state: states,
-        stateRaw: evt,
+        stateRaw: selected,
         countyOptions: countyOptions,
       },
       () => {
+        console.log(`file: Search.js:502 ~ Search ~ UPDATED STATE - Before Sorting:`, this.state);
         this.filterResultsBy(this.state);
         // Purge invalid counties, which will then run filterBy
 
@@ -508,13 +512,18 @@ class Search extends React.Component {
             const matches =  this.state.county.includes(countyObj.value)
             console.log(`file: Search.js:507 ~ Search ~ this.state.countyOptions.filter ~ matches:`, matches);
             return matches;
-          }),
-          selected,
-          reason,
+          })          
         );
       }
     );
   };
+  onMapLocationChange(_stateRaw) {
+  console.log(`file: Search.js:521 ~ Search ~ onMapLocationChange ~ _stateRaw:`, _stateRaw);
+  if(!_stateRaw){
+    console.warn('Warning no state was received from the map filter!!!')
+    return;
+  }
+}
   /** Helper method for onLocationChange limits county options to selected states in filter,
    * or resets to all counties if no states selected */
   narrowCountyOptions = (stateValues) => {
@@ -539,16 +548,24 @@ function countyFilter(stateValues) {
     return filteredCounties;
   };
   onCountyChange = (evt, selected, reason) => {
+    console.log(`file: Search.js:543 ~ Search ~ evt, selected, reason:`, evt, selected, reason);
     
     
     let counties = [];
-    if (reason === 'selectOption') {
+    if (reason && reason === 'selectOption') {
       //[TODO] Debuging only reseting state
       //counties = this.state.county || [];
       if (_.isArray(selected)) {
         selected.map(s => {
           counties.push(s.value)
         })
+      }
+      else if(!reason && evt.length){
+        console.log(`file: Search.js:556 ~ Search ~ evt:`, evt, evt.length);
+        evt.map(s => {
+          counties.push(s.value)
+        })
+
       }
       else {
         counties.push(selected.value)
@@ -567,9 +584,66 @@ function countyFilter(stateValues) {
       );
     }
   }
+  // onMapLocationChange = (_state) => {
+  //     let states = this.state.state || [];
+  //     _state.map(s => {
+  //       states.push(s.value);
+  //     })
+  //     this.filterCounties(states);
+  // }
+
+  // onLocationChange = (evt, selected, reason) => {
+  //   //    
+  //   let states = [];
+  //   if (reason === 'selectOption') {
+  //     states = this.state.state || [];
+  //     selected.map(s => {
+  //       states.push(s.value)
+  //     })
+  //   }
+
+  //   this.filterCounties(states);
+    
+  // };
+
+  filterCounties = (states) => {
+    console.log(`file: Search.js:506 ~ Search ~ states:`, states);
+    //filter out counties not in the selected state(s)
+    const countyOptions = this.narrowCountyOptions(states);
+    
+    //match the signature of onCountyChange, so it can be called from here
+    const reason = "selectOption";
+
+    this.setState(
+      {
+        state: states,
+        countyOptions: countyOptions,
+      },
+      () => {
+        this.filterResultsBy(this.state);
+        // Purge invalid counties, which will then run filterBy
+
+        this.onCountyChange(
+          this.state.countyOptions.filter(countyObj => this.state.county.includes(countyObj.value)));
+
+        //[TODO] FIX THIS 
+        this.onCountyChange(
+          this.state.countyOptions.filter((countyObj) => {
+
+            const matches = this.state.county.includes(countyObj.value)
+            console.log(`file: Search.js:507 ~ Search ~ this.state.countyOptions.filter ~ matches:`, matches);
+            return matches;
+          }),
+          states,
+          reason,
+        );
+      }
+    );
+  }
+
   onProximityChange = (evt, selected, reason) => {
-    
-    
+
+
     if (evt.value === -1) {
       this.setState({
         proximityOption: null,
@@ -585,19 +659,19 @@ function countyFilter(stateValues) {
       );
     }
   };
-  onSortByChangeHandler = (evt)=>{
-    console.log(`onSortByChangeHandler Event`,evt);
+  onSortByChangeHandler = (evt) => {
+    console.log(`onSortByChangeHandler Event`, evt);
     this.setState({
       searcherInputs: {
         sortBy: evt.target.value,
       }
     }, () => {
-      
+
     })
   }
 
   onTitleOnlyChecked = (evt) => {
-    
+
     if (evt.target.checked) {
       this.setState({
         searchOption: "C", // Title only
@@ -619,7 +693,7 @@ function countyFilter(stateValues) {
   };
 
   onUseOptionsChecked = (evt) => {
-    
+
     this.props.optionsChanged(evt.target.checked);
   };
 
@@ -860,11 +934,6 @@ function countyFilter(stateValues) {
         "&:hover": {
           backgroundColor: "#348ECF",
         },
-        // ':active': {
-        //     ...styles[':active'],
-        //     backgroundColor: !isDisabled && (isSelected ? data.color : color.alpha(0.3).css()),
-        //   },
-        //   padding: 20,
       }),
       control: (styles) => ({
         ...styles,
@@ -893,11 +962,11 @@ function countyFilter(stateValues) {
               marginTop: 0
             }}>
               <Grid Border={0} columnSpacing={0} id="result-header-grid-container" container>{''}
-                <Grid 
-                  container 
-                  xs={12} 
+                <Grid
+                  container
+                  xs={12}
                   id="results-header-grid-container"
-                  flex={1} 
+                  flex={1}
                   flexGrow={1}>
                   <ResultsHeader
                     {...this.props}
@@ -917,12 +986,12 @@ function countyFilter(stateValues) {
                     onDownloadClick={this.onDownloadClick}
                   />
                 </Grid>
-                <Grid 
-                  columnSpacing={2} 
-                  Border={0} 
-                  borderColor={'blue'} 
-                  container 
-                  xs={12} 
+                <Grid
+                  columnSpacing={2}
+                  Border={0}
+                  borderColor={'blue'}
+                  container
+                  xs={12}
                   flex={1}
                   margin={0}
                   padding={0}
@@ -1056,7 +1125,7 @@ function countyFilter(stateValues) {
             server_response: rsp,
           },
           () => {
-            
+
           }
         );
         // let responseOK = response && response.status === 200;

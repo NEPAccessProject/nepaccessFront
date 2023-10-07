@@ -58,7 +58,6 @@ class Landing extends React.Component {
               id="headline"
               className="no-select cursor-default"
             >
-              Width: {window.innerHeight} - Height: {window.innerWidth}
               <div id="landing-headline-container">
                 <h1 id="landing-headline-left">
                   <span className="glow">

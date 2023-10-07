@@ -57,8 +57,6 @@ RenderSnippets.prototypes = {
 //priveate function
 function Snippets(props) {
   const { text, record } = props;
-  console.log(`🚀 ~ file: SearchResultSnippets.jsx:52 ~ Snippets ~ record:`, record);
-
   const { id, processId } = record;
   const { state, setState } = useContext(SearchContext);
 

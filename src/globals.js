@@ -13417,18 +13417,23 @@ const Globals = {
 
     /** Special logic for ;-delimited states from Buomsoo, Alex/Natasha/... */
     const arrayMatchesArray = (field, val) => {
+        console.log(`file: globals.js:13420 ~ arrayMatchesArray ~ field, val:`, field, val);
         return function (a) {
             // console.log(a);
             let returnValue = false;
             val.forEach(item =>{
-                if(a[field]){
+                if(item && a[field]){
                     let _vals = a[field].split(/[;,]+/); // e.g. AK;AL or AK,AL
+                    console.log(`file: globals.js:13427 ~ _vals:`, _vals);
                     for(let i = 0; i < _vals.length; i++) {
                         if (_vals[i].trim() === item.trim()) {
                             returnValue = true; // if we hit ANY of them, then true
                             i = _vals.length; // done
                         }
                     }
+                }
+                else{
+                    console.warn('Item does not have a state or county field to match array - field:',field, "VAL:",val, "ITEM:",item);
                 }
             });
             return returnValue;
