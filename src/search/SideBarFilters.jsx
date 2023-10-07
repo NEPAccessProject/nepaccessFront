@@ -172,14 +172,12 @@ const SideBarFilters = (props) => {
                   disableListWrap={false}
                   //renderOption={(option) => `${option.label} ?`}
                   onChange={(evt, value, tag) => {
-                    console.log(`file: SideBarFilters.jsx:168 ~ SideBarFilters ~ evt:`, evt);
                     onAgencyChange(evt, value, tag)
                   }}
                   className={classes.autoComplete}
                   getOptionLabel={(v) => (v.label.length > 25 ? `${v.label.slice(0, 25)}...` : `${v.label}`)}
                   renderInput={(params) => {
                     params.inputProps.className = classes.autoComplete;
-                    console.log(`file: SideBarFilters.jsx:171 ~ SideBarFilters ~ renderInput - params:`, params);
                     return (
                       <TextField
                         {...params}
