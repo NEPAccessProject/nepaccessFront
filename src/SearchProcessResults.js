@@ -38,6 +38,7 @@ export default class SearchProcessResults extends React.Component {
 
     constructor(props) {
         super(props);
+        console.log(`file: SearchProcessResults.js:41 ~ SearchProcessResults ~ constructor ~ props:`, props);
         this.state = {
             showContext: true,
             size: 0,
@@ -51,7 +52,9 @@ export default class SearchProcessResults extends React.Component {
                     <SearchProcessResult 
                         show={this.state.showContext}
                         hideText={this.hideText}
-                        hidden={this.hide} />
+                        hidden={this.hide} 
+                        onDetailLink={this.props.onDetailLink}
+                        />
                 )
             }
         ];

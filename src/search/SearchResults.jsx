@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 import React, { useEffect, useRef, useState } from 'react';
 
-import { Box, Grid, Paper, Typography, Pagination, TablePagination } from '@mui/material';
+import { Box, Grid, Paper, Typography, Pagination, TablePagination, Link } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import theme from '../../styles/theme';
 //import Grid from '@mui/material/Grid'; // Grid version 1
@@ -133,8 +133,7 @@ const SearchResults = (props) => {
         results.map((result, index) => {
           return (
               <Paper key={result.id} elevation={10}>
-                <Typography>{results.length} - {ctx.state.titleRaw}</Typography>
-               
+               <Link variant='filterLabel' href={`./record-details?id=${result.processId}`}>LINK - {result.title}</Link>
                 <Box sx={{ margin: 5 }}>
 {/* 
                   <SearchResultCards result={result} /> */}

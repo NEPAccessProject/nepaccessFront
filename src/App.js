@@ -111,7 +111,7 @@ export default class App extends React.Component {
     console.log(`file: App.js:111 ~ App ~ page = 0, pageSize = 10:`, page, pageSize);
     this._page = page;
     this._pageSize = pageSize;
-    
+
     this._searchId = this._searchId + 1;
     this.gatherPageHighlightsDebounced(
       this._searchId,
@@ -163,7 +163,7 @@ export default class App extends React.Component {
       axios.get(url).then((response) => {
         if (response.data && response.data[0]) {
           for (let i = 0; i < response.data.length; i++) {
-            
+
             let json = JSON.parse(response.data[i]["geojson"]);
             json.style = {};
             json.sortPriority = 0;
@@ -191,7 +191,7 @@ export default class App extends React.Component {
             (a, b) => parseInt(a.sortPriority) - parseInt(b.sortPriority)
           );
 
-          
+
           this.setState({
             geoResults: sortedData,
             geoLoading: false,
@@ -210,8 +210,8 @@ export default class App extends React.Component {
    * Sorts by existing sort/asc values before updating state for a more responsive UX.
    * Gets highlights for current page whenever it's called. */
   filterResultsBy = (searcherState) => {
-    
-    
+
+
     this._searcherState = searcherState; // for live filtering
     // Only filter if there are any results to filter
     console.log(`file: App.js:218 ~ App ~ this.state.searchResults.length:`, this.state.searchResults.length);
@@ -250,8 +250,8 @@ export default class App extends React.Component {
         }
       );
     }
-    else{
-      console.error('UNEXPECTED RESULT: NO RESULTS from searcherState',th);
+    else {
+      console.error('UNEXPECTED RESULT: NO RESULTS from searcherState', th);
     }
   };
 
@@ -266,7 +266,7 @@ export default class App extends React.Component {
 
   /** Sort, then highlight */
   sortDataByFieldThenHighlight = (field, ascending) => {
-    
+
     this.setState(
       {
         // searchResults: this.state.searchResults.sort((a, b) => (a[field] > b[field]) ? 1 : -1)
@@ -320,9 +320,9 @@ export default class App extends React.Component {
 
   /** Assign any existing highlights from the first-page highlight pass, which is now done before full record population */
   mergeHighlights = (data) => {
-    
+
     if (!this.state.searchResults || !this.state.searchResults[0]) {
-      
+
       return data;
     }
 
@@ -338,14 +338,14 @@ export default class App extends React.Component {
             let same =
               data[i].records[j].id ===
               this.state.searchResults[i].records[j].id;
-            
+
             if (same) {
               data[i].records[j].plaintext =
                 this.state.searchResults[i].records[j].plaintext;
-              
+
             }
           } else {
-            
+
           }
         }
       }
@@ -366,8 +366,8 @@ export default class App extends React.Component {
    * using Object.keys(), Object.values(), or Object.entries()
    */
   buildData = (data) => {
-    
-    
+
+
     let processResults = {};
     let newUniqueKey = -1;
     let i = 0;
@@ -466,7 +466,7 @@ export default class App extends React.Component {
 
   // Start a brand new search.
   startNewSearch = (searcherState) => {
-    
+
 
     // Reset page, page size
     this._page = searcherState.page || 1;
@@ -496,7 +496,7 @@ export default class App extends React.Component {
 
   /** Just get the top results quickly before launching the "full" search with initialSearch() */
   startSearch = (searcherState) => {
-    
+
     Globals.emitEvent("new_search");
     if (!this._mounted) {
       // User navigated away or reloaded
@@ -549,7 +549,7 @@ export default class App extends React.Component {
         };
 
         // OPTION: If we restore a way to use search options for faster searches, we'll assign here
-        
+
         if (this.state.useSearchOptions) {
           dataToPass = {
             title: this.state.searcherInputs.titleRaw,
@@ -582,14 +582,14 @@ export default class App extends React.Component {
                 dataToPass.title +
                 '"~' +
                 this.state.searcherInputs.proximityOption.value;
-            } catch (e) {}
+            } catch (e) { }
           }
         }
 
         //Send the AJAX call to the server
         let shouldContinue = true;
 
-        
+
         axios({
           method: "POST", // or 'PUT'
           url: searchUrl,
@@ -597,9 +597,9 @@ export default class App extends React.Component {
         })
           .then((response) => {
             let responseOK = response && response.status === 200;
-            
+
             if (responseOK) {
-              
+
               return response.data;
             } else if (response.status === 204) {
               // Probably invalid query due to misuse of *, "
@@ -621,11 +621,11 @@ export default class App extends React.Component {
             }
           })
           .then((currentResults) => {
-            
+
 
             let _data = [];
             if (currentResults && currentResults[0] && currentResults[0].doc) {
-              
+
 
               _data = currentResults
                 // .filter((result) => { // Soft rollout logic
@@ -670,9 +670,9 @@ export default class App extends React.Component {
               let processResults = {};
               processResults = this.buildData(_data);
               _data = processResults;
-              
 
-              
+
+
 
               // At this point we don't need the hashmap design anymore, it's just very fast for its purpose.
               // Now we have to iterate through all of it anyway, and it makes sense to put it in an array.
@@ -685,7 +685,7 @@ export default class App extends React.Component {
                   results: _data,
                 },
                 () => {
-                  
+
 
                   // title-only (or blank search===no text search at all): return
                   if (
@@ -717,7 +717,7 @@ export default class App extends React.Component {
                 }
               );
             } else {
-              
+
               this.setState({
                 searching: false,
                 searchResults: [],
@@ -775,7 +775,7 @@ export default class App extends React.Component {
       return;
     }
 
-    
+
 
     let searchUrl = new URL("text/search_no_context", Globals.currentHost);
 
@@ -816,13 +816,13 @@ export default class App extends React.Component {
             dataToPass.title +
             '"~' +
             this.state.searcherInputs.proximityOption.value;
-        } catch (e) {}
+        } catch (e) { }
       }
     }
 
     //Send the AJAX call to the server
 
-    
+
 
     axios({
       method: "POST", // or 'PUT'
@@ -831,20 +831,20 @@ export default class App extends React.Component {
     })
       .then((response) => {
         let responseOK = response && response.status === 200;
-networkError
+        networkError
         /* sometimes the backend will return 200 even if the requested failed, if the server has an error.
           this can result in the filenames returning a string such as "org.hibernate.exception.GenericJDBCException: could not extract ResultSet"
           [TODO] Fix the backend so the proper HTTP codes are returned.
         */
-       const errorTest =  response[0].filename.toLowerCase();
-        if(responseOk && (errorTest.contains('error') || errorTest.contains('exception'))){
+        const errorTest = response[0].filename.toLowerCase();
+        if (responseOk && (errorTest.contains('error') || errorTest.contains('exception'))) {
           this.setState({
             resultsText: "Error: " + response.filename,
             networkError: "Error: " + response.filename
-            
+
           });
           return null;
-          
+
         }
         if (responseOK) {
           return response.data;
@@ -915,13 +915,13 @@ networkError
             },
             () => {
               this.filterResultsBy(this._searcherState);
-              
+
 
               this.countTypes();
             }
           );
         } else {
-          
+
           this.setState({
             searching: false,
             searchResults: [],
@@ -978,7 +978,7 @@ networkError
           terms: _terms,
         },
       }).then((response) => {
-        
+
 
         this.setState({
           // lookupResult: response.data
@@ -1000,10 +1000,10 @@ networkError
    * which we can use to skip having to loop through everything.
    */
   gatherSpecificHighlights = (_index, record) => {
-    
+
     if (!this._mounted) {
       // User navigated away or reloaded
-      
+
       return; // cancel search
     }
 
@@ -1046,7 +1046,7 @@ networkError
           return;
         }
 
-        
+
 
         if (!this._searchTerms) {
           this._searchTerms = this.state.lastSearchedTerm;
@@ -1075,7 +1075,7 @@ networkError
           })
           .then((parsedJson) => {
             if (parsedJson) {
-              
+
               let allResults = this.state.searchResults;
 
               // Iterate through records until we find the correct one (sort/filter could change index within card)
@@ -1107,7 +1107,7 @@ networkError
                   // Run our filter + sort which will intelligently populate outputResults from updated searchResults
                   // and update the table
                   this.filterResultsBy(this._searcherState);
-                  
+
                   //     allResults, currentResults);
                 }
               );
@@ -1151,7 +1151,7 @@ networkError
         _inputs = { titleRaw: Globals.getParameterByName("q") };
       }
     }
-    
+
     if (!this._mounted) {
       // User navigated away or reloaded
       return; // cancel search
@@ -1192,7 +1192,7 @@ networkError
             // For each record in result card
             // Push first lucene ID and filename
             if (!Globals.isEmptyOrSpaces(currentResults[i].records[j].name)) {
-              
+
 
               // Need to skip this entry on both sides if it already has plaintext.
               // If it has any, then skip here - we can get more on demand elsewhere, in separate logic.
@@ -1205,7 +1205,7 @@ networkError
                   currentResults[i].records[j].name.split(">")[0];
                 let firstLuceneId = [currentResults[i].records[j].luceneIds[0]];
 
-                
+
                 //     firstFilename, currentResults[i].records[j].id, firstLuceneId);
 
                 _unhighlighted.push({
@@ -1213,7 +1213,7 @@ networkError
                   filename: firstFilename,
                 });
               } else {
-                
+
                 mustSkip[currentResults[i].records[j].id] = true;
               }
             }
@@ -1234,7 +1234,7 @@ networkError
           fragmentSizeValue: _inputs.fragmentSizeValue,
         };
 
-        
+
 
         //Send the AJAX call to the server
         axios({
@@ -1252,7 +1252,7 @@ networkError
           })
           .then((parsedJson) => {
             if (parsedJson) {
-              
+
 
               let allResults = this.state.searchResults;
 
@@ -1267,11 +1267,11 @@ networkError
                   if (
                     !Globals.isEmptyOrSpaces(currentResults[i].records[j].name)
                   ) {
-                    
+
 
                     if (mustSkip[currentResults[i].records[j].id]) {
                       // do nothing; skip
-                      
+
                     } else {
                       // Instead of currentResults[i].records[j].id, use the stored index
                       //     currentResults[i].originalIndex for record j);
@@ -1329,7 +1329,7 @@ networkError
   };
 
   gatherPageHighlights = (searchId, _inputs, currentResults) => {
-    
+
     if (!_inputs) {
       if (this.state.searcherInputs) {
         _inputs = this.state.searcherInputs;
@@ -1373,7 +1373,7 @@ networkError
       for (let j = 0; j < currentResults[i].records.length; j++) {
         // Push first lucene ID and filename
         if (!Globals.isEmptyOrSpaces(currentResults[i].records[j].name)) {
-          
+
 
           // Need to skip this entry on both sides if it already has plaintext.
           // If it has any, then skip here - we can get more on demand elsewhere, in separate logic.
@@ -1385,7 +1385,7 @@ networkError
             let firstFilename = currentResults[i].records[j].name.split(">")[0];
             let firstLuceneId = [currentResults[i].records[j].luceneIds[0]];
 
-            
+
             //     firstFilename, currentResults[i].records[j].id, firstLuceneId);
 
             _unhighlighted.push({
@@ -1393,7 +1393,7 @@ networkError
               filename: firstFilename,
             });
           } else {
-            
+
             mustSkip[currentResults[i].records[j].id] = true;
           }
         }
@@ -1421,7 +1421,7 @@ networkError
           fragmentSizeValue: _inputs.fragmentSizeValue,
         };
 
-        
+
 
         //Send the AJAX call to the server
         axios({
@@ -1439,7 +1439,7 @@ networkError
           })
           .then((parsedJson) => {
             if (parsedJson) {
-              
+
 
               // TODO: If we want to avoid checking every ID until we run out of highlights,
               // data structures and a lot more must be changed
@@ -1457,10 +1457,10 @@ networkError
                   if (
                     !Globals.isEmptyOrSpaces(currentResults[i].records[j].name)
                   ) {
-                    
+
 
                     if (mustSkip[currentResults[i].records[j].id]) {
-                      
+
                     } else {
                       currentResults[i].records[j].plaintext = parsedJson[x];
                       allResults[currentResults[i].originalIndex].records[
@@ -1475,7 +1475,7 @@ networkError
               // Verify one last time we want this before we actually commit to these results,
               // otherwise it could be jarring UX to setState here
               if (searchId < this._searchId) {
-                
+
                 return;
               } else {
                 // Fin
@@ -1490,7 +1490,7 @@ networkError
                     shouldUpdate: true,
                   },
                   () => {
-                    
+
                     //     allResults, currentResults);
                   }
                 );
@@ -1556,9 +1556,9 @@ networkError
       })
       .finally(() => {
         this.setState({ loaded: true });
-        
+
       });
-    
+
   };
 
   /** Scroll to bottom on page change and populate full table with latest results */
@@ -1590,9 +1590,9 @@ networkError
   };
 
   displayedRowsUnpopulated = () => {
-    
+
     for (let i = 0; i < this.state.displayRows.length; i++) {
-      
+
       if (this.state.displayRows[i].data.plaintext.length === 0) {
         console.error("No text.  Should populate.");
         return true;
@@ -1752,6 +1752,7 @@ networkError
                   lookupResult={this.state.lookupResult}
                   networkError={this.state.networkError}
                   noiCount={this._noiCount}
+                  onDetailLink={this.onDetailLink}
                   optionsChanged={this.optionsChanged}
                   outputResults={this.state.outputResults}
                   parseError={this.state.parseError}
@@ -1771,6 +1772,7 @@ networkError
                     download={this.downloadCurrentAsTSV}
                     exportToSpreadsheet={this.exportToCSV}
                     filtersHidden={this.state.filtersHidden}
+                    onDetailLink={this.onDetailLink}
                     gatherSpecificHighlights={this.gatherSpecificHighlights}
                     geoLoading={this.state.geoLoading}
                     geoResults={this.state.geoResults}
@@ -1857,7 +1859,7 @@ networkError
     // Option: Rehydrate old search results and everything?
     try {
       const rehydrate = JSON.parse(persist.getItem("results"));
-      
+
       this.setState(rehydrate);
     } catch (e) {
       // do nothing
@@ -1865,17 +1867,17 @@ networkError
   }
 
   async componentWillUnmount() {
-    
+
     this._mounted = false;
 
     // Option: Rehydrate only if not interrupting a search?
     // if(!this.state.searching){
-    try{
+    try {
       persist.setItem("results", JSON.stringify(this.state));
-      }
-      catch(err){
-        console.warn('Error while unmounting appState in Search.js: ', err);
-      }
+    }
+    catch (err) {
+      console.warn('Error while unmounting appState in Search.js: ', err);
+    }
     // }
   }
 }

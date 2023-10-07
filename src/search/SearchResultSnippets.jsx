@@ -54,7 +54,6 @@ RenderSnippets.prototypes = {
   plaintext: PropTypes.arrayOf(PropTypes.string).isRequired
 }
 
-//priveate function
 function Snippets(props) {
   const { text, record } = props;
   const { id, processId } = record;

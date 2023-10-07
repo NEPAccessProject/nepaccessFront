@@ -63,12 +63,12 @@ export default class SearchProcessResults extends React.Component {
 
   constructor(props) {
     super(props);
+    console.log(`file: SearchProcessResults.js:66 ~ SearchProcessResults ~ constructor ~ props:`, props);
     // console.log(
     //   "🚀 ~ file: SearchProcessResults.js:41 ~ SearchProcessResults ~ constructor ~ props:",
     //   props
     // );
     const ctx = this.context;
-    console.log('Search Process Results - 97 - ctx', ctx);
     this.state = {
       //     ...state,
       showContext: true,
@@ -251,11 +251,6 @@ export default class SearchProcessResults extends React.Component {
       return null;
     }
   };
-  onDetailLink = (processId) => {
-    //console.log('onDetailLink',processId);
-    //this.props.onDetailLink(processId);
-  }
-
   render() {
     const ctxState = this.context.state;
     const { results } = this.props;
@@ -305,15 +300,16 @@ export default class SearchProcessResults extends React.Component {
           {results.map((result, index) => {
             return (
               <Paper key={result.id}>
-                <Box id="search-results-parent-container-box" Border={0} borderColor={"#eee"} paddingTop={1} paddingBottom={1} >
-                  <Typography paddingLeft={2} color={'primary'} variant='h4'>
-                    <Link onClick={this.onDetailLink(result.processId)}>{result.title}</Link>
-                  </Typography>
+                <Box id="search-results-parent-container-box" Border={0} borderColor={"#eee"} padding={1} >
+                  {/* Title and link for each result */}
+                    <Link target="_blank" variant="h3" href={`/record-details/?id=${result.processId}`}>
+                      {result.title}
+                    </Link>
                   <Box id="search-results-cards-container-box">
                     <SearchResultCards result={result} />
                   </Box>
                   <Box id="search-results-items-container-box">
-                    <SearchResultItems result={result} />
+                    <SearchResultItems onDetailLink={this.onDetailLink}  result={result} />
                   </Box>
 
                 </Box>

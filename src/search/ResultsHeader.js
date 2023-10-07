@@ -221,6 +221,7 @@ export default class ResultsHeader extends React.Component {
               <SearchResultOptions
                 state={this.state}
                 setPageInfo={this.props.setPageInfo}
+                onUseOptionsChecked={this.props.onUseOptionsChecked}
                 onCheckboxChange={this.onCheckboxChange}
                 onLimitChangeHandler={this.onLimitChangeHandler}
                 onSortDirectionChangeHandler={this.onSortOrderChange}

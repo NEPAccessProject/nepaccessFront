@@ -490,10 +490,6 @@ class Search extends React.Component {
       states.push(s.value)
     })
     const countyOptions = this.narrowCountyOptions(selected);
-    console.log(`file: Search.js:490 ~ Search ~ # OF COUNTIES:`, countyOptions.length);
-    
-    
-    console.log(`file: Search.js:499 ~ Search ~ states:`, states);
     this.setState(
       {
         state: states,
@@ -692,10 +688,11 @@ function countyFilter(stateValues) {
     }
   };
 
-  onUseOptionsChecked = (evt) => {
+  // onUseOptionsChecked = (evt) => {
+  // console.log(`file: Search.js:692 ~ Search ~ evt:`, evt);
 
-    this.props.optionsChanged(evt.target.checked);
-  };
+  //   this.props.optionsChanged(evt.target.checked);
+  // };
 
   onNeedsDocumentChecked = (evt) => {
     this.setState(
@@ -921,6 +918,15 @@ function countyFilter(stateValues) {
       );
     }
   };
+  onDetailLink(evt){
+    console.log(`file: Search.js:922 ~ Search ~ onDetailLink ~ evt:`, evt);
+    evt.preventDefault();
+  }
+  onUseOptionsChecked(evt){
+    console.log(`file: Search.js:926 ~ Search ~ onUseOptionsChecked ~ evt:`, evt);
+    evt.preventDefault()
+    this.setState({onUseOptionsChecked: evt.target.checked})
+  }
 
   render() {
     // const { history } = this.props;
@@ -959,7 +965,7 @@ function countyFilter(stateValues) {
         <ThemeProvider theme={theme}>
           <SearchContext.Provider value={value}>
             <Paper sx={{
-              marginTop: 0
+              marginTop: 5
             }}>
               <Grid Border={0} columnSpacing={0} id="result-header-grid-container" container>{''}
                 <Grid
@@ -981,20 +987,19 @@ function countyFilter(stateValues) {
                     titleRaw={this.state.titleRaw}
                     results={this.state.results}
                     total={this.state.total}
+                    onUseOptionsChecked={this.onUseOptionsChecked}
                     onSortByChangeHandler={this.onSortByChangeHandler}
                     onLimitChangeHandler={this.onLimitChangeHandler}
                     onDownloadClick={this.onDownloadClick}
                   />
                 </Grid>
                 <Grid
-                  columnSpacing={2}
-                  Border={0}
-                  borderColor={'blue'}
+                  columnSpacing={1}
                   container
                   xs={12}
                   flex={1}
                   margin={0}
-                  padding={0}
+                  padding={1}
                   id="filters-grid-container">
                   <Grid Border={0} item xs={3} id="filters-grid-item">
                     {!this.state.filtersHidden &&
@@ -1011,7 +1016,6 @@ function countyFilter(stateValues) {
                         onClearFiltersClick={this.onClearFiltersClick}
                         filtersHidden={this.state.filtersHidden}
                         orgClick={this.orgClick}
-                        onUseOptionsChecked={this.onUseOptionsChecked}
                         onCooperatingAgencyChange={this.onCooperatingAgencyChange}
                         onStartDateChange={this.onStartDateChange}
                         onEndDateChange={this.onEndDateChange}
@@ -1023,7 +1027,7 @@ function countyFilter(stateValues) {
                     }
                   </Grid>
                   <Grid item xs={9} pl={2}>
-                    {this.props.children}
+                    <Paper elation={1} >{this.props.children}</Paper>
                   </Grid>
                 </Grid>
 

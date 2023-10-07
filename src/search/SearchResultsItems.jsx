@@ -1,4 +1,4 @@
-import { Box, Paper, Typography } from "@mui/material";
+import { Box, Paper,Link, Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { makeStyles } from "@mui/styles";
 import React, { useContext, useState } from "react";
@@ -87,7 +87,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function SearchResultItems(props) {
-//  console.log(`🚀 ~ file: SearchResultsItems.jsx:102 ~ SearchResultItems ~ props:`, props);
+  //  console.log(`🚀 ~ file: SearchResultsItems.jsx:102 ~ SearchResultItems ~ props:`, props);
 
   const context = useContext(SearchContext);
   const [isPDFViewOpen, setIsPDFViewOpen] = useState(false);
@@ -109,7 +109,9 @@ export default function SearchResultItems(props) {
         {sortedRecords.map((record, idx) => {
           return (
             <Box key={record.id} id={`search-result-item-container-${record.id}`}>
-              <Typography color={'secondary'} variant='h5'> {record.title}</Typography>
+                  <Link variant="h6" href={`./record-details?id=${record.processId}`} rel="noreferrer" target='_blank'>
+                  {record.title}
+                  </Link>
               <Box borderColor='#ccc' id="search-result-item-container-box">
                 <SearchResultItem record={record} />
               </Box>

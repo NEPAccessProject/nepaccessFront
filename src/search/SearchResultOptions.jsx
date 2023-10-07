@@ -55,8 +55,9 @@ function SearchResultOptions(props) {
     onUseOptionsChecked,
 		sort,
 	} = props;
+  console.log(`file: SearchResultOptions.jsx:58 ~ SearchResultOptions ~ props:`, props);
   const ctx = useContext(SearchContext)
-  const {state} = ctx;
+  const {state,setState} = ctx;
   //assign default values to args
   const { sortBy='relevance', sortDirection='ASC', limit=100, showContext=true, snippetsDisabled = false } = state;   
 	return (
@@ -85,10 +86,11 @@ function SearchResultOptions(props) {
 								control={
 									<Checkbox
                     name="showContext"
-										// checked={searchOptions}
+										//checked={showContext}
 										checked={state.useSearchOptions}
 										onChange={(evt) => onUseOptionsChecked(evt)}
-										disabled={snippetsDisabled}
+		
+                    disabled={snippetsDisabled}
 									/>
 								}
 								label='Show Text Snippets'

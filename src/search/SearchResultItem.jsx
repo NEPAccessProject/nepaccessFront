@@ -91,12 +91,6 @@ export default function SearchResultItem(props) {
 		evt.preventDefault();
 		console.log('Download ID Value and filename', id, filename);
 	};
-
-	const onDetailLink = (evt, processId) => {
-		console.log("🚀 ~ file: SearchResultsItems.jsx:193 ~ onDetailLink ~ evt,processId:", evt, processId)
-	}
-
-
 	const openModal = ((event,id) => {
 		event.preventDefault()
 		const { target: { dataset: { modal } } } = event
@@ -200,8 +194,9 @@ export default function SearchResultItem(props) {
 								padding={1}
 								flex={1}
 							>
+                
 								<Typography id="snippets-title" variant='h5' >{(title) ? title : ''}</Typography>
-
+                
 								{/* <RenderSnippets record={record} /> */}
 							</Grid>
 							<Grid
@@ -217,7 +212,7 @@ export default function SearchResultItem(props) {
 								<Grid
 									id="pdf-button-grid-item"
 									item
-									xs={12}
+									xs={6}
 									display={'flex'}
 									alignContent={'center'}
 									justifyContent="center"
@@ -238,7 +233,7 @@ export default function SearchResultItem(props) {
                     modal={modalOpen} />
 									</Grid>
 								</Grid>
-								{/* <Grid
+								<Grid
 									id="preview-button-grid-item"
 									item
 									//         display={'flex'}
@@ -256,7 +251,7 @@ export default function SearchResultItem(props) {
 									>
 										Download
 									</Button>
-								</Grid> */}
+								</Grid>
 							</Grid>
 							<Grid item xs={12}>
 								<RenderSnippets record={record} />

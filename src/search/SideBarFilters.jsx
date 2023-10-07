@@ -8,6 +8,7 @@ import {
   Divider,
   FormControl,
   FormLabel,
+  Link,
   TextField,
   Typography,
   Stack,
@@ -63,7 +64,7 @@ const useStyles = makeStyles((theme) => ({
     margin: 0,
   },
   autoComplete: {
-    fontSize: 10,
+    fontSize: 20,
     padding:0,
     margin:0
   }
@@ -175,7 +176,7 @@ const SideBarFilters = (props) => {
                     onAgencyChange(evt, value, tag)
                   }}
                   className={classes.autoComplete}
-                  getOptionLabel={(v) => (v.label.length > 25 ? `${v.label.slice(0, 25)}...` : `${v.label}`)}
+                  getOptionLabel={(v) => (v.label.length > 25 ? `${v.label.slice(0, 20)}...` : `${v.label}`)}
                   renderInput={(params) => {
                     params.inputProps.className = classes.autoComplete;
                     return (
@@ -184,7 +185,6 @@ const SideBarFilters = (props) => {
                         placeholder='Type or Select Lead Agencies'
                         variant='outlined'
                         sx={{
-                          fontSize: 6,
                           width: '100%',
                           p: 0,
                         }}
@@ -489,7 +489,10 @@ const SideBarFilters = (props) => {
                   type='checkbox'
                   name='typeFinal'
                   checked={props.useOptions}
-                  onChange={(evt) => onUseOptionsChecked(evt)}
+                  onChange={(evt) => {
+                    console.log(`file: SideBarFilters.jsx:492 ~ SideBarFilters ~ evt:`, evt);
+                    onUseOptionsChecked(evt)
+                  }}
                 />
                 <label
                   className='checkbox-text'
