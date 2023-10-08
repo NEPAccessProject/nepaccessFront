@@ -1752,7 +1752,6 @@ export default class App extends React.Component {
                   lookupResult={this.state.lookupResult}
                   networkError={this.state.networkError}
                   noiCount={this._noiCount}
-                  onDetailLink={this.onDetailLink}
                   optionsChanged={this.optionsChanged}
                   outputResults={this.state.outputResults}
                   parseError={this.state.parseError}
@@ -1772,7 +1771,6 @@ export default class App extends React.Component {
                     download={this.downloadCurrentAsTSV}
                     exportToSpreadsheet={this.exportToCSV}
                     filtersHidden={this.state.filtersHidden}
-                    onDetailLink={this.onDetailLink}
                     gatherSpecificHighlights={this.gatherSpecificHighlights}
                     geoLoading={this.state.geoLoading}
                     geoResults={this.state.geoResults}

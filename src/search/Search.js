@@ -964,7 +964,7 @@ function countyFilter(stateValues) {
       >
         <ThemeProvider theme={theme}>
           <SearchContext.Provider value={value}>
-            <Paper sx={{
+            <Container sx={{
               marginTop: 5
             }}>
               <Grid Border={0} columnSpacing={0} id="result-header-grid-container" container>{''}
@@ -1049,7 +1049,7 @@ function countyFilter(stateValues) {
                   <div></div>
                 </div>
               </div>
-            </Paper>
+            </Container>
           </SearchContext.Provider>
         </ThemeProvider>
       </Container>

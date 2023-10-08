@@ -1,4 +1,4 @@
-import { Button, Paper, Typography } from '@mui/material';
+import { Button,Box, Divider,Paper, Typography } from '@mui/material';
 import Grid from '@mui/material/Unstable_Grid2';
 import { makeStyles } from '@mui/styles';
 import React, { useContext, useEffect, useRef, useState } from 'react';
@@ -125,15 +125,15 @@ export default function SearchResultItem(props) {
 	const text = record.plaintext || '';
 	return (
 		<>
+      <Divider/>
 			<div  id="portal-root">
 
 			</div>
       <div id="modal-root">
 
 			</div>
-			<Paper elevantion={5} sx={{
-				margin: 1,
-				backGroundColor: "#eee"
+			<Box id="search-result-box-container" elevantion={2} sx={{
+				margin: 2,
 			}}>
 				<Grid container id="search-result-grid-container">
 					<Grid
@@ -142,16 +142,20 @@ export default function SearchResultItem(props) {
 						flex={1}
 						flexGrow={1}
 						className={classes.centeredContent}
+            border={1}
+            borderColor={'#ccc'}
 						xs={12}
 						sx={{
 						}}
 					>
 						<Grid container id="search-result-row-container"
-							textAlign={'center'} justifyContent={'center'}>
+							textAlign={'center'} justifyContent={'center'}
+                
+            >
 							<Grid item id="year-box"
 								xs={1}
-								borderColor={'#ccc'}
-								//                borderRight={1}
+                borderRight={1}
+                borderColor='#ccc'
 								classes={classes.cardGridItem}
 								display={'flex'}
 								alignContent={'center'}
@@ -176,6 +180,8 @@ export default function SearchResultItem(props) {
 								justifyContent="center"
 								alignItems={'center'}
 								className={classes.centeredContent}
+                borderRight={1}
+                borderColor={'#ccc'}
 							>
 								<Typography
 									className={classes.card}
@@ -209,7 +215,7 @@ export default function SearchResultItem(props) {
 								flex={1}
 							//       className={classes.centeredContent}
 							>
-								<Grid
+								{/* <Grid
 									id="pdf-button-grid-item"
 									item
 									xs={6}
@@ -232,12 +238,12 @@ export default function SearchResultItem(props) {
                     closeFn={onDialogClose} 
                     modal={modalOpen} />
 									</Grid>
-								</Grid>
+								</Grid> */}
 								<Grid
 									id="preview-button-grid-item"
 									item
 									//         display={'flex'}
-									xs={6}
+									xs={12}
 									alignContent={'center'}
 									justifyContent="center"
 									alignItems={'center'}
@@ -247,7 +253,7 @@ export default function SearchResultItem(props) {
 									<Button
 										onClick={(evt) => handleDownloadClick(evt)}
 										variant='contained'
-										color="secondary"
+										color="primary"
 									>
 										Download
 									</Button>
@@ -259,7 +265,7 @@ export default function SearchResultItem(props) {
 						</Grid>
 					</Grid>
 				</Grid>
-			</Paper>
+			</Box>
 		</>
 	);
 }

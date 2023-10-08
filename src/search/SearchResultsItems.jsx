@@ -1,4 +1,4 @@
-import { Box, Paper,Link, Typography } from "@mui/material";
+import { Box,Divider, Paper,Link, Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { makeStyles } from "@mui/styles";
 import React, { useContext, useState } from "react";
@@ -105,20 +105,21 @@ export default function SearchResultItems(props) {
     <>
       {/* <h2>Search Result Items Result?</h2>
     {JSON.stringify(result)} */}
-      <Box margin={1} id="search-results-container-box">
+      <Paper elevation={1} border={1} borderColor="red" margin={1} id="search-results-container-box">
         {sortedRecords.map((record, idx) => {
           return (
             <Box key={record.id} id={`search-result-item-container-${record.id}`}>
-                  <Link variant="h6" href={`./record-details?id=${record.processId}`} rel="noreferrer" target='_blank'>
+                  {/* <Link id="search-result-item-details-link" variant="h6" href={`./record-details?id=${record.processId}`} rel="noreferrer" target='_blank'>
                   {record.title}
-                  </Link>
-              <Box borderColor='#ccc' id="search-result-item-container-box">
+                  </Link> */}
+              <Box elevation={0} id="search-result-item-container-box">
                 <SearchResultItem record={record} />
+                <Divider/>
               </Box>
             </Box>
           );
         })}
-      </Box>
+      </Paper>
     </>
   );
 }

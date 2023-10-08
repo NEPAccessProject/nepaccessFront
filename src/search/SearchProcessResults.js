@@ -1,4 +1,4 @@
-import { Box, Divider, Link, Grid, Paper, Skeleton, Typography } from "@mui/material";
+import { Box,Container, Divider, Link, Grid, Paper, Skeleton, Typography } from "@mui/material";
 import { styled } from "@mui/styles";
 import React from "react";
 import { reactFormatter } from "react-tabulator";
@@ -297,14 +297,13 @@ export default class SearchProcessResults extends React.Component {
             // searcherState={this.props.searcherState}
             />
           </Grid>
+          
           {results.map((result, index) => {
             return (
-              <Paper key={result.id}>
+              <Paper  margin={10} elevation={1} borderColor={"#000"} key={result.id}>
                 <Box id="search-results-parent-container-box" Border={0} borderColor={"#eee"} padding={1} >
                   {/* Title and link for each result */}
-                    <Link target="_blank" variant="h3" href={`/record-details/?id=${result.processId}`}>
-                      {result.title}
-                    </Link>
+     
                   <Box id="search-results-cards-container-box">
                     <SearchResultCards result={result} />
                   </Box>

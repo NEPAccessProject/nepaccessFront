@@ -11,6 +11,8 @@ import React from "react";
 import Globals from "../globals";
 import SearchContext from "./SearchContext";
 import SearchResultOptions from "./SearchResultOptions";
+import SearchTipsDialog from "./Dialogs/SearchTipDialog";
+import AvailableFilesDialog from "./Dialogs/AvailableFilesDialog";
 
 const sortOptions = [
   { value: "relevance", label: "Relevance" },
@@ -32,6 +34,9 @@ export default class ResultsHeader extends React.Component {
     this.state = {
       sort: { value: "relevance", label: "Relevance" },
       order: { value: true, label: "^" },
+      isSearchTipsDialogOpen: false,
+      isAvailableFilesDialogOpen: false,
+      isQuickStartDialogOpen: false,
     };
   }
 
@@ -41,18 +46,27 @@ export default class ResultsHeader extends React.Component {
       "🚀 ~ file: ResultsHeader.js:22 ~ toggleSearchTipsDialog ~ evt:",
       evt
     );
+    this.setState({
+      isSearchTipsDialogOpen: !this.state.isSearchTipsDialogOpen,
+    })
   };
   toggleAvailableFilesDialog = (evt) => {
     console.log(
       "🚀 ~ file: ResultsHeader.js:25 ~ toggleAvailableFilesDialog ~ evt:",
       evt
     );
+    this.setState({
+      isAvailableFilesDialogOpen: !this.state.isAvailableFilesDialogOpen,
+    })
   };
   toggleQuickStartDialog = (evt) => {
     console.log(
       "🚀 ~ file: ResultsHeader.js:32 ~ toggleQuickStartDialog ~ toggleQuickStartDialog:",
       evt
     );
+    this.setState({
+      isQuickStartDialogOpen: !this.state.isQuickStartDialogOpen,
+    })
   };
 
   onSortChange = (event) => {
@@ -120,6 +134,8 @@ export default class ResultsHeader extends React.Component {
   render() {
     return (
       <>
+      <SearchTipsDialog open={this.state.isSearchTipsDialogOpen} />
+      <AvailableFilesDialog open={this.state.isAvailableFilesDialogOpen} />
         <Grid
           id="search-text-grid-container"
           display={"flex-root"}
@@ -141,13 +157,13 @@ export default class ResultsHeader extends React.Component {
                 borderRight={0}
                 borderColor={"#CCC"}
               >
-                <ListItem onClick={this.toggleSearchTipsDialog}>
+                <ListItem onClick={this.toggleSearchTipsDialog.bind(this)}>
                   <a href="#">Search Tips</a>
                 </ListItem>
-                <ListItem onClick={this.toggleAvailableFilesDialog}>
+                <ListItem onClick={this.toggleAvailableFilesDialog.bind(this)}>
                   <a href="#">Available Files</a>
                 </ListItem>
-                <ListItem onClick={this.toggleQuickStartDialog}>
+                <ListItem onClick={this.toggleQuickStartDialog.bind(this)}>
                   <a href="#">Quick-start guide</a>
                 </ListItem>
               </Box>
