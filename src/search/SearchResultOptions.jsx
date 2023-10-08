@@ -55,7 +55,9 @@ function SearchResultOptions(props) {
     onUseOptionsChecked,
 		sort,
 	} = props;
-  console.log(`file: SearchResultOptions.jsx:58 ~ SearchResultOptions ~ props:`, props);
+    console.log(`🚀 ~ file: SearchResultOptions.jsx:58 ~ SearchResultOptions ~ onUseOptionsChecked:`, onUseOptionsChecked);
+
+  // console.log(`file: SearchResultOptions.jsx:58 ~ SearchResultOptions ~ props:`, props);
   const ctx = useContext(SearchContext)
   const {state,setState} = ctx;
   //assign default values to args

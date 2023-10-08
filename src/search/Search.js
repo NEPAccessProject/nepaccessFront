@@ -93,6 +93,7 @@ class Search extends React.Component {
       decisionRaw: [],
       action: [],
       actionRaw: [],
+  
       typeAll: true,
       typeFinal: false,
       typeDraft: false,
@@ -111,6 +112,9 @@ class Search extends React.Component {
       limit: 10,
       offset: 0,
       searchOption: "B",
+      isSearchTipsDialogOpen: false,
+      isAvailableFilesDialogOpen: false,
+      isQuickStartDialogOpen:false,
       test: Globals.anEnum.options,
       tooltipOpen: undefined,
       proximityOption: null,
@@ -133,6 +137,8 @@ class Search extends React.Component {
 
     this.myRef = React.createRef();
   }
+
+  
 
   handleChange(inputId, inputValue) {
 
@@ -919,13 +925,15 @@ function countyFilter(stateValues) {
     }
   };
   onDetailLink(evt){
-    console.log(`file: Search.js:922 ~ Search ~ onDetailLink ~ evt:`, evt);
+    console.log(`file: Search.js:922 ~ Search ~ onDetailLink ~ this:`, this);
     evt.preventDefault();
   }
   onUseOptionsChecked(evt){
     console.log(`file: Search.js:926 ~ Search ~ onUseOptionsChecked ~ evt:`, evt);
     evt.preventDefault()
-    this.setState({onUseOptionsChecked: evt.target.checked})
+    this.setState({
+      useOptionsChecked : evt.target.checked
+    })
   }
 
   render() {
@@ -956,104 +964,152 @@ function countyFilter(stateValues) {
       setState: this.setState,
     };
     return (
-      <Container
-        disableGutters={false}
-        sx={{
-          //					marginTop: 15,
-        }}
-      >
-        <ThemeProvider theme={theme}>
-          <SearchContext.Provider value={value}>
-            <Container sx={{
-              marginTop: 5
-            }}>
-              <Grid Border={0} columnSpacing={0} id="result-header-grid-container" container>{''}
-                <Grid
-                  container
-                  xs={12}
-                  id="results-header-grid-container"
-                  flex={1}
-                  flexGrow={1}>
-                  <ResultsHeader
-                    {...this.props}
-                    sort={this.props.sort}
-                    state={this.state}
-                    setPageInfo={this.props.setPageInfo}
-                    handleProximityValues={this.handleProximityValues}
-                    onInput={this.onInput}
-                    onKeyUp={this.onKeyUp}
-                    onKeyDown={this.onKeyDown}
-                    onIconClick={this.onIconClick}
-                    titleRaw={this.state.titleRaw}
-                    results={this.state.results}
-                    total={this.state.total}
-                    onUseOptionsChecked={this.onUseOptionsChecked}
-                    onSortByChangeHandler={this.onSortByChangeHandler}
-                    onLimitChangeHandler={this.onLimitChangeHandler}
-                    onDownloadClick={this.onDownloadClick}
-                  />
-                </Grid>
-                <Grid
-                  columnSpacing={1}
-                  container
-                  xs={12}
-                  flex={1}
-                  margin={0}
-                  padding={1}
-                  id="filters-grid-container">
-                  <Grid Border={0} item xs={3} id="filters-grid-item">
-                    {!this.state.filtersHidden &&
-                      //[TODO] it would probably be simpler showing these into context
-                      <SideBarFilters
-                        {...this.props}
-                        onActionChange={this.onActionChange}
-                        onAgencyChange={this.onAgencyChange}
-                        onClearFilter={this.onClearFilter}
-                        onCountyChange={this.onCountyChange}
-                        onLocationChange={this.onLocationChange}
-                        onDecisionChange={this.onDecisionChange}
-                        onTypeChecked={this.onTypeChecked}
-                        onClearFiltersClick={this.onClearFiltersClick}
-                        filtersHidden={this.state.filtersHidden}
-                        orgClick={this.orgClick}
-                        onCooperatingAgencyChange={this.onCooperatingAgencyChange}
-                        onStartDateChange={this.onStartDateChange}
-                        onEndDateChange={this.onEndDateChange}
-                        toggleFiltersHidden={this.toggleFiltersHidden}
-                        onNeedsDocumentChecked={this.onNeedsDocumentChecked}
-                        renderClearFiltersButton={this.renderClearFiltersButton}
-                        onTitleOnlyChecked={this.onTitleOnlyChecked}
-                      />
-                    }
-                  </Grid>
-                  <Grid item xs={9} pl={2}>
-                    <Paper elation={1} >{this.props.children}</Paper>
-                  </Grid>
-                </Grid>
-
-              </Grid>
-              {/* End Header*/}
-              {/* <Item xs={2} id="filter-container-items" >
+			<Container
+				disableGutters={false}
+				sx={
+					{
+						//					marginTop: 15,
+					}
+				}>
+				<ThemeProvider theme={theme}>
+					<SearchContext.Provider value={value}>
+						<Container
+							sx={{
+								marginTop: 5,
+							}}>
+							<Grid
+								Border={0}
+								columnSpacing={0}
+								id='result-header-grid-container'
+								container>
+								{''}
+								<Grid
+									container
+									xs={12}
+									id='results-header-grid-container'
+									flex={1}
+									flexGrow={1}>
+									<ResultsHeader
+										{...this.props}
+										sort={this.props.sort}
+										state={this.state}
+										setPageInfo={this.props.setPageInfo}
+										handleProximityValues={
+											this.handleProximityValues
+										}
+										onInput={this.onInput}SearchResultOptions
+										onKeyUp={this.onKeyUp}
+										onKeyDown={this.onKeyDown}
+										onIconClick={this.onIconClick}
+										titleRaw={this.state.titleRaw}
+										results={this.state.results}
+										total={this.state.total}
+										onUseOptionsChecked={
+                      this.onUseOptionsChecked.bind(this)
+										}
+										onSortByChangeHandler={
+											this.onSortByChangeHandler
+										}
+										onLimitChangeHandler={
+											this.onLimitChangeHandler
+										}
+										onDownloadClick={this.onDownloadClick}
+										
+									/>
+								</Grid>
+								<Grid
+									columnSpacing={1}
+									container
+									xs={12}
+									flex={1}
+									margin={0}
+									padding={1}
+									id='filters-grid-container'>
+									<Grid
+										Border={0}
+										item
+										xs={3}
+										id='filters-grid-item'>
+										{!this.state.filtersHidden && (
+											//[TODO] it would probably be simpler showing these into context
+											<SideBarFilters
+												{...this.props}
+												onActionChange={this.onActionChange}
+												onAgencyChange={this.onAgencyChange}
+												onClearFilter={this.onClearFilter}
+												onCountyChange={this.onCountyChange}
+												onLocationChange={
+													this.onLocationChange
+												}
+												onDecisionChange={
+													this.onDecisionChange
+												}
+												onTypeChecked={this.onTypeChecked}
+												onClearFiltersClick={
+													this.onClearFiltersClick
+												}
+												filtersHidden={
+													this.state.filtersHidden
+												}
+												orgClick={this.orgClick}
+												onCooperatingAgencyChange={
+													this.onCooperatingAgencyChange
+												}
+												onStartDateChange={
+													this.onStartDateChange
+												}
+												onEndDateChange={
+													this.onEndDateChange
+												}
+												toggleFiltersHidden={
+													this.toggleFiltersHidden
+												}
+												onNeedsDocumentChecked={
+													this.onNeedsDocumentChecked
+												}
+												renderClearFiltersButton={
+													this.renderClearFiltersButton
+												}
+												onTitleOnlyChecked={
+													this.onTitleOnlyChecked
+												}
+											/>
+										)}
+									</Grid>
+									<Grid
+										item
+										xs={9}
+										pl={2}>
+										<Paper elation={1}>
+											{this.props.children}
+										</Paper>
+									</Grid>
+								</Grid>
+							</Grid>
+							{/* End Header*/}
+							{/* <Item xs={2} id="filter-container-items" >
 									</Item>
 									<Item display={'flex'} xs={9}  id="results-container-items">
 									</Item>  */}
-              {this.getSuggestions()}
-              <div id="loader-holder">
-                {/* <div className="center" hidden={this.props.searching}>
+							{this.getSuggestions()}
+							<div id='loader-holder'>
+								{/* <div className="center" hidden={this.props.searching}>
 									<span id="inputMessage"><CircularProgress/> {this.state.inputMessage}</span>
 								</div> */}
-                <div className="lds-ellipsis" hidden={!this.props.searching}>
-                  <div></div>
-                  <div></div>
-                  <div></div>
-                  <div></div>
-                </div>
-              </div>
-            </Container>
-          </SearchContext.Provider>
-        </ThemeProvider>
-      </Container>
-    );
+								<div
+									className='lds-ellipsis'
+									hidden={!this.props.searching}>
+									<div></div>
+									<div></div>
+									<div></div>
+									<div></div>
+								</div>
+							</div>
+						</Container>
+					</SearchContext.Provider>
+				</ThemeProvider>
+			</Container>
+		);
   }
 
   orgClick = () => {

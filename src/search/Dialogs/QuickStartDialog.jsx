@@ -8,7 +8,7 @@ import {
 	Typography,
 } from '@mui/material';
 import React from 'react';
-export default function SearchTipsDialog(props) {
+export default function QuickStartDialog(props) {
 	console.log(
 		`file: SearchTipDialog.jsx:4 ~ SearchTipsDialog ~ props:`,
 		props,

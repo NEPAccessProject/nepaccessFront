@@ -1,7 +1,7 @@
 import React, { useContext } from 'react';
 import { Dialog, DialogContext, DialogContent, DialogTitle, DialogContentText, DialogActions, Grid, Box, Typography, IconButton } from '@mui/material';
 export default function AvailableFilesDialog(props) {
-  const { isOpen, onDialogClose } = props;
+  const { isOpen, onClose } = props;
   return (
 
     <Dialog open={isOpen}>
@@ -10,7 +10,7 @@ export default function AvailableFilesDialog(props) {
           <Box paddingLeft={2}><Typography fontSize={'large'} fontWeight={'bold'}>Available Files</Typography></Box>
         </Grid>
         <Grid item xs={1} justifyContent={'center'}>
-          <IconButton onClick={onDialogClose}><Typography fontSize={'medium'}>X</Typography></IconButton>
+          <IconButton onClick={onClose}><Typography fontSize={'medium'}>X</Typography></IconButton>
         </Grid>
       </Grid>
       <DialogContent>
