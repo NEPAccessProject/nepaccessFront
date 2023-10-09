@@ -183,15 +183,13 @@ export default class ResultsHeader extends React.Component {
           isOpen={this.state.isQuickStartDialogOpen}
           />  
 				<Grid
+        container
 					id='search-text-grid-container'
 					display={'flex-root'}
 					alignItems={'center'}
-					container={true}
 					layout={'row'}
 					spacing={1}
-					border={0}
-					borderBottom={1}
-					borderColor='#ccc'>
+          >
 					<Hidden mdDown>
 						<Grid
 							item
@@ -201,9 +199,7 @@ export default class ResultsHeader extends React.Component {
 								id='search-text-grid-item'
 								// backgroundColor="transparent"
 								height={115}
-								borderRadius={0}
-								borderRight={0}
-								borderColor={'#CCC'}>
+		              >
 								<ListItem
 									onClick={this.toggleSearchTipsDialog.bind(this)}>
 									<a href='#'>
@@ -230,15 +226,14 @@ export default class ResultsHeader extends React.Component {
 					</Hidden>
 
 					<Grid
+            id="search-box-grid-container"
 						container
 						flex={1}
-						border={0}
-						borderColor={'darkgreen'}>
+            >
 						<Grid
 							item
 							xs={12}
 							border={0}
-							//              borderColor={"#DDD"}
 							md={12}
 							borderLeft={0}
 							marginTop={2}
@@ -246,27 +241,16 @@ export default class ResultsHeader extends React.Component {
 							<Box
 								id='search-box-box-item'
 								display={'flex'}
-								justifyContent={'center'}
-								justifyItems={'center'}
-								alignItems={'center'}
-								alignContent={'center'}
 								height={60}
-								paddingLeft={0}
-								paddingRight={2}
 								padding={0}
-								elevation={1}
-								borderRadius={0}
-								border={0}
-								borderColor={'#CCC'}
-								borderLeft={0}
-								marginLeft={0}
-								marginRight={0}>
+                >
 								<TextField
 									fullWidth
 									backgroundColor={'white'}
 									id='main-search-text-field'
 									name='titleRaw'
 									variant='outlined'
+                  color="primary"
 									focused
 									onInput={(evt) => this.props.onInput(evt)}
 									// onKeyUp={onKeyUp}
