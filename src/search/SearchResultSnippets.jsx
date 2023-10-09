@@ -22,11 +22,12 @@ export default function RenderSnippets(props) {
   } = props;
 
   //console.log('RenderSnippets props.record', record);
-  const { state, setState } = useContext(SearchContext);
+  const { ctxState=state, setState } = useContext(SearchContext);
 
   const [isPDFViewOpen, setIsPDFViewOpen] = useState(false);
   const [isContentExpanded, setIsContentExpanded] = useState(false);
-  const { hideText, hidden } = state;
+  const { hideText, hidden,showContext } = ctxState;
+  console.log(`file: SearchResultSnippets.jsx:30 ~ RenderSnippets ~ state:`, ctxState);
   const _mounted = useRef(false);
   function convertToHTML(content) {
     return { __html: content };
@@ -96,8 +97,9 @@ function Snippets(props) {
   else {
     return (
       <>
+      <b>showContext</b>: {showContext ? true : false}
         <Box borderTop={1} borderColor="#ccc">
-          {snippet.length >= 100 && !isContentExpanded
+          {snippet.length >= 100 && showContext && !isContentExpanded
             ?
             <Box padding={2}>
               {/*[TODO][REFACTOR] Use https://stackoverflow.com/questions/52257993/strip-tag-from-text-in-react-js  to strip html tags vs displaying */}

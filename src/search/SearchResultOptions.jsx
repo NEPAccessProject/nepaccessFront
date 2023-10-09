@@ -58,8 +58,10 @@ function SearchResultOptions(props) {
 		onSortDirectionChangeHandler,
 		onDownloadClick,
 		onSaveSearchResultsClick,
+    onCheckBoxChange,
 		onSortByChangeHandler,
     onUseOptionsChecked,
+    onCheckboxChecked,
 		sort,
 	} = props;
     console.log(`🚀 ~ file: SearchResultOptions.jsx:58 ~ SearchResultOptions ~ onUseOptionsChecked:`, onUseOptionsChecked);
@@ -68,8 +70,10 @@ function SearchResultOptions(props) {
   const ctx = useContext(SearchContext)
   const classes = useStyles(theme);
   const {state,setState} = ctx;
+  console.log(`file: SearchResultOptions.jsx:71 ~ SearchResultOptions ~ state:`, state);
+  const {showContext} = state;
   //assign default values to args
-  const { sortBy='relevance', sortDirection='ASC', limit=100, showContext=true, snippetsDisabled = false } = state;   
+  const { sortBy='relevance', sortDirection='ASC', limit=100, snippetsDisabled = false } = state;   
 	return (
 		<>
       <Grid container flex={1} border={1} borderColor={'#ddd'}>
@@ -103,8 +107,8 @@ const ShowTextCheckbox = (props) => {
           <Checkbox
             name="showContext"
             //checked={showContext}
-            checked={useSearchOptions}
-            onChange={(evt) => onUseOptionsChecked(evt)}
+            checked={showContext}
+            onChange={(evt) => onCheckboxChecked(evt)}
 
           // disabled={snippetsDisabled}
           />

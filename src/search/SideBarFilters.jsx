@@ -148,7 +148,7 @@ const SideBarFilters = (props) => {
                 fullWidth
                 variant='outlined'
                 color='primary'
-                Border={0}
+                border={0}
                 borderRadius={0}>
                 Clear Filters
               </Button>
@@ -269,7 +269,7 @@ const SideBarFilters = (props) => {
             </Box>
             <Box>
               <FormLabel
-                Label
+                label
                 htmlFor='county'>
                 County/counties:
               </FormLabel>

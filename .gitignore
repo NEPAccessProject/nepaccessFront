@@ -45,3 +45,6 @@ src/NEPAccess.code-workspace
 public/docs**
 src/search/**/*.pdf
 public/example-pdfs.zip
+/test-results/
+/playwright-report/
+/playwright/.cache/

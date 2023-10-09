@@ -40,7 +40,6 @@
     "@types/styled-components": "^5.1.26",
     "axios": "^1.4.0",
     "chart.js": "^2.9.4",
-    "cypress": "^13.3.0",
     "d3": "^3.5.17",
     "dayjs": "^1.11.8",
     "eslint": "^8.42.0",
@@ -85,6 +84,7 @@
   },
   "devDependencies": {
     "@babel/plugin-proposal-private-property-in-object": "^7.16.7",
+    "@playwright/test": "^1.38.1",
     "@storybook/addon-essentials": "^7.0.26",
     "@storybook/addon-interactions": "7.0.26",
     "@storybook/addon-links": "7.0.26",
@@ -94,6 +94,7 @@
     "@storybook/react": "7.0.26",
     "@storybook/react-webpack5": "7.0.26",
     "@storybook/testing-library": "0.0.14-next.2",
+    "@types/node": "^20.8.4",
     "babel-plugin-named-exports-order": "0.0.2",
     "eslint-plugin-react": "^7.33.0",
     "eslint-plugin-react-hooks": "^4.6.0",
@@ -109,7 +110,8 @@
     "test": "react-scripts test",
     "jest": "jest",
     "cypress:open": "cypress open",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "fix" : "yarn eslint --fix"
   },
   "eslintConfig": {
     "extends": "react-app"

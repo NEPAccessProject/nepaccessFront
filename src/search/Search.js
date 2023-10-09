@@ -76,57 +76,58 @@ class Search extends React.Component {
 
 
     this.state = {
-      titleRaw: "",
-      startPublish: null,
-      endPublish: null,
-      startComment: null,
-      endComment: null,
+  
+      action: [],
+      actionRaw: [],
       agency: [],
       agencyRaw: [],
       cooperatingAgency: [],
       cooperatingAgencyRaw: [],
-      state: [],
-      stateRaw: [],
       county: [],
       countyRaw: [],
       decision: [],
       decisionRaw: [],
-      action: [],
-      actionRaw: [],
-  
-      typeAll: true,
-      typeFinal: false,
-      typeDraft: false,
-      typeEA: false,
-      typeNOI: false,
-      typeROD: false,
-      typeScoping: false,
-      typeOther: false,
-      showQuickTipsDialog: false,
-      showPDFDialog: false,
-      showSearchTipsDialog: false,
+      endComment: null,
+      endPublish: null,
+      filtersHidden: false,
+      fragmentSizeValue: 2,
+      hideOrganization: true,
+      iconClassName: "icon icon--effect",
+      isAvailableFilesDialogOpen: false,
+      isDirty: false,
+      isQuickStartDialogOpen:false,
+      isSearchTipsDialogOpen: false,
+      limit: 10,
+      markup: true,
       needsComments: false,
       needsDocument: false,
-      optionsChecked: true,
-      iconClassName: "icon icon--effect",
-      limit: 10,
       offset: 0,
-      searchOption: "B",
-      isSearchTipsDialogOpen: false,
-      isAvailableFilesDialogOpen: false,
-      isQuickStartDialogOpen:false,
-      test: Globals.anEnum.options,
-      tooltipOpen: undefined,
-      proximityOption: null,
+      optionsChecked: true,
       proximityDisabled: true,
-      hideOrganization: true,
-      markup: true,
-      fragmentSizeValue: 2,
-      isDirty: false,
+      proximityOption: null,
+      searchOption: "B",
+      showContext: false,
+      showPDFDialog: false,
+      showQuickTipsDialog: false,
+      showSearchTipsDialog: false,
+      startComment: null,
+      startPublish: null,
+      state: [],
+      stateRaw: [],
       surveyChecked: true,
       surveyDone: true,
       surveyResult: "Haven't searched yet",
-      filtersHidden: false,
+      test: Globals.anEnum.options,
+      titleRaw: "",
+      tooltipOpen: undefined,
+      typeAll: true,
+      typeDraft: false,
+      typeEA: false,
+      typeFinal: false,
+      typeNOI: false,
+      typeOther: false,
+      typeROD: false,
+      typeScoping: false,
     };
     this.debouncedSearch = _.debounce(this.props.search, 300);
     this.filterResultsBy = this.props.filterResultsBy;
@@ -139,7 +140,14 @@ class Search extends React.Component {
   }
 
   
-
+  onCheckboxChecked = (evt) => {
+    console.log(`file: Search.js:144 key: ${evt.taget.name} - isChecked ${evt.taget.checked}` );
+    evt.preventDefault();
+    
+    this.setState({
+      [evt.target.name]: evt.target.checked,
+    });
+  }
   handleChange(inputId, inputValue) {
 
     this.setState({ [inputId]: inputValue });
@@ -978,7 +986,7 @@ function countyFilter(stateValues) {
 								marginTop: 5,
 							}}>
 							<Grid
-								Border={0}
+								border={0}
 								columnSpacing={0}
 								id='result-header-grid-container'
 								container>
@@ -1007,6 +1015,7 @@ function countyFilter(stateValues) {
 										onUseOptionsChecked={
                       this.onUseOptionsChecked.bind(this)
 										}
+                    onCheckboxChecked = {this.onCheckboxChecked.bind(this)} 
 										onSortByChangeHandler={
 											this.onSortByChangeHandler
 										}
@@ -1026,7 +1035,7 @@ function countyFilter(stateValues) {
 									padding={1}
 									id='filters-grid-container'>
 									<Grid
-										Border={0}
+										border={0}
 										item
 										xs={3}
 										id='filters-grid-item'>
