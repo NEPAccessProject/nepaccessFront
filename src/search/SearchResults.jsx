@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 import React, { useEffect, useRef, useState } from 'react';
-
+import List from 'rc-virtual-list'
 import { Box, Grid, Paper, Typography, Pagination, TablePagination, Link } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import theme from '../../styles/theme';
@@ -132,14 +132,14 @@ const SearchResults = (props) => {
       {results && results.length ? (
         results.map((result, index) => {
           return (
-              <Paper key={result.id} elevation={10}>
+              <Box border={1} key={result.id} elevation={10}>
                <Link variant='filterLabel' href={`./record-details?id=${result.processId}`}>LINK - {result.title}</Link>
                 <Box sx={{ margin: 5 }}>
-{/* 
-                  <SearchResultCards result={result} /> */}
+
+                  <SearchResultCards result={result} />
                   <SearchResultItems result={result} />
                 </Box>
-              </Paper>
+              </Box>
             );
         })
               ) : (
