@@ -9,6 +9,7 @@ import { ThemeOptions } from '@mui/material/styles';
 		map: 999,
 	},
 		palette: {
+      divider: grey[200],
 			mode: 'light',
 			primary: {
 				main: '#053B50',
@@ -132,10 +133,11 @@ import { ThemeOptions } from '@mui/material/styles';
 	 },
       MuiFormControlLabel: {
         styleOverrides: {
-          label: "This is a label?",
           root: {
             fontSize: 12,
             color: grey[700],
+            padding:0,
+            margin:0,
 
 
           }
