@@ -15,7 +15,7 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 
-import Grid from '@mui/material/Unstable_Grid2'; // Grid version
+import Grid from '@mui/material/Grid'; // Grid version
 import { styled } from '@mui/material/styles';
 import theme from '../styles/theme';
 import React, { useContext } from 'react';
@@ -42,6 +42,13 @@ const useStyles = makeStyles((theme) => ({
 		textAlign: 'center',
 		color: 'black', //theme.palette.text.secondary,
 	},
+  container: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    verticalAlign: 'middle',
+    border:1,
+    borderColor: theme.palette.divider,
+  }
 }));
 function SearchResultOptions(props) {
 	const {
@@ -59,218 +66,127 @@ function SearchResultOptions(props) {
 
   // console.log(`file: SearchResultOptions.jsx:58 ~ SearchResultOptions ~ props:`, props);
   const ctx = useContext(SearchContext)
+  const classes = useStyles(theme);
   const {state,setState} = ctx;
   //assign default values to args
   const { sortBy='relevance', sortDirection='ASC', limit=100, showContext=true, snippetsDisabled = false } = state;   
 	return (
 		<>
-			<Grid
-				container
-				flex={1}
-				spacing={0}
-				border={0}
-				justifyContent={'flex-start'}>
-				<Grid
-					xs={4}
-					md={4}>
-					<Item
-						elevation={0}
-						justifyContent='center'
-						sx={{
-							justifyContent: 'center',
-							alignItems: 'center',
-							display: 'flex',
-							borderRight: 1,
-							borderColor: 'lightgray',
-						}}>
-						<FormControl>
-							<FormControlLabel
-								control={
-									<Checkbox
-                    name="showContext"
-										//checked={showContext}
-										checked={state.useSearchOptions}
-										onChange={(evt) => onUseOptionsChecked(evt)}
-		
-                    disabled={snippetsDisabled}
-									/>
-								}
-								label='Show Text Snippets'
-							/>
-						</FormControl>
-					</Item>
-				</Grid>
-				<Grid
-					xs={6}
-					md={3}>
-					<Item
-						justifyContent='center'
-						elevation={0}
-						sx={{
-							justifyContent: 'center',
-							alignItems: 'center',
-							display: 'flex',
-							borderRight: 1,
-							borderColor: 'lightgray',
-						}}>
-						<FormControlLabel
-							itemID='sort'
-							id='sort-by-select-label'
-							labelPlacement='start'
-							label={
-								<Typography
-									variant='formContolLabel'
-									sx={{ marginRight: 2 }}>
-									Sort by:
-								</Typography>
-							}
-							control={
-								<Select
-									id='search-result-options-sort-by-select'
-									value={state.sortBy}
-									label={
-										<Typography
-											variant='formContolLabel'
-											sx={{ marginRight: 2 }}>
-											Sort By:
-										</Typography>
-									}
-                  name='sort'
-									defaultValue={'relevance'}
-                  placeholder='Select...'
-									onChange={(evt) => onSortByChangeHandler(evt)}>
-									<MenuItem value='relevance'>Relevance</MenuItem>
-									<MenuItem value='title'>Title</MenuItem>
-									<MenuItem value='date'>Date</MenuItem>
-									<MenuItem value='distance'>Distance</MenuItem>
-								</Select>
-							}></FormControlLabel>
-					</Item>
-				</Grid>
-				<Grid
-					xs={6}
-					md={3}>
-					<Item
-						justifyContent='center'
-						elevation={0}
-						sx={{
-							justifyContent: 'center',
-							alignItems: 'center',
-							display: 'flex',
-							borderRight: 1,
-							borderColor: 'lightgray',
-						}}>
-						<FormControl>
-							<FormControlLabel
-								itemID='search-result-options-pagesize-select'
-								id='sort-by-select-label'
-								labelPlacement='start'
-                name="sortby"
-								label={
-									<Typography
-										variant='formContolLabel'
-										sx={{ marginRight: 2 }}>
-										Page Size:
-									</Typography>
-								}
-								control={
-									<Select
-                    name="limit"
-										id='search-result-options-sort-by-select'
-										value={state.limit || 10}
-										defaultValue={10}
-										onChange={(evt) =>
-                      //[TODO] need to pass the current page vs just 0
-											setPageInfo(0, evt.target.value)
-										}
-										label='Page Size'>
-										<MenuItem value={1}>1</MenuItem>
-										<MenuItem value={5}>5</MenuItem>
-										<MenuItem value={10}>10</MenuItem>
-										<MenuItem value={25}>25</MenuItem>
-										<MenuItem value={50}>50</MenuItem>
-										<MenuItem value={100}>100</MenuItem>
-									</Select>
-								}></FormControlLabel>
-						</FormControl>
-					</Item>
-				</Grid>
-				<Grid
-					xs={6}
-					md={2}
-					container
-					flex={1}
-					spacing={0}
-					elevation={0}
-					id='search-result-options-icon-container'
-					alignItems={'center'}
-					alignContent={'Center'}
-					justifyContent={'center'}>
-					<Grid
-						xs={6}
-						flex={1}
-						id='search-result-options-icon-items'>
-						<Item
-							id='search-result-options-icon-item'
-							justifyContent='center'
-							elevation={0}
-							height='auto'
-							sx={{
-								justifyContent: 'center',
-								alignItems: 'center',
-								display: 'flex',
-								borderRight: 1,
-								borderColor: 'lightgray',
-							}}>
-							<SortOutlined
-								value={sortDirection}
-								onChange={onSortDirectionChangeHandler}
-							/>
-						</Item>
-					</Grid>
-					<Grid
-						xs={12}
-						md={6}
-						flex={1}
-						id='search-result-options-grid-container'>
-						<Item
-							id='search-result-sort-item'
-							justifyContent='center'
-							elevation={0}
-							sx={{
-								justifyContent: 'center',
-								alignItems: 'center',
-								display: 'flex',
-								borderRight: 0,
-								borderColor: 'lightgray',
-							}}>
-							<CloudDownloadIcon
-								value={sortDirection}
-								onChange={onDownloadClick}
-							/>
-						</Item>
-					</Grid>
-
-					{/* <Grid xs={6} md={3}>
-						<Item
-							elevation={0}
-							sx={{
-								justifyContent: 'center',
-								alignItems: 'center',
-								display: 'flex',
-								borderLeft: 1,
-								borderColor: 'lightgray',
-							}}
-						>
-							<FavoriteIcon
-								value={sortDirection}
-								onChange={onSortDirectionChangeHandler}
-							/>
-						</Item>
-					</Grid> */}
-				</Grid>
-			</Grid>
+      <Grid container flex={1} border={1} borderColor={'#ddd'}>
+        <Grid item xs={5} borderRight={1} borderColor={'#ddd'} id="show-checkbox-grid-item" className={classes.container} display={"flex"}>
+          <ShowTextCheckbox onUseOptionsChecked={onUseOptionsChecked}/>
+        </Grid>
+        <Grid item xs={3} borderRight={1} borderColor={'#ddd'} id="sort-by-grid-item" display="flex" justifyContent={"center"}>
+          <SortByControl onSortByChangeHandler={onSortByChangeHandler} orderBy={sortBy}/>
+        </Grid>
+        <Grid item xs={3} borderRight={1} borderColor={'#ddd'} id="sort-by-grid-item" display="flex" justifyContent={"center"}>
+          <SortDirControl onSortByChangeHandler={onSortDirectionChangeHandler} sortDirection={sortDirection}/>
+        </Grid>
+        <Grid item xs={1} className={classes.container} alignItems={"center"} display={"flex"} justifyContent={"center"} alignContent={"center"}>
+        <CloudDownloadIcon
+            value={sortDirection}
+            onChange={onDownloadClick}
+          />
+        </Grid>
+      </Grid>
 		</>
 	);
+}
+
+const ShowTextCheckbox = (props) => {
+  const classes = useStyles(theme);
+  const { onUseOptionsChecked,  useSearchOptions } = props
+  return (
+    <FormControl className={classes.centered}>
+      <FormControlLabel
+        control={
+          <Checkbox
+            name="showContext"
+            //checked={showContext}
+            checked={useSearchOptions}
+            onChange={(evt) => onUseOptionsChecked(evt)}
+
+          // disabled={snippetsDisabled}
+          />
+        }
+        label='Show Text Snippets'
+      />
+    </FormControl>
+  )
+}
+
+const SortByControl = (props) => {
+  const { onSortByChangeHandler, orderBy } = props
+  const classes = useStyles(theme);
+  return (
+    <FormControlLabel
+      itemID='sort'
+      id='sort-by-select-label'
+      labelPlacement='start'
+      label={
+        <Typography
+          variant='formContolLabel'
+          sx={{ marginRight: 2 }}>
+          Sort by:
+        </Typography>
+      }
+      control={
+        <Select
+          id='search-result-options-sort-by-select'
+          value={orderBy}
+          label={
+            <Typography
+              variant='formContolLabel'
+              sx={{ marginRight: 2 }}>
+              Sort By:
+            </Typography>
+          }
+          name='sort'
+          defaultValue={'relevance'}
+          placeholder='Select...'
+          onChange={(evt) => onSortByChangeHandler(evt)}>
+          <MenuItem value='relevance'>Relevance</MenuItem>
+          <MenuItem value='title'>Title</MenuItem>
+          <MenuItem value='date'>Date</MenuItem>
+          <MenuItem value='distance'>Distance</MenuItem>
+        </Select>
+      }></FormControlLabel>
+  )
+}
+const SortDirControl = (props) => {
+  const {onSortByChangeHandler,sortDirection} = props;
+  return(
+    <>
+    <FormControlLabel
+      itemID='sort'
+      id='sort-by-select-label'
+      labelPlacement='start'
+      marginRight={4}
+      label={
+        <Typography
+          variant='formContolLabel'
+          sx={{ marginRight: 2 }}>
+          Sort by:
+        </Typography>
+      }
+      control={
+        <Select
+          id='search-result-options-sort-by-select'
+          value={sortDirection}
+          label={
+            <Typography variant='formContolLabel'>
+              Sort By:
+            </Typography>
+          }
+          name='sort'
+          defaultValue={'relevance'}
+          placeholder='Select...'
+          onChange={(evt) => onSortDirectionChangeHandler(evt)}>
+          <MenuItem value='ASC'>ASC</MenuItem>
+          <MenuItem value='DESC'>DESC</MenuItem>
+        </Select>
+      }></FormControlLabel>
+    </>
+  )
 }
 export default SearchResultOptions;
