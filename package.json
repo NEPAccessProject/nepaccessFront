@@ -39,6 +39,7 @@
     "@types/react-helmet": "^6.1.6",
     "@types/styled-components": "^5.1.26",
     "axios": "^1.4.0",
+    "canvas": "^2.11.2",
     "chart.js": "^2.9.4",
     "d3": "^3.5.17",
     "dayjs": "^1.11.8",
@@ -50,7 +51,7 @@
     "leaflet": "^1.7.1",
     "leaflet-geosearch": "^3.6.1",
     "lodash": "^4.17.21",
-    "node": "^20.2.0",
+    "node": "^18.8.0",
     "pdfjs-dist": "3.4.120",
     "rc-virtual-list": "^3.11.2",
     "react": "^17.0.2",
@@ -111,7 +112,7 @@
     "jest": "jest",
     "cypress:open": "cypress open",
     "eject": "react-scripts eject",
-    "fix" : "yarn eslint --fix"
+    "fix": "yarn eslint --fix"
   },
   "eslintConfig": {
     "extends": "react-app"
