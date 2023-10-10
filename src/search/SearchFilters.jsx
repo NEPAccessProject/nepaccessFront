@@ -70,7 +70,7 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-const SideBarFilters = (props) => {
+const SearchFilters = (props) => {
   const { state, setState } = useContext(SearchContext);
   const classes = useStyles(theme);
   const {

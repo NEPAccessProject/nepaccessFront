@@ -23,9 +23,10 @@ import Globals from "../globals.js";
 import persist from "../persist.js";
 import theme from "../styles/theme";
 import SearchContext from "./SearchContext.js";
-import SideBarFilters from './SideBarFilters';
+import SideBarFilters from './SearchFilters';
 import PropTypes from "prop-types";
 import ResultsHeader from "./ResultsHeader";
+import SearchFilters from "./SearchFilters";
 const counties = Globals.counties;
 
 
@@ -141,7 +142,7 @@ class Search extends React.Component {
 
   
   onCheckboxChecked = (evt) => {
-    console.log(`file: Search.js:144 key: ${evt.taget.name} - isChecked ${evt.taget.checked}` );
+    console.log(`file: Search.js:144 key: ${evt.target.name} - isChecked ${evt.target.checked}` );
     evt.preventDefault();
     
     this.setState({
@@ -1032,16 +1033,18 @@ function countyFilter(stateValues) {
 									xs={12}
 									flex={1}
 									margin={0}
+                  border={0}
 									padding={1}
 									id='filters-grid-container'>
 									<Grid
 										border={0}
 										item
-										xs={3}
+										md={3}
+                    sx={12}
 										id='filters-grid-item'>
 										{!this.state.filtersHidden && (
 											//[TODO] it would probably be simpler showing these into context
-											<SideBarFilters
+											<SearchFilters
 												{...this.props}
 												onActionChange={this.onActionChange}
 												onAgencyChange={this.onAgencyChange}
@@ -1087,7 +1090,8 @@ function countyFilter(stateValues) {
 									</Grid>
 									<Grid
 										item
-										xs={9}
+										md={9}
+                    xs={12}
 										pl={2}>
 										<Paper elation={1}>
 											{this.props.children}
