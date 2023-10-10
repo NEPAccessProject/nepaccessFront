@@ -39,6 +39,7 @@ export default class ResultsHeader extends React.Component {
 			results,
 			titleRaw,
 			sort,
+      onCheckboxChecked,
 			useOptionsChecked,
 		} = props;
 		this.state = {
@@ -291,10 +292,11 @@ export default class ResultsHeader extends React.Component {
 								onUseOptionsChecked={
 									this.props.onUseOptionsChecked
 								}
-								onCheckboxChange={this.onCheckboxChange}
+								onCheckboxChange={this.props.onCheckboxChange}
 								onLimitChangeHandler={
 									this.onLimitChangeHandler
 								}
+                onCheckboxChecked={this.props.onCheckboxChecked}
 								onSortDirectionChangeHandler={
 									this.onSortOrderChange
 								}

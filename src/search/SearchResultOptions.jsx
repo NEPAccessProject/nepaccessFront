@@ -64,27 +64,24 @@ function SearchResultOptions(props) {
     onCheckboxChecked,
 		sort,
 	} = props;
-    console.log(`🚀 ~ file: SearchResultOptions.jsx:58 ~ SearchResultOptions ~ onUseOptionsChecked:`, onUseOptionsChecked);
 
   // console.log(`file: SearchResultOptions.jsx:58 ~ SearchResultOptions ~ props:`, props);
   const ctx = useContext(SearchContext)
   const classes = useStyles(theme);
   const {state,setState} = ctx;
-  console.log(`file: SearchResultOptions.jsx:71 ~ SearchResultOptions ~ state:`, state);
-  const {showContext} = state;
   //assign default values to args
-  const { sortBy='relevance', sortDirection='ASC', limit=100, snippetsDisabled = false } = state;   
+  const { showContext=false,sortBy='relevance', sortDirection='ASC', limit=100, snippetsDisabled = false } = state;   
 	return (
 		<>
       <Grid container flex={1} border={1} borderColor={'#ddd'}>
         <Grid item xs={5} borderRight={1} borderColor={'#ddd'} id="show-checkbox-grid-item" className={classes.container} display={"flex"}>
-          <ShowTextCheckbox onUseOptionsChecked={onUseOptionsChecked}/>
+          <ShowTextCheckbox showContext={showContext} onCheckboxChecked={(evt) => onCheckboxChecked(evt)}/>
         </Grid>
         <Grid item xs={3} borderRight={1} borderColor={'#ddd'} id="sort-by-grid-item" display="flex" justifyContent={"center"}>
           <SortByControl onSortByChangeHandler={onSortByChangeHandler} orderBy={sortBy}/>
         </Grid>
         <Grid item xs={3} borderRight={1} borderColor={'#ddd'} id="sort-by-grid-item" display="flex" justifyContent={"center"}>
-          <SortDirControl onSortByChangeHandler={onSortDirectionChangeHandler} sortDirection={sortDirection}/>
+          <SortDirControl onSortDirectionChangeHandler={onSortDirectionChangeHandler} sortDirection={sortDirection}/>
         </Grid>
         <Grid item xs={1} className={classes.container} alignItems={"center"} display={"flex"} justifyContent={"center"} alignContent={"center"}>
         <CloudDownloadIcon
@@ -98,8 +95,9 @@ function SearchResultOptions(props) {
 }
 
 const ShowTextCheckbox = (props) => {
+
   const classes = useStyles(theme);
-  const { onUseOptionsChecked,  useSearchOptions } = props
+  const { onCheckboxChecked,showContext,  useSearchOptions } = props
   return (
     <FormControl className={classes.centered}>
       <FormControlLabel
@@ -158,7 +156,7 @@ const SortByControl = (props) => {
   )
 }
 const SortDirControl = (props) => {
-  const {onSortByChangeHandler,sortDirection} = props;
+  const {onSortDirectionChangeHandler,sortDirection} = props;
   return(
     <>
     <FormControlLabel
