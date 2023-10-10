@@ -9,16 +9,8 @@ import {
 } from '@mui/material';
 import React from 'react';
 export default function SearchTipsDialog(props) {
-	console.log(
-		`file: SearchTipDialog.jsx:4 ~ SearchTipsDialog ~ props:`,
-		props,
-	);
 	const { isOpen, onClose } = props;
 	const _onDialogClose = (evt) => {
-		console.log(
-			`file: SearchTipDialog.jsx:7 ~ SearchTipsDialog ~ evt:`,
-			evt,
-		);
 		props.onClose(evt);
 	};
 	return (
