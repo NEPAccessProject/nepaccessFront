@@ -48,16 +48,25 @@ export default class SearchProcessResults extends React.Component {
         Globals.registerListener('new_search', this.resetHidden);
         
         this._columns = [
-            { title: "", field: "", formatter: reactFormatter(
-                    <SearchProcessResult 
-                        show={this.state.showContext}
-                        hideText={this.hideText}
-                        hidden={this.hide} 
-                        onDetailLink={this.props.onDetailLink}
-                        />
-                )
-            }
+          {
+            title: "",
+            field: "",
+            formatter: reactFormatter(
+              <SearchProcessResult
+                //show={this.state.showContext || false}
+                hideText={this.hideText}
+                hidden={this.hide}
+                onDetailLink={this.props.onDetailLink}
+              />
+            ),
+          },
         ];
+
+        this.state = {
+          showContext: true, // Define showContext here
+          size: 0,
+          hidden: new Set(),
+        };
         
         this.options = {
             selectable:false,
