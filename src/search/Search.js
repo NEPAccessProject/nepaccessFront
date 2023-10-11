@@ -397,7 +397,7 @@ class Search extends React.Component {
       } catch (e) {
         console.error(e);
       } finally {
-        this.onCountyChange(_countyRaw);
+        this.onMapCountyChange(_countyRaw);
       }
     } else {
       // do nothing: filter has no supported functionality for "other" polygons
@@ -497,6 +497,8 @@ class Search extends React.Component {
     );
   };
   onLocationChange = (evt, selected, reason) => {
+    console.log(`file: Search.js:500 ~ Search ~ reason:`, reason);
+    console.log(`Search.js 500 - State at location change:`, this.state);
     //    
     let states = [];
     if (reason === 'selectOption')
@@ -528,12 +530,10 @@ class Search extends React.Component {
       }
     );
   };
-  onMapLocationChange(_stateRaw) {
-  console.log(`file: Search.js:521 ~ Search ~ onMapLocationChange ~ _stateRaw:`, _stateRaw);
-  if(!_stateRaw){
-    console.warn('Warning no state was received from the map filter!!!')
-    return;
-  }
+
+  //Wraps the map's onClick event to match the signature of the onLocation change
+  onMapLocationChange(_stateRaw,evt) {
+    this.onLocationChange(evt, _stateRaw, "selectOption")
 }
   /** Helper method for onLocationChange limits county options to selected states in filter,
    * or resets to all counties if no states selected */
@@ -558,10 +558,13 @@ function countyFilter(stateValues) {
 
     return filteredCounties;
   };
-  onCountyChange = (evt, selected, reason) => {
-    console.log(`file: Search.js:543 ~ Search ~ evt, selected, reason:`, evt, selected, reason);
-    
-    
+  //wraps the map's on county change event to the signature of the county filter
+  onMapCountyChange = (selected)=> {
+    console.log(`file: Search.js:561 ~ Search ~ selected:`, selected);
+    this.onCountyChange("",selected,"selectOption");
+  };
+  onCountyChange = (evt, selected, reason) => { 
+    console.log(`file: Search.js:556 ~ Search ~ State at county change:`, this.state);
     let counties = [];
     if (reason && reason === 'selectOption') {
       //[TODO] Debuging only reseting state
