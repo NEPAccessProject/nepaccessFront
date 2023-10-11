@@ -129,10 +129,7 @@ function Snippets(props) {
             </Box>
   }
   {showContext && (snippet.length >= 100  && isContentExpanded) && (
-            <Box id="click-to-see-less-button-container"
-              paddingTop={0}
-              paddingBottom={0}
-            >
+            <Box id="click-to-see-less-button-container" padding={2}>
               {snippet}
               <Button
                 variant='contained'
