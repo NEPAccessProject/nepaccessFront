@@ -251,7 +251,6 @@ export default function HeaderNav(props) {
     };
     setResponsiveness();
     window.addEventListener('resize', (evt) => {
-      console.log(`Setting innerHeight: ${window.innerHeight} - innerWidth: ${window.innerWidth}`, evt,)
       setResponsiveness();
     });
 
