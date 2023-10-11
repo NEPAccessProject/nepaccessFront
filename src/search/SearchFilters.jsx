@@ -25,17 +25,17 @@ import Globals from '../globals';
 import theme from '../styles/theme';
 import SearchDatePickers from './SearchDatePickers';
 import {
-  actionOptions as actions,
-  agencyOptions as agencies,
-  decisionOptions as decisions,
-  countyOptions as counties,
+  actionOptions,
+  agencyOptions,
+  decisionOptions,
+  countyOptions,
 } from './options';
 //filter out duplicates
-const actionOptions = Array.from(new Set(actions));
-const agencyOptions = Array.from(new Set(agencies));
-const countyOptions = Array.from(new Set(counties));
-const decisionOptions = Array.from(new Set(decisions));
-const stateOptions = Array.from(new Set(Globals.locations));
+const actions = Array.from(new Set(actionOptions));
+const agencies = Array.from(new Set(agencyOptions));
+const counties = Array.from(new Set(countyOptions));
+const decisions = Array.from(new Set(decisionOptions));
+const states = Array.from(new Set(Globals.locations));
 
 const Item = styled(Box)(({ theme }) => ({
   backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
@@ -72,6 +72,7 @@ const useStyles = makeStyles((theme) => ({
 
 const SearchFilters = (props) => {
   const { state, setState } = useContext(SearchContext);
+  console.log(`file: SearchFilters.jsx:75 ~ SearchFilters ~ state:`, state);
   const classes = useStyles(theme);
   const {
     filtersHidden,
@@ -120,6 +121,7 @@ const SearchFilters = (props) => {
       }}>
         <Grid container>
           <Item hidden={state.filtersHidden}>
+            {/* #region search title */}
             <Box alignItems={'center'}>
               <Checkbox
                 tabIndex='3'
@@ -136,6 +138,7 @@ const SearchFilters = (props) => {
                 </Typography>
               </FormLabel>
             </Box>
+            {/* #endregion */}
             <Box
               padding={0}
               margin={0}
@@ -155,6 +158,7 @@ const SearchFilters = (props) => {
               {/* {renderClearFiltersButton()} */}
             </Box>
             <Divider />
+            {/* #region search agencies */}
             <Box>
               <FormControl fullWidth>
                 <FormLabel htmlFor='searchAgency'>Lead Agencies:</FormLabel>
@@ -163,8 +167,8 @@ const SearchFilters = (props) => {
                   name='agency'
                   {...filterProps}
                   tabIndex={3}
-                  options={agencyOptions}
-                  value={agencyOptions.filter((v) =>
+                  options={agencies}
+                  value={agencies.filter((v) =>
                     state.agency.includes(v.value),
                   )}
                   margin={0}
@@ -176,7 +180,6 @@ const SearchFilters = (props) => {
                     onAgencyChange(evt, value, tag)
                   }}
                   className={classes.autoComplete}
-                  getOptionLabel={(v) => (v.label.length > 25 ? `${v.label.slice(0, 20)}...` : `${v.label}`)}
                   renderInput={(params) => {
                     params.inputProps.className = classes.autoComplete;
                     return (
@@ -195,6 +198,8 @@ const SearchFilters = (props) => {
               </FormControl>
               {/* #endregion */}
             </Box>
+            {/* #region search */}
+            {/* #regionSearch Agency */}
             <Box>
               <FormControl
                 fullWidth
@@ -211,8 +216,8 @@ const SearchFilters = (props) => {
                   name='cooperatingAgency'
                   {...filterProps}
                   tabIndex={4}
-                  options={agencyOptions}
-                  value={agencyOptions.filter((v) =>
+                  options={agencies}
+                  value={agencies.filter((v) =>
                     state.cooperatingAgency.includes(v.value),
                   )}
                   onChange={(evt, value, tag) =>
@@ -237,17 +242,21 @@ const SearchFilters = (props) => {
                 />
               </FormControl>
             </Box>
+            {/* #endregion */}
             <Divider />
+            {/* #region search states */}
             <Box>
+              <Typography variant='h6'>Selected States: {JSON.stringify(state.state)}</Typography>
+              <Typography variant='h6'>Selected Counties: {JSON.stringify(state.county)}</Typography>
               <FormLabel htmlFor='state'>State(s) and Location(s):</FormLabel>
               <Autocomplete
                 id='state'
                 name='state'
                 {...filterProps}
-                options={stateOptions}
-                value={stateOptions.filter((v) =>
-                  state.state.includes(v.value),
-                )}
+                options={states}
+                value={states.filter((v) => {
+                  	return state.state.includes(v.value);
+                })}
                 onChange={(evt, value, reason) =>
                   onLocationChange(evt, value, reason)
                 }
@@ -267,6 +276,8 @@ const SearchFilters = (props) => {
                 }}
               />
             </Box>
+            {/* #endregion */}
+            {/* #region search counties */}
             <Box>
               <FormLabel
                 label
@@ -276,21 +287,24 @@ const SearchFilters = (props) => {
               <Autocomplete
                 id='county'
                 name='county'
-                tabIndex={5}
-                options={state.countyOptions}
-                value={
-                  state.countyOptions &&
-                  state.countyOptions.filter((v) =>
-                    state.county.includes(v.value),
-                  )
-                }
+                tabIndex={5}a
+                options={counties}
+                value={ counties && counties.filter((v) => {
+                  if(state.county.includes(v.value))
+                  {
+                    console.log(`Match on ${v.value} for ${state.county}`);
+                    return v.value;
+                  }
+                  else{
+                    //console.log(`No match on ${v.value} for ${state.county}`)
+                    return `not found`
+                  }
+                  })}
                 onChange={(evt, value, reason) =>
                   onCountyChange(evt, value, reason)
                 }
                 getOptionLabel={(v) => (
-                  <Typography variant='filterLabel'>
-                    {v.label.length > 25 ? `${v.label.slice(0, 25)}...` : `${v.label}`}
-                  </Typography>
+                  v.label.length > 25 ? `${v.label.slice(0, 25)}...` : `${v.label}`
                 )}
                 //getOptionLabel={(agencyOptions) => agencyOptions.label}
                 renderInput={(params) => {
@@ -308,26 +322,25 @@ const SearchFilters = (props) => {
                 }}
               />
             </Box>
+            {/* #endregion */}
+            {/* #region dates */}
+            {/* Authorized Only Filters */}
             <div hidden={!Globals.authorized()}>
               <div hidden={!Globals.curatorOrHigher()}></div>
               <Divider />
-
+              {/* #region search action type */}
               <div hidden={!Globals.authorized()}>
-                <Box>
+                {/* <Box id="action-type-box">
                   <FormLabel htmlFor='searchAction'>Action Type:</FormLabel>
                   <Autocomplete
+                    {...filterProps}
                     id='searchAction'
                     name='searchAction'
                     tabIndex={10}
                     className={'classes.autocomplete'}
-                    options={actionOptions}
-                    //                      value={getValue(actionOptions, state.action)}
-                    onChange={(evt, value, reason) =>
-                      onActionChange(evt, value, reason)
-                    }
-                    getOptionLabel={(v) => (
-                      v.label.length > 25 ? `${v.label.slice(0, 25)}...` : `${v.label}`
-                    )}
+                    options={actions}
+                    value={state.actionRaw}  
+                    onChange={(evt, value, reason) => onActionChange(evt, value, reason)}
                     renderInput={(params) => {
                       return (
                         <TextField
@@ -342,26 +355,26 @@ const SearchFilters = (props) => {
                       );
                     }}
                   />
-                </Box>
+                </Box> */}
+                {/* #endregion */}
               </div>
             </div>
+            {/* #endregion */}
             <div hidden={!Globals.authorized()}>
-              <Item>
+              {/* #region search decision */}
+              {/* <Item>
                 <FormLabel htmlFor='searchDecision'></FormLabel>
                 <Typography variant='filterLabel'>Decision Type</Typography>
                 <Autocomplete
                   id='searchDecision'
                   name='decision'
                   tabIndex='11'
-                  options={decisionOptions}
+                  options={decisions}
                   placeholder='Type or select decision type(s)'
-                  multiple={true}
                   onChange={(evt, value, reason) =>
                     onDecisionChange(evt, value, reason)
                   }
-                  value={decisionOptions.filter((v) =>
-                    state.decision.includes(v.value),
-                  )}
+                  value={decisions.filter((v)=> decisions.filter(v))}
                   renderInput={(params) => (
                     <TextField
                       {...params}
@@ -374,10 +387,11 @@ const SearchFilters = (props) => {
                     />
                   )}
                 />
-              </Item>
+              </Item> */}
+              {/* #endregion */}
             </div>
-
             <Divider />
+
             <Item>
               <Box
                 display={'flex'}
@@ -396,10 +410,11 @@ const SearchFilters = (props) => {
                 />
               </Box>
             </Item>
+            {/* #endregion */}
 
             <Divider />
+              {/* #region document type filters */}
             <Item>
-              {/* <Typography var="filterLabel">Document Type</Typography>              */}
               <Box>
                 <Checkbox
                   name='typeFinal'
@@ -447,7 +462,6 @@ const SearchFilters = (props) => {
                   <Checkbox
                     name='typeROD'
                     id='typeROD'
-                    //                      className="sidebar-checkbox"
                     tabIndex='15'
                     checked={state.typeROD}
                     onChange={(evt) => onTypeChecked(evt)}
@@ -477,7 +491,8 @@ const SearchFilters = (props) => {
                 </Box>
               </Box>
             </Item>
-
+            {/* #endregion */}
+            {/* #region advanced */}
             <div
               className='filter'
               hidden={!Globals.curatorOrHigher()}>
@@ -501,16 +516,19 @@ const SearchFilters = (props) => {
                 </label>
               </div>
             </div>
+            {/* #endregion */}
           </Item>
+          {/* #region organization */}
           <Item
             hidden={state.hideOrganization}
             id='agency-svg-holder'>
             <button onClick={(evt) => orgClick(evt)}>x</button>
           </Item>
+          {/* #endregion */}
         </Grid>
       </Paper>
     </>
   );
 };
 //export default withStyles(useStyles)(SideBarFilters);
-export default SideBarFilters;
+export default SearchFilters;
