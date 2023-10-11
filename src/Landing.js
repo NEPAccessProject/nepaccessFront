@@ -24,12 +24,10 @@ class Landing extends React.Component {
   }
 
   handleChange(inputId, inputValue) {
-    console.log(`SearchLanding - Line 27 - HandleChanger() inputId: ${inputId} - inputValue: ${inputValue}`)
     this.setState({ [inputId]: inputValue });
   }
 
   handleClick(id, val) {
-    console.log(`Searcher Landing - Line 32 - handleClick id: ${id}, val: ${val}`)
     this.setState({ [id]: val }, () => {
       this.props.history.push('search?q=' + this.state.rawInput);
     });
