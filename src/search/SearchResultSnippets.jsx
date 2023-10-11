@@ -27,15 +27,19 @@ export default function RenderSnippets(props) {
   const [isPDFViewOpen, setIsPDFViewOpen] = useState(false);
   const [isContentExpanded, setIsContentExpanded] = useState(false);
   const { hideText, hidden,showContext } = state;
-  console.log(`file: SearchResultSnippets.jsx:30 ~ RenderSnippets ~ state:`, state);
   const _mounted = useRef(false);
   function convertToHTML(content) {
     return { __html: content };
   }
+
+  useEffect(() => {
+    _mounted.current = true
+    return (() => {
+      _mounted.current = false
+    })
+  })
   return (
-    // useEffect(() => {
-    //   console.log('useEffect for content expanded');
-    // },[isContentExpanded]);
+    //Loop through each snippet and render it
     record.plaintext.map((text, idx) => {
       return (
         <>
@@ -103,7 +107,7 @@ function Snippets(props) {
             <Box padding={2}>
               <Typography>{snippet.slice(0, 99)}...</Typography>
               <Box
-                id="click-to-see-more-box"
+                id="click-to-see-more-box"  
                 // onClick={(evt) => toggleContentExpansion(evt, id)}
               > 
 
