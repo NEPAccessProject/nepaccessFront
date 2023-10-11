@@ -6,12 +6,37 @@ import theme from '../styles/theme';
 import PDFViewerDialog from './Dialogs/PDFViewerDialog';
 import SearchContext from './SearchContext';
 import RenderSnippets from './SearchResultSnippets.jsx';
-
+import {styled} from '@mui/styles'; 
+const DataCell = styled(Grid)(({ theme }) => ({
+  backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
+  ...theme.typography.body2,
+  color: theme.palette.text.secondary,
+  border:1,
+  borderColor: 'black',
+  display: 'flex',
+  justifyContent: 'center',
+  justifyItems: 'center',
+  alignContent:'center',
+  alignItems:'center',
+  '&:hover': {
+    //           backgroundColor: //theme.palette.grey[200],
+    boxShadow: '0px 4px 8px rgba(0.5, 0.5, 0.5, 0.15)',
+    cursor: 'pointer',
+    '& .addIcon': {
+      color: 'purple',
+    },
+  },
+}));
 const useStyles = makeStyles((theme) => ({
 	centered: {
 		alignContent: 'center',
-		justifyContent: 'center',
 		alignItems: 'center',
+		justifyContent: 'center',
+    justifyItems: 'center',
+    border: 2,
+    display: 'flex',
+    borderRight: 1,
+    borderColor: '#ddd'
 	},
 	cardGridItem: {
 		fontSize: "1rem",
@@ -135,136 +160,32 @@ export default function SearchResultItem(props) {
 			<Box id="search-result-box-container" elevantion={2} sx={{
 				margin: 2,
 			}}>
-				<Grid container id="search-result-grid-container">
-					<Grid
-						container
-						id="search-result-grid-item"
-						flex={1}
-						flexGrow={1}
-						className={classes.centeredContent}
-            border={1}
-            borderColor={'#ccc'}
-						xs={12}
-						sx={{
-						}}
-					>
-						<Grid container id="search-result-row-container"
-							textAlign={'center'} justifyContent={'center'}
-                
-            >
-							<Grid item id="year-box"
-								xs={1}
-                borderRight={1}
-                borderColor='#ccc'
-								classes={classes.cardGridItem}
-								display={'flex'}
-								alignContent={'center'}
-								justifyContent="center"
-								alignItems={'center'}
-							>
-								<Typography
-									id="year-typography"
-									className={classes.centeredContent}
-									fontWeight={'bold'}
-								>
+						<Grid container id="search-result-row-container" borderTop={1} borderColor={'#ddd'}>
+							<DataCell item id="year-box" xs={1} borderColor={'#ddd'}>
+								<Typography id="year-typography" fontWeight={'bold'}>
 									{year ? year : 'N/A'}
 								</Typography>
-							</Grid>
+							</DataCell>
 
-							<Grid
-								item
-								id="status-document-type-grid-item"
-								display={'flex'}
-								xs={2}
-								alignContent={'center'}
-								justifyContent="center"
-								alignItems={'center'}
-								className={classes.centeredContent}
-                borderRight={1}
-                borderColor={'#ccc'}
-							>
-								<Typography
-									className={classes.card}
-								>
+							<DataCell item xs={3} display={'flex'} borderLeft={1} borderColor={'#ddd'} id="status-document-type-grid-item">
+								<Typography className={classes.card}>
 									{documentType}
 								</Typography>
-							</Grid>
-							<Grid
-								display={'flex'}
-								container
-								borderRight={1}
-								borderLeft={1}
-								borderColor='#ccc'
-								id="title-grid-container"
-								xs={7}
-								padding={1}
-								flex={1}
-							>
-                
+							</DataCell>
+							<DataCell container xs={6} display={'flex'}  id="title-grid-container"  borderRight={1} borderLeft={1} borderColor={'#ddd'} padding={2}>
 								<Typography id="snippets-title" variant='h5' >{(title) ? title : ''}</Typography>
-                
-								{/* <RenderSnippets record={record} /> */}
-							</Grid>
-							<Grid
-								display={'flex'}
-								container
-								borderColor={'#ccc'}
-								borderLeft={0}
-								id="button-grid-container"
-								xs={2}
-								flex={1}
-							//       className={classes.centeredContent}
-							>
-								{/* <Grid
-									id="pdf-button-grid-item"
-									item
-									xs={6}
-									display={'flex'}
-									alignContent={'center'}
-									justifyContent="center"
-									alignItems={'center'} >
-									<Button color={'primary'} 
-                    variant={'contained'} 
-                    data-modal={`modal-${record.id}`} 
-                    onClick={(evt)=> openModal(evt, record.id)}>
-                      Preview PDF
-                    </Button>
-									<Grid>
-
-									<ModalManager 
-                    record={record} 
-                    id={record.id}
-                    isOpen={isOpen}
-                    closeFn={onDialogClose} 
-                    modal={modalOpen} />
-									</Grid>
-								</Grid> */}
-								<Grid
-									id="preview-button-grid-item"
-									item
-									//         display={'flex'}
-									xs={12}
-									alignContent={'center'}
-									justifyContent="center"
-									alignItems={'center'}
-									display={'flex'}
-								>
-
-									<Button
-										onClick={(evt) => handleDownloadClick(evt)}
-										variant='contained'
-										color="primary"
-									>
+							</DataCell>
+							<DataCell container xs={2} flex={1} display={'flex'}  id="button-grid-container">
+								<DataCell id="preview-button-grid-item" item display={'flex'} xs={12} >
+									<Button onClick={(evt) => handleDownloadClick(evt)} variant='contained' color="primary">
 										Download
 									</Button>
-								</Grid>
-							</Grid>
-							<Grid item xs={12}>
-								<RenderSnippets record={record} />
-							</Grid>
+								</DataCell>
+							</DataCell>
 						</Grid>
-					</Grid>
-				</Grid>
+            <DataCell item xs={12}>
+								<RenderSnippets record={record} />
+							</DataCell>
 			</Box>
 		</>
 	);
