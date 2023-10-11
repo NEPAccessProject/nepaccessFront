@@ -1,6 +1,6 @@
 import React from 'react';
 import axios from 'axios';
-import { Autocomplete } from '@mui/material';
+import { Autocomplete,Container } from '@mui/material';
 import globals from '../globals';
 import { SearchOutlined } from '@mui/icons-material';
 import {
@@ -25,20 +25,17 @@ class SearcherLanding extends React.Component {
             titleRaw: '',
             num: 0
         };
-        
+
         this.getTitles = this.getTitles.bind(this);
     }
 
-    onInput = (evt) => {       
-        //console.log(`OnInput  - file: SearcherLanding.js:32 ~ OnInput ~ SearcherLanding ~ evt - target: ${evt.target.name} value: ${evt.target.value}`, evt);
+    onInput = (evt) => {
         this.setState({ [evt.target.name]: evt.target.value });
         const val = evt.target.value;
-        console.log(`onInput Id : ${this.props.id} - value: ${val}`)
         this.props.onChange(this.props.id, val);
     }
 
     onKeyUp = (evt) => {
-        //console.log(`OnKeyUp file: SearcherLanding.js:40 ~ onKeyUp ~ SearcherLanding ~ evt - keyCode: ${evt.keyCode}  - target: ${evt.target.name} value: ${evt.target.value}`, evt);
         if(evt.keyCode ===13){
             this.props.onClick("render", "app");
         }
@@ -51,7 +48,7 @@ class SearcherLanding extends React.Component {
         // Custom clear icon not captured by onInput(), so update the relevant props and state here
         //console.log(`onClearClick Event Handler ${evt.target.name} - value : ${evt.target.value}`)
         this.setState({ titleRaw: '' });
-        this.props.onChange(this.props.id, ''); 
+        this.props.onChange(this.props.id, '');
     }
     onChangeHandler = (evt) => {
         //console.log(`onChange Event Handler ${evt.target.name} - value : ${evt.target.value}`)
@@ -64,7 +61,7 @@ class SearcherLanding extends React.Component {
         let titlesUrl = new URL('test/titles', globals.currentHost);
         //Send the AJAX call to the server
 			axios({
-				method: 'POST', 
+				method: 'POST',
 				url: titlesUrl,
 				data: ''
 			}).then(response => {
@@ -80,7 +77,7 @@ class SearcherLanding extends React.Component {
 					this.setState({
 						titles: parsedJson,
 					});
-				} 
+				}
 			}).catch(error => { // If verification failed, it'll be a 403 error (includes expired tokens) or server down
                 // Don't necessarily need to do anything, autocomplete won't work and user probably needs to login anyway
 			});
@@ -97,7 +94,7 @@ class SearcherLanding extends React.Component {
         }).then(_response => {
             const rsp = _response.data;
             this.setState({ [stateName]: rsp });
-        }).catch(error => { 
+        }).catch(error => {
         })
     }
     // getCounts = () => {
@@ -115,12 +112,12 @@ class SearcherLanding extends React.Component {
     //     if(this.state.total) {
     //         return <div className="under-search-holder">
     //             <div className="flip">
-    //                 <FlipNumbers 
-    //                     height={44} width={25} color="white" background="rgba(0,0,0,0.5)" 
-    //                     play={true} duration={1} delay={0} numbers={`${this.state.num}`} 
-    //                     perspective={500} 
+    //                 <FlipNumbers
+    //                     height={44} width={25} color="white" background="rgba(0,0,0,0.5)"
+    //                     play={true} duration={1} delay={0} numbers={`${this.state.num}`}
+    //                     perspective={500}
     //                     numberStyle={numStyle}
-    //                 /> 
+    //                 />
     //                 <span className="flip-span">
     //                     NEPA documents and counting
     //                 </span>
@@ -137,7 +134,7 @@ class SearcherLanding extends React.Component {
 
     //             <div className="flip">
     //                 <div className="transparent-background">
-    //                     <a className="link landing-link" rel="noopener noreferrer" 
+    //                     <a className="link landing-link" rel="noopener noreferrer"
     //                             href={`./available-documents`}>
     //                         More about Available Files
     //                     </a>
@@ -152,16 +149,18 @@ class SearcherLanding extends React.Component {
 
     render(){
         return(
-            <Grid container flex={1} style={{marginTop:10}}>
-                <Grid
-                    item
-                    xs={12}
-                    md={12}
-                    id="search-box-grid-item"
-                >
+            <Box style={{
+              alignContent: 'center',
+              justifyContent: 'center',
+              display: 'flex',
+              alignItems: 'center',
+              border: '1px solid black',
+              marginLeft:'5%',
+              marginRight:'5%',
+            }}>
                     {/* <Box
                         id="search-box-box-item"
-                        display={'flex'}                        
+                        display={'flex'}
                         paddingLeft={0}
                         //paddingRight={2}
                         padding={0}
@@ -194,8 +193,6 @@ class SearcherLanding extends React.Component {
                             autoFocus
                             sx={{
                                 borderRadius:1,
-                                marginLeft: 4,
-                                marginRight: 4,
                                 backgroundColor: '#fff',
                                 zIndex: 9999,
                             }}
@@ -208,8 +205,7 @@ class SearcherLanding extends React.Component {
                             }}
                         />
                     {/* </Box> */}
-                </Grid>                
-            </Grid>
+            </Box>
         )
     }
 
@@ -217,7 +213,7 @@ class SearcherLanding extends React.Component {
         return (
             <div id="landing-search-box-container" style={{
                 border: '2px solid red',
-            }}>                
+            }}>
                 <div id="landing-search-holder" className={this.getClassName()}>
                     <div id="landing-search-bar-holder">
                         {/* <h3 id="landing-search-header">
@@ -226,10 +222,10 @@ class SearcherLanding extends React.Component {
                             </span>
                         </h3> */}
                         <input id="landing-search-bar"
-                            name="titleRaw" 
-                            placeholder="Search for NEPA documents" 
+                            name="titleRaw"
+                            placeholder="Search for NEPA documents"
                             value={this.state.titleRaw}
-                            autoFocus 
+                            autoFocus
                             onChange={this.onChangeHandler}
                             onInput={this.onInput} onKeyUp={this.onKeyUp}
                         />
@@ -241,7 +237,7 @@ class SearcherLanding extends React.Component {
                             />
                             <path d="M17.4289 19.0834C16.9609 19.5514 16.2049 19.5514 15.7369 19.0834L12.2689 15.6154L8.80089 19.0834C8.33289 19.5514 7.57689 19.5514 7.10889 19.0834C6.88418 18.8592 6.7579 18.5548 6.7579 18.2374C6.7579 17.9199 6.88418 17.6155 7.10889 17.3914L10.5769 13.9234L7.10889 10.4554C6.88418 10.2312 6.7579 9.92677 6.7579 9.60935C6.7579 9.29193 6.88418 8.98755 7.10889 8.76335C7.57689 8.29535 8.33289 8.29535 8.80089 8.76335L12.2689 12.2314L15.7369 8.76335C16.2049 8.29535 16.9609 8.29535 17.4289 8.76335C17.8969 9.23135 17.8969 9.98735 17.4289 10.4554L13.9609 13.9234L17.4289 17.3914C17.8849 17.8474 17.8849 18.6154 17.4289 19.0834Z" fill="#737272"/>
                         </svg>
-                        
+
                     </div>
 
                 </div>
