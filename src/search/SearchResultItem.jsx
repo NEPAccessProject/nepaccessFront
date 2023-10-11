@@ -160,7 +160,7 @@ export default function SearchResultItem(props) {
 			<Box id="search-result-box-container" elevantion={2} sx={{
 				margin: 2,
 			}}>
-						<Grid container id="search-result-row-container" borderTop={1} borderColor={'#ddd'}>
+						<Grid container id="search-result-row-container" border={1} borderColor={'#ddd'}>
 							<DataCell item id="year-box" xs={1} borderColor={'#ddd'}>
 								<Typography id="year-typography" fontWeight={'bold'}>
 									{year ? year : 'N/A'}
@@ -183,7 +183,7 @@ export default function SearchResultItem(props) {
 								</DataCell>
 							</DataCell>
 						</Grid>
-            <DataCell item xs={12}>
+            <DataCell border={1} borderColor={'#ddd'} borderTop={0} item xs={12}>
 								<RenderSnippets record={record} />
 							</DataCell>
 			</Box>
