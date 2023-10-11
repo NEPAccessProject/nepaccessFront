@@ -429,7 +429,6 @@ class Search extends React.Component {
         agencyRaw: evt,
       },
       () => {
-
         this.filterResultsBy(this.state);
       }
     );
@@ -598,28 +597,6 @@ function countyFilter(stateValues) {
       );
     }
   }
-  // onMapLocationChange = (_state) => {
-  //     let states = this.state.state || [];
-  //     _state.map(s => {
-  //       states.push(s.value);
-  //     })
-  //     this.filterCounties(states);
-  // }
-
-  // onLocationChange = (evt, selected, reason) => {
-  //   //    
-  //   let states = [];
-  //   if (reason === 'selectOption') {
-  //     states = this.state.state || [];
-  //     selected.map(s => {
-  //       states.push(s.value)
-  //     })
-  //   }
-
-  //   this.filterCounties(states);
-    
-  // };
-
   filterCounties = (states) => {
     console.log(`file: Search.js:506 ~ Search ~ states:`, states);
     //filter out counties not in the selected state(s)
@@ -1257,7 +1234,7 @@ Search.propTypes = {
       title: PropTypes.string,
       processId: PropTypes.number
     })),
-  onSearch: PropTypes.func.isRequired,
+  onSearch: PropTypes.func,
   onSort: PropTypes.func.isRequired,
   onFilter: PropTypes.func.isRequired,
   searchParams: PropTypes.object.isRequired,
