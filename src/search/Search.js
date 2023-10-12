@@ -27,10 +27,7 @@ import SideBarFilters from './SearchFilters';
 import PropTypes from "prop-types";
 import ResultsHeader from "./ResultsHeader";
 import SearchFilters from "./SearchFilters";
-const counties = Globals.counties;
 
-
-// import PropTypes from "prop-types";
 
 const _ = require("lodash");
 
@@ -86,6 +83,7 @@ class Search extends React.Component {
       cooperatingAgencyRaw: [],
       county: [],
       countyRaw: [],
+      countyOptions: Globals.counties,
       decision: [],
       decisionRaw: [],
       endComment: null,
@@ -524,11 +522,11 @@ class Search extends React.Component {
       selected.map(s => {
         states.push(s.value)
       })
-      countyOptions = this.narrowCountyOptions(selected);
     }
     else if (reason === "removeOption") {
       states = this.state.state.filter((v) => selected.value !== v.value);
     }
+    countyOptions = this.narrowCountyOptions(selected);
 
     this.setState(
       {
@@ -539,9 +537,6 @@ class Search extends React.Component {
       () => {
         console.log(`file: Search.js:502 ~ Search ~ UPDATED STATE - Before Sorting:`, this.state);
         this.filterResultsBy(this.state);
-        // Purge invalid counties, which will then run filterBy
-
-        //[TODO] FIX THIS
         this.onCountyChange(
           this.state.countyOptions.filter((countyObj) => {
 
