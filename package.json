@@ -42,7 +42,6 @@
     "chart.js": "^2.9.4",
     "d3": "^3.5.17",
     "dayjs": "^1.11.8",
-    "eslint": "^8.51.0",
     "iframe-resizer-react": "^1.1.0",
     "js-file-download": "^0.4.12",
     "json-server": "0.17.3",
@@ -52,8 +51,11 @@
     "node": "~20.7.0",
     "pdfjs-dist": "3.4.120",
     "prettier": "3.0.3",
+    "prettier-eslint-cli": "7.1.0",
+    "prettier-plugin-organize-imports": "3.2.3",
+    "eslint-config-prettier": "9.0.0",
     "rc-virtual-list": "^3.11.2",
-    "react": "^17.0.2",
+    "react": "^18.0.2",
     "react-app-rewired": "^2.2.1",
     "react-chartjs-2": "^2.11.2",
     "react-datepicker": "^4.20.0",
@@ -82,7 +84,8 @@
   },
   "devDependencies": {
     "babel-plugin-named-exports-order": "0.0.2",
-    "eslint-plugin-react": "^7.33.0",
+    "eslint": "^8.51.0",
+    "eslint-plugin-react": "^7.33.2",
     "eslint-plugin-react-hooks": "^4.6.0",
     "prop-types": "15.8.1",
     "typescript": "^5.0.0",
@@ -93,11 +96,8 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "fix": "yarn eslint --fix",
-    "serve": "serve build -l 4000"
-  },
-  "eslintConfig": {
-    "extends": "react-app"
+    "fix": "eslint --fix",
+    "serve": "serve build -l 80"
   },
   "browserslist": {
     "production": [
