@@ -77,7 +77,7 @@ class Search extends React.Component {
 
 
     this.state = {
-  
+
       action: [],
       actionRaw: [],
       agency: [],
@@ -96,7 +96,7 @@ class Search extends React.Component {
       iconClassName: "icon icon--effect",
       isAvailableFilesDialogOpen: false,
       isDirty: false,
-      isQuickStartDialogOpen:false,
+      isQuickStartDialogOpen: false,
       isSearchTipsDialogOpen: false,
       limit: 10,
       markup: true,
@@ -140,11 +140,11 @@ class Search extends React.Component {
     this.myRef = React.createRef();
   }
 
-  
+
   onCheckboxChecked = (evt) => {
-    console.log(`file: Search.js:144 key: ${evt.target.name} - isChecked ${evt.target.checked}` );
+    console.log(`file: Search.js:144 key: ${evt.target.name} - isChecked ${evt.target.checked}`);
     evt.preventDefault();
-    
+
     this.setState({
       [evt.target.name]: evt.target.checked,
     });
@@ -173,8 +173,8 @@ class Search extends React.Component {
   };
 
   doSearchFromParams = () => {
-    // 
-    // 
+    //
+    //
 
     var queryString = Globals.getParameterByName("q");
     this.setState({
@@ -182,7 +182,7 @@ class Search extends React.Component {
     })
     if (!this.props.count && (queryString === null || queryString === "")) {
       // No query param/blank terms: Launch no-term search - Only if we have no results saved here already
-      // 
+      //
       this.doSearch("");
     } else if (queryString) {
       // Query terms: Handle proximity dropdown logic, launch search
@@ -333,7 +333,7 @@ class Search extends React.Component {
   };
 
   onInput = (evt) => {
-    //		
+    //
     let userInput = evt.target.value;
 
     let proximityValues = this.handleProximityValues(userInput);
@@ -362,7 +362,7 @@ class Search extends React.Component {
   };
 
   geoFilter = (geodata) => {
-    // 
+    //
     if (geodata.geoType === Globals.geoType.STATE) {
       // Assuming Search and SearchResultsMap talk to each other, we'll want two-way interaction.
       // So if it's sending us a state, we may want to enable or disable it.
@@ -423,6 +423,10 @@ class Search extends React.Component {
         return agencies.push(s.value);
       });
     }
+    else if (reason === "removeOption") {
+      agencies = this.state.agency.filter((v) => selected.value !== v.value);
+    }
+
     this.setState(
       {
         agency: agencies,//selected,
@@ -442,6 +446,9 @@ class Search extends React.Component {
 
         return agencies.push(s.value);
       });
+    }
+    else if (reason === "removeOption") {
+      agencies = this.state.cooperatingAgency.filter((v) => selected.value !== v.value);
     }
 
     this.setState(
@@ -465,6 +472,11 @@ class Search extends React.Component {
         return actions.push(s.value);
       });
     }
+    else if (reason === "removeOption") {
+
+      actions = this.state.action.filter((v) => selected.value !== v.value);
+    }
+
     //[TODO] remove these from event handlers once the value arg is passed consistently
     this.setState(
       {
@@ -484,7 +496,14 @@ class Search extends React.Component {
         decisions.push(s.value)
       })
     }
-
+    else if (reason && reason === "removeOption") {
+      decisions = this.state.decision || [];
+      if (this.state.decision && this.state.decision.length > 0) {
+        selected.map(s => {
+          decisions = decisions.filter(decision => decision !== s.value)
+        })
+      }
+    }
     this.setState(
       {
         decision: decisions,
@@ -496,16 +515,21 @@ class Search extends React.Component {
     );
   };
   onLocationChange = (evt, selected, reason) => {
-    console.log(`file: Search.js:500 ~ Search ~ reason:`, reason);
-    console.log(`Search.js 500 - State at location change:`, this.state);
-    //    
+    console.log(`file: Search.js:499 ~ Search ~ selected, reason:`, selected, reason);
     let states = [];
-    if (reason === 'selectOption')
+    let countyOptions = [];
+
+    if (reason === 'selectOption') {
       states = state.state || [];
-    selected.map(s => {
-      states.push(s.value)
-    })
-    const countyOptions = this.narrowCountyOptions(selected);
+      selected.map(s => {
+        states.push(s.value)
+      })
+      countyOptions = this.narrowCountyOptions(selected);
+    }
+    else if (reason === "removeOption") {
+      states = this.state.state.filter((v) => selected.value !== v.value);
+    }
+
     this.setState(
       {
         state: states,
@@ -517,53 +541,53 @@ class Search extends React.Component {
         this.filterResultsBy(this.state);
         // Purge invalid counties, which will then run filterBy
 
-        //[TODO] FIX THIS 
+        //[TODO] FIX THIS
         this.onCountyChange(
           this.state.countyOptions.filter((countyObj) => {
-            
-            const matches =  this.state.county.includes(countyObj.value)
+
+            const matches = this.state.county.includes(countyObj.value)
             console.log(`file: Search.js:507 ~ Search ~ this.state.countyOptions.filter ~ matches:`, matches);
             return matches;
-          })          
+          })
         );
       }
     );
   };
 
   //Wraps the map's onClick event to match the signature of the onLocation change
-  onMapLocationChange(_stateRaw,evt) {
+  onMapLocationChange(_stateRaw, evt) {
     this.onLocationChange(evt, _stateRaw, "selectOption")
-}
+  }
   /** Helper method for onLocationChange limits county options to selected states in filter,
    * or resets to all counties if no states selected */
   narrowCountyOptions = (stateValues) => {
-    console.log(`file: Search.js:517 ~ Search ~ stateValues:`, stateValues.length,stateValues[0]);
-    
-/** Filter logic for county array of specific label/value format given array of state abbreviations  */
-function countyFilter(stateValues) {
-  console.log(`file: Search.js:521 ~ Search ~ countyFilter ~ stateValues:`, stateValues);
-  return function (a) {
-    const matches = stateValues.some(item => a.label.split(":")[0] === item.value);
-    return matches;
-  };
-}
+    console.log(`file: Search.js:517 ~ Search ~ stateValues:`, stateValues.length, stateValues[0]);
+
+    /** Filter logic for county array of specific label/value format given array of state abbreviations  */
+    function countyFilter(stateValues) {
+      console.log(`file: Search.js:521 ~ Search ~ countyFilter ~ stateValues:`, stateValues);
+      return function (a) {
+        const matches = stateValues.some(item => a.label.split(":")[0] === item.value);
+        return matches;
+      };
+    }
 
     let filteredCounties = Globals.counties;
     if (stateValues && stateValues.length > 0) {
       filteredCounties = filteredCounties.filter(countyFilter(stateValues));
     }
     console.log(`file: Search.js:535 ~ Search ~ filteredCounties:`, filteredCounties);
-    
+
 
     return filteredCounties;
   };
   //wraps the map's on county change event to the signature of the county filter
-  onMapCountyChange = (selected)=> {
+  onMapCountyChange = (selected) => {
     console.log(`file: Search.js:561 ~ Search ~ selected:`, selected);
-    this.onCountyChange("",selected,"selectOption");
+    this.onCountyChange("", selected, "selectOption");
   };
-  onCountyChange = (evt, selected, reason) => { 
-    console.log(`file: Search.js:556 ~ Search ~ State at county change:`, this.state);
+  onCountyChange = (evt, selected, reason) => {
+    console.log(`file: Search.js:571 ~ Search ~ ed, reason:`, selected, reason);
     let counties = [];
     if (reason && reason === 'selectOption') {
       //[TODO] Debuging only reseting state
@@ -573,16 +597,25 @@ function countyFilter(stateValues) {
           counties.push(s.value)
         })
       }
-      else if(!reason && evt.length){
+      else if (!reason && evt.length) {
         console.log(`file: Search.js:556 ~ Search ~ evt:`, evt, evt.length);
         evt.map(s => {
           counties.push(s.value)
         })
 
       }
+      else if (reason && reason === "removeOption") {
+        counties = this.state.county || [];
+        console.log(`file: Search.js:586 ~ Search ~ counties:`, counties);
+        if (this.state.county && this.state.county.length > 0) {
+          selected.map(s => {
+            counties = counties.filter(county => county === s.value)
+          })
+        }
+      }
       else {
         counties.push(selected.value)
-        
+
       }
 
 
@@ -592,6 +625,7 @@ function countyFilter(stateValues) {
           countyRaw: evt,
         },
         () => {
+          console.log('COUNTIES AFTER STATE UPDATE',this.state.county);
           this.filterResultsBy(this.state);
         }
       );
@@ -601,7 +635,7 @@ function countyFilter(stateValues) {
     console.log(`file: Search.js:506 ~ Search ~ states:`, states);
     //filter out counties not in the selected state(s)
     const countyOptions = this.narrowCountyOptions(states);
-    
+
     //match the signature of onCountyChange, so it can be called from here
     const reason = "selectOption";
 
@@ -617,7 +651,7 @@ function countyFilter(stateValues) {
         this.onCountyChange(
           this.state.countyOptions.filter(countyObj => this.state.county.includes(countyObj.value)));
 
-        //[TODO] FIX THIS 
+        //[TODO] FIX THIS
         this.onCountyChange(
           this.state.countyOptions.filter((countyObj) => {
 
@@ -645,7 +679,7 @@ function countyFilter(stateValues) {
           proximityOption: evt,
         },
         () => {
-          // 
+          //
         }
       );
     }
@@ -751,8 +785,8 @@ function countyFilter(stateValues) {
     // if(evt && evt.target && evt.target.value && /^\d{4}$/.test(evt.target.value)) {
     //     // TODO: Is there a way to change the month/day focused without filling in those text values?
     //     // Goal is to focus Dec 31 of year instead of Jan 1 (defaults to 01 01 if nothing provided)
-    //     
-    //     
+    //
+    //
     //     this.datePickerEnd.value = new Date('12 31 ' + evt.target.value);
     //     this.datePickerEnd.state.preSelection = new Date('12 31 ' + evt.target.value);
     //     this.datePickerEnd.calendar.instanceRef.state.date = new Date('12 31 ' + evt.target.value);
@@ -761,7 +795,7 @@ function countyFilter(stateValues) {
     //     this.setState( { endPublish: new Date('12 31 ' + evt.target.value) }, () => {
     //         this.datePickerEnd.value = this.state.endPublish;
     //         this.filterBy(this.state);
-    //         
+    //
     //         this.datePickerEnd.forceUpdate();
     //         // this.debouncedSearch(this.state);
     //     });
@@ -913,15 +947,15 @@ function countyFilter(stateValues) {
       );
     }
   };
-  onDetailLink(evt){
+  onDetailLink(evt) {
     console.log(`file: Search.js:922 ~ Search ~ onDetailLink ~ this:`, this);
     evt.preventDefault();
   }
-  onUseOptionsChecked(evt){
+  onUseOptionsChecked(evt) {
     console.log(`file: Search.js:926 ~ Search ~ onUseOptionsChecked ~ evt:`, evt);
     evt.preventDefault()
     this.setState({
-      useOptionsChecked : evt.target.checked
+      useOptionsChecked: evt.target.checked
     })
   }
 
@@ -953,156 +987,151 @@ function countyFilter(stateValues) {
       setState: this.setState,
     };
     return (
-			<Container
-				disableGutters={false}
-				sx={
-					{
-						//					marginTop: 15,
-					}
-				}>
-				<ThemeProvider theme={theme}>
-					<SearchContext.Provider value={value}>
-						<Container
-							sx={{
-								marginTop: 5,
-							}}>
-							<Grid
-								border={0}
-								columnSpacing={0}
-								id='result-header-grid-container'
-								container>
-								{''}
-								<Grid
-									container
-									xs={12}
-									id='results-header-grid-container'
-									flex={1}
-									flexGrow={1}>
-									<ResultsHeader
-										{...this.props}
-										sort={this.props.sort}
-										state={this.state}
-										setPageInfo={this.props.setPageInfo}
-										handleProximityValues={
-											this.handleProximityValues
-										}
-										onInput={this.onInput}SearchResultOptions
-										onKeyUp={this.onKeyUp}
-										onKeyDown={this.onKeyDown}
-										onIconClick={this.onIconClick}
-										titleRaw={this.state.titleRaw}
-										results={this.state.results}
-										total={this.state.total}
-										onUseOptionsChecked={
+        <ThemeProvider theme={theme}>
+          <SearchContext.Provider value={value}>
+            <Container
+              maxWidth="xl"
+              component={Paper}
+              disableGutters={true}
+              sx={{
+                marginTop: 5,
+              }}>
+              <Grid
+                border={0}
+                columnSpacing={1}
+                id='result-header-grid-container'
+                container>
+                {''}
+                <Grid
+                  container
+                  xs={12}
+                  id='results-header-grid-container'
+                  flex={1}
+                  flexGrow={1}>
+                  <ResultsHeader
+                    {...this.props}
+                    sort={this.props.sort}
+                    state={this.state}
+                    setPageInfo={this.props.setPageInfo}
+                    handleProximityValues={
+                      this.handleProximityValues
+                    }
+                    onInput={this.onInput} SearchResultOptions
+                    onKeyUp={this.onKeyUp}
+                    onKeyDown={this.onKeyDown}
+                    onIconClick={this.onIconClick}
+                    titleRaw={this.state.titleRaw}
+                    results={this.state.results}
+                    total={this.state.total}
+                    onUseOptionsChecked={
                       this.onUseOptionsChecked.bind(this)
-										}
-                    onCheckboxChecked = {this.onCheckboxChecked.bind(this)} 
-										onSortByChangeHandler={
-											this.onSortByChangeHandler
-										}
-										onLimitChangeHandler={
-											this.onLimitChangeHandler
-										}
-										onDownloadClick={this.onDownloadClick}
-										
-									/>
-								</Grid>
-								<Grid
-									columnSpacing={1}
-									container
-									xs={12}
-									flex={1}
-									margin={0}
+                    }
+                    onCheckboxChecked={this.onCheckboxChecked.bind(this)}
+                    onSortByChangeHandler={
+                      this.onSortByChangeHandler
+                    }
+                    onLimitChangeHandler={
+                      this.onLimitChangeHandler
+                    }
+                    onDownloadClick={this.onDownloadClick}
+
+                  />
+                </Grid>
+                <Grid
+                  columnSpacing={1}
+                  container
+                  xs={12}
+                  flex={1}
+                  margin={0}
                   border={0}
-									padding={1}
-									id='filters-grid-container'>
-									<Grid
-										border={0}
-										item
-										md={3}
+                  padding={1}
+                  id='filters-grid-container'>
+                  <Grid
+                    border={0}
+                    item
+                    md={3}
                     sx={12}
-										id='filters-grid-item'>
-										{!this.state.filtersHidden && (
-											//[TODO] it would probably be simpler showing these into context
-											<SearchFilters
-												{...this.props}
-												onActionChange={this.onActionChange}
-												onAgencyChange={this.onAgencyChange}
-												onClearFilter={this.onClearFilter}
-												onCountyChange={this.onCountyChange}
-												onLocationChange={
-													this.onLocationChange
-												}
-												onDecisionChange={
-													this.onDecisionChange
-												}
-												onTypeChecked={this.onTypeChecked}
-												onClearFiltersClick={
-													this.onClearFiltersClick
-												}
-												filtersHidden={
-													this.state.filtersHidden
-												}
-												orgClick={this.orgClick}
-												onCooperatingAgencyChange={
-													this.onCooperatingAgencyChange
-												}
-												onStartDateChange={
-													this.onStartDateChange
-												}
-												onEndDateChange={
-													this.onEndDateChange
-												}
-												toggleFiltersHidden={
-													this.toggleFiltersHidden
-												}
-												onNeedsDocumentChecked={
-													this.onNeedsDocumentChecked
-												}
-												renderClearFiltersButton={
-													this.renderClearFiltersButton
-												}
-												onTitleOnlyChecked={
-													this.onTitleOnlyChecked
-												}
-											/>
-										)}
-									</Grid>
-									<Grid
-										item
-										md={9}
+                    id='filters-grid-item'>
+                    {!this.state.filtersHidden && (
+                      //[TODO] it would probably be simpler showing these into context
+                      <SearchFilters
+                        {...this.props}
+                        onActionChange={this.onActionChange}
+                        onAgencyChange={this.onAgencyChange}
+                        onClearFilter={this.onClearFilter}
+                        onCountyChange={this.onCountyChange}
+                        onLocationChange={
+                          this.onLocationChange
+                        }
+                        onDecisionChange={
+                          this.onDecisionChange
+                        }
+                        onTypeChecked={this.onTypeChecked}
+                        onClearFiltersClick={
+                          this.onClearFiltersClick
+                        }
+                        filtersHidden={
+                          this.state.filtersHidden
+                        }
+                        orgClick={this.orgClick}
+                        onCooperatingAgencyChange={
+                          this.onCooperatingAgencyChange
+                        }
+                        onStartDateChange={
+                          this.onStartDateChange
+                        }
+                        onEndDateChange={
+                          this.onEndDateChange
+                        }
+                        toggleFiltersHidden={
+                          this.toggleFiltersHidden
+                        }
+                        onNeedsDocumentChecked={
+                          this.onNeedsDocumentChecked
+                        }
+                        renderClearFiltersButton={
+                          this.renderClearFiltersButton
+                        }
+                        onTitleOnlyChecked={
+                          this.onTitleOnlyChecked
+                        }
+                      />
+                    )}
+                  </Grid>
+                  <Grid
+                    item
+                    md={9}
                     xs={12}
-										pl={2}>
-										<Paper elation={1}>
-											{this.props.children}
-										</Paper>
-									</Grid>
-								</Grid>
-							</Grid>
-							{/* End Header*/}
-							{/* <Item xs={2} id="filter-container-items" >
+                    pl={2}>
+                    <Paper elation={1}>
+                      {this.props.children}
+                    </Paper>
+                  </Grid>
+                </Grid>
+              </Grid>
+              {/* End Header*/}
+              {/* <Item xs={2} id="filter-container-items" >
 									</Item>
 									<Item display={'flex'} xs={9}  id="results-container-items">
 									</Item>  */}
-							{this.getSuggestions()}
-							<div id='loader-holder'>
-								{/* <div className="center" hidden={this.props.searching}>
+              {this.getSuggestions()}
+              <div id='loader-holder'>
+                {/* <div className="center" hidden={this.props.searching}>
 									<span id="inputMessage"><CircularProgress/> {this.state.inputMessage}</span>
 								</div> */}
-								<div
-									className='lds-ellipsis'
-									hidden={!this.props.searching}>
-									<div></div>
-									<div></div>
-									<div></div>
-									<div></div>
-								</div>
-							</div>
-						</Container>
-					</SearchContext.Provider>
-				</ThemeProvider>
-			</Container>
-		);
+                <div
+                  className='lds-ellipsis'
+                  hidden={!this.props.searching}>
+                  <div></div>
+                  <div></div>
+                  <div></div>
+                  <div></div>
+                </div>
+              </div>
+            </Container>
+          </SearchContext.Provider>
+        </ThemeProvider>
+    );
   }
 
   orgClick = () => {
@@ -1133,8 +1162,8 @@ function countyFilter(stateValues) {
         this._lastSearchTerms = rehydrate.lastSearchedTerm;
       }
 
-      // 
-      // 
+      //
+      //
 
       if (typeof rehydrate.startPublish === "string") {
         rehydrate.startPublish = Globals.getCorrectDate(rehydrate.startPublish);
@@ -1156,7 +1185,7 @@ function countyFilter(stateValues) {
     this.getCounts();
 
     // Get search params on mount and run search on them (implies came from landing page)
-    // 
+    //
     this.doSearchFromParams();
   }
 
