@@ -182,7 +182,7 @@ export default class ResultsHeader extends React.Component {
         <QuickStartDialog
           onClose={this.toggleQuickStartDialog.bind(this)}
           isOpen={this.state.isQuickStartDialogOpen}
-          />  
+          />
 				<Grid
         container
 					id='search-text-grid-container'
@@ -195,11 +195,16 @@ export default class ResultsHeader extends React.Component {
 						<Grid
 							item
 							xs={0}
-							md={2}>
+							md={2}
+              display={'flex'}
+              justifyContent={'center'}
+              alignContent={'center'}
+              alignItems={'center'}
+            >
 							<Box
 								id='search-text-grid-item'
 								// backgroundColor="transparent"
-								height={115}
+								//height={115}
 		              >
 								<ListItem
 									onClick={this.toggleSearchTipsDialog.bind(this)}>
