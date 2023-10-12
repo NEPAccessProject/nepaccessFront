@@ -72,7 +72,6 @@ const useStyles = makeStyles((theme) => ({
 
 const SearchFilters = (props) => {
   const { state, setState } = useContext(SearchContext);
-  console.log(`file: SearchFilters.jsx:75 ~ SearchFilters ~ state:`, state);
   const classes = useStyles(theme);
   const {
     filtersHidden,
@@ -99,13 +98,22 @@ const SearchFilters = (props) => {
 
   //Common Settings used by all autocomplete filters
   const filterProps = {
-    fullWidth: true,
+    //fullWidth: true,
     multiple: true,
     autoComplete: true,
-    autoHighlight: true,
+    autoFocus:false,
+    //autoHighlight: true,
     limitTags: 3,
     disablePortal: true,
     variant: 'standard',
+    renderTags: (props,option,state,ownerState)=> {
+      return (
+        props.map((prop,idx)=> (
+          <Chip size="small" key={props.label} label={abbreviate(prop.label, 25) }/>
+        ))
+      )
+    },
+    getOptionLabel: (option) => abbreviate(option.label, 50),
     getLimitTagsText: (options) =>
       options.label.length > 10
         ? options.label.slice(0, 10) + '...'
@@ -113,6 +121,15 @@ const SearchFilters = (props) => {
 
     // ),
   };
+  const abbreviate = (text="",length=20)=>{
+    if(!text.length){
+      console.warn(`The text specified is empty this is most likely an upstream issue`)
+      return "TEXT NOT FOUND!!!!"
+    }
+    else {
+      return text.length > length ? text.slice(0, length) + '...' : text
+    }
+  }
 
   return (
     <>
@@ -160,35 +177,36 @@ const SearchFilters = (props) => {
             <Divider />
             {/* #region search agencies */}
             <Box>
-              <FormControl fullWidth>
-                <FormLabel htmlFor='searchAgency'>Lead Agencies:</FormLabel>
+            <FormControl
+                fullWidth
+                xs={{
+                  p: 1,
+                  mb: 1,
+                  mt: 1,
+                }}>
+                <FormLabel htmlFor='searchAgency'>
+                  Lead Agencies:
+                </FormLabel>
                 <Autocomplete
-                  id='searchAgency'
+                  fullWidth
+                  id='agency'
                   name='agency'
                   {...filterProps}
-                  tabIndex={3}
+                  tabIndex={4}
                   options={agencies}
                   value={agencies.filter((v) =>
                     state.agency.includes(v.value),
                   )}
-                  margin={0}
-                  padding={0}
-                  size="small"
-                  disableListWrap={false}
-                  //renderOption={(option) => `${option.label} ?`}
-                  onChange={(evt, value, tag) => {
-                    onAgencyChange(evt, value, tag)
-                  }}
-                  className={classes.autoComplete}
+                  onChange={(evt, value, tag) => onAgencyChange(evt, value, tag)}
                   renderInput={(params) => {
-                    params.inputProps.className = classes.autoComplete;
                     return (
                       <TextField
                         {...params}
                         placeholder='Type or Select Lead Agencies'
                         variant='outlined'
                         sx={{
-                          width: '100%',
+                          wordWrap: 'break-word',
+                          overflow: 'hidden',
                           p: 0,
                         }}
                       />
@@ -196,6 +214,7 @@ const SearchFilters = (props) => {
                   }}
                 />
               </FormControl>
+
               {/* #endregion */}
             </Box>
             {/* #region search */}
@@ -212,6 +231,7 @@ const SearchFilters = (props) => {
                   Cooperating Agencies:
                 </FormLabel>
                 <Autocomplete
+                  fullWidth
                   id='searchAgency'
                   name='cooperatingAgency'
                   {...filterProps}
@@ -220,20 +240,16 @@ const SearchFilters = (props) => {
                   value={agencies.filter((v) =>
                     state.cooperatingAgency.includes(v.value),
                   )}
-                  onChange={(evt, value, tag) =>
-                    onCooperatingAgencyChange(evt, value, tag)
-                  }
-                  getOptionLabel={(v) => (
-                    v.label.length > 25 ? `${v.label.slice(0, 25)}...` : `${v.label}`
-                  )}
+                  onChange={(evt, value, tag) => onCooperatingAgencyChange(evt, value, tag)}
                   renderInput={(params) => {
                     return (
                       <TextField
                         {...params}
-                        placeholder='Type or Select Lead Agencies'
+                        placeholder='Type or Select Cooperating Agencies'
                         variant='outlined'
                         sx={{
-                          width: '100%',
+                          wordWrap: 'break-word',
+                          overflow: 'hidden',
                           p: 0,
                         }}
                       />
@@ -286,27 +302,14 @@ const SearchFilters = (props) => {
               </FormLabel>
               <Autocomplete
                 id='county'
+                {...filterProps}
                 name='county'
-                tabIndex={5}a
+                tabIndex={5}
                 options={counties}
-                value={ counties && counties.filter((v) => {
-                  if(state.county.includes(v.value))
-                  {
-                    console.log(`Match on ${v.value} for ${state.county}`);
-                    return v.value;
-                  }
-                  else{
-                    //console.log(`No match on ${v.value} for ${state.county}`)
-                    return `not found`
-                  }
-                  })}
+                value={ counties.filter((v) => state.county.includes(v))}
                 onChange={(evt, value, reason) =>
                   onCountyChange(evt, value, reason)
                 }
-                getOptionLabel={(v) => (
-                  v.label.length > 25 ? `${v.label.slice(0, 25)}...` : `${v.label}`
-                )}
-                //getOptionLabel={(agencyOptions) => agencyOptions.label}
                 renderInput={(params) => {
                   return (
                     <TextField
@@ -339,7 +342,7 @@ const SearchFilters = (props) => {
                     tabIndex={10}
                     className={'classes.autocomplete'}
                     options={actions}
-                    value={state.actionRaw}  
+                    value={state.actionRaw}
                     onChange={(evt, value, reason) => onActionChange(evt, value, reason)}
                     renderInput={(params) => {
                       return (
