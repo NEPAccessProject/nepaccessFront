@@ -251,7 +251,7 @@ export default class App extends React.Component {
       );
     }
     else {
-      console.error('UNEXPECTED RESULT: NO RESULTS from searcherState', th);
+      console.error('UNEXPECTED RESULT: NO RESULTS from searcherState', searcherState);
     }
   };
 
@@ -1337,7 +1337,7 @@ export default class App extends React.Component {
         _inputs = { titleRaw: Globals.getParameterByName("q") };
       }
     }
-    // 
+    //
     if (!this._mounted) {
       // User navigated away or reloaded
       return; // cancel search
