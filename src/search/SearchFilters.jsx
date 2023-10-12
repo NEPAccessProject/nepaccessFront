@@ -106,13 +106,15 @@ const SearchFilters = (props) => {
     limitTags: 3,
     disablePortal: true,
     variant: 'standard',
+    //render selected values from the dropdown
     renderTags: (props,option,state,ownerState)=> {
       return (
         props.map((prop,idx)=> (
-          <Chip size="small" key={props.label} label={abbreviate(prop.label, 25) }/>
+          <Chip size="small" color="primary" fontSize="small" key={props.label} label={abbreviate(prop.label, 30) }/>
         ))
       )
     },
+   //render selected values for the dropdown options
     getOptionLabel: (option) => abbreviate(option.label, 50),
     getLimitTagsText: (options) =>
       options.label.length > 10
@@ -194,9 +196,7 @@ const SearchFilters = (props) => {
                   {...filterProps}
                   tabIndex={4}
                   options={agencies}
-                  value={agencies.filter((v) =>
-                    state.agency.includes(v.value),
-                  )}
+                  value={agencies.filter((v) =>state.agency.includes(v.value))}
                   onChange={(evt, value, tag) => onAgencyChange(evt, value, tag)}
                   renderInput={(params) => {
                     return (
@@ -262,8 +262,6 @@ const SearchFilters = (props) => {
             <Divider />
             {/* #region search states */}
             <Box>
-              <Typography variant='h6'>Selected States: {JSON.stringify(state.state)}</Typography>
-              <Typography variant='h6'>Selected Counties: {JSON.stringify(state.county)}</Typography>
               <FormLabel htmlFor='state'>State(s) and Location(s):</FormLabel>
               <Autocomplete
                 id='state'
@@ -298,15 +296,15 @@ const SearchFilters = (props) => {
               <FormLabel
                 label
                 htmlFor='county'>
-                County/counties:
+                County/counties: {JSON.stringify("" + state.county)}
               </FormLabel>
               <Autocomplete
                 id='county'
                 {...filterProps}
                 name='county'
                 tabIndex={5}
-                options={counties}
-                value={ counties.filter((v) => state.county.includes(v))}
+                options={state.countyOptions}
+                value={state.countyOptions.filter((v) => state.county.includes(v.value))}
                 onChange={(evt, value, reason) =>
                   onCountyChange(evt, value, reason)
                 }
@@ -328,13 +326,16 @@ const SearchFilters = (props) => {
             {/* #endregion */}
             {/* #region dates */}
             {/* Authorized Only Filters */}
-            <div hidden={!Globals.authorized()}>
-              <div hidden={!Globals.curatorOrHigher()}></div>
+            {/* <div hidden={!Globals.authorized()}> */}
+              {/* <div hidden={!Globals.curatorOrHigher()}></div> */}
               <Divider />
               {/* #region search action type */}
-              <div hidden={!Globals.authorized()}>
-                {/* <Box id="action-type-box">
+              {/* <div hidden={!Globals.authorized()}> */}
+              <div>
+                <Box id="action-type-box">
+
                   <FormLabel htmlFor='searchAction'>Action Type:</FormLabel>
+                  {JSON.stringify(state.action)}
                   <Autocomplete
                     {...filterProps}
                     id='searchAction'
@@ -342,7 +343,7 @@ const SearchFilters = (props) => {
                     tabIndex={10}
                     className={'classes.autocomplete'}
                     options={actions}
-                    value={state.actionRaw}
+                    value={(actions.filter((v) => state.action.includes(v.value)))}
                     onChange={(evt, value, reason) => onActionChange(evt, value, reason)}
                     renderInput={(params) => {
                       return (
@@ -358,26 +359,27 @@ const SearchFilters = (props) => {
                       );
                     }}
                   />
-                </Box> */}
+                </Box>
                 {/* #endregion */}
               </div>
-            </div>
+            {/* </div> */}
             {/* #endregion */}
             <div hidden={!Globals.authorized()}>
               {/* #region search decision */}
-              {/* <Item>
+              <Item>
                 <FormLabel htmlFor='searchDecision'></FormLabel>
                 <Typography variant='filterLabel'>Decision Type</Typography>
                 <Autocomplete
                   id='searchDecision'
                   name='decision'
+                  {...filterProps}
                   tabIndex='11'
                   options={decisions}
                   placeholder='Type or select decision type(s)'
                   onChange={(evt, value, reason) =>
                     onDecisionChange(evt, value, reason)
                   }
-                  value={decisions.filter((v)=> decisions.filter(v))}
+                  value={decisions.filter((v)=> state.decision.includes(v))}
                   renderInput={(params) => (
                     <TextField
                       {...params}
@@ -390,7 +392,7 @@ const SearchFilters = (props) => {
                     />
                   )}
                 />
-              </Item> */}
+              </Item>
               {/* #endregion */}
             </div>
             <Divider />
