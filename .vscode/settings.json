@@ -1,6 +1,7 @@
 {
-  "editor.codeActionsOnSave": { 
-    "source.fixAll.eslint": false,
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": true,
+    "source.fixAll": true
    },
   "editor.defaultFormatter": "esbenp.prettier-vscode",
   "editor.formatOnSave": false,
@@ -28,5 +29,8 @@
     "live-server-extension": true,
     "live-preview-extension": true
   },
-  "console-ninja.outputMode": "In View"
+  "console-ninja.outputMode": "In View",
+  "cSpell.words": [
+    "kruft"
+  ]
   }
