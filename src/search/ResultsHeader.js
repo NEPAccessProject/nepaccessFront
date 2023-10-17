@@ -5,9 +5,11 @@ import {
 	Hidden,
 	IconButton,
 	ListItem,
+  Paper,
 	TextField,
 } from '@mui/material';
 import React from 'react';
+import theme from '../styles/theme'
 import Globals from '../globals';
 import SearchContext from './SearchContext';
 import SearchResultOptions from './SearchResultOptions';
@@ -162,148 +164,166 @@ export default class ResultsHeader extends React.Component {
 	render() {
 		return (
 			<>
-				<SearchTipsDialog
-          onClose={this.toggleSearchTipsDialog.bind(this)}
-					isOpen={this.state.isSearchTipsDialogOpen}
-				/>
-				<AvailableFilesDialog
-          onClose={this.toggleAvailableFilesDialog.bind(this)}
-					isOpen={this.state.isAvailableFilesDialogOpen}
-				/>
-        <QuickStartDialog
-          onClose={this.toggleQuickStartDialog.bind(this)}
-          isOpen={this.state.isQuickStartDialogOpen}
-          />
-				<Grid
-        container
-					id='search-text-grid-container'
-					display={'flex-root'}
-					alignItems={'center'}
-					layout={'row'}
-					spacing={1}
-          >
-					<Hidden mdDown>
-						<Grid
-							item
-							xs={0}
-							md={2}
-              display={'flex'}
-              justifyContent={'center'}
-              alignContent={'center'}
-              alignItems={'center'}
+				<Paper fullWidth elevation={1} border={0} sx={{
+          width:'100%',
+          borderRadius:0,
+          marginLeft:0,
+          marginRight:0,
+          padding:0,
+          margin:0
+        }} >
+				  <SearchTipsDialog
+            onClose={this.toggleSearchTipsDialog.bind(this)}
+  					isOpen={this.state.isSearchTipsDialogOpen}
+  				/>
+  				<AvailableFilesDialog
+            onClose={this.toggleAvailableFilesDialog.bind(this)}
+  					isOpen={this.state.isAvailableFilesDialogOpen}
+  				/>
+          <QuickStartDialog
+            onClose={this.toggleQuickStartDialog.bind(this)}
+            isOpen={this.state.isQuickStartDialogOpen}
+            />
+  				<Grid
+          container
+  					id='search-text-grid-container'
+  					display={'flex-root'}
+  					alignItems={'center'}
+  					layout={'row'}
+  					spacing={1}
             >
-							<Box
-								id='search-text-grid-item'
-								// backgroundColor="transparent"
-								//height={115}
-		              >
-								<ListItem
-									onClick={this.toggleSearchTipsDialog.bind(this)}>
-									<a href='#'>
-										Search Tips
-									</a>
-								</ListItem>
-								<ListItem
-									onClick={this.toggleAvailableFilesDialog.bind(
-										this,
-									)}>
-									<a href='#'>
-										Available Files
-									</a>
-								</ListItem>
-								<ListItem
-									onClick={this.toggleQuickStartDialog.bind(
-										this,
-									)}>
-									<a href='#'>Quick Start
-									</a>
-								</ListItem>
-							</Box>
-						</Grid>
-					</Hidden>
+  					<Hidden mdDown>
+  						<Grid
+  							item
+  							xs={0}
+  							md={2}
+                display={'flex'}
+                justifyContent={'center'}
+                alignContent={'center'}
+                alignItems={'center'}
+              >
+  							<Box
+  								id='search-text-grid-item'
+  								// backgroundColor="transparent"
+  								//height={115}
+  		              >
+  								<ListItem
+  									onClick={this.toggleSearchTipsDialog.bind(this)}>
+  									<a href='#'>
+  										Search Tips
+  									</a>
+  								</ListItem>
+  								<ListItem
+  									onClick={this.toggleAvailableFilesDialog.bind(
+  										this,
+  									)}>
+  									<a href='#'>
+  										Available Files
+  									</a>
+  								</ListItem>
+  								<ListItem
+  									onClick={this.toggleQuickStartDialog.bind(
+  										this,
+  									)}>
+  									<a href='#'>Quick Start
+  									</a>
+  								</ListItem>
+  							</Box>
+  						</Grid>
+  					</Hidden>
 
-					<Grid
-            id="search-box-grid-container"
-						container
-						flex={1}
-            >
-						<Grid
-							item
-							xs={12}
-							border={0}
-							md={12}
-							borderLeft={0}
-							marginTop={2}
-              paddingRight={1}
-							id='search-box-grid-item'>
-							<Box
-								id='search-box-box-item'
-								display={'flex'}
-								height={60}
-								padding={0}
-                >
-								<TextField
-									fullWidth
-									backgroundColor={'white'}
-									id='main-search-text-field'
-									name='titleRaw'
-									variant='outlined'
-                  color="primary"
-									focused
-									onInput={(evt) => this.props.onInput(evt)}
-									// onKeyUp={onKeyUp}
-									// onKeyDown={onKeyDown}
-									placeholder='Search for NEPA documents'
-									value={
-										this.props.titleRaw
-											? this.props.titleRaw
-											: ''
-									}
-									autoFocus
-									InputProps={{
-										endAdornment: (
-											<IconButton
-												name='titleRaw'
-												value={
-													this.props.titleRaw
-														? this.props.titleRaw
-														: ''
-												}
-												onClick={this.props.onIconClick}>
-												<SearchOutlined />
-											</IconButton>
-										),
-									}}
-								/>
-							</Box>
-						</Grid>
-						<Grid
-							item
-							xs={12}
-							md={12}
-							borderLeft={0}
-							id='search-box-result-options-container'>
-							<SearchResultOptions
-								state={this.state}
-								setPageInfo={this.props.setPageInfo}
-								onUseOptionsChecked={
-									this.props.onUseOptionsChecked
-								}
-								onCheckboxChange={this.props.onCheckboxChange}
-								onLimitChangeHandler={
-									this.onLimitChangeHandler
-								}
-                onCheckboxChecked={this.props.onCheckboxChecked}
-								onSortDirectionChangeHandler={
-									this.onSortOrderChange
-								}
-								onDownloadClick={this.onDownloadClick}
-								onSortByChangeHandler={this.onSortChange}
-								onSortOrderChange={this.onSortOrderChange}
-							/>
-						</Grid>
-					</Grid>
-				</Grid>
+  					<Grid
+              id="search-box-grid-container"
+  						container
+  						flex={1}
+              >
+  						<Grid
+  							item
+  							xs={12}
+  							border={0}
+  							md={12}
+  							borderLeft={0}
+  							marginTop={2}
+                paddingRight={1}
+  							id='search-box-grid-item'>
+  							<Box
+  								id='search-box-box-item'
+  								display={'flex'}
+  								height={60}
+  								padding={0}
+                  >
+  								<TextField
+  									fullWidth
+                    focused
+  									backgroundColor={'white'}
+  									id='main-search-text-field'
+  									name='titleRaw'
+  									variant='outlined'
+                    color="primary"
+  									onInput={(evt) => this.props.onInput(evt)}
+  									// onKeyUp={onKeyUp}
+  									// onKeyDown={onKeyDown}
+  									placeholder='Search for NEPA documents'
+  									value={
+  										this.props.titleRaw
+  											? this.props.titleRaw
+  											: ''
+  									}
+                    sx={{
+                      "& .MuiOutlinedInput-root": {
+                        border: "1px solid lightblue",
+                        borderRadius: "0",
+                        padding: "0",
+                    },
+                    "& .MuiOutlinedInput-root .MuiOutlinedInput-notchedOutline": {
+                        border: "1px solid lightblue",
+                    }
+                    }}
+  									InputProps={{
+  										endAdornment: (
+  											<IconButton
+  												name='titleRaw'
+  												value={
+  													this.props.titleRaw
+  														? this.props.titleRaw
+  														: ''
+  												}
+  												onClick={this.props.onIconClick}>
+  												<SearchOutlined />
+  											</IconButton>
+  										),
+  									}}
+  								/>
+  							</Box>
+  						</Grid>
+  						<Grid
+  							item
+  							xs={12}
+  							md={12}
+
+  							id='search-box-result-options-container'>
+  							<SearchResultOptions
+  								state={this.state}
+  								setPageInfo={this.props.setPageInfo}
+  								onUseOptionsChecked={
+  									this.props.onUseOptionsChecked
+  								}
+  								onCheckboxChange={this.props.onCheckboxChange}
+  								onLimitChangeHandler={
+  									this.onLimitChangeHandler
+  								}
+                  onCheckboxChecked={this.props.onCheckboxChecked}
+  								onSortDirectionChangeHandler={
+  									this.onSortOrderChange
+  								}
+  								onDownloadClick={this.onDownloadClick}
+  								onSortByChangeHandler={this.onSortChange}
+  								onSortOrderChange={this.onSortOrderChange}
+  							/>
+  						</Grid>
+  					</Grid>
+  				</Grid>
+				</Paper>
 			</>
 		);
 	}

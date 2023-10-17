@@ -48,6 +48,8 @@ const useStyles = makeStyles((theme) => ({
     verticalAlign: 'middle',
     border:1,
     borderColor: theme.palette.divider,
+    paddingTop: 2,
+    paddingBottom: 2,
   }
 }));
 function SearchResultOptions(props) {
@@ -73,17 +75,17 @@ function SearchResultOptions(props) {
   const { showContext=false,sortBy='relevance', sortDirection='ASC', limit=100, snippetsDisabled = false } = state;
 	return (
 		<>
-      <Grid container flex={1} border={1} borderColor={'#ddd'} display={'flex'} style={{
+      <Grid container flex={1} border={1} borderColor={'#eee'} display={'flex'} style={{
         //marginLeft:'5%',
         marginRight: '5%',
       }}>
-        <Grid item xs={5} borderRight={1} borderColor={'#ddd'} id="show-checkbox-grid-item" className={classes.container} display={"flex"}>
+        <Grid item xs={5} borderRight={1} padding={1} borderColor={'#ddd'} id="show-checkbox-grid-item" className={classes.container} display={"flex"}>
           <ShowTextCheckbox showContext={showContext} onCheckboxChecked={(evt) => onCheckboxChecked(evt)}/>
         </Grid>
-        <Grid item xs={3} borderRight={1} borderColor={'#ddd'} id="sort-by-grid-item" display="flex" justifyContent={"center"}>
+        <Grid item xs={3} borderRight={1} padding={1} borderColor={'#ddd'} id="sort-by-grid-item" display="flex" justifyContent={"center"}>
           <SortByControl onSortByChangeHandler={onSortByChangeHandler} orderBy={sortBy}/>
         </Grid>
-        <Grid item xs={3} borderRight={1} borderColor={'#ddd'} id="sort-by-grid-item" display="flex" justifyContent={"center"}>
+        <Grid item xs={3} borderRight={1} padding={1} borderColor={'#ddd'} id="sort-by-grid-item" display="flex" justifyContent={"center"}>
           <SortDirControl onSortDirectionChangeHandler={onSortDirectionChangeHandler} sortDirection={sortDirection}/>
         </Grid>
         <Grid item xs={1} className={classes.container} alignItems={"center"} display={"flex"} justifyContent={"center"} alignContent={"center"}>

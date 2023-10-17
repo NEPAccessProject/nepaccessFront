@@ -98,11 +98,6 @@ export default class SearchProcessResults extends React.Component {
 
   constructor(props) {
     super(props);
-    console.log(`file: SearchProcessResults.js:66 ~ SearchProcessResults ~ constructor ~ props:`, props);
-    // console.log(
-    //   "🚀 ~ file: SearchProcessResults.js:41 ~ SearchProcessResults ~ constructor ~ props:",
-    //   props
-    // );
     const ctx = this.context;
     this.state = {
       //     ...state,
@@ -181,7 +176,6 @@ export default class SearchProcessResults extends React.Component {
 
   render() {
     const ctxState = this.context.state;
-    console.log(`file: SearchProcessResults.js:216 ~ SearchProcessResults ~ render ~ ctxState:`, ctxState);
     const { results } = this.props;
 
     //If searching display skeleton
@@ -209,14 +203,25 @@ export default class SearchProcessResults extends React.Component {
     //If there are results, then diplay them
     else {
       return (
+        <>
+        <SearchResultsMap
+        toggleMapHide={this.props.toggleMapHide}
+        isHidden={this.props.isMapHidden}
+        docList={this.props.geoResults}
+        results={this.props.results}
+      // searcherState={this.props.searcherState}
+      />
         <Grid container flex={1} id="search-result-row-box" xs={12}>
-          <Typography variant="h3" padding={1}>Showing { ctxState.limit}  of {results.length} Results for "{ctxState.titleRaw}"</Typography>
-          <Container width={'100%'} id="search-result-row-container">
-                              {results.length && (
-                  <ResultRow results={results} />
-                )}
-          </Container>
+          <Typography variant="h3" padding={1}>Showing {ctxState.limit}  of {results.length} Results for "{ctxState.titleRaw}"</Typography>
+          <Divider/>
+          <Box border={0} width={'100%'} id="search-result-row-container">
+            {results.length && (
+              <ResultRow results={results} />
+            )}
+            <Divider/>
+          </Box>
         </Grid>
+        </>
       )
     }
   }
@@ -269,7 +274,7 @@ const ResultRow = (props) => {
     return (() => {
       _mounted.current = false
     })
-  },[]);
+  }, []);
   //const scrollToBottom = () => {
   //  listRef.current.scrollToIndex(0);
   //};
@@ -277,11 +282,11 @@ const ResultRow = (props) => {
   //   if (_mounted.current && results.length > 0) {
   //     scrollToBottom();
   //   }
-//     }, [results]);
-    function getRowHeight(index) {
+  //     }, [results]);
+  function getRowHeight(index) {
     const height = rowHeights.current[index] + 8 || 82;
     console.log(`file: SearchProcessResults.js:512 ~ getRowHeight ~ height:`, height);
-      return height;
+    return height;
   }
 
   function getRowHeight(index) {
@@ -290,14 +295,14 @@ const ResultRow = (props) => {
 
   return (
     <Paper id="search-result-render-row-wrapper-paper">
-      <Grid container id="search-result-row-grid-container" xs={12} flex={1}>
-        {results.map((result,idx) => (
+      <Grid container id="search-result-row-grid-container" marginBottom={2} xs={12} flex={1}>
+        {results.map((result, idx) => (
           <Grid item xs={12} key={result.id} id={`search-result-row-grid-item-${result.id}`}>
             {/* <Typography variant="h5" paddingBottom={0}>
               <Link href={`/record-detail/?id=${result.id}`}>{result.title}</Link>
             </Typography> */}
             <SearchResultCards result={result} />
-              <SearchResultItem records={result.records} />
+            <SearchResultItem records={result.records} />
           </Grid>
         ))}
       </Grid>

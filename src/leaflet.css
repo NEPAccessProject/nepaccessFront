@@ -43,7 +43,7 @@
 
 .toggle-container-row {
     height: 28px; /* should match margin offset */
-    margin-top: -28px;
+    /* margin-top: -28px; */
 }
 .toggle-container {
     float: right;
@@ -64,7 +64,7 @@
     border: 1px solid black;
     cursor: pointer;
     user-select: none;
-    
+
     font-family: Open Sans;
     font-size: 18px;
     font-style: normal;
@@ -72,16 +72,16 @@
     line-height: 23px;
     letter-spacing: 0em;
     text-align: center;
-    
+
     z-index: 500;
 }
 .map-layers-toggle {
     position: absolute;
     margin-top: 0px;
     margin-left: 0px;
-    
+
     width: 126px;
-    
+
     background-color: rgba(184, 247, 255, 0.8);
 
     z-index: 500;
@@ -102,7 +102,7 @@ div.leaflet-control-zoom {
 
 /* Defining our own ZoomControl, so hide the default top left one. */
 div.leaflet-control-container>div.leaflet-left>div.leaflet-control-zoom {
-    display: none; 
+    display: none;
 }
 
 path.leaflet-interactive {
@@ -125,23 +125,23 @@ div.leaflet-popup.leaflet-zoom-animated, div.leaflet-popup.leaflet-zoom-animated
 }
 /** for some reason this was the easiest way to "remove" the element after the animation completes. It exists until
 another click somewhere on the map. Until then, it blocks click events even if it's invisible. So the key was
-setting width and/or height to 0. Transform didn't work as expected. 
+setting width and/or height to 0. Transform didn't work as expected.
 Strange effects while still visible without overflow: hidden.
 Still takes a while to animate the height to 0 at the end, but it's unclickable after a few seconds. */
 @keyframes _disappear {
     0% { opacity: 1; }
-    99% { opacity: 0; height: initial; 
+    99% { opacity: 0; height: initial;
     }
-    100% { opacity: 0; 
+    100% { opacity: 0;
         overflow: hidden;
         height: 0;
     }
 }
 @-webkit-keyframes _disappear {
     0% { opacity: 1; }
-    99% { opacity: 0; height: initial; 
+    99% { opacity: 0; height: initial;
     }
-    100% { opacity: 0; 
+    100% { opacity: 0;
         overflow: hidden;
         height: 0;
     }

@@ -17,6 +17,7 @@ import Globals from "./globals.js";
 import persist from "./persist.js";
 import SearchContext from "./search/SearchContext.js";
 import theme from "./styles/theme";
+import {Paper} from '@mui/material';
 const _ = require("lodash");
 
 /** For testing redesigned, consolidated search which is in progress */
@@ -1728,7 +1729,7 @@ export default class App extends React.Component {
           <CssBaseline />
           <ThemeProvider theme={theme}>
             <SearchContext.Provider value={value}>
-              <div id="app-content" className="footer-content">
+              <Paper elevation={1} id="app-content" className="footer-content">
                 <Helmet>
                   <meta charSet="utf-8" />
                   <title>Search - NEPAccess</title>
@@ -1789,7 +1790,7 @@ export default class App extends React.Component {
                     toggleMapHide={this.toggleMapHide}
                   />
                 </Search>
-              </div>
+              </Paper>
               <div ref={this.endRef} />
               <Footer id="footer"></Footer>
             </SearchContext.Provider>

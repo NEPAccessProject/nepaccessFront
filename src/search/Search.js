@@ -27,7 +27,7 @@ import SideBarFilters from './SearchFilters';
 import PropTypes from "prop-types";
 import ResultsHeader from "./ResultsHeader";
 import SearchFilters from "./SearchFilters";
-
+import SearchResultsMap from "./SearchResultsMap";
 
 const _ = require("lodash");
 
@@ -621,7 +621,7 @@ class Search extends React.Component {
           countyRaw: evt,
         },
         () => {
-          console.log('COUNTIES AFTER STATE UPDATE',this.state.county);
+          console.log('COUNTIES AFTER STATE UPDATE', this.state.county);
           this.filterResultsBy(this.state);
         }
       );
@@ -983,24 +983,34 @@ class Search extends React.Component {
       setState: this.setState,
     };
     return (
-        <ThemeProvider theme={theme}>
-          <SearchContext.Provider value={value}>
+      <ThemeProvider theme={theme}>
+        <SearchContext.Provider value={value}>
             <Container
-              maxWidth="xl"
+              id="search-root-container"
               component={Paper}
-              disableGutters={true}
+              maxWidth='xl'
+              disableGutters={false}
               sx={{
-                marginTop: 5,
+                border:1,
+                borderColor:'#ccc',
+                paddingLeft:2,
+                paddingRight:2,
+                marginTop: 2,
               }}>
               <Grid
                 border={0}
-                columnSpacing={1}
+                columnSpacing={3}
+                spacing={3}
+                marginBottom={10}
+                border={1}
+                border="#ddd"
                 id='result-header-grid-container'
                 container>
                 {''}
                 <Grid
                   container
                   xs={12}
+                  marginTop={1}
                   id='results-header-grid-container'
                   flex={1}
                   flexGrow={1}>
@@ -1034,16 +1044,15 @@ class Search extends React.Component {
                   />
                 </Grid>
                 <Grid
-                  columnSpacing={1}
                   container
                   xs={12}
                   flex={1}
-                  margin={0}
-                  border={0}
-                  padding={1}
-                  id='filters-grid-container'>
+                  id='filters-grid-container'
+                  style={{
+                    marginTop:10,
+                  }}
+                >
                   <Grid
-                    border={0}
                     item
                     md={3}
                     sx={12}
@@ -1098,8 +1107,8 @@ class Search extends React.Component {
                     item
                     md={9}
                     xs={12}
-                    pl={2}>
-                    <Paper elation={1}>
+                    >
+                    <Paper elevation={1} style={{padding:5}}>
                       {this.props.children}
                     </Paper>
                   </Grid>
@@ -1107,14 +1116,14 @@ class Search extends React.Component {
               </Grid>
               {/* End Header*/}
               {/* <Item xs={2} id="filter-container-items" >
-									</Item>
-									<Item display={'flex'} xs={9}  id="results-container-items">
-									</Item>  */}
+  									</Item>
+  									<Item display={'flex'} xs={9}  id="results-container-items">
+  									</Item>  */}
               {this.getSuggestions()}
               <div id='loader-holder'>
                 {/* <div className="center" hidden={this.props.searching}>
-									<span id="inputMessage"><CircularProgress/> {this.state.inputMessage}</span>
-								</div> */}
+  									<span id="inputMessage"><CircularProgress/> {this.state.inputMessage}</span>
+  								</div> */}
                 <div
                   className='lds-ellipsis'
                   hidden={!this.props.searching}>
@@ -1125,8 +1134,8 @@ class Search extends React.Component {
                 </div>
               </div>
             </Container>
-          </SearchContext.Provider>
-        </ThemeProvider>
+        </SearchContext.Provider>
+      </ThemeProvider>
     );
   }
 

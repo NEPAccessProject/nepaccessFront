@@ -1,4 +1,4 @@
-import { Button, Box, Divider,Grid, Paper, Typography } from '@mui/material';
+import { Button, Box, Divider, Grid, Paper, Typography } from '@mui/material';
 //import Grid from '@mui/material/Unstable_Grid2';
 import { makeStyles } from '@mui/styles';
 import React, { useContext, useEffect, useRef, useState } from 'react';
@@ -15,6 +15,10 @@ const DataCell = styled(Grid)(({ theme }) => ({
   color: theme.palette.text.secondary,
   border: 1,
   item: true,
+  padding:2,
+  paddingTop:15,
+  paddingBottom:15,
+  spacing: 2,
   borderColor: 'black',
   display: 'flex',
   justifyContent: 'center',
@@ -129,7 +133,6 @@ export default function SearchResultItem(props) {
 }
 
 const RenderRecord = (props) => {
-  console.log(`file: SearchResultItem.jsx:154 ~ RenderRecord ~ props:`, props);
   const { record } = props;
   const {
     action,
@@ -160,42 +163,48 @@ const RenderRecord = (props) => {
   return (
 
     <Paper elevation={1} style={{
+        marginLeft:2,
+        marginRight:2,
     }}>
-      {/* <DownloadFile
-          key={record.filename}
-          downloadType="nepafile"
-          id={_id}
-          filename={record.filename}
-        /> */}
-    <Grid container xs={12}>
-        <Grid container id="search-result-row-container" xs={12} borderTop={1} borderBottom={1} borderColor={'#ccc'}>
-          <DataCell id="year-box" xs={1} style={{border: 'right 1px solid #ccc'}}>
+
+      <Grid container>
+        <DataCell>
+          <Typography variant='h4'>{title}</Typography>
+        </DataCell>
+        <Grid container id="search-result-row-container" borderTop={1} borderBottom={1} borderColor={'#ccc'}>
+          <DataCell item id="year-box" xs={1} style={{ border: 'right 1px solid #ccc' }}>
             <Typography id="year-typography" fontWeight={'bold'}>
               {year ? year : 'N/A'}
             </Typography>
           </DataCell>
 
-          <DataCell xs={3} borderLeft={1} borderColor={'#ccc'} id="status-document-type-grid-item">
+          <DataCell item xs={3} borderLeft={1} borderColor={'#ccc'} id="status-document-type-grid-item">
             <Typography className={classes.card}>
               {documentType}
             </Typography>
           </DataCell>
-          <DataCell container xs={5} flex={1} id="title-grid-container" borderRight={1} borderLeft={1} borderColor={'#ccc'}>
+          <DataCell item xs={6} flex={1} id="title-grid-container" borderRight={1} borderLeft={1} borderColor={'#ccc'}>
             <Typography id="snippets-title" variant='h5' >{(title) ? title : ''}</Typography>
           </DataCell>
           <Grid container xs={2} flex={1} id="button-grid-container">
             <DataCell item id="preview-button-grid-item" item display={'flex'} xs={12} >
-              <Button onClick={(evt) => handleDownloadClick(evt)} variant='contained' color="primary">
+              {/* <Button onClick={(evt) => handleDownloadClick(evt)} variant='contained' color="primary">
                 Download
-              </Button>
+              </Button> */}
+              <DownloadFile
+                key={record.filename}
+                downloadType="nepafile"
+                id={record.id}
+                filename={record.filename}
+              />
             </DataCell>
           </Grid>
         </Grid>
         <Grid id="render-snippets-record-grid-container" container xs={12}>
-              <RenderSnippets record={record} />
+          <RenderSnippets record={record} />
 
         </Grid>
-    </Grid>
+      </Grid>
 
     </Paper>
   )

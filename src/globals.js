@@ -49,7 +49,6 @@ const Globals = {
 
     emitEvent(key, eventObject) {
         const entries = this.listeners[key] || [];
-        console.log(`file: globals.js:52 ~ emitEvent ~ entries:`, entries);
         entries && entries.length && entries.forEach(listener => {
             if(listener){
               listener(eventObject)

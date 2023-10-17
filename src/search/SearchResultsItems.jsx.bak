@@ -1,0 +1,136 @@
+import { Box, Divider, Paper, Link, Typography } from "@mui/material";
+
+import { styled } from "@mui/material/styles";
+import { makeStyles } from "@mui/styles";
+import React, { useContext, useEffect, useState, useRef } from "react";
+import SearchContext from "./SearchContext";
+import SearchResultItem from "./SearchResultItem";
+import { List } from 'react-virtualized'
+import AutoSizer from 'react-virtualized-auto-sizer'
+import '../index.css';
+//import './search.css';
+
+const Item = styled(Paper)(({ theme }) => ({
+  backgroundColor: theme.palette.mode === "dark" ? "#1A2027" : "#fff",
+  ...theme.typography.body2,
+  padding: theme.spacing(1),
+  // textAlign: 'center',
+  color: theme.palette.text.secondary,
+  elevation: 0,
+  border: 0,
+  borderRadius: 0,
+  fontColor: "#000",
+  fontFamily: "open sans",
+}));
+
+function setRowHeight(index, size) {
+  listRef.current.resetAfterIndex(0);
+  rowHeights.current = { ...rowHeights.current, [index]: size };
+}
+
+function scrollToBottom() {
+  listRef.current.scrollToItem(messages.length - 1, "end");
+}
+
+
+function getRowHeight(index) {
+  return rowHeights.current[index] + 8 || 82;
+}
+
+function Row({ index, style }) {
+  const rowRef = useRef({});
+
+  useEffect(() => {
+    if (rowRef.current) {
+      setRowHeight(index, rowRef.current.clientHeight);
+    }
+    // eslint-disable-next-line
+  }, [rowRef]);
+}
+export default function SearchResultItems(props) {
+  //  console.log(`🚀 ~ file: SearchResultsItems.jsx:102 ~ SearchResultItems ~ props:`, props);
+
+  const context = useContext(SearchContext);
+  const [isPDFViewOpen, setIsPDFViewOpen] = useState(false);
+  const { state, setState } = useContext(SearchContext);
+  const [isContentExpanded, setIsContentExpanded] = useState(false);
+  const { hideText, hidden } = state;
+  //console.log("🚀 ~ file: SearchResultsItems.jsx:45 ~ SearchResultItems ~ props:", props);
+  const { result } = props;
+  const listRef = useRef({});
+  const rowHeights = useRef({});
+  const _mounted = useRef(false);
+  const sortByDate = (a, b) => {
+    return a.commentDate > b.commentDate;
+  };
+  useEffect(() => {
+    _mounted.current = true;
+    (() => {
+      _mounted.current = false;
+    })
+  }, [])
+  function Row(props) {
+    console.log(`file: SearchResultsItems.jsx:68 ~ Row ~ props:`, props);
+    const {
+      key, // Unique key within array of rows
+      index, // Index of row within collection
+      isScrolling, // The List is currently being scrolled
+      isVisible, // This row is visible within the List (eg it is not an overscanned row)
+      style, // Style object to be applied to row (to position it)
+    } = props
+    return (
+      <div style={{ border: '1px solid black' }} key={key} style={style}>
+        <Typography variant="h4"> INDEX: {index}, KEY: {key}</Typography>
+        {JSON.stringify(result, null, 2)}
+        <SearchResultItem record={sortedRecords[index]} />
+      </div>
+    );
+  }
+
+  let sortedRecords = result.records.sort(sortByDate);
+    return (
+      <>
+        {/* <h2>Search Result Items Result?</h2>
+      {JSON.stringify(result)} */}
+        <Paper elevation={1} border={1} borderColor="red" margin={1} id="search-results-container-box">
+          <Typography variant="h6">{sortedRecords.length} Search Results</Typography>
+          {/* <AutoSizer> */}
+          {/* {({width,height}) => ( */}
+          <>
+            {/* <Typography typography="h5">width: {width} - height: {height}</Typography> */}
+            <AutoSizer
+            //style={styles.messagesContainer}
+            >
+              {({ height, width }) => (
+<>
+<Typography variant="h4">WIDTH: {width} - HEIGHT:{height} - # records {sortedRecords.length}</Typography>
+
+<List
+                    className="List"
+                    height={getRowHeight}
+                    itemCount={sortedRecords.length}
+                    itemSize={getRowHeight}
+                    ref={listRef}
+                    offset={0}
+                    rowRenderer={(key,index,isScrolling,isVisible,style) => {
+                      console.log(`file: SearchResultsItems.jsx:117 ~ ey,index,isScrolling,isVisible,style:`, ey,index,isScrolling,isVisible,style);
+                      return (
+                        <Row
+                          key={key}
+                          index={index}
+                          isScrolling={isScrolling}
+                          isVisible={isVisible}
+                          style={style}
+                        />
+                      );
+                    }}
+                  >
+                  </List>
+</>
+              )}
+            </AutoSizer>
+          </>
+        </Paper>
+      </>
+    );
+}

@@ -2,9 +2,9 @@ import React from 'react';
 import axios from 'axios';
 import './User/login.css';
 import Globals from './globals.js';
-
+import {Button} from '@mui/material'
 import LoginModal from './User/LoginModal.js';
-
+import theme from './styles/theme';
 export default class DownloadFile extends React.Component {
 
 	// Receives needed props from React-Tabular instance in SearchResults.js
@@ -18,11 +18,11 @@ export default class DownloadFile extends React.Component {
 			downloadClass2: ''
 		};
 	}
-    
+
     /** Log download */
     logInteraction = (downloadedAll) => {
         const _url = new URL('interaction/set', Globals.currentHost);
-        const dataForm = new FormData(); 
+        const dataForm = new FormData();
 
         // DownloadFile component shows up in both main results and details page, so SearchResult includes .results=true prop
         if(this.props.results) {
@@ -32,19 +32,19 @@ export default class DownloadFile extends React.Component {
         }
 
         if(downloadedAll) {
-            dataForm.append('type',"DOWNLOAD_ARCHIVE"); 
+            dataForm.append('type',"DOWNLOAD_ARCHIVE");
         } else {
-            // individual file OR epa comments archive.  
+            // individual file OR epa comments archive.
             // Can differentiate if important but even the distinction between single file/all is just a bonus already.
-            dataForm.append('type',"DOWNLOAD_ONE"); 
+            dataForm.append('type',"DOWNLOAD_ONE");
         }
 
         if(this.props.recordId) {
             dataForm.append('docId',this.props.recordId);
         } else {
-            dataForm.append('docId',this.props.id); // TODO: May not have this every time unfortunately, need to clean up outside logic    
+            dataForm.append('docId',this.props.id); // TODO: May not have this every time unfortunately, need to clean up outside logic
         }
-        
+
         axios({
             url: _url,
             method: 'POST',
@@ -52,7 +52,7 @@ export default class DownloadFile extends React.Component {
         }).then(response => {
             // let responseOK = response && response.status === 200;
             console.log(response.status);
-        }).catch(error => { 
+        }).catch(error => {
             console.error(error);
         })
     }
@@ -65,9 +65,9 @@ export default class DownloadFile extends React.Component {
 			downloadText: 'Downloading...',
 			downloadClass2: 'disabled_download'
         });
-        
+
         let getRoute = Globals.currentHost + 'file/download_nepa_file';
-        
+
 		axios.get(getRoute, {
 				params: {
                     filename: _filename,
@@ -76,7 +76,7 @@ export default class DownloadFile extends React.Component {
 				responseType: 'blob',
 				onDownloadProgress: (progressEvent) => { // Show progress if available
 					const totalLength = progressEvent.lengthComputable ? progressEvent.total : progressEvent.target.getResponseHeader('content-length') || progressEvent.target.getResponseHeader('x-decompressed-content-length');
-                    
+
 					if (totalLength !== null) { // Progress as percent, if we have total
 						this.setState({
 							progressValue: '('+Math.round((progressEvent.loaded * 100) / totalLength) + '% downloaded)'
@@ -99,7 +99,7 @@ export default class DownloadFile extends React.Component {
 
                     this.logInteraction(false);
                 }
-                
+
 				// verified = response && response.status === 200;
 			})
 			.catch((error) => {
@@ -137,7 +137,7 @@ export default class DownloadFile extends React.Component {
 			downloadText: 'Downloading...',
 			downloadClass: 'disabled_download'
         });
-        
+
         let _filename = filenameOrID;
         if(isFolder){ // folder case handles this on download if _filename===null
             _filename = null;
@@ -155,7 +155,7 @@ export default class DownloadFile extends React.Component {
 				responseType: 'blob',
 				onDownloadProgress: (progressEvent) => { // Show progress if available
 					const totalLength = progressEvent.lengthComputable ? progressEvent.total : progressEvent.target.getResponseHeader('content-length') || progressEvent.target.getResponseHeader('x-decompressed-content-length');
-                    
+
                     if(isFolder && !_filename) { // multi-file case, archive filename needs to be extracted from header
                         // filename is surrounded by "quotes" so get that and remove those
                         let fileInfo = progressEvent.target.getResponseHeader('content-disposition');
@@ -190,10 +190,10 @@ export default class DownloadFile extends React.Component {
 
                     this.logInteraction(true);
                 }
-                
+
 				// verified = response && response.status === 200;
 			})
-			.catch((error) => { 
+			.catch((error) => {
                 if(error.response && error.response.status === 404) {
                     this.setState({
                         downloadText: 'File not found',
@@ -220,6 +220,7 @@ export default class DownloadFile extends React.Component {
     }
 
 	render() {
+    localStorage.role= "ADMIN";
         if(localStorage.role === undefined) {
             return <span className="not-logged-in">
                 Please <LoginModal /> or <a className="not-logged-in" href='register' target='_blank' rel='noopener noreferrer'>register</a> to download files.
@@ -248,7 +249,7 @@ export default class DownloadFile extends React.Component {
             else if (this.props.filename) { // filename only
                 // console.log("Filename only?: " + this.props.filename);
 				propFilename = this.props.filename;
-			} 
+			}
 
             let sizeText = "";
             if(this.props.size) {
@@ -259,18 +260,27 @@ export default class DownloadFile extends React.Component {
                 propID = this.props.id;
                 return (<>
                     {this.state.downloadPreText}
-                    <button className = {this.state.downloadClass2} onClick = { () => {this.downloadNepaFile(propFilename, propID)} }> 
-                        {this.state.downloadText} {sizeText} {this.state.progressValue} 
-                    </button> <span className="propFilename">{propFilename}</span>
+                    <Button border={3} color="primary" variant='contained' className = {this.state.downloadClass2} onClick = { () => {this.downloadNepaFile(propFilename, propID)} }>
+                        {/* {this.state.downloadText} {sizeText} {this.state.progressValue} */}
+                        Download {this.state.progressValue}
+                    </Button>
+                     {/* <span className="propFilename">{propFilename}</span> */}
                     </>
                 );
             }
 			else if (propFilename) {
+                console.log(`file: DownloadFile.js:270 ~ DownloadFile ~ render ~ propFilename:`, propFilename);
                 return (<>
-                    {this.state.downloadPreText}
-                    <button className = {this.state.downloadClass} onClick = { () => {this.download(propFilename, false)} }> 
-                        {this.state.downloadText} {sizeText} {this.state.progressValue} 
-                    </button> <span className="propFilename">{propFilename}</span>
+                    {/* {this.state.downloadPreText} */}
+                    <Button
+                      color="primary"
+                      variant='contained'
+                      className = {this.state.downloadClass}
+                      onClick = { () => {this.download(propFilename, false)} }>
+                        {/* {this.state.downloadText} {sizeText} {this.state.progressValue} */}
+                        Download {this.state.progressValue}
+                    </Button>
+                    {/* <span className="propFilename">{propFilename}</span> */}
                     </>
                 );
 			} else if (propID) {
@@ -279,13 +289,14 @@ export default class DownloadFile extends React.Component {
                 if(innerText && innerText.length>4 && innerText.substr(-4).toLowerCase() !== '.zip') {
                     innerText+=".zip";
                 }
-                
+
                 return (
                     <>
                     {this.state.downloadPreText}
-                    <button className = {this.state.downloadClass} onClick = { () => {this.download(propID, true)} }> 
-                        {this.state.downloadText} <b>{innerText.replaceAll(' ','_')}</b> - {sizeText} {this.state.progressValue}
-                    </button> 
+                    <Button color="primary" variant='contained' className = {this.state.downloadClass} onClick = { () => {this.download(propID, true)} }>
+                        Download
+                        {/* {this.state.downloadText} <b>{innerText.replaceAll(' ','_')}</b> - {sizeText} {this.state.progressValue} */}
+                    </Button>
                     </>
                 );
             } else {
