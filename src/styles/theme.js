@@ -98,6 +98,13 @@ import { ThemeOptions } from '@mui/material/styles';
 			subtitle1: {
 				fontSize: '0.8rem',
 			},
+      textSnippet: {
+        fontSize: '1rem',
+        fontFamily: 'Open Sans',
+        padding:1,
+        wordWrap: 'break-word',
+        noWrap: false,
+      }
 		},
 
 		shape: {
@@ -119,7 +126,7 @@ import { ThemeOptions } from '@mui/material/styles';
 					// Name of the slot
 					root: {
 						// Overwrite defaults
-						
+
 					},
 				},
 			},
