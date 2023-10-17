@@ -82,13 +82,6 @@ const SearchResults = (props) => {
   const _mounted = useRef(false);
   const ctx = React.useContext(SearchContext);
   console.log('STATE ??? CTX TITLE RAW',ctx.titleRaw,'CTX:',ctx)
-  useEffect(() => {
-    _mounted.current = true;
-  }, () => {
-    console.log('unmounted searchResults')
-    _mounted.current = false;
-  })
-
   const sortResults = (results) => {
     results.map((result, idx) => {
       console.log('sorting results', results);
@@ -162,7 +155,7 @@ SearchResults.propTypes = {
 const { results } = props;
 const { records, docs } = results;
       export default React.memo(SearchResults);
- 
+
       //useMemo(()=>SearchResults,[results]);
 
       export function SearchResultCards(props) {
@@ -232,7 +225,7 @@ const { records, docs } = results;
         >
           Decision <b>{result.decision ? result.decision : 'N/A'}</b>
         </Item>
-        {/* {(result.commentDate) 
+        {/* {(result.commentDate)
             ? ( */}
         <Item
           className={classes.itemHeader}

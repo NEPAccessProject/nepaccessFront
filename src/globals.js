@@ -42,15 +42,18 @@ const Globals = {
         const entries = [];
 
         // assign even if not first time (prevents permanently disabling listeners if they unmount)
-        this.listeners[key] = entries; 
+        this.listeners[key] = entries;
         entries.push(listenerFunction);
-    
+
     },
-    
+
     emitEvent(key, eventObject) {
         const entries = this.listeners[key] || [];
-        entries.forEach(listener => {
-            listener(eventObject)
+        console.log(`file: globals.js:52 ~ emitEvent ~ entries:`, entries);
+        entries && entries.length && entries.forEach(listener => {
+            if(listener){
+              listener(eventObject)
+            }
         });
     },
 
@@ -64,22 +67,22 @@ const Globals = {
         if (!results[2]) return '';
         return decodeURIComponent(results[2].replace(/\+/g, ' '));
     },
-    
+
     // Set up globals like axios default headers and base URL
     setUp() {
         if(window.location.hostname === 'localhost' || window.location.hostname === 'www.nepaccess.org') {
             this.currentHost = new URL(window.location.protocol + 'localhost:8080/');
         } else {
             this.currentHost = new URL(window.location.protocol + window.location.hostname + ':8080/nepaBackend/');
-        } 
+        }
         // else if(window.location.hostname) {
         //     this.currentHost = new URL('https://' + window.location.hostname + ':8080/');
         // }
-        
+
         axios.defaults.headers.common['Content-Type'] = 'application/json;charset=utf-8';
         axios.defaults.headers.common['X-Content-Type-Options'] = 'no-sniff';
         axios.defaults.headers.common['Access-Control-Allow-Origin'] = '*';
-                
+
         let token = localStorage.JWT;
         if(token){
             axios.defaults.headers.common['Authorization'] = token; // Change to defaults works everywhere
@@ -90,9 +93,9 @@ const Globals = {
         let token = localStorage.JWT;
         if(token){
             axios.defaults.headers.common['Authorization'] = token;
-        } 
+        }
     },
-    
+
 
     signOut() {
         localStorage.clear();
@@ -142,18 +145,18 @@ const Globals = {
         let oddity = sDate.replace(/-/g,'/').substr(0, 10);
         return new Date(oddity);
     },
-    
+
     formatDate(date) {
         var d = new Date(date),
             month = '' + (d.getMonth() + 1),
             day = '' + d.getDate(),
             year = d.getFullYear();
-    
-        if (month.length < 2) 
+
+        if (month.length < 2)
             month = '0' + month;
-        if (day.length < 2) 
+        if (day.length < 2)
             day = '0' + day;
-    
+
         return [year, month, day].join('-');
     },
 
@@ -163,23 +166,23 @@ const Globals = {
     },
 
     colors: ['#4572A7', '#AA4643', '#89A54E', '#80699B', '#3D96AE',
-        '#DB843D', '#92A8CD', '#A47D7C', '#B5CA92', 
+        '#DB843D', '#92A8CD', '#A47D7C', '#B5CA92',
         "Red","Green","Blue","Yellow","Pink","Purple",
         "Orange","Cyan","Magenta","Teal","DarkGray",
         '#4572A7', '#AA4643', '#89A54E', '#80699B', '#3D96AE',
-        '#DB843D', '#92A8CD', '#A47D7C', '#B5CA92', 
+        '#DB843D', '#92A8CD', '#A47D7C', '#B5CA92',
         "Red","Green","Blue","Yellow","Pink","Purple",
         "Orange","Cyan","Magenta","Teal","DarkGray",
         '#4572A7', '#AA4643', '#89A54E', '#80699B', '#3D96AE',
-        '#DB843D', '#92A8CD', '#A47D7C', '#B5CA92', 
+        '#DB843D', '#92A8CD', '#A47D7C', '#B5CA92',
         "Red","Green","Blue","Yellow","Pink","Purple",
         "Orange","Cyan","Magenta","Teal","DarkGray",
         '#4572A7', '#AA4643', '#89A54E', '#80699B', '#3D96AE',
-        '#DB843D', '#92A8CD', '#A47D7C', '#B5CA92', 
+        '#DB843D', '#92A8CD', '#A47D7C', '#B5CA92',
         "Red","Green","Blue","Yellow","Pink","Purple",
         "Orange","Cyan","Magenta","Teal","DarkGray",
         '#4572A7', '#AA4643', '#89A54E', '#80699B', '#3D96AE',
-        '#DB843D', '#92A8CD', '#A47D7C', '#B5CA92', 
+        '#DB843D', '#92A8CD', '#A47D7C', '#B5CA92',
         "Red","Green","Blue","Yellow","Pink","Purple",
         "Orange","Cyan","Magenta","Teal","DarkGray"
     ],
@@ -225,8 +228,8 @@ const Globals = {
     },
 
     // note on fixing delimiters for multiple values:
-    // regex for fixing space-only delimited: find ([\s][A-Z]{2}) ([A-Z]{2}[\s]) replacing with ($1);($2) 
-    // repeatedly until 0 occurrences replaced. 
+    // regex for fixing space-only delimited: find ([\s][A-Z]{2}) ([A-Z]{2}[\s]) replacing with ($1);($2)
+    // repeatedly until 0 occurrences replaced.
     // then replace " - " with ";".
     // then we can standardize everything by turning ',' into ';' and turning ';[ ]*' into just ';' to remove every single useless space
 
@@ -242,8 +245,8 @@ const Globals = {
         // Indian Ocean
         // Mediterranean Sea
         // Philippine Sea
-        
-        
+
+
         // New land bodies:
         // Commonwealth of the Northern Mariana Islands (CNMI)
         // U.S. Pacific Remote Island Areas (PRIA)
@@ -267,7 +270,7 @@ const Globals = {
         ,{ value: 'Caribbean States', label: 'Caribbean States' }
     ],
 
-    /** array of 3220 distinct counties where value is string= [county name] 
+    /** array of 3220 distinct counties where value is string= [county name]
      * and label is string= [state abbreviation]: [county name] */
     counties: [
         {
@@ -13177,7 +13180,7 @@ const Globals = {
         return garbage;
     },
 
-    /** format incoming json data as tab-separated values to prep .tsv download, without double quotes.  
+    /** format incoming json data as tab-separated values to prep .tsv download, without double quotes.
      * Undefined behavior if data has tabs in it already. */
     jsonToTSV: (data) => {
         const items = data;
@@ -13186,12 +13189,12 @@ const Globals = {
         header.join('\t'), // header row first
         ...items.map(row => header.map(fieldName => (row[fieldName])).join('\t'))
         ].join('\r\n')
-        
+
         return tsv;
     },
 
     /** Returns incoming json data as comma-separated values to prep .csv download, with double quotes to help out
-     * since strings may contain commas. May get confused if incoming data has double quotes and/or commas 
+     * since strings may contain commas. May get confused if incoming data has double quotes and/or commas
      * in bad places */
     jsonToCSV: (data) => {
         const items = data;
@@ -13204,7 +13207,7 @@ const Globals = {
             ...items.map(row => header.map(fieldName => JSON.stringify(row[fieldName], replacer)).join(','))
             // ...items.map(row => header.map(fieldName => (row[fieldName])).join('\t'))
         ].join('\r\n')
-        
+
         return csv;
     },
 
@@ -13229,12 +13232,12 @@ const Globals = {
     doFilter: (searcherState, searchResults, preFilterCount, legacyStyle) => {
 
         let filtered = {isFiltered: false, textToUse: "", filteredResults: []};
-        
+
         let isFiltered = false;
 
         // Deep clone results
         let filteredResults = JSON.parse(JSON.stringify(searchResults));
-        
+
         if(searcherState.agency && searcherState.agency.length > 0){
             isFiltered = true;
             filteredResults = filteredResults.filter(matchesArray("agency", searcherState.agency));
@@ -13281,12 +13284,12 @@ const Globals = {
                 filteredResults = filteredResults.filter(matchesEndDate(formattedDate));
             }
         }
-        if(searcherState.typeFinal || searcherState.typeDraft || searcherState.typeEA 
+        if(searcherState.typeFinal || searcherState.typeDraft || searcherState.typeEA
             || searcherState.typeNOI || searcherState.typeROD || searcherState.typeScoping){
             isFiltered = true;
             if(legacyStyle) {
                 filteredResults = filteredResults.filter(matchesTypeOld(
-                    searcherState.typeFinal, 
+                    searcherState.typeFinal,
                     searcherState.typeDraft,
                     searcherState.typeEA,
                     searcherState.typeNOI,
@@ -13294,7 +13297,7 @@ const Globals = {
                     searcherState.typeScoping));
             } else {
                 filteredResults = filteredResults.filter(matchesType(
-                    searcherState.typeFinal, 
+                    searcherState.typeFinal,
                     searcherState.typeDraft,
                     searcherState.typeEA,
                     searcherState.typeNOI,
@@ -13310,7 +13313,7 @@ const Globals = {
                 filteredResults = filteredResults.filter(hasDocument)
             }
         }
-        
+
         let textToUse = filteredResults.length + " Results"; // unfiltered: "Results"
         if(filteredResults.length === 1) {
             textToUse = filteredResults.length + " Result";
@@ -13332,7 +13335,7 @@ const Globals = {
         return filtered;
     },
     /** Settings for multiple admin tables */
-    tabulatorOptions: { 
+    tabulatorOptions: {
         selectable:true,                   // true===multiselect (1 for single select)
         layoutColumnsOnNewData:true,
         tooltips:true,
@@ -13340,13 +13343,13 @@ const Globals = {
         // responsiveLayoutCollapseUseFormatters:false,
         pagination:"local",
         paginationSize:10,
-        paginationSizeSelector:[10, 25, 50, 100], 
+        paginationSizeSelector:[10, 25, 50, 100],
         movableColumns:true,
         resizableRows:true,
         resizableColumns:true,
         layout:"fitColumns",
         invalidOptionWarnings:false,       // spams pointless warnings without this
-        // http://tabulator.info/docs/4.9/callbacks#column 
+        // http://tabulator.info/docs/4.9/callbacks#column
         columnResized:function(col) {
             // col.updateDefinition({width:col._column.width}); // needed if widths not all explicitly defined
             col._column.table.redraw(); // important for dynamic columns, prevents vertical scrollbar
@@ -13362,7 +13365,7 @@ const Globals = {
         }
         return keysArr;
     },
-    
+
     /**
      * @param {Object} object
      * @param {string} key
@@ -13379,7 +13382,7 @@ const Globals = {
 
     anEnum: Object.freeze({"test":1, "test2":2, "test3":3})
 
-    
+
 }
 
     /** Filters */
@@ -13547,7 +13550,7 @@ const Globals = {
                 }
                 return false;
             });
-            
+
             return returnValue;
         };
     }
@@ -13563,7 +13566,7 @@ const Globals = {
                 }
                 return false;
             });
-            
+
             return returnValue;
         };
     }
@@ -13595,9 +13598,9 @@ const Globals = {
                     filterResult = true;
                     standingResult = true;
                 }
-                if( ( (type === "ea") && matchEA ) || 
-                    ( (type === "noi") && matchNOI ) || 
-                    ( (type === "rod" || type === "final and rod") && matchROD ) || 
+                if( ( (type === "ea") && matchEA ) ||
+                    ( (type === "noi") && matchNOI ) ||
+                    ( (type === "rod" || type === "final and rod") && matchROD ) ||
                     ( (type === "scoping report") && matchScoping ))
                 {
                     filterResult = true;
@@ -13624,19 +13627,19 @@ const Globals = {
     const matchesTypeOld = (matchFinal, matchDraft, matchEA, matchNOI, matchROD, matchScoping) => {
         return function (a) {
             return (
-                (Globals.isFinalType(a["documentType"]) && matchFinal) || 
-                (Globals.isDraftType(a["documentType"]) && matchDraft) || 
+                (Globals.isFinalType(a["documentType"]) && matchFinal) ||
+                (Globals.isDraftType(a["documentType"]) && matchDraft) ||
                 ((
-                    (a["documentType"] === "EA") 
-                ) && matchEA) || 
+                    (a["documentType"] === "EA")
+                ) && matchEA) ||
                 ((
-                    (a["documentType"] === "NOI") 
-                ) && matchNOI) || 
+                    (a["documentType"] === "NOI")
+                ) && matchNOI) ||
                 ((
-                    (a["documentType"] === "ROD") 
-                ) && matchROD) || 
+                    (a["documentType"] === "ROD")
+                ) && matchROD) ||
                 ((
-                    (a["documentType"] === "Scoping Report") 
+                    (a["documentType"] === "Scoping Report")
                 ) && matchScoping)
             );
         };

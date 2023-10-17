@@ -97,54 +97,6 @@ class SearcherLanding extends React.Component {
     }).catch(error => {
     })
   }
-  // getCounts = () => {
-  //     this.get('stats/earliest_year','firstYear');
-  //     this.get('stats/latest_year','lastYear');
-  //     this.get('stats/total_count','total')
-  // }
-
-  // showFlipNum = () => {
-  //     const numStyle = {
-  //         'fontFamily': "Open Sans",
-  //         'fontSize': "23px",
-  //     };
-
-  //     if(this.state.total) {
-  //         return <div className="under-search-holder">
-  //             <div className="flip">
-  //                 <FlipNumbers
-  //                     height={44} width={25} color="white" background="rgba(0,0,0,0.5)"
-  //                     play={true} duration={1} delay={0} numbers={`${this.state.num}`}
-  //                     perspective={500}
-  //                     numberStyle={numStyle}
-  //                 />
-  //                 <span className="flip-span">
-  //                     NEPA documents and counting
-  //                 </span>
-  //             </div>
-
-  //             <div className="flip">
-  //                 <div className="flip-range flip-top">
-  //                     <span className="transparent-background">
-  //                         {this.state.firstYear}</span> - <span className="transparent-background">{this.state.lastYear}
-  //                     </span>
-  //                 </div>
-  //                 <span className="flip-span">Date range</span>
-  //             </div>
-
-  //             <div className="flip">
-  //                 <div className="transparent-background">
-  //                     <a className="link landing-link" rel="noopener noreferrer"
-  //                             href={`./available-documents`}>
-  //                         More about Available Files
-  //                     </a>
-  //                 </div>
-  //             </div>
-  //         </div>;
-  //     } else {
-  //         return <></>;
-  //     }
-  // }
 
 
   render() {
@@ -154,7 +106,6 @@ class SearcherLanding extends React.Component {
         justifyContent: 'center',
         display: 'flex',
         alignItems: 'center',
-        border: '1px solid black',
         marginLeft: '5%',
         marginRight: '5%',
       }}>
@@ -177,6 +128,7 @@ class SearcherLanding extends React.Component {
           autoFocus
           sx={{
             borderRadius: 1,
+            border:0,
             backgroundColor: '#fff',
             zIndex: 9999,
           }}
@@ -200,11 +152,6 @@ class SearcherLanding extends React.Component {
       }}>
         <div id="landing-search-holder" className={this.getClassName()}>
           <div id="landing-search-bar-holder">
-            {/* <h3 id="landing-search-header">
-                            <span className="glow">
-                                Begin with a simple keyword search:
-                            </span>
-                        </h3> */}
             <input id="landing-search-bar"
               name="titleRaw"
               placeholder="Search for NEPA documents"

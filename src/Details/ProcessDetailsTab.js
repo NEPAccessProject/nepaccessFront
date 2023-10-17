@@ -14,7 +14,7 @@ import DownloadFiles from '../DownloadFiles.js';
 // buildProcess() gets all metadata for process ID.  Move that to the ?id= param and give it the process ID from the results
 // Then for each metadata record, populate each with a filenames call.  Show DownloadFile for whole folder like before, but
 // for all of them.  Expandable individual downloads.
-// Finally, decide which metadata to show at the top (use latest except account for blanks), and which per record 
+// Finally, decide which metadata to show at the top (use latest except account for blanks), and which per record
 // Maybe show a timeline of all dates using d3-timeline
 export default class ProcessDetailsTab extends React.Component {
 
@@ -36,7 +36,7 @@ export default class ProcessDetailsTab extends React.Component {
         if(!this.state.processId) {
             this.populate();
         }
-        
+
         window.addEventListener('resize', this.handleResize);
     }
 
@@ -51,7 +51,7 @@ export default class ProcessDetailsTab extends React.Component {
     onChange = (evt) => {
         this.setState({ [evt.target.name]: evt.target.value });
     }
-    
+
 
     get = async (_url, _params) => {
         try {
@@ -64,13 +64,13 @@ export default class ProcessDetailsTab extends React.Component {
                 return response.data;
             // }
         } catch (error) {
-            this.setState({ 
+            this.setState({
                 networkError: Globals.getErrorMessage(error),
                 exists: false
             });
             throw error;
         }
-    }   
+    }
     post = async (_url, _data) => {
         try {
             const response = await axios({
@@ -84,7 +84,7 @@ export default class ProcessDetailsTab extends React.Component {
             throw e;
         }
     }
-    
+
     /** Log details page "click" (render) -
      * Since we know it's a process, we'll just be sending any ID from any of the records - they all have the same
      * process ID, so that can be derived from any record.
@@ -92,9 +92,9 @@ export default class ProcessDetailsTab extends React.Component {
      */
     logInteraction = (_id) => {
         const _url = new URL('interaction/set', Globals.currentHost);
-        const dataForm = new FormData(); 
+        const dataForm = new FormData();
         dataForm.append('source',"UNKNOWN"); // Don't know if it's clicked, typed or reloaded until logic changes
-        dataForm.append('type',"PROCESS_CLICK"); 
+        dataForm.append('type',"PROCESS_CLICK");
         dataForm.append('docId',_id);
 
         this.post(_url, dataForm).then(resp => {
@@ -108,11 +108,11 @@ export default class ProcessDetailsTab extends React.Component {
     // Send report to server
     reportDataIssue = () => {
         this.setState({ reported: true });
-        
+
         const _url = new URL('reports/report_data_issue', Globals.currentHost);
-        const dataForm = new FormData(); 
+        const dataForm = new FormData();
         dataForm.append('report',this.state.reportText);
-        dataForm.append('processId',this.state.processId); 
+        dataForm.append('processId',this.state.processId);
 
         this.post(_url, dataForm).then(resp => {
             // console.log(resp.status);
@@ -121,7 +121,7 @@ export default class ProcessDetailsTab extends React.Component {
         })
     }
 
-    
+
     renderDownload = (_id,_size,_filename,_results, _downloadType) => {
         return (<DownloadFiles key={_id} downloadType={_downloadType}
                         recordId={_id}
@@ -185,13 +185,13 @@ export default class ProcessDetailsTab extends React.Component {
     showFilesNew = (_id, filenames) => {
 
         // If user is not logged in (anonymous), then no need to show a list of "Please log in or register to download"
-        if(localStorage.role === undefined) { 
+        if(localStorage.role === undefined) {
             return <></>;
         }
-        
+
 
         let showMore = this.state.showMore.includes(_id);
-        
+
         return filenames.map((_filename, i) => {
             if(i === 0) {
                 if(!showMore) {
@@ -200,7 +200,7 @@ export default class ProcessDetailsTab extends React.Component {
                     return <>
                         <span className="show-more-link" onClick={() => {this.showMoreToggle(_id)}}>Hide individual file downloads</span>
                         <span key={_filename} className="detail-filename">
-                            <DownloadFile key={_filename} downloadType="nepafile" 
+                            <DownloadFile key={_filename} downloadType="nepafile"
                                 id={_id}
                                 filename={_filename}/>
                         </span>
@@ -208,7 +208,7 @@ export default class ProcessDetailsTab extends React.Component {
                 }
             } else if(showMore) {
                 return <span key={_filename} className="detail-filename">
-                    <DownloadFile key={_filename} downloadType="nepafile" 
+                    <DownloadFile key={_filename} downloadType="nepafile"
                         id={_id}
                         filename={_filename}/>
                 </span>
@@ -220,7 +220,7 @@ export default class ProcessDetailsTab extends React.Component {
 
     showTitle = () => {
         if(this.state.title) {
-            return (<p key={-1} className='modal-line'><span className='modal-title'>Title:</span> 
+            return (<p key={-1} className='modal-line'><span className='modal-title'>Title:</span>
                 <span className="bold record-details-title">{this.state.title}</span>
             </p>);
         }
@@ -238,7 +238,7 @@ export default class ProcessDetailsTab extends React.Component {
                 <b>{type} : {date}</b>
             </span>
         }
-        
+
     }
 
     interpretProcess = (process) => {
@@ -254,11 +254,11 @@ export default class ProcessDetailsTab extends React.Component {
                 return 0;
             }
         ));
-        
+
         return Object.keys(process).map( ((key, i) => {
             let proc = process[key].doc;
             let filenames = process[key].filenames;
-            
+
             if(proc && proc.id) {
 
                 let size = 0;
@@ -267,7 +267,7 @@ export default class ProcessDetailsTab extends React.Component {
                 }
 
                 let recordDownload;
-    
+
                 if(proc.size && proc.size > 200) {
                     if(proc.folder) {
                         recordDownload = this.renderDownload(proc.id,size,proc.folder + "_" + proc.documentType + ".zip",true,"Folder");
@@ -298,7 +298,7 @@ export default class ProcessDetailsTab extends React.Component {
         if(this.state.processId && this.state.process) {
 
             // already have this data. No need for any axios calls
-            if(this.state.process.length > 0) { 
+            if(this.state.process.length > 0) {
                 for(let i = 0; i < this.state.process.length; i++) {
                     return (
                         <div className="metadata-container process-files">
@@ -313,8 +313,8 @@ export default class ProcessDetailsTab extends React.Component {
     }
     showDataIssueLink = () => {
         return (<div className="report-holder">
-                <span   id="report-start-link" className="report-link" 
-                        hidden={this.state.linkClicked || this.state.reported} 
+                <span   id="report-start-link" className="report-link"
+                        hidden={this.state.linkClicked || this.state.reported}
                         onClick={() => { this.setState({ linkClicked:true }) }}>
                     Report a data issue
                 </span>
@@ -322,7 +322,7 @@ export default class ProcessDetailsTab extends React.Component {
                     <div className="report-type-header">
                         Type report here:
                     </div>
-                    <textarea rows="5" cols="50" name="reportText" 
+                    <textarea rows="5" cols="50" name="reportText"
                             onChange={this.onChange} value={this.state.reportText} />
                     <div>
                         <span className="report-link" onClick={() => { this.reportDataIssue() }}>
@@ -364,7 +364,7 @@ export default class ProcessDetailsTab extends React.Component {
                             if(record.doc.registerDate && date.registerDate === record.doc.registerDate) {
                                 hasDate = true;
                                 // Then just add the type to exising date after a semicolon
-                                date.documentType = date.documentType + "; " + record.doc.documentType; 
+                                date.documentType = date.documentType + "; " + record.doc.documentType;
                                 return true;
                             }
                             return false;
@@ -373,18 +373,18 @@ export default class ProcessDetailsTab extends React.Component {
                         if(!hasDate) {
                             _dates.push({registerDate: record.doc.registerDate, documentType: record.doc.documentType});
                         }
-                        
+
                         // Get latest title for display
                         if(!_latestDate && record.doc.registerDate) {
                             _latestDate = record.doc.registerDate;
                             _title = record.doc.title;
-                        } else if(record.doc.registerDate && 
-                                    _latestDate && 
+                        } else if(record.doc.registerDate &&
+                                    _latestDate &&
                                     _latestDate < record.doc.registerDate) {
                             _latestDate = record.doc.registerDate;
                             _title = record.doc.title;
                         }
-                        
+
                         // Build list of all titles
                         let hasTitle = false;
                         this.state.otherTitles.some(el => {
@@ -422,7 +422,7 @@ export default class ProcessDetailsTab extends React.Component {
                             }
                         });
                     }
-                    
+
                     this.setState({
                         processId: _processId,
                         process: response,
@@ -467,7 +467,7 @@ export default class ProcessDetailsTab extends React.Component {
         if(this.state.process && this.state.process[0]) {
             const process = this.state.process;
             cellData = this.state.process[0].doc;
-            
+
             process.some(function(el) {
                 if(Globals.isFinalType(el.doc.documentType)) {
                     cellData = el.doc;
@@ -491,7 +491,7 @@ export default class ProcessDetailsTab extends React.Component {
                 // reword fields;
                 } else if (key==='cooperatingAgency') {
                     keyName = 'Cooperating agencies';
-                    
+
                     const coops = cellData[key].split(';').map( (coop,j) => {
                         return <span key={key+j} className="cooperating block"><b>{coop}</b></span>;
                     })
@@ -506,10 +506,10 @@ export default class ProcessDetailsTab extends React.Component {
                 } else if (key==='firstRodDate') {
                     keyName = 'Record of Decision (ROD) date'
                 // exclusions:
-                } else if(key==='size' || key==='matchPercent' || key==='commentDate' || key==='id' || key==='id_' || 
+                } else if(key==='size' || key==='matchPercent' || key==='commentDate' || key==='id' || key==='id_' ||
                         key==='plaintext' || key==='folder' || key==='link' || key==='notes' || key==='commentsFilename'
                         || key === 'filename' || key==='luceneIds' || key==='status' || key==='processId' || key==='summaryText'
-                        || key==='registerDate' || key==='title' || key==='documentType') { 
+                        || key==='registerDate' || key==='title' || key==='documentType') {
                     return '';
                 // special exclusions:
                 } else if(!Globals.authorized() && (key==='decision' || key==='action')) {
@@ -555,7 +555,7 @@ export default class ProcessDetailsTab extends React.Component {
 
 
     render () {
-        
+
         if(!this.state.exists) {
             return (
                 <div id="details">
@@ -576,7 +576,7 @@ export default class ProcessDetailsTab extends React.Component {
                 </div>
             );
         }
-        
+
     }
 
 

@@ -70,10 +70,13 @@ function SearchResultOptions(props) {
   const classes = useStyles(theme);
   const {state,setState} = ctx;
   //assign default values to args
-  const { showContext=false,sortBy='relevance', sortDirection='ASC', limit=100, snippetsDisabled = false } = state;   
+  const { showContext=false,sortBy='relevance', sortDirection='ASC', limit=100, snippetsDisabled = false } = state;
 	return (
 		<>
-      <Grid container flex={1} border={1} borderColor={'#ddd'}>
+      <Grid container flex={1} border={1} borderColor={'#ddd'} display={'flex'} style={{
+        //marginLeft:'5%',
+        marginRight: '5%',
+      }}>
         <Grid item xs={5} borderRight={1} borderColor={'#ddd'} id="show-checkbox-grid-item" className={classes.container} display={"flex"}>
           <ShowTextCheckbox showContext={showContext} onCheckboxChecked={(evt) => onCheckboxChecked(evt)}/>
         </Grid>

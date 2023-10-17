@@ -11,6 +11,11 @@ import { ReactTabulator,reactFormatter } from 'react-tabulator';
 import Tabulator  from 'tabulator-tables';
 import 'react-tabulator/lib/styles.css'; // required styles
 import 'react-tabulator/lib/css/tabulator_site.min.css'; // theme
+import Pagination from '@mui/material/Pagination';
+import PaginationItem from '@mui/material/PaginationItem';
+import Stack from '@mui/material/Stack';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 
 import Tippy from '@tippyjs/react';
 
@@ -46,7 +51,7 @@ export default class SearchProcessResults extends React.Component {
         }
         window.addEventListener('resize', this.handleResize);
         Globals.registerListener('new_search', this.resetHidden);
-        
+
         this._columns = [
           {
             title: "",
@@ -67,7 +72,7 @@ export default class SearchProcessResults extends React.Component {
           size: 0,
           hidden: new Set(),
         };
-        
+
         this.options = {
             selectable:false,
             tooltips:false,
@@ -75,7 +80,7 @@ export default class SearchProcessResults extends React.Component {
             paginationSize:10,              //allow 10 rows per page of data
             paginationSizeSelector:[10, 25, 50], // with all the text, even 50 is a lot.
             movableColumns:false,            //don't allow column order to be changed
-            resizableRows:false,             
+            resizableRows:false,
             resizableColumns:false,
             layout:"fitColumns",
             invalidOptionWarnings:false, // spams spurious warnings without this
@@ -84,7 +89,7 @@ export default class SearchProcessResults extends React.Component {
         this.updateTableDebounced = _.debounce(this.updateTable, 0);
         this.doneRenderDebounced = _.debounce(this.doneRender, 0);
     }
-    
+
     resetHidden = () => {
         // console.log("Brand new search, clear toggled Set");
         this.hidden = new Set();
@@ -96,7 +101,7 @@ export default class SearchProcessResults extends React.Component {
 
     hideText = (_offsetY, _index, record) => {
         this.offsetY = _offsetY;
-        
+
         if(this.hidden.has(record.id)) {
             this.hidden.delete(record.id);
             this.setState({hidden: this.hidden});
@@ -107,7 +112,7 @@ export default class SearchProcessResults extends React.Component {
             });
         }
     }
-    
+
     handleResize = () => {
     }
     /** TODO:  The problem is that we don't always want to scroll when the page has to
@@ -140,7 +145,7 @@ export default class SearchProcessResults extends React.Component {
                 if(this.page != pageNumber) {
                     shouldScroll = true;
                 }
-                
+
                 // Need to set these ahead of informAppPage()
                 this.page = pageNumber;
                 this.pageSize = PAGE_SIZE;
@@ -172,14 +177,14 @@ export default class SearchProcessResults extends React.Component {
         console.log("Custom pagination error logic");
         this.onPageLoaded(1);
     }
-    
+
     onCheckboxChange = (evt) => {
-        this.setState({ 
+        this.setState({
             showContext: evt.target.checked
         });
     }
-    
-    /** To update show/hide text snippets, updates columns; also redraws table to accommodate potentially 
+
+    /** To update show/hide text snippets, updates columns; also redraws table to accommodate potentially
      * different-sized contents (particularly height) so that nothing overflows and disappears outside the table itself
     */
     updateTable = () => {
@@ -192,14 +197,14 @@ export default class SearchProcessResults extends React.Component {
                     this._size = this.props.results.length;
 
                     _columns = [
-                        { title: "", field: "", formatter: reactFormatter(<SearchProcessResult 
-                            show={this.state.showContext} 
+                        { title: "", field: "", formatter: reactFormatter(<SearchProcessResult
+                            show={this.state.showContext}
                             hideText={this.hideText}
                             hidden={this.hide} />)}
                     ];
                 }
-                TABLE.setColumns(_columns); 
-    
+                TABLE.setColumns(_columns);
+
                 // Check if filtering has reduced the page count below the last known active page.
                 // We don't want to call setPage on a page that doesn't exist.
                 // Use max page in that case. Other option would be setPage(1).
@@ -216,7 +221,7 @@ export default class SearchProcessResults extends React.Component {
                 },0)
             }
         }
-        
+
     }
 
     getCorrectResultsStyle = () => {
@@ -251,7 +256,7 @@ export default class SearchProcessResults extends React.Component {
                 );
             }
         }
-        
+
         try {
 
             return (
@@ -264,14 +269,14 @@ export default class SearchProcessResults extends React.Component {
                             <div className="results-count-holder">
                                 <h2 id="results-label" className="inline">
                                     {this.props.resultsText}&nbsp;
-                                        <Tippy className="tippy-tooltip--small searchTips" trigger='manual click' 
+                                        <Tippy className="tippy-tooltip--small searchTips" trigger='manual click'
                                             hideOnClick={true}
                                             interactive={true}
                                             placement="right"
                                             content={
                                                 <div>
                                                     The map view is a <span className="bold">visual representation</span> of all states and counties found in the current results
-                                                    table. 
+                                                    table.
                                                     <div>
                                                         • If you hover over a polygon, a tooltip will also show how many of the current results are linked to it.
                                                     </div>
@@ -288,7 +293,7 @@ export default class SearchProcessResults extends React.Component {
                                         </Tippy>
                                 </h2>
                             </div>
-                            <SearchResultsMap 
+                            <SearchResultsMap
                                 toggleMapHide={this.props.toggleMapHide}
                                 isHidden={this.props.isMapHidden}
                                 docList={this.props.geoResults}
@@ -296,17 +301,17 @@ export default class SearchProcessResults extends React.Component {
                                 // searcherState={this.props.searcherState}
                             />
 
-                            <ResultsHeader 
+                            <ResultsHeader
                                 setPageInfo={this.props.setPageInfo}
                                 sort={this.props.sort}
                                 searching={this.props.searching}
-                                snippetsDisabled={this.props.snippetsDisabled} 
+                                snippetsDisabled={this.props.snippetsDisabled}
                                 showContext={this.state.showContext}
                                 onCheckboxChange={this.onCheckboxChange}
                                 download={this.props.download}
                                 exportToSpreadsheet={this.props.exportToSpreadsheet}
                             />
-                            
+
                             <Tabulator
                                 ref={ref => (this.ref = ref)}
                                 data={this.props.results}
@@ -351,7 +356,7 @@ export default class SearchProcessResults extends React.Component {
         // // Save last viewed page number so user doesn't lose their place on navigation
         localStorage.unmountedPage = this.page;
     }
-    
+
     componentDidUpdate() {
         this.updateTableDebounced();
     }

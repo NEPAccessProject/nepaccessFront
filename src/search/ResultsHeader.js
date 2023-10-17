@@ -50,10 +50,6 @@ export default class ResultsHeader extends React.Component {
 			isAvailableFilesDialogOpen: false,
 			isQuickStartDialogOpen: false,
 		};
-		console.log(
-			`file: ResultsHeader.js:41 ~ ResultsHeader ~ constructor ~ this.state:`,
-			this.state,
-		);
 	}
 	toggleSearchTipsDialog = (evt) => {
 		console.log(
@@ -151,10 +147,6 @@ export default class ResultsHeader extends React.Component {
 	};
 
 	componentDidMount() {
-		console.log(
-			'🚀 ~ file: ResultsHeader.js:89 ~ componentDidMount ~ this.context:',
-			this.context,
-		);
 		const { state, setState } = this.context;
 		this.setState(
 			{
@@ -162,7 +154,6 @@ export default class ResultsHeader extends React.Component {
 				state,
 			},
 			() => {
-				console.log('Result Header state', this.state);
 			},
 		);
 		// this.setState = this.context
@@ -243,6 +234,7 @@ export default class ResultsHeader extends React.Component {
 							md={12}
 							borderLeft={0}
 							marginTop={2}
+              paddingRight={1}
 							id='search-box-grid-item'>
 							<Box
 								id='search-box-box-item'

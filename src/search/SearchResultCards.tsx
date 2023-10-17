@@ -26,11 +26,11 @@ const CardItem = styled(Paper)(({ theme }) => ({
 	},
 }));
 interface IProps {
-	result: ISearchResult;
+  result : ISearchResult;
 }
 
 export default function SearchResultCards(props: IProps) {
-	const { result } = props;
+	const { result} = props;
 	return (
 		<div>
 			<Grid container padding={2} xs={12} flexDirection={'row'} flex={1}>
@@ -58,9 +58,9 @@ export default function SearchResultCards(props: IProps) {
 				<CardItem sx={{ padding:1, margin:0.5}}>
 					Decision <b>{result.decision ? result.decision : 'N/A'}</b>
 				</CardItem>
-				{/* {(result.commentDate) 
+				{/* {(result.commentDate)
               ? ( */}
-				<CardItem sx={{ padding:1, margin:0.5}}>					
+				<CardItem sx={{ padding:1, margin:0.5}}>
           Project Start Date:{' '}
 					<b>{result.registerDate ? result.registerDate : 'N/A'}</b>
 				</CardItem>

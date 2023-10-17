@@ -26,8 +26,9 @@ export default function RenderSnippets(props) {
 
   const [isPDFViewOpen, setIsPDFViewOpen] = useState(false);
   const [isContentExpanded, setIsContentExpanded] = useState(false);
-  const { hideText, hidden,showContext } = state;
+  const { hideText, hidden, showContext } = state;
   const _mounted = useRef(false);
+  const maxSnippetLength = 255;
   function convertToHTML(content) {
     return { __html: content };
   }
@@ -40,15 +41,13 @@ export default function RenderSnippets(props) {
   })
   return (
     //Loop through each snippet and render it
-    record.plaintext.map((text, idx) => {
-      return (
-        <>
+    // record.plaintext.map((text, idx) => {
+    //     <>
           <Box key={record.id}>
-            <Snippets key={record.id} showContext={showContext} text={text} record={record} />
+            <Snippets key={record.id} showContext={showContext} text={record.plaintext[0]} record={record} />
           </Box>
-        </>
-      )
-    }))
+        // </>
+  );
 }
 RenderSnippets.prototypes = {
   record: PropTypes.shape({
@@ -60,14 +59,13 @@ RenderSnippets.prototypes = {
 }
 
 function Snippets(props) {
-  const { text, record,showContext} = props;
+  const { text="", record, showContext } = props;
   const { id, processId } = record;
   const { state, setState } = useContext(SearchContext);
-
   //  console.log("🚀 ~ file: SearchResultsItems.jsx:343 ~ RenderSnippets ~ record:", record)
   const [isContentExpanded, setIsContentExpanded] = useState(false);
   const { hideText, hidden } = state;
-
+ const maxSnippetLength = 255;
   const _mounted = useRef(false);
   useEffect(() => {
     _mounted.current = true
@@ -76,8 +74,6 @@ function Snippets(props) {
   }, [])
 
   const classes = useStyles(theme);
-
-
   /*Originaly the app was designed to render the markup embedded with tags using:
     <div dangerouslySetInnerHTML={convertToHTML(text.slice(0,255))} />
     However, this can either break the page by having an unclosed tag(s) and give a potential XSS vector
@@ -98,64 +94,42 @@ function Snippets(props) {
       <></>
     )
   }
-  else {
+  else if (showContext) {
     return (
-      <>
-        <Box borderTop={1} borderColor="#ccc">
-          {showContext && (snippet.length >= 100  && !isContentExpanded)
-            &&
-            <Box padding={2}>
-              <Typography>{snippet.slice(0, 99)}...</Typography>
-              <Box
-                id="click-to-see-more-box"  
-                // onClick={(evt) => toggleContentExpansion(evt, id)}
-              > 
+      <Grid display={'flex'} xs={12} id="grid-snippet-container" container>
+        {snippet && (
+          <Grid item xs={12} display={'flex'}  id="grid-snippet-snippet-box">
+            <Typography variant='textSnippet' padding={2}>
+                {!isContentExpanded && snippet.length >= maxSnippetLength ? snippet.slice(0, maxSnippetLength) : snippet}
+                {isContentExpanded && snippet}
+            </Typography>
+          </Grid>
+        )}
 
-                <Button
-                  variant='contained'
-                  // color="primary"
-                  width='100%'
-                  onClick={(evt) => toggleContentExpansion(evt, id)}
-                  sx={{
-                    width: '100%',
-                    padding: 1,
-                    borderRadius: 0,
-                    border: 0,
-                  }}
-                >
-                  Click to See More...
-                </Button>
-              </Box>
-            </Box>
-  }
-  {showContext && (snippet.length >= 100  && isContentExpanded) && (
-            <Box id="click-to-see-less-button-container" padding={2}>
-              {snippet}
-              <Button
-                variant='contained'
-                // color='secondary'
-                width='100%'
-                onClick={(evt) => toggleContentExpansion(evt, id)}
-                sx={{
-                  width: '100%',
-                  padding: 1,
-                  borderRadius: 0,
-                  border: 0,
-                }}
-              >
-                Click to See Less</Button>
-            </Box>
-          )}
-        </Box>
-      </>
+        {snippet.length && snippet.length >= maxSnippetLength && (
+          <Grid item xs={12} display={'flex'} id="grid-snippet-expand-box" width={'100%'}>
+            <Button
+              id="grid-snippet-expand-button"
+              fullWidth={true}
+              variant='contained'
+              color="primary"
+              onClick={(evt) => toggleContentExpansion(evt, id)}
+              sx={{
+                width:'100%',
+                borderRadius: 0,
+              }}
+            >
+              Click to See {isContentExpanded ? 'Less' : 'More'}
+            </Button>
+          </Grid>
+        )}
+      </Grid>
     )
   }
-}
-Snippets.prototypes = {
-  text: string,
-  record: PropTypes.shape({
-    id: PropTypes.string.isRequired,
-    title: PropTypes.string,
-    processId: PropTypes.number.isRequired
-  })
+  else {
+    return (
+      <Box>
+        NOTHING????
+      </Box>)
+  }
 }

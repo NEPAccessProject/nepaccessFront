@@ -6,7 +6,10 @@
 body, #home-page, #root {
   min-width: 600px;
 }
-
+.list {
+  /*...*/
+  height: calc(100vh - 20px);
+}
 html {
   scroll-behavior: auto;
   font-family: "Open Sans";
@@ -23,7 +26,7 @@ body {
   flex-direction: column;
 }
 
-/* 
+/*
 #home-page {
   position: relative;
   margin: auto;
@@ -87,7 +90,7 @@ body {
   position: absolute;
   width: 289x;
   height: 122px;
-  
+
   /* Center vertically using top 50% and margin - half of height */
   top: 50%;
   margin-top: -61px;
@@ -100,7 +103,7 @@ body {
   height: 78px;
   left: 48.8px;
   top: -10px;
-  
+
   font-family: "Playfair Display";
   font-style: normal;
   font-weight: bold;
@@ -119,7 +122,7 @@ body {
   height: 67px;
   left: 123.54px;
   top: 46px;
-  
+
   font-family: "Playfair Display";
   font-style: normal;
   font-weight: bold;
@@ -127,9 +130,9 @@ body {
   line-height: 147px;
   display: flex;
   align-items: flex-end;
-  
+
   color: #DC3131;
-  
+
 }
 
 #logo-type #ccess {
@@ -138,7 +141,7 @@ body {
   height: 23px;
   left: 198px;
   top: 64px;
-  
+
   font-family: "Playfair Display";
   font-style: normal;
   font-weight: normal;
@@ -149,7 +152,7 @@ body {
   letter-spacing: -0.03em;
 
   color: #000000;
-  
+
 }
 
 /* End logo contents */
@@ -201,7 +204,7 @@ body {
     padding-right: 10px;
     border-right: 2px black solid;
 }
-  
+
 .right-nav-item,
 #profile-span {
     margin-left: 10px;
@@ -210,7 +213,7 @@ body {
 #main-menu {
     position: relative;
     /* left: calc(25vw + 10px); */
-    margin-left: clamp(315px, calc(25vw + 15px), 390px); 
+    margin-left: clamp(315px, calc(25vw + 15px), 390px);
     min-width: 400px;
     height: 52px;
     top: 50px;
@@ -221,7 +224,7 @@ body {
 /* #main-menu>.main-menu-link,
 #main-menu .drop-button
  {
-    margin-left: clamp(10px, 2%, 40px); 
+    margin-left: clamp(10px, 2%, 40px);
     font-size: calc(20% + 1vw);
 }
 #main-menu i
@@ -242,12 +245,12 @@ body {
   line-height: 25px;
   display: inline-flex;
   align-items: flex-end;
-  
+
   color: #000000;
 
   cursor: pointer;
   text-decoration: none;
-  
+
 }
 .main-menu-link:hover {
     color: white;
@@ -289,10 +292,10 @@ body {
 
 /* Special tags */
 
-*[hidden] { 
-    display: none !important; 
+*[hidden] {
+    display: none !important;
 }
-*[currentpage="true"] { 
+*[currentpage="true"] {
     font-weight: bold !important;
     color: white !important;
 }
@@ -366,7 +369,7 @@ button {
 .disabled_download {
   pointer-events: none;
   cursor: default;
-  
+
   /* background: lightgray !important; */
   border: none;
   /* padding: 0;
@@ -427,7 +430,7 @@ span.email-text {
 }
 
 /* allow <a> to be links inside tooltips */
-.tippy-popper a { 
+.tippy-popper a {
     pointer-events: all;
 }
 .tippy-popper>.tippy-tooltip--small [x-circle] {
@@ -511,7 +514,7 @@ span.email-text {
     position: absolute;
     left: -54px;
     text-align: center;
-} 
+}
 
 
 .dropdown {
@@ -524,7 +527,7 @@ span.email-text {
     border: none;
     outline: none;
     background-color: inherit;
-    font-family: inherit; 
+    font-family: inherit;
     margin: 0;
     height: 25px;
 }
@@ -536,11 +539,11 @@ span.email-text {
     display: block;
     float: none;
     width: 182px;
-    
+
     text-decoration: none;
     color: black;
     background-color: white;
-    
+
     padding: 5px;
 
     border: 2px solid #C4C4C4;
@@ -599,7 +602,7 @@ span.email-text {
     padding-left: 0px !important;
 }
 .logo-size {
-    width: clamp(315px, calc(25vw + 15px), 390px); 
+    width: clamp(315px, calc(25vw + 15px), 390px);
     padding-left: 0px;
     padding-right: 0px;
     margin-left: 0px;
@@ -609,7 +612,7 @@ span.email-text {
 span.leading-text {
     float: left;
 
-    width: clamp(310px, calc(25vw + 10px), 385px) !important; 
+    width: clamp(310px, calc(25vw + 10px), 385px) !important;
 
     padding-left: 0px !important;
     padding-right: 5px !important;
@@ -623,7 +626,7 @@ span.leading-text {
 }
 .form-control {
     display: inline-block;
-    
+
     width: 300px;
     height: 20px;
 
@@ -642,7 +645,7 @@ span.leading-text {
 }
 .logo-left {
     display: inline-block;
-    margin-left: clamp(315px, calc(25vw + 15px), 390px); 
+    margin-left: clamp(315px, calc(25vw + 15px), 390px);
     padding-left: 5px;
 }
 .contact-form-control {
@@ -655,7 +658,7 @@ span.leading-text {
     height: 36px;
 
     padding: 0px;
-    
+
     border-radius: 0px !important;
     border: solid black 1px !important;
 }

@@ -1,6 +1,7 @@
-import { Box,Container, Divider, Link, Grid, Paper, Skeleton, Typography } from "@mui/material";
+import { Box, Container, Divider, Paper, Skeleton, Typography } from "@mui/material";
+import Grid from '@mui/material/Unstable_Grid2';
 import { styled } from "@mui/styles";
-import React from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import { reactFormatter } from "react-tabulator";
 import "react-tabulator/lib/css/tabulator_site.min.css"; // theme
 import "react-tabulator/lib/styles.css"; // required styles
@@ -17,12 +18,29 @@ import SearchTips from './SearchTips.jsx';
 import ResultsLayoutSkeleton from './ResultsLayoutSkeleton';
 import SearchResultCards from './SearchResultCards';
 import SearchResultsMap from './SearchResultsMap';
+//import { List,Collection ,AutoSizer, CellMeasurer, CellMeasurerCache } from 'react-virtualized';
+import { useVirtual } from 'react-virtual'
+import SearchResultItem from "./SearchResultItem";
+import InfiniteLoader from "react-window-infinite-loader";
+//import { List, Collection, AutoSizer, CellMeasurer, CellMeasurerCache } from 'react-virtualized'
+import { VariableSizeList as List } from "react-window";
+import AutoSizer from "react-virtualized-auto-sizer";
+import Pagination from '@mui/material/Pagination';
+import PaginationItem from '@mui/material/PaginationItem';
+import Stack from '@mui/material/Stack';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
+import { Link } from "react-router-dom";
+
+
 const _ = require("lodash");
 
 const FULLSTYLE = {
   width: "100%",
   minWidth: "20%",
   maxWidth: "100%",
+};
+const styles = {
 };
 const Item = styled(Paper)(({ theme }) => ({
   ...theme,
@@ -50,7 +68,24 @@ const Item = styled(Paper)(({ theme }) => ({
     fontFamily: "open sans"
   },
 }));
-
+const testData = [{
+  id: 1,
+  title: 'Title 1'
+},
+{
+  id: 2,
+  title: 'title 2'
+},
+];
+function cellSizeAndPositionGetter({ index }) {
+  const cell = {
+    height: cellHeight,
+    width: cellWidth,
+    y: index * cellHeight,
+    x: Math.floor(Math.random() * 10) * cellWidth
+  }
+  return cell;
+}
 export default class SearchProcessResults extends React.Component {
   static contextType = SearchContext;
   _size = 0;
@@ -74,23 +109,16 @@ export default class SearchProcessResults extends React.Component {
       showContext: true,
       size: 0,
       hidden: new Set(),
+      listHeight: 300,
+      listRowHeight: 50,
+      overscanRowCount: 10,
+      rowCount: this.props.results.length,
+      scrollToIndex: undefined,
+      showScrollingPlaceholder: false,
+      useDynamicRowHeight: false,
     };
     window.addEventListener("resize", this.handleResize);
     Globals.registerListener("new_search", this.resetHidden);
-
-    this._columns = [
-      {
-        title: "",
-        field: "",
-        formatter: reactFormatter(
-          <SearchProcessResult
-            show={this.state.showContext}
-            hideText={this.hideText}
-            hidden={this.hide}
-          />
-        ),
-      },
-    ];
 
     this.options = {
       selectable: false,
@@ -104,155 +132,56 @@ export default class SearchProcessResults extends React.Component {
       layout: "fitColumns",
       invalidOptionWarnings: false, // spams spurious warnings without this
     };
-
-    this.updateTableDebounced = _.debounce(this.updateTable, 0);
-    this.doneRenderDebounced = _.debounce(this.doneRender, 0);
   }
 
-  resetHidden = () => {
-    // console.log("Brand new search, clear toggled Set");
-    this.hidden = new Set();
-  };
-
-  hide = (props) => {
-    return this.hidden.has(props);
-  };
-
-  hideText = (_offsetY, _index, record) => {
-    this.offsetY = _offsetY;
-
-    if (this.hidden.has(record.id)) {
-      this.hidden.delete(record.id);
-      this.setState({ hidden: this.hidden });
-    } else {
-      this.hidden.add(record.id);
-      this.setState({ hidden: this.hidden }, () => {
-        this.props.gatherSpecificHighlights(_index, record);
-      });
-    }
-  };
-
-  handleResize = () => { };
-  /** TODO:  The problem is that we don't always want to scroll when the page has to
-   * redraw.  Examples would be showing/hiding text snippets or changing the page.  Page tends to redraw
-   * several times, so we can't just immediately set offsetY to null, and it's slightly laborious to clear
-   * offsetY every time we do any other kind of event.  So we just clear it here on a delay, but it's a little
-   * bit of a hack. */
-  doneRender = () => {
-    // console.log("They see me scrollin'")
-    if (this.offsetY) {
-      // console.log("They hatin'",this.offsetY)
-      window.scrollTo(0, this.offsetY);
-      setTimeout(() => {
-        // After all redraws are probably finished, clear variable
-        this.offsetY = null;
-      }, 500);
-    }
-  };
-  onPageLoaded = (pageNumber) => {
-    // this.page can become a string on mount/unmount, which makes comparisons interesting.
-    // console.log(typeof(this.page));
-    try {
-      const TABLE = this.ref.table;
-      let PAGE_SIZE = TABLE.footerManager.links[0].size;
-      let shouldScroll = false;
-      // Page change OR page size change
-      if (this.page != pageNumber || this.pageSize != PAGE_SIZE) {
-        // Only scroll to top on new page, not new page size
-        if (this.page != pageNumber) {
-          shouldScroll = true;
-        }
-
-        // Need to set these ahead of informAppPage()
-        this.page = pageNumber;
-        this.pageSize = PAGE_SIZE;
-
-        // Ensures this won't try to run if parent (App.js) isn't supporting on-demand highlighting
-        if (this.props.informAppPage) {
-          this.props.informAppPage(pageNumber, PAGE_SIZE);
-        }
-
-        if (shouldScroll) {
-          this.props.scrollToTop();
-        }
-      } else {
-        // do nothing
-        // console.log("Nothing is different", this.page, pageNumber, this.pageSize, PAGE_SIZE);
-      }
-    } catch (e) {
-      /* New search (or webapp navigation): Reset page number.
-                Otherwise on new search the table will go to the page from the previous results from the previous search,
-                which can't possibly be correct. Size could be restored but 10 is actually already large. */
-      this.page = pageNumber;
-      this.pageSize = 10;
-
-      // console.error(e);
-      // console.error("Table not yet rendered");
-    }
-  };
-  handlePaginationError = (evt) => {
-    console.log("Custom pagination error logic");
-    this.onPageLoaded(1);
-  };
   onCheckboxChange = (evt) => {
     this.setState({
       showContext: evt.target.checked,
     });
   };
-  /** To update show/hide text snippets, updates columns; also redraws table to accommodate potentially
-   * different-sized contents (particularly height) so that nothing overflows and disappears outside the table itself
-   */
-  updateTable = () => {
-    if (this.ref && this.ref.table) {
-      const TABLE = this.ref.table;
-      try {
-        // all needed for text snippets show/hide
-        let _columns = [];
-        if (this.props.results && this.props.results[0]) {
-          this._size = this.props.results.length;
 
-          _columns = [
-            {
-              title: "",
-              field: "",
-              formatter: reactFormatter(
-                <SearchProcessResult
-                  show={this.state.showContext}
-                  hideText={this.hideText}
-                  hidden={this.hide}
-                />
-              ),
-            },
-          ];
-        }
-        TABLE.setColumns(_columns);
+  setRowHeight(index, size) {
+    listRef.current.resetAfterIndex(0);
+    rowHeights.current = { ...rowHeights.current, [index]: size };
+  }
 
-        // Check if filtering has reduced the page count below the last known active page.
-        // We don't want to call setPage on a page that doesn't exist.
-        // Use max page in that case. Other option would be setPage(1).
-        TABLE.setPage(Math.min(this.page, TABLE.footerManager.links[0].max));
-        // Note that we might want the page to be reset in some circumstances but that can be handled if so
-      } catch (e) {
-        console.log("Column setup error");
-        // that's okay
-      } finally {
-        // need to redraw to accommodate new data (new dimensions) or hiding/showing texts
-        setTimeout(function () {
-          TABLE.redraw(true);
-          console.log("Table redrawn");
-        }, 0);
-      }
-    }
-  };
-  getCorrectResultsStyle = () => {
-    if (this.props.filtersHidden) {
-      return FULLSTYLE;
-    } else {
-      return null;
-    }
-  };
+  scrollToBottom() {
+    listRef.current.scrollToItem(results.length - 1, "end");
+  }
+
+  renderRow({ index, key, style, parent }) {
+    console.log(`file: SearchProcessResults.js:318 ~ SearchProcessResults ~ renderRow ~ index, key, style, parent :`, index, key, style, parent);
+    const result = this.props.results[index];
+    return (
+      <>
+        <b>{key}</b>
+        <b>index: {index}</b>
+        <b>{JSON.stringify(result)}</b>
+      </>
+    )
+  }
+
+  getRowHeight(index) {
+    return rowHeights.current[index] + 8 || 82;
+  }
+
+  RowVirtualizerVariable({ rows }) {
+    const parentRef = React.useRef();
+
+    const rowVirtualizer = useVirtual({
+      size: rows.length,
+      parentRef,
+      estimateSize: React.useCallback((i) => 400, []),
+      overscan: 5
+    });
+  }
+  _noRowsRenderer() {
+    return <div className={styles.noRows}>No rows</div>;
+  }
+
   render() {
     const ctxState = this.context.state;
+    console.log(`file: SearchProcessResults.js:216 ~ SearchProcessResults ~ render ~ ctxState:`, ctxState);
     const { results } = this.props;
 
     //If searching display skeleton
@@ -279,44 +208,15 @@ export default class SearchProcessResults extends React.Component {
     }
     //If there are results, then diplay them
     else {
-
       return (
-        <>
-          {/* {Object.keys(ctxState).map(key => {
-            return (
-              <div key={key}><b>{key}:</b> {typeof(ctxState[key]) != "array" && typeof(ctxState[key]) != "object" ? ctxState[key] : JSON.stringify(ctxState[key])}</div>
-            )
-          })} */}
-          <Typography padding={1}>{results.length} results found for "<b>{ctxState.titleRaw}</b>" </Typography>
-          <Grid item xs={12}>
-            <SearchResultsMap
-              toggleMapHide={this.props.toggleMapHide}
-              isHidden={this.props.isMapHidden}
-              docList={this.props.geoResults}
-              results={this.props.results}
-            // searcherState={this.props.searcherState}
-            />
-          </Grid>
-          
-          {results.map((result, index) => {
-            return (
-              <Paper  margin={10} elevation={1} borderColor={"#000"} key={result.id}>
-                <Box id="search-results-parent-container-box" border={0} borderColor={"#eee"} padding={1} >
-                  {/* Title and link for each result */}
-     
-                  <Box id="search-results-cards-container-box">
-                    <SearchResultCards result={result} />
-                  </Box>
-                  <Box id="search-results-items-container-box">
-                    <SearchResultItems onDetailLink={this.onDetailLink}  result={result} />
-                  </Box>
-
-                </Box>
-              </Paper>
-            );
-          }
-          )}
-        </>
+        <Grid container flex={1} id="search-result-row-box" xs={12}>
+          <Typography variant="h3" padding={1}>Showing { ctxState.limit}  of {results.length} Results for "{ctxState.titleRaw}"</Typography>
+          <Container width={'100%'} id="search-result-row-container">
+                              {results.length && (
+                  <ResultRow results={results} />
+                )}
+          </Container>
+        </Grid>
       )
     }
   }
@@ -336,7 +236,6 @@ export default class SearchProcessResults extends React.Component {
     localStorage.unmountedPage = this.page;
   }
   componentDidUpdate() {
-    this.updateTableDebounced();
   }
 }
 
@@ -348,3 +247,61 @@ export default class SearchProcessResults extends React.Component {
 
 //     return returnVal;
 // }
+const _noRowsRenderer = () => {
+  return <div className={styles.noRows}>No rows</div>;
+}
+
+const ResultRow = (props) => {
+  console.log(`file: SearchProcessResults.js:482 ~ ResultRow ~ props:`, props);
+  // References
+  const { results } = props;
+  const listRef = useRef({});
+  // const rowHeights = useRef({});
+  const ctx = useContext(SearchContext);
+  const { state } = ctx;
+  // const { limit } = state.searcherInputs;
+  // const [currentPage, setCurrentPage] = useState(0);
+  const _mounted = useRef(false);
+  // Functions
+
+  useEffect(() => {
+    _mounted.current = true;
+    return (() => {
+      _mounted.current = false
+    })
+  },[]);
+  //const scrollToBottom = () => {
+  //  listRef.current.scrollToIndex(0);
+  //};
+  // useEffect(() => {
+  //   if (_mounted.current && results.length > 0) {
+  //     scrollToBottom();
+  //   }
+//     }, [results]);
+    function getRowHeight(index) {
+    const height = rowHeights.current[index] + 8 || 82;
+    console.log(`file: SearchProcessResults.js:512 ~ getRowHeight ~ height:`, height);
+      return height;
+  }
+
+  function getRowHeight(index) {
+    return rowHeights[index] + 8 || 82;
+  }
+
+  return (
+    <Paper id="search-result-render-row-wrapper-paper">
+      <Grid container id="search-result-row-grid-container" xs={12} flex={1}>
+        {results.map((result,idx) => (
+          <Grid item xs={12} key={result.id} id={`search-result-row-grid-item-${result.id}`}>
+            {/* <Typography variant="h5" paddingBottom={0}>
+              <Link href={`/record-detail/?id=${result.id}`}>{result.title}</Link>
+            </Typography> */}
+            <SearchResultCards result={result} />
+              <SearchResultItem records={result.records} />
+          </Grid>
+        ))}
+      </Grid>
+    </Paper>
+  );
+
+}

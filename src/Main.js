@@ -63,7 +63,7 @@ import ImporterGeoLinks from './ImporterGeoLinks.js';
 import Globals from './globals.js';
 import Header from './Header'
 import HeaderNav from './HeaderNav';
-
+import SearchProcessResults from './search/SearchProcessResults';
 import { Link, Switch, Route, withRouter } from 'react-router-dom';
 
 import PropTypes from "prop-types";
@@ -87,6 +87,7 @@ import {
 } from '@material-ui/core';
 import MenuIcon from '@material-ui/icons/Menu';
 import ThemePreview from './examples/ThemePreview';
+import VirtualList from './examples/VirtualList';
 
 const _ = require('lodash');
 
@@ -323,6 +324,7 @@ class Main extends React.Component {
           <Route path="/up_alignment" component={ImporterAlignment} />
           <Route path="/theme" component={ThemePreview} />
           <Route path="/" component={Landing} />
+          <Route path="/list" component={VirtualList} />
         </Switch>
       </div>
     )
