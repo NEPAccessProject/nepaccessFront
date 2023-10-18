@@ -1,60 +1,62 @@
 @host = http://localhost:8080/
-
+@token = Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJnbXMiLCJleHAiOjE2OTg1MTI5NTEsImp0aSI6IjY0NSJ9.cDvudFpFkEwDVuJQowMBRo4wDzEUkdpGvTHNm21xgPVZE_A1BCHJxUyuC77T8oMxND5PKeLTDcfmr2EjhnNyBw
 ###
 GET {{host}}stats/eis_count HTTP/1.1
-authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJnbXMiLCJleHAiOjE2NDY5ODgsImp0aSI6IjY0NSJ9.rF3uctOM2yxzdHFbBFpEH1q2QbjToxLhM3vrs4FA9pxsF6F8bHS61OFEVrnVzrhe4iM9jLlXBrBmverbsvSUVw
-
+key: test_key_only
+###
+GET {{host}}file/download_nepa_file?filename=EisDocuments-374669.zip&id=17781 HTTP/1.1
+Authorization: {{token}}
 key: test_key_only
 
 ###
 POST {{host}}test/check HTTP/1.1
-#authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJnbXMiLCJleHAiOjE2OTA4NDY5ODgsImp0aSI6IjY0NSJ9.rF3uctOM2yxzdHFbBFpEH1q2QbjToxLhM3vrs4FA9pxsF6F8bHS61OFEVrnVzrhe4iM9jLlXBrBmverbsvSUVw
+Authorization: {{token}}
 key: test_key_only
 
 ###
-GET {{host}}stats/draft_final_count_year HTTP/1.1 
-authorization: Bearer 
+GET {{host}}stats/draft_final_count_year HTTP/1.1
+Authorization: {{token}}
 key: test_key_only
 Content-Type: application/json
 Accept: application/json
 ###
 POST {{host}}text/search_no_context HTTP/1.1
-authorization: Bearer 
+Authorization: {{token}}
 key: test_key_only
 Content-Type: application/json
 Accept: application/json
 
 {
-    "title": "Bay"
+    "title": "Cooper Mine"
 }
 
 ###
 POST {{host}}text/search_top/ HTTP/1.1
-authorization: authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJnbXMiLCJleHAiOjE2OTA4NDY5ODgsImp0aSI6IjY0NSJ9.rF3uctOM2yxzdHFbBFpEH1q2QbjToxLhM3vrs4FA9pxsF6F8bHS61OFEVrnVzrhe4iM9jLlXBrBmverbsvSUVw
+Authorization: {{token}}
 key: test_key_only
 Content-Type: application/json
 Accept: application/json
 
 {
- 
+
     "title": "2005"
 }
 
 ###
 POST {{host}}text/search/ HTTP/1.1
-authorization: authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJnbXMiLCJleHAiOjE2OTA4NDY5ODgsImp0aSI6IjY0NSJ9.rF3uctOM2yxzdHFbBFpEH1q2QbjToxLhM3vrs4FA9pxsF6F8bHS61OFEVrnVzrhe4iM9jLlXBrBmverbsvSUVw
+Authorization: {{token}}
 key: test_key_only
 Content-Type: application/json
 Accept: application/json
 
 {
- 
-    "title": "Bay" 
+
+    "title": "Bay"
 }
 
 ###
 POST {{host}}text/search_test HTTP/1.1
-authorization: authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJnbXMiLCJleHAiOjE2OTA4NDY5ODgsImp0aSI6IjY0NSJ9.rF3uctOM2yxzdHFbBFpEH1q2QbjToxLhM3vrs4FA9pxsF6F8bHS61OFEVrnVzrhe4iM9jLlXBrBmverbsvSUVw
+Authorization: {{token}}
 key: test_key_only
 Content-Type: application/json
 Accept: application/json
@@ -64,7 +66,7 @@ Accept: application/json
 }
 ###
 GET {{host}}text/search_test HTTP/1.1
-authorization: authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJnbXMiLCJleHAiOjE2OTA4NDY5ODgsImp0aSI6IjY0NSJ9.rF3uctOM2yxzdHFbBFpEH1q2QbjToxLhM3vrs4FA9pxsF6F8bHS61OFEVrnVzrhe4iM9jLlXBrBmverbsvSUVw
+Authorization: {{token}}
 key: test_key_only
 Content-Type: application/json
 Accept: application/json
@@ -78,7 +80,7 @@ GET {{host}}test/get_process_full?processId=1000331 HTTP/1.1
 ###
 
 POST {{host}}text/get_highlightsFVH HTTP/1.1
-authorization: authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJnbXMiLCJleHAiOjE2OTA4NDY5ODgsImp0aSI6IjY0NSJ9.rF3uctOM2yxzdHFbBFpEH1q2QbjToxLhM3vrs4FA9pxsF6F8bHS61OFEVrnVzrhe4iM9jLlXBrBmverbsvSUVw
+Authorization: {{token}}
 key: test_key_only
 Content-Type: application/json
 Accept: application/json
@@ -94,83 +96,83 @@ Accept: application/json
 
 ###
 GET {{host}}text/test_terms?terms=2020 HTTP/1.1
-authorization: authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJnbXMiLCJleHAiOjE2OTA4NDY5ODgsImp0aSI6IjY0NSJ9.rF3uctOM2yxzdHFbBFpEH1q2QbjToxLhM3vrs4FA9pxsF6F8bHS61OFEVrnVzrhe4iM9jLlXBrBmverbsvSUVw
+Authorization: {{token}}
 key: test_key_only
 Content-Type: application/json
 Accept: application/json
 ###
 GET {{host}}text/get_by_title?title=Meeks HTTP/1.1
-authorization: authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJnbXMiLCJleHAiOjE2OTA4NDY5ODgsImp0aSI6IjY0NSJ9.rF3uctOM2yxzdHFbBFpEH1q2QbjToxLhM3vrs4FA9pxsF6F8bHS61OFEVrnVzrhe4iM9jLlXBrBmverbsvSUVw
+Authorization: {{token}}
 key: test_key_only
 Content-Type: application/json
 Accept: application/json
 
 ###
 GET {{host}}text/search/suggest?terms=Bay HTTP/1.1
-authorization: authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJnbXMiLCJleHAiOjE2OTA4NDY5ODgsImp0aSI6IjY0NSJ9.rF3uctOM2yxzdHFbBFpEH1q2QbjToxLhM3vrs4FA9pxsF6F8bHS61OFEVrnVzrhe4iM9jLlXBrBmverbsvSUVw
+{{token}}
 key: test_key_only
 Content-Type: application/json
 Accept: application/json
 
 ###
 GET {{host}}text/get_by_filename?filename=CommentLetters-79624.zip HTTP/1.1
-authorization: authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJnbXMiLCJleHAiOjE2OTA4NDY5ODgsImp0aSI6IjY0NSJ9.rF3uctOM2yxzdHFbBFpEH1q2QbjToxLhM3vrs4FA9pxsF6F8bHS61OFEVrnVzrhe4iM9jLlXBrBmverbsvSUVw
+{{token}}
 key: test_key_only
 Content-Type: application/json
 Accept: application/json
 
-### 
+###
 GET {{host}}stats/earliest_year HTTP/1.1
-authorization: authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJnbXMiLCJleHAiOjE2OTA4NDY5ODgsImp0aSI6IjY0NSJ9.rF3uctOM2yxzdHFbBFpEH1q2QbjToxLhM3vrs4FA9pxsF6F8bHS61OFEVrnVzrhe4iM9jLlXBrBmverbsvSUVw
+{{token}}
 key: test_key_only
 
 ###
 POST {{host}}user/get_role HTTP/1.1
-authorization: authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJnbXMiLCJleHAiOjE2OTA4NDY5ODgsImp0aSI6IjY0NSJ9.rF3uctOM2yxzdHFbBFpEH1q2QbjToxLhM3vrs4FA9pxsF6F8bHS61OFEVrnVzrhe4iM9jLlXBrBmverbsvSUVw
+{{token}}
 key: test_key_only
 ###
 POST {{host}}scraper/restart HTTP/1.1
-authorization: authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJnbXMiLCJleHAiOjE2OTA4NDY5ODgsImp0aSI6IjY0NSJ9.rF3uctOM2yxzdHFbBFpEH1q2QbjToxLhM3vrs4FA9pxsF6F8bHS61OFEVrnVzrhe4iM9jLlXBrBmverbsvSUVw
+{{token}}
 key: test_key_only
 
 ###
 GET {{host}}scraper/is_shutdown HTTP/1.1
-authorization: authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJnbXMiLCJleHAiOjE2OTA4NDY5ODgsImp0aSI6IjY0NSJ9.rF3uctOM2yxzdHFbBFpEH1q2QbjToxLhM3vrs4FA9pxsF6F8bHS61OFEVrnVzrhe4iM9jLlXBrBmverbsvSUVw
+{{token}}
 key: test_key_only
 
 
 
 ###
 GET http://localhost:8080/geojson/get_all_state_county HTTP/1.1
-authorization: authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJnbXMiLCJleHAiOjE2OTA4NDY5ODgsImp0aSI6IjY0NSJ9.rF3uctOM2yxzdHFbBFpEH1q2QbjToxLhM3vrs4FA9pxsF6F8bHS61OFEVrnVzrhe4iM9jLlXBrBmverbsvSUVw
+{{token}}
 key: test_key_only
 
 
 
 ###
 POST {{host}}scraper/sync HTTP/1.1
-authorization: authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJnbXMiLCJleHAiOjE2OTA4NDY5ODgsImp0aSI6IjY0NSJ9.rF3uctOM2yxzdHFbBFpEH1q2QbjToxLhM3vrs4FA9pxsF6F8bHS61OFEVrnVzrhe4iM9jLlXBrBmverbsvSUVw
+{{token}}
 key: test_key_only
 ###
 
 
 ###
 POST {{host}}user/checkAdmin HTTP/1.1
-authorization: authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJnbXMiLCJleHAiOjE2OTA4NDY5ODgsImp0aSI6IjY0NSJ9.rF3uctOM2yxzdHFbBFpEH1q2QbjToxLhM3vrs4FA9pxsF6F8bHS61OFEVrnVzrhe4iM9jLlXBrBmverbsvSUVw
+{{token}}
 key: test_key_only
 
 ###
 GET {{host}}text/sync HTTP/1.1
-authorization: authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJnbXMiLCJleHAiOjE2OTA4NDY5ODgsImp0aSI6IjY0NSJ9.rF3uctOM2yxzdHFbBFpEH1q2QbjToxLhM3vrs4FA9pxsF6F8bHS61OFEVrnVzrhe4iM9jLlXBrBmverbsvSUVw
+{{token}}
 key: test_key_only
 
 
 ###
 GET {{host}}text/get_by_id?id=24155 HTTP/1.1
-authorization: authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJnbXMiLCJleHAiOjE2OTA4NDY5ODgsImp0aSI6IjY0NSJ9.rF3uctOM2yxzdHFbBFpEH1q2QbjToxLhM3vrs4FA9pxsF6F8bHS61OFEVrnVzrhe4iM9jLlXBrBmverbsvSUVw
+{{token}}
 key: test_key_only
 
 ###
 GET {{host}}text/get_length_ids?id=24155 HTTP/1.1
-authorization: authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJnbXMiLCJleHAiOjE2OTA4NDY5ODgsImp0aSI6IjY0NSJ9.rF3uctOM2yxzdHFbBFpEH1q2QbjToxLhM3vrs4FA9pxsF6F8bHS61OFEVrnVzrhe4iM9jLlXBrBmverbsvSUVw
+{{token}}
 key: test_key_only
