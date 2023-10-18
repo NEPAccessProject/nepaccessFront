@@ -162,11 +162,11 @@ const RenderRecord = (props) => {
   const classes = useStyles(theme);
   return (
 
-    <Paper elevation={1} style={{
+    <Paper elevation={0} style={{
         marginLeft:2,
         marginRight:2,
+        marginTop:10,
     }}>
-
       <Grid container>
         <DataCell>
           <Typography variant='h4'>{title}</Typography>

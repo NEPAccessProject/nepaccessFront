@@ -987,23 +987,17 @@ class Search extends React.Component {
         <SearchContext.Provider value={value}>
             <Container
               id="search-root-container"
-              component={Paper}
               maxWidth='xl'
-              disableGutters={false}
+              disableGutters
               sx={{
-                border:1,
-                borderColor:'#ccc',
+
                 paddingLeft:2,
                 paddingRight:2,
-                marginTop: 2,
+                marginTop:5,
               }}>
               <Grid
                 border={0}
-                columnSpacing={3}
-                spacing={3}
-                marginBottom={10}
-                border={1}
-                border="#ddd"
+                rowSpacing={2}
                 id='result-header-grid-container'
                 container>
                 {''}
@@ -1046,10 +1040,11 @@ class Search extends React.Component {
                 <Grid
                   container
                   xs={12}
-                  flex={1}
+                  columnSpacing={1}
+                  rowSpacing={1}
                   id='filters-grid-container'
                   style={{
-                    marginTop:10,
+                    marginTop: 10
                   }}
                 >
                   <Grid

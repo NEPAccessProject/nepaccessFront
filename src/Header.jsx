@@ -225,7 +225,6 @@ export default function HeaderNav() {
                         id="mobile-logo-container"
                         sx={{
                             alignItems: 'center',
-                            border: '2px solid black',
                             height: '70px',
                             display: 'flex',
                             alignItems: 'center',
@@ -270,7 +269,7 @@ export default function HeaderNav() {
                         </div>
                         <div>
 
-                            
+
                         </div>
                     </Drawer>
 
@@ -318,7 +317,7 @@ export default function HeaderNav() {
                 </Link>
             );
         });
-        
+
 
     };
 

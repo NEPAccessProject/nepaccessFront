@@ -38,7 +38,7 @@ const useStyles = makeStyles((theme) => ({
   skeleton:{
     width:'100%',
     //margin:1,
-    
+
   }
 }));
 
@@ -46,7 +46,7 @@ export default function ResultsLayoutSkeleton() {
 	const classes = useStyles(theme);
 	//   const classes = useStyles(theme);
 	return (
-		<Grid 
+		<Grid
       container
       borderColor='#ccc'
       border={0}
@@ -80,7 +80,7 @@ export default function ResultsLayoutSkeleton() {
           </Grid>
           <Grid
             item
-            className={classes.card}            
+            className={classes.card}
             xs={2}
             >
             <Skeleton
@@ -234,11 +234,11 @@ export default function ResultsLayoutSkeleton() {
             />
           </Grid>
         </Grid>
-        <Grid 
+        <Grid
           id="results-skeleton-result-1-grid-container"
           container
           margin={1}
-          padding={0} 
+          padding={0}
           spacing={1}
           xs={12}>
           <Grid
@@ -259,7 +259,6 @@ export default function ResultsLayoutSkeleton() {
 
           >
             <Skeleton
-              classes={classes}
               animation='pulse'
               variant='rectangular'
               height={50}
@@ -281,14 +280,13 @@ export default function ResultsLayoutSkeleton() {
           <Skeleton width={'100%'} height={20} variant="rounded" animation="wave" />
         </Grid>
 			</Grid>
-      <Grid container margin={1} borderColor={'#ccc'} padding={0} spacing={1} id="results-skeleton-result-2-grid-container"				
+      <Grid container margin={1} borderColor={'#ccc'} padding={0} spacing={1} id="results-skeleton-result-2-grid-container"
           xs={12}>
           <Grid
             item
             className={classes.card}
             xs={4}>
             <Skeleton
-              classes={[classes]}
               animation='pulse'
               variant='rectangular'
               height={50}
@@ -302,7 +300,6 @@ export default function ResultsLayoutSkeleton() {
 
           >
             <Skeleton
-              classes={classes}
               animation='pulse'
               variant='rectangular'
               height={50}

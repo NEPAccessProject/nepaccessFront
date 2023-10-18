@@ -1,6 +1,5 @@
 import PropTypes from 'prop-types';
 import React, { useEffect, useRef, useState } from 'react';
-import List from 'rc-virtual-list'
 import { Box, Grid, Paper, Typography, Pagination, TablePagination, Link } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import theme from '../../styles/theme';
@@ -109,7 +108,7 @@ const SearchResults = (props) => {
   }
   return (
     <Paper id="search-results-root" container={5} sx={{
-      border: 2,
+      marginTop:50
     }}>
       <Pagination
         shape='rounded'

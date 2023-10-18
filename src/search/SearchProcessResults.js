@@ -294,8 +294,10 @@ const ResultRow = (props) => {
   }
 
   return (
-    <Paper id="search-result-render-row-wrapper-paper">
-      <Grid container id="search-result-row-grid-container" marginBottom={2} xs={12} flex={1}>
+    <Paper border={0} style={{
+      marginTop: 0,
+    }} elevation={0} id="search-result-render-row-wrapper-paper">
+      <Grid container id="search-result-row-grid-container" marginTop={1} borderTop={1} borderColor={'#ddd'} marginBottom={2} xs={12} flex={1}>
         {results.map((result, idx) => (
           <Grid item xs={12} key={result.id} id={`search-result-row-grid-item-${result.id}`}>
             {/* <Typography variant="h5" paddingBottom={0}>
@@ -303,6 +305,7 @@ const ResultRow = (props) => {
             </Typography> */}
             <SearchResultCards result={result} />
             <SearchResultItem records={result.records} />
+            <Divider/>
           </Grid>
         ))}
       </Grid>

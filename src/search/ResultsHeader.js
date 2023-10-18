@@ -300,7 +300,6 @@ export default class ResultsHeader extends React.Component {
   							item
   							xs={12}
   							md={12}
-
   							id='search-box-result-options-container'>
   							<SearchResultOptions
   								state={this.state}
