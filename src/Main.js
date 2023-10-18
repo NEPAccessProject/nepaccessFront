@@ -87,7 +87,6 @@ import {
 } from '@material-ui/core';
 import MenuIcon from '@material-ui/icons/Menu';
 import ThemePreview from './examples/ThemePreview';
-import VirtualList from './examples/VirtualList';
 
 const _ = require('lodash');
 
@@ -324,7 +323,6 @@ class Main extends React.Component {
           <Route path="/up_alignment" component={ImporterAlignment} />
           <Route path="/theme" component={ThemePreview} />
           <Route path="/" component={Landing} />
-          <Route path="/list" component={VirtualList} />
         </Switch>
       </div>
     )
