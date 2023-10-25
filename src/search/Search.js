@@ -18,7 +18,7 @@ import { ThemeProvider, styled } from "@mui/material/styles";
 import { makeStyles } from "@mui/styles";
 import "react-datepicker/dist/react-datepicker.css";
 import { withRouter } from "react-router";
-import "tippy.js/dist/tippy.css"; // optional
+//import "tippy.js/dist/tippy.css"; // optional
 import Globals from "../globals.js";
 import persist from "../persist.js";
 import theme from "../styles/theme";
@@ -68,11 +68,12 @@ class Search extends React.Component {
   // history: PropTypes.object.isRequired
   // };
 
+  contextType = SearchContext;
   constructor(props) {
+
     super(props);
-    console.log(`file: Search.js:75 ~ Search ~ constructor ~ props:`, props);
-
-
+    console.log(`SEARCH PROPS`,props);
+    this.ctx = this.context;
     this.state = {
 
       action: [],
@@ -83,7 +84,7 @@ class Search extends React.Component {
       cooperatingAgencyRaw: [],
       county: [],
       countyRaw: [],
-      countyOptions: Globals.counties,
+      countyOptions: [], //Globals.counties,
       decision: [],
       decisionRaw: [],
       endComment: null,
@@ -731,7 +732,15 @@ class Search extends React.Component {
   };
 
   onTypeChecked = (evt) => {
+    if(!evt ||!evt.target ||!evt.target.name){
+      console.warn(`Error the checkbox event is either missing or has no target or name`,evt);
+      return;
+    }
+    if(!evt.target.name){
+      console.warn(`On Type Check requires a evt.target.name, evt:`,evt.target)
+    }
     if (evt.target.name === "optionsChecked") {
+      console.log(`file: Search.js:739 ~ Search ~ evt.target.name:`, evt.target.name);
       this.setState({
         [evt.target.name]: evt.target.checked,
       });

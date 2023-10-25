@@ -213,13 +213,14 @@ body {
 #main-menu {
     position: relative;
     /* left: calc(25vw + 10px); */
-    margin-left: clamp(315px, calc(25vw + 15px), 390px);
+    /* margin-left: clamp(315px, calc(25vw + 15px), 390px); */
     min-width: 400px;
     height: 52px;
     top: 50px;
+    border: '2px solid black',
 }
 #main-menu>.main-menu-link:first-child{
-    margin-left: 25px;
+    /* margin-left: 25px; */
 }
 /* #main-menu>.main-menu-link,
 #main-menu .drop-button

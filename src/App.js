@@ -241,7 +241,7 @@ export default class App extends React.Component {
         () => {
           // this.getGeoDebounced(filtered.filteredResults);
           this.getGeoDebounced();
-
+          console.log(`App.js 244 - getting Highlights for file`)
           this._searchId = this._searchId + 1;
           this.gatherPageHighlightsDebounced(
             this._searchId,
@@ -1768,7 +1768,11 @@ export default class App extends React.Component {
                   useOptions={this.state.useSearchOptions}
                 >
                   <SearchProcessResults
-                    {...this.props}
+                    draftCount={this._draftCount}
+                    eaCount={this._eaCount}
+                    rodCount={this._rodCount}
+                    scopingCount={this._scopingCount}
+                    finalCount={this._finalCount}
                     download={this.downloadCurrentAsTSV}
                     exportToSpreadsheet={this.exportToCSV}
                     filtersHidden={this.state.filtersHidden}

@@ -198,13 +198,12 @@ export default function HeaderNav() {
     return (
       <>
         <Toolbar id="mobile-tool-bar" className={mobileToolbar} elevation={1}>
-          
+
           <Grid
             container
             id="mobile-logo-container"
             sx={{
               alignItems: 'center',
-              border: '2px solid black',
               height: '70px',
               display: 'flex',
               alignItems: 'center',
@@ -213,7 +212,7 @@ export default function HeaderNav() {
             }}
           >
             <img src="logo2022.png" height={61} width={150} alt="NEPAccess Mobile Logo" />
-            
+
           </Grid>
 
           <Drawer
@@ -370,7 +369,7 @@ export default function HeaderNav() {
             <Container id="mobile-search-container">
               <SearcherLanding />
             </Container>
-  
+
             <Container id="mobile-call-out-container">
               <CalloutContainer />
             </Container>

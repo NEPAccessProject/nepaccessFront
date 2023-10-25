@@ -80,7 +80,7 @@ const SearchResults = (props) => {
   const [sortedResults, setSortedResults] = useState([]);
   const _mounted = useRef(false);
   const ctx = React.useContext(SearchContext);
-  console.log('STATE ??? CTX TITLE RAW',ctx.titleRaw,'CTX:',ctx)
+  console.log('STATE ??? CTX TITLE RAW', ctx.titleRaw, 'CTX:', ctx)
   const sortResults = (results) => {
     results.map((result, idx) => {
       console.log('sorting results', results);
@@ -102,13 +102,14 @@ const SearchResults = (props) => {
     })
 
   };
-  const onPaginationChange = (evt)=>{
+  const onPaginationChange = (evt) => {
     evt.preventDefault();
-    console.log('onPaginationChange',evt)
+    console.log('onPaginationChange', evt)
   }
   return (
     <Paper id="search-results-root" container={5} sx={{
-      marginTop:50
+      marginTop: 50,
+      border: '2psx solid black'
     }}>
       <Pagination
         shape='rounded'
@@ -124,20 +125,20 @@ const SearchResults = (props) => {
       {results && results.length ? (
         results.map((result, index) => {
           return (
-              <Box border={1} key={result.id} elevation={10}>
-               <Link variant='filterLabel' href={`./record-details?id=${result.processId}`}>LINK - {result.title}</Link>
-                <Box sx={{ margin: 5 }}>
+            <Box border={1} key={result.id} elevation={10}>
+              <Link variant='filterLabel' href={`./record-details?id=${result.processId}`}>{result.title}</Link>
+              <Box sx={{ margin: 5 }}>
 
-                  <SearchResultCards result={result} />
-                  <SearchResultItems result={result} />
-                </Box>
+                <SearchResultCards result={result} />
+                <SearchResultItems result={result} />
               </Box>
-            );
+            </Box>
+          );
         })
-              ) : (
-              <><SearchTips/></>
+      ) : (
+        <><SearchTips /></>
       )}
-            </Paper>
+    </Paper>
   );
 }
 SearchResults.propTypes = {
@@ -149,149 +150,146 @@ SearchResults.propTypes = {
       decisionType: PropTypes.string.isRequired,
       filename: PropTypes.string.isRequired,
       folder: PropTypes.string.isRequired,
-  })),
+    })),
 };
 const { results } = props;
 const { records, docs } = results;
-      export default React.memo(SearchResults);
+export default React.memo(SearchResults);
 
-      //useMemo(()=>SearchResults,[results]);
-
-      export function SearchResultCards(props) {
+export function SearchResultCards(props) {
   const classes = useStyles(theme);
-      const {result} = props;
-      console.log('Search Result Card Props',props);
-      return (
-      <Grid padding={2} container xs={12} flexDirection={'row'} flex={1}>
-        <Item
-          className={classes.itemHeader}
-          sx={{
-            margin: 0.5,
-            padding: 1,
-            elevation: 1,
-          }}
-        >
-
-          Status: <b>{result.decision ? result.decision : 'N/A'}</b>
-        </Item>
-        <Item
-          className={classes.itemHeader}
-          sx={{
-            margin: 0.5,
-            padding: 1,
-            elevation: 1,
-          }}
-        >
-          Date: <b>{result.commentDate ? result.commentDate : 'N/A'}</b>
-        </Item>
-        <Item
-          className={classes.itemHeader}
-          sx={{
-            margin: 0.5,
-            padding: 1,
-            elevation: 1,
-          }}
-        >
-          State: <b>{result.state ? result.state : 'N/A'}</b>
-        </Item>
-        <Item
-          className={classes.itemHeader}
-          sx={{
-            margin: 0.5,
-            padding: 1,
-            elevation: 1,
-          }}
-        >
-          County: <b>{result.county ? result.county : 'N/A'}</b>
-        </Item>
-        <Item
-          className={classes.itemHeader}
-          sx={{
-            margin: 0.5,
-            padding: 1,
-            elevation: 1,
-          }}
-        >
-          Action: <b>{result.action ? result.action : 'N/A'}</b>
-        </Item>
-        <Item
-          className={classes.itemHeader}
-          sx={{
-            margin: 0.5,
-            padding: 1,
-            elevation: 1,
-          }}
-        >
-          Decision <b>{result.decision ? result.decision : 'N/A'}</b>
-        </Item>
-        {/* {(result.commentDate)
+  const { result } = props;
+  console.log('Search Result Card Props', props);
+  return (
+    <Grid padding={2} container xs={12} flexDirection={'row'} flex={1}>
+      <Item
+        className={classes.itemHeader}
+        sx={{
+          margin: 0.5,
+          padding: 1,
+          elevation: 1,
+        }}
+      >
+        Status: <b>{result.decision ? result.decision : 'N/A'}</b>
+      </Item>
+      <Item
+        className={classes.itemHeader}
+        sx={{
+          margin: 0.5,
+          padding: 1,
+          elevation: 1,
+        }}
+      >
+        Date: <b>{result.commentDate ? result.commentDate : 'N/A'}</b>
+      </Item>
+      <Item
+        className={classes.itemHeader}
+        sx={{
+          margin: 0.5,
+          padding: 1,
+          elevation: 1,
+        }}
+      >
+        State: <b>{result.state ? result.state : 'N/A'}</b>
+      </Item>
+      <Item
+        className={classes.itemHeader}
+        sx={{
+          margin: 0.5,
+          padding: 1,
+          elevation: 1,
+        }}
+      >
+        County: <b>{result.county ? result.county : 'N/A'}</b>
+      </Item>
+      <Item
+        className={classes.itemHeader}
+        sx={{
+          margin: 0.5,
+          padding: 1,
+          elevation: 1,
+        }}
+      >
+        Action: <b>{result.action ? result.action : 'N/A'}</b>
+      </Item>
+      <Item
+        className={classes.itemHeader}
+        sx={{
+          margin: 0.5,
+          padding: 1,
+          elevation: 1,
+        }}
+      >
+        Decision <b>{result.decision ? result.decision : 'N/A'}</b>
+      </Item>
+      {/* {(result.commentDate)
             ? ( */}
-        <Item
-          className={classes.itemHeader}
-          sx={{
-            margin: 0.5,
-            padding: 1,
-            elevation: 1,
-          }}
-        >
-          Project Start Date: <b>{result.registerDate ? result.registerDate : 'N/A'}</b>
-        </Item>
-        <Item
-          className={classes.itemHeader}
-          sx={{
-            margin: 0.5,
-            padding: 1,
-            elevation: 1,
-          }}
-        >
-          Project Endate Date: <b>{result.commentDate ? result.commentDate : 'N/A'}</b>
-        </Item>
-        <Item
-          className={classes.itemHeader}
-          sx={{
-            margin: 0.5,
-            padding: 1,
-            elevation: 1,
-          }}
-        >
-          Final NOA: <b>{result.finalNoa ? result.finalNoa : 'N/A'}</b>
-        </Item>
-        <Item
-          className={classes.itemHeader}
-          sx={{
-            margin: 0.5,
-            padding: 1,
-            elevation: 1,
-          }}
-        >
-          Draft NOA: <b>{result.draftNoa ? result.draftNoa : 'N/A'}</b>
-        </Item>
-        <Item
-          className={classes.itemHeader}
-          sx={{
-            margin: 0.5,
-            padding: 1,
-            elevation: 1,
-          }}
-        >
-          Process ID: <b>{result.processId ? result.processId : 'N/A'}</b>
-        </Item>
+      <Item
+        className={classes.itemHeader}
+        sx={{
+          margin: 0.5,
+          padding: 1,
+          elevation: 1,
+        }}
+      >
+        Project Start Date: <b>{result.registerDate ? result.registerDate : 'N/A'}</b>
+      </Item>
+      <Item
+        className={classes.itemHeader}
+        sx={{
+          margin: 0.5,
+          padding: 1,
+          elevation: 1,
+        }}
+      >
+        Project Endate Date: <b>{result.commentDate ? result.commentDate : 'N/A'}</b>
+      </Item>
+      <Item
+        className={classes.itemHeader}
+        sx={{
+          margin: 0.5,
+          padding: 1,
+          elevation: 1,
+        }}
+      >
+        Final NOA: <b>{result.finalNoa ? result.finalNoa : 'N/A'}</b>
+      </Item>
+      <Item
+        className={classes.itemHeader}
+        sx={{
+          margin: 0.5,
+          padding: 1,
+          elevation: 1,
+        }}
+      >
+        Draft NOA: <b>{result.draftNoa ? result.draftNoa : 'N/A'}</b>
+      </Item>
+      <Item
+        className={classes.itemHeader}
+        sx={{
+          margin: 0.5,
+          padding: 1,
+          elevation: 1,
+        }}
+      >
+        Process ID: <b>{result.processId ? result.processId : 'N/A'}</b>
+      </Item>
 
 
-        {/* ) : (
+      {/* ) : (
         <></>
       )} */}
-      </Grid>
-      );
+    </Grid>
+  );
 }
 //[TODO] abstract to reusable type since many components use similar shapes
 SearchResultCards.propTypes = {
-  result : PropTypes.shape({
+  result: PropTypes.shape({
     id: PropTypes.string.isRequired,
     title: PropTypes.string,
     processId: PropTypes.number.isRequired,
     decisionType: PropTypes.string.isRequired,
     filename: PropTypes.string.isRequired,
     folder: PropTypes.string.isRequired,
-})
+  })
 }

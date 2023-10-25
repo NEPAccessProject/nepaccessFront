@@ -7,6 +7,7 @@ import '../User/login.css';
 import Globals from '../globals.js';
 
 import Tippy from '@tippyjs/react';
+import SearchContext from './SearchContext.js';
 
 // TODO: Filtering results etc. rerenders and loses track of downloads
 
@@ -66,11 +67,12 @@ const useStyles = makeStyles((theme) => ({
 
 
 export default class SearchProcessResult extends React.Component {
-
+  static contextType = SearchContext;
 	constructor(props) {
 		super(props);
-		console.log("🚀 ~ file: SearchProcessResult.js:17 ~ SearchProcessResult ~ constructor ~ props:", props)
-		this.state = { 
+    this.ctx = SearchContext;
+    console.log(`file: SearchProcessResult.js:74 ~ SearchProcessResult ~ constructor ~ ctx:`, ctx);
+		this.state = {
             fileProgressValue: null,
             downloadText: 'Download',
             downloadClass: 'bold',
@@ -116,9 +118,9 @@ export default class SearchProcessResult extends React.Component {
                         Title:
                         <Tippy className="tippy-tooltip"
                             trigger='mouseenter focus' content="Opens a new tab with more details">
-                            <a className="link" target="_blank" rel="noopener noreferrer" 
+                            <a className="link" target="_blank" rel="noopener noreferrer"
                                     href={_href}>
-                                            {this.props.cell._cell.row.data.title} 
+                                            {this.props.cell._cell.row.data.title}
                             </a>
                         </Tippy>
                     </span>
@@ -185,9 +187,9 @@ export default class SearchProcessResult extends React.Component {
             return <></>;
         }
     }
-    
-    /** Used by showText(). 
-     * Takes: record ID,filename,text,index; 
+
+    /** Used by showText().
+     * Takes: record ID,filename,text,index;
      * Returns: HTML for React incl. DownloadFile (which handles logging downloads)
      */
     showFragment = (_id,_filename,text,index) => {
@@ -195,7 +197,7 @@ export default class SearchProcessResult extends React.Component {
             return (
                 <span className="fragment-container" key={ `${_id}-${index}` }>
                     <span className="cardHeader bold filename-inner">
-                        <DownloadFile key={_filename} downloadType="nepafile" 
+                        <DownloadFile key={_filename} downloadType="nepafile"
                             recordId={_id}
                             id={_id}
                             filename={_filename}
@@ -213,13 +215,13 @@ export default class SearchProcessResult extends React.Component {
             return (
                 <span className="fragment-container" key={ `${_id}-${index}` }>
                     <span className="cardHeader bold filename-inner">
-                        <DownloadFile key={_filename} downloadType="nepafile" 
+                        <DownloadFile key={_filename} downloadType="nepafile"
                             recordId={_id}
                             id={_id}
                             filename={_filename}
                             results={true} />
                     </span>
-                    
+
                     <div className="card-loader-holder">
                         <div className="loader">Loading text snippet...</div>
                     </div>
@@ -230,7 +232,7 @@ export default class SearchProcessResult extends React.Component {
             return (
                 <span className="fragment-container" key={ `${_id}-${index}` }>
                     <span className="cardHeader bold filename-inner">
-                        <DownloadFile key={_filename} downloadType="nepafile" 
+                        <DownloadFile key={_filename} downloadType="nepafile"
                             recordId={_id}
                             id={_id}
                             filename={_filename}
@@ -240,8 +242,8 @@ export default class SearchProcessResult extends React.Component {
             );
         }
     }
-    /** Used by showRecord(). 
-     * Returns HTML for downloadable filenames each with highlight(s) as highlights are populated; show more/less buttons */ 
+    /** Used by showRecord().
+     * Returns HTML for downloadable filenames each with highlight(s) as highlights are populated; show more/less buttons */
     showText = (record, _index) => {
         if(record && record.name){
             let filenames = record.name.split(">");
@@ -251,7 +253,7 @@ export default class SearchProcessResult extends React.Component {
                 return [value, texts[index]]
             });
 
-            let _id = record.id; 
+            let _id = record.id;
             // console.log(record.name.substring(0,10));
             if(!this.props.show) {
                 return (
@@ -265,7 +267,7 @@ export default class SearchProcessResult extends React.Component {
                     return (
                         <div key={_id}>
                             {this.showFragment(_id,combined[0][0],combined[0][1],0)}
-        
+
                             <div className="margins" >
                                 <div>
                                     <span className="hide-button" onClick={(e) => this.hide(e, _index, record)}>
@@ -310,9 +312,9 @@ export default class SearchProcessResult extends React.Component {
                                     <span className="cardHeader bold filename-inner">
                                         {combo[0]}
                                     </span>
-                                    
-                                    
-                                    <span className="card-highlight fragment" 
+
+
+                                    <span className="card-highlight fragment"
                                             dangerouslySetInnerHTML={{
                                                 __html:combo[1]
                                             }}>
@@ -323,7 +325,7 @@ export default class SearchProcessResult extends React.Component {
                     </div>
                 );
             }
-            
+
 
         } else if(record && record.matchPercent) {
             return (
@@ -337,7 +339,7 @@ export default class SearchProcessResult extends React.Component {
             );
         }
     }
-    
+
     // Show download availability, filename, size, and download progress if downloading/downloaded
     showFileDownload = (record) => {
         if (record) {
@@ -392,7 +394,7 @@ export default class SearchProcessResult extends React.Component {
             return newRecords;
         }
     }
-    
+
     showRecord = (record, _index) => {
         return (<div key={record.relevance} className="record">
             <div className="record-line">
@@ -421,9 +423,9 @@ export default class SearchProcessResult extends React.Component {
             return "Record of Decision (ROD)";
         } else if(Globals.isFinalType(docType) || Globals.isDraftType(docType)) {
             if(docType.toLowerCase()==='final and rod') {
-                return "Final Environmental Impact Statement And ROD"; 
+                return "Final Environmental Impact Statement And ROD";
             } else {
-                return docType + " Environmental Impact Statement"; 
+                return docType + " Environmental Impact Statement";
             }
         } else {
             return docType;

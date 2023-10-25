@@ -1,4 +1,4 @@
-import { Button, Box, Divider, Grid, Paper, Typography } from '@mui/material';
+import { Alert,Button, Box, Divider, Grid, Paper,Snackbar ,Typography } from '@mui/material';
 //import Grid from '@mui/material/Unstable_Grid2';
 import { makeStyles } from '@mui/styles';
 import React, { useContext, useEffect, useRef, useState } from 'react';
@@ -9,6 +9,7 @@ import RenderSnippets from './SearchResultSnippets.jsx';
 import { styled } from '@mui/styles';
 import DownloadFiles from '../DownloadFiles';
 import DownloadFile from '../DownloadFile';
+import {Link} from 'react-router-dom';
 const DataCell = styled(Grid)(({ theme }) => ({
   backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
   ...theme.typography.body2,
@@ -161,51 +162,54 @@ const RenderRecord = (props) => {
   const year = 2023;
   const classes = useStyles(theme);
   return (
-
-    <Paper elevation={0} style={{
-        marginLeft:2,
-        marginRight:2,
-        marginTop:10,
-    }}>
-      <Grid container>
-        <DataCell>
-          <Typography variant='h4'>{title}</Typography>
-        </DataCell>
-        <Grid container id="search-result-row-container" borderTop={1} borderBottom={1} borderColor={'#ccc'}>
-          <DataCell item id="year-box" xs={1} style={{ border: 'right 1px solid #ccc' }}>
-            <Typography id="year-typography" fontWeight={'bold'}>
-              {year ? year : 'N/A'}
+<>
+      <Paper elevation={0} style={{
+          marginLeft:2,
+          marginRight:2,
+          marginTop:10,
+      }}>
+        <Grid container>
+          <DataCell>
+            <Typography variant='h4'>
+              <Link to={`/record-details?id=${id}`}>{title}</Link>
             </Typography>
           </DataCell>
-
-          <DataCell item xs={3} borderLeft={1} borderColor={'#ccc'} id="status-document-type-grid-item">
-            <Typography className={classes.card}>
-              {documentType}
-            </Typography>
-          </DataCell>
-          <DataCell item xs={6} flex={1} id="title-grid-container" borderRight={1} borderLeft={1} borderColor={'#ccc'}>
-            <Typography id="snippets-title" variant='h5' >{(title) ? title : ''}</Typography>
-          </DataCell>
-          <Grid container xs={2} flex={1} id="button-grid-container">
-            <DataCell item id="preview-button-grid-item" item display={'flex'} xs={12} >
-              {/* <Button onClick={(evt) => handleDownloadClick(evt)} variant='contained' color="primary">
-                Download
-              </Button> */}
-              <DownloadFile
-                key={record.filename}
-                downloadType="nepafile"
-                id={record.id}
-                filename={record.filename}
-              />
+          <Grid container id="search-result-row-container" borderTop={1} borderBottom={1} borderColor={'#ccc'}>
+            <DataCell item id="year-box" xs={1} style={{ border: 'right 1px solid #ccc' }}>
+              <Typography id="year-typography" fontWeight={'bold'}>
+                {year ? year : 'N/A'}
+              </Typography>
             </DataCell>
+
+            <DataCell item xs={3} borderLeft={1} borderColor={'#ccc'} id="status-document-type-grid-item">
+              <Typography className={classes.card}>
+                {documentType}
+              </Typography>
+            </DataCell>
+            <DataCell item xs={6} flex={1} id="title-grid-container" borderRight={1} borderLeft={1} borderColor={'#ccc'}>
+              <Typography id="snippets-title" variant='h5' >{(title) ? title : ''}</Typography>
+            </DataCell>
+            <Grid container xs={2} flex={1} id="button-grid-container">
+              <DataCell item id="preview-button-grid-item" item display={'flex'} xs={12} >
+                {/* <Button onClick={(evt) => handleDownloadClick(evt)} variant='contained' color="primary">
+                  Download
+                </Button> */}
+                <DownloadFile
+                  key={record.filename}
+                  downloadType="nepafile"
+                  id={record.id}
+                  filename={record.filename}
+                />
+              </DataCell>
+            </Grid>
+          </Grid>
+          <Grid id="render-snippets-record-grid-container" container xs={12}>
+            <RenderSnippets record={record} />
+
           </Grid>
         </Grid>
-        <Grid id="render-snippets-record-grid-container" container xs={12}>
-          <RenderSnippets record={record} />
 
-        </Grid>
-      </Grid>
-
-    </Paper>
+      </Paper>
+</>
   )
 }

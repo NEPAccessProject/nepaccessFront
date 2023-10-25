@@ -105,7 +105,7 @@ class Main extends React.Component {
       loggedInDisplay: 'display-none',
       loggedOutDisplay: '',
       loaderClass: 'loadDefault',
-      role: null,
+      role: '',
       currentPage: "",
       anonymous: false,
       headerLandingCss: ""
@@ -266,10 +266,12 @@ class Main extends React.Component {
         //className={this.getHeaderCss() + this.state.headerLandingCss}
         >
           <HeaderNav
-            loggedInDisplay={this.loggedInDisplay}
-            loggedOutDisplay={this.loggedOutDisplay}
+            loggedInDisplay={this.state.loggedInDisplay}
+            loggedOutDisplay={this.state.loggedOutDisplay}
             showMenuItems={this.showMenuItems}
             role={this.state.role}
+            state={this.state}
+            loggedIn= {this.state.loggedIn}
           />
         </div>
         <Switch>
@@ -328,12 +330,15 @@ class Main extends React.Component {
     )
   }
 
-  showMenuItems = () => {
+  showMenuItems = (props) => {
+    console.log(`file: Main.js:334 ~ Main ~ props:`, props);
     console.log(`showMenuItems role: ${this.state.role} logged In Displayed: ${this.state.loggedInDisplay}`);
     return (
-      <span id="admin-span" hidden={(!this.state.role || this.state.role === 'user')} className={this.state.loggedInDisplay + " right-nav-item logged-in"}>
+      <span  hidden={(!this.state.role || this.state.role === 'user')} className={this.state.loggedInDisplay + " right-nav-item logged-in"}>
 
-        <div id="admin-dropdown" className="main-menu-link dropdown">
+        <div id="admin-dropdown"
+          className="main-menu-link dropdown"
+          >
           <Link id="admin-button" className="main-menu-link drop-button" to="/importer">
             Admin
           </Link>

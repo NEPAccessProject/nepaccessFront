@@ -34,7 +34,6 @@ const FULLSTYLE = {display: 'block',
 };
 
 class SearchTest extends React.Component {
-    _lastSearchTerms = "";
 
 	// static propTypes = {
         // match: PropTypes.object.isRequired,
@@ -44,6 +43,7 @@ class SearchTest extends React.Component {
 
     constructor(props) {
         super(props);
+    this.lastSearchedTerm ='';
 		this.state = {
             titleRaw: '',
             startPublish: null,
@@ -96,7 +96,7 @@ class SearchTest extends React.Component {
 
         this.myRef = React.createRef();
     }
-    
+
     doSearch = (terms) => {
         this._lastSearchTerms = terms;
         this.setState({
@@ -137,7 +137,7 @@ class SearchTest extends React.Component {
                     this.debouncedSearch(this.state);
                 }
             });
-        } 
+        }
     }
 
     handleProximityValues = (string) => {
@@ -145,7 +145,7 @@ class SearchTest extends React.Component {
 
         // Disable prox dropdown if conflicting characters in terms
         if( string.match(/["?*~]+/) ) {
-            // _inputMessage = "Wildcard, phrase or proximity search character found in terms: " 
+            // _inputMessage = "Wildcard, phrase or proximity search character found in terms: "
             //     + userInput.match(/["\?\*~]+/)[0][0]
             //     + ".  Disabled proximity search dropdown to prevent unpredictable results."
             valuesResult._inputMessage = "Proximity dropdown is disabled when certain special characters are used: ~ ? \" *";
@@ -170,15 +170,15 @@ class SearchTest extends React.Component {
     }
     /** clears and disables proximity search option as well as clearing text */
     onClearClick = (evt) => {
-        this.setState({ 
-            titleRaw: '', 
-            proximityDisabled: true, 
-            proximityOption: null, 
-            inputMessage: "" 
+        this.setState({
+            titleRaw: '',
+            proximityDisabled: true,
+            proximityOption: null,
+            inputMessage: ""
         }, () => {
             this.inputSearch.focus();
             this.debouncedSuggest();
-        }); 
+        });
     }
 
     onClearFiltersClick = () => {
@@ -209,10 +209,10 @@ class SearchTest extends React.Component {
             optionsChecked: true,
 
             countyOptions: Globals.counties
-        }, () => { 
+        }, () => {
             this.filterBy(this.state);
         });
-        
+
     }
 
     onRadioChange = (evt) => {
@@ -227,7 +227,7 @@ class SearchTest extends React.Component {
             this.doSearch(this.state.titleRaw);
         }
     }
-    /** For some reason, without this, calendars stay open after tabbing past them. 
+    /** For some reason, without this, calendars stay open after tabbing past them.
      *  (This is opposite to how react-datepicker's default behavior is described.) */
     onKeyDown = (e) => {
         if (e.key === "Tab") {
@@ -254,15 +254,15 @@ class SearchTest extends React.Component {
 
 		//get the evt.target.name (defined by name= in input)
 		//and use it to target the key on our `state` object with the same name, using bracket syntax
-		this.setState( 
-		{ 
+		this.setState(
+		{
             [evt.target.name]: userInput,
             proximityDisabled: proximityValues.disableValue,
             inputMessage: proximityValues._inputMessage
-        }, () => { 
+        }, () => {
             // auto-searching is currently too expensive until asynchronous results
             // this.debouncedSearch(this.state);
-            
+
             // autocomplete/suggest/other functionality fires, starting here
             // TODO: May want to take out any special characters that never appear in titles or are otherwise unnecessary
             this.debouncedSuggest(this.state.titleRaw);
@@ -273,16 +273,16 @@ class SearchTest extends React.Component {
     onChangeHandler = (evt) => {
         // do nothing
     }
-    
-    geoFilter = (geodata) => { 
+
+    geoFilter = (geodata) => {
         // console.log(geodata.name, geodata.abbrev);
         if(geodata.geoType === Globals.geoType.STATE) {
-            
+
             // Assuming Search and SearchResultsMap talk to each other, we'll want two-way interaction.
             // So if it's sending us a state, we may want to enable or disable it.
             const indexIfExists = this.state.state.indexOf(geodata.abbrev);
             let _stateRaw = this.state.stateRaw;
-            try { 
+            try {
                 if(indexIfExists === -1) { // Enable
                     _stateRaw.push({value: geodata.abbrev, label: geodata.name});
                 } else { // Disable
@@ -297,7 +297,7 @@ class SearchTest extends React.Component {
         } else if (geodata.geoType === Globals.geoType.COUNTY) {
             const indexIfExists = this.state.county.indexOf(geodata.abbrev);
             let _countyRaw = this.state.countyRaw;
-            try { 
+            try {
                 if(indexIfExists === -1) { // Enable
                     _countyRaw.push({value: geodata.abbrev, label: geodata.abbrev});
                 } else { // Disable
@@ -328,16 +328,16 @@ class SearchTest extends React.Component {
         }
         // this.setState(prevState => {
         //     let inputs = { ...prevState.inputs };  // creating copy of state variable inputs
-        //     inputs.agency = agencyLabels;                     // update the name property, assign a new value                 
+        //     inputs.agency = agencyLabels;                     // update the name property, assign a new value
         //     return { inputs };                                 // return new object inputs object
         // }, () =>{
         //     this.debouncedSearch(this.state.inputs);
         // });
-        this.setState( 
-		{ 
+        this.setState(
+		{
             agency: agencyLabels,
             agencyRaw: evt
-		}, () => { 
+		}, () => {
 			this.filterBy(this.state);
 		});
     }
@@ -346,11 +346,11 @@ class SearchTest extends React.Component {
 		for(var i = 0; i < evt.length; i++){
 			agencyLabels.push(evt[i].label.replace(/ \([A-Z]*\)/gi,""));
         }
-        this.setState( 
-		{ 
+        this.setState(
+		{
             cooperatingAgency: agencyLabels,
             cooperatingAgencyRaw: evt
-		}, () => { 
+		}, () => {
 			this.filterBy(this.state);
 		});
     }
@@ -360,18 +360,18 @@ class SearchTest extends React.Component {
 			stateValues.push(evt[i].value);
 		}
 
-        this.setState( 
-		{ 
+        this.setState(
+		{
 			state: stateValues,
             stateRaw: evt,
             countyOptions: this.narrowCountyOptions(stateValues)
-		}, () => { 
+		}, () => {
 			// this.filterBy(this.state);
             // Purge invalid counties, which will then run filterBy
             this.onCountyChange(this.state.countyOptions.filter(countyObj => this.state.county.includes(countyObj.value)));
         });
     }
-    /** Helper method for onLocationChange limits county options to selected states in filter, 
+    /** Helper method for onLocationChange limits county options to selected states in filter,
      * or resets to all counties if no states selected */
     narrowCountyOptions = (stateValues) => {
         /** Filter logic for county array of specific label/value format given array of state abbreviations  */
@@ -400,11 +400,11 @@ class SearchTest extends React.Component {
 			countyValues.push(evt[i].value);
 		}
 
-        this.setState( 
-		{ 
+        this.setState(
+		{
 			county: countyValues,
             countyRaw: evt
-		}, () => { 
+		}, () => {
 			this.filterBy(this.state);
         });
     }
@@ -414,10 +414,10 @@ class SearchTest extends React.Component {
                 proximityOption: null
             });
         } else {
-            this.setState( 
-            { 
+            this.setState(
+            {
                 proximityOption: evt,
-            }, () => { 
+            }, () => {
                 // console.log(this.state.proximityOption);
             });
         }
@@ -450,14 +450,14 @@ class SearchTest extends React.Component {
     onNeedsDocumentChecked = (evt) => {
         this.setState({
             needsDocument: !this.state.needsDocument
-		}, () => { 
+		}, () => {
 			this.filterBy(this.state);
         });
     }
-    
+
     onTypeChecked = (evt) => {
         if(evt.target.name==="optionsChecked") {
-            this.setState({ 
+            this.setState({
                 [evt.target.name]: evt.target.checked
             });
         } else if(evt.target.name==="typeAll" && evt.target.checked) { // All: Check all, uncheck others
@@ -466,17 +466,17 @@ class SearchTest extends React.Component {
                 typeFinal: false,
                 typeDraft: false,
                 typeOther: false
-            }, () => { 
+            }, () => {
                 this.filterBy(this.state);
-                /**this.debouncedSearch(this.state);*/ 
+                /**this.debouncedSearch(this.state);*/
             });
         } else { // Not all: Check target, uncheck all
-            this.setState({ 
+            this.setState({
                 [evt.target.name]: evt.target.checked,
                 typeAll: false
-            }, () => { 
+            }, () => {
                 this.filterBy(this.state);
-                // this.debouncedSearch(this.state); 
+                // this.debouncedSearch(this.state);
             });
         }
     }
@@ -484,18 +484,18 @@ class SearchTest extends React.Component {
 	// onChecked = (evt) => {
 	//     this.setState( { [evt.target.name]: evt.target.checked}, () => { this.debouncedSearch(this.state); });
     // }
-    
-    onStartDateChange = (date) => { 
-        this.setState( { startPublish: date }, () => { 
+
+    onStartDateChange = (date) => {
+        this.setState( { startPublish: date }, () => {
 			this.filterBy(this.state);
-            // this.debouncedSearch(this.state); 
-        }); 
+            // this.debouncedSearch(this.state);
+        });
     }
     // Tried quite a bit but I can't force the calendar to Dec 31 of a year as it's typed in without editing the library code itself.
     // I can change the value but the popper state won't update to reflect it (even when I force it to update).
-    onEndDateChange = (date, evt) => { 
+    onEndDateChange = (date, evt) => {
         // should be true at 4 digits e.g. user typed in a year
-        // if(evt && evt.target && evt.target.value && /^\d{4}$/.test(evt.target.value)) { 
+        // if(evt && evt.target && evt.target.value && /^\d{4}$/.test(evt.target.value)) {
         //     // TODO: Is there a way to change the month/day focused without filling in those text values?
         //     // Goal is to focus Dec 31 of year instead of Jan 1 (defaults to 01 01 if nothing provided)
         //     console.log(new Date('12 31 ' + evt.target.value));
@@ -505,33 +505,33 @@ class SearchTest extends React.Component {
         //     this.datePickerEnd.calendar.instanceRef.state.date = new Date('12 31 ' + evt.target.value);
         //     this.datePickerEnd.forceUpdate();
 
-        //     this.setState( { endPublish: new Date('12 31 ' + evt.target.value) }, () => { 
+        //     this.setState( { endPublish: new Date('12 31 ' + evt.target.value) }, () => {
         //         this.datePickerEnd.value = this.state.endPublish;
         //         this.filterBy(this.state);
         //         console.log(this.state.endPublish);
         //         this.datePickerEnd.forceUpdate();
-        //         // this.debouncedSearch(this.state); 
-        //     }); 
+        //         // this.debouncedSearch(this.state);
+        //     });
         // } else {
 
-            this.setState( { endPublish: date }, () => { 
+            this.setState( { endPublish: date }, () => {
                 this.filterBy(this.state);
-                // this.debouncedSearch(this.state); 
-            }); 
+                // this.debouncedSearch(this.state);
+            });
         // }
 
     }
-    onStartCommentChange = (date) => { 
-        this.setState( { startComment: date }, () => { 
+    onStartCommentChange = (date) => {
+        this.setState( { startComment: date }, () => {
 			this.filterBy(this.state);
-            // this.debouncedSearch(this.state); 
-        }); 
+            // this.debouncedSearch(this.state);
+        });
     }
-    onEndCommentChange = (date) => { 
+    onEndCommentChange = (date) => {
         this.setState( { endComment: date }, () => {
 			this.filterBy(this.state);
-            // this.debouncedSearch(this.state); 
-        }); 
+            // this.debouncedSearch(this.state);
+        });
     }
     tooltipTrigger = (evt) => {
         if(this.state.tooltipOpen){
@@ -568,7 +568,7 @@ class SearchTest extends React.Component {
         }).then(_response => {
             const rsp = _response.data;
             this.setState({ [stateName]: rsp });
-        }).catch(error => { 
+        }).catch(error => {
         })
     }
 
@@ -586,15 +586,15 @@ class SearchTest extends React.Component {
                         key={idx}
                         dangerouslySetInnerHTML={{
                             __html: suggestion.title
-                        }} 
+                        }}
                     />
                 </div>
             );
         }
     }
     /** If we can complete the current search terms into a title, show links to up to three suggested details pages.
-     * AnalyzingInfixSuggester.lookup logic seems to see if the rightmost term can be expanded to match titles.  
-     * 
+     * AnalyzingInfixSuggester.lookup logic seems to see if the rightmost term can be expanded to match titles.
+     *
      * So the terms 'rose mine' won't find anything, because a word MUST be 'rose' - but 'mine rose' will find rosemont
      * copper mine, because it's basically looking for mine AND rose*, whereas rose AND mine* doesn't match any titles.
      */
@@ -677,7 +677,7 @@ class SearchTest extends React.Component {
 
         // original data has some abbreviation-only/incorrect/missing entries (ARD, FirstNet, NGB, URC?)
         // { value: 'ARD', label: 'ARD' }
-        const agencyOptions = [	
+        const agencyOptions = [
             { value: 'ACHP', label: 'Advisory Council on Historic Preservation (ACHP)' },{ value: 'USAID', label: 'Agency for International Development (USAID)' },{ value: 'ARS', label: 'Agriculture Research Service (ARS)' },{ value: 'APHIS', label: 'Animal and Plant Health Inspection Service (APHIS)' },{ value: 'AFRH', label: 'Armed Forces Retirement Home (AFRH)' },{ value: 'BPA', label: 'Bonneville Power Administration (BPA)' },{ value: 'BIA', label: 'Bureau of Indian Affairs (BIA)' },{ value: 'BLM', label: 'Bureau of Land Management (BLM)' },{ value: 'USBM', label: 'Bureau of Mines (USBM)' },{ value: 'BOEM', label: 'Bureau of Ocean Energy Management (BOEM)' },{ value: 'BOP', label: 'Bureau of Prisons (BOP)' },{ value: 'BR', label: 'Bureau of Reclamation (BR)' },{ value: 'Caltrans', label: 'California Department of Transportation (Caltrans)' },{ value: 'CHSRA', label: 'California High-Speed Rail Authority (CHSRA)' },{ value: 'CIA', label: 'Central Intelligence Agency (CIA)' },{ value: 'NYCOMB', label: 'City of New York, Office of Management and Budget (NYCOMB)' },{ value: 'CDBG', label: 'Community Development Block Grant (CDBG)' },{ value: 'CTDOH', label: 'Connecticut Department of Housing (CTDOH)' },{ value: 'BRAC', label: 'Defense Base Closure and Realignment Commission (BRAC)' },{ value: 'DLA', label: 'Defense Logistics Agency (DLA)' },{ value: 'DNA', label: 'Defense Nuclear Agency (DNA)' },{ value: 'DNFSB', label: 'Defense Nuclear Fac. Safety Board (DNFSB)' },{ value: 'DSA', label: 'Defense Supply Agency (DSA)' },{ value: 'DRB', label: 'Delaware River Basin Commission (DRB)' },{ value: 'DC', label: 'Denali Commission (DC)' },{ value: 'USDA', label: 'Department of Agriculture (USDA)' },{ value: 'DOC', label: 'Department of Commerce (DOC)' },{ value: 'DOD', label: 'Department of Defense (DOD)' },{ value: 'DOE', label: 'Department of Energy (DOE)' },{ value: 'HHS', label: 'Department of Health and Human Services (HHS)' },{ value: 'DHS', label: 'Department of Homeland Security (DHS)' },{ value: 'HUD', label: 'Department of Housing and Urban Development (HUD)' },{ value: 'DOJ', label: 'Department of Justice (DOJ)' },{ value: 'DOL', label: 'Department of Labor (DOL)' },{ value: 'DOS', label: 'Department of State (DOS)' },{ value: 'DOT', label: 'Department of Transportation (DOT)' },{ value: 'TREAS', label: 'Department of Treasury (TREAS)' },{ value: 'VA', label: 'Department of Veteran Affairs (VA)' },{ value: 'DOI', label: 'Department of the Interior (DOI)' },{ value: 'DEA', label: 'Drug Enforcement Administration (DEA)' },{ value: 'EDA', label: 'Economic Development Administration (EDA)' },{ value: 'ERA', label: 'Energy Regulatory Administration (ERA)' },{ value: 'ERDA', label: 'Energy Research and Development Administration (ERDA)' },{ value: 'EPA', label: 'Environmental Protection Agency (EPA)' },{ value: 'FSA', label: 'Farm Service Agency (FSA)' },{ value: 'FHA', label: 'Farmers Home Administration (FHA)' },{ value: 'FAA', label: 'Federal Aviation Administration (FAA)' },{ value: 'FCC', label: 'Federal Communications Commission (FCC)' },{ value: 'FEMA', label: 'Federal Emergency Management Agency (FEMA)' },{ value: 'FEA', label: 'Federal Energy Administration (FEA)' },{ value: 'FERC', label: 'Federal Energy Regulatory Commission (FERC)' },{ value: 'FHWA', label: 'Federal Highway Administration (FHWA)' },{ value: 'FMC', label: 'Federal Maritime Commission (FMC)' },{ value: 'FMSHRC', label: 'Federal Mine Safety and Health Review Commission (FMSHRC)' },{ value: 'FMCSA', label: 'Federal Motor Carrier Safety Administration (FMCSA)' },{ value: 'FPC', label: 'Federal Power Commission (FPC)' },{ value: 'FRA', label: 'Federal Railroad Administration (FRA)' },{ value: 'FRBSF', label: 'Federal Reserve Bank of San Francisco (FRBSF)' },{ value: 'FTA', label: 'Federal Transit Administration (FTA)' }
             ,{ value: 'FirstNet', label: 'First Responder Network Authority (FirstNet)' },{ value: 'USFWS', label: 'Fish and Wildlife Service (USFWS)' },{ value: 'FDOT', label: 'Florida Department of Transportation (FDOT)' },{ value: 'FDA', label: 'Food and Drug Administration (FDA)' },{ value: 'USFS', label: 'Forest Service (USFS)' },{ value: 'GSA', label: 'General Services Administration (GSA)' },{ value: 'USGS', label: 'Geological Survey (USGS)' },{ value: 'GLB', label: 'Great Lakes Basin Commission (GLB)' },{ value: 'IHS', label: 'Indian Health Service (IHS)' },{ value: 'IRS', label: 'Internal Revenue Service (IRS)' },{ value: 'IBWC', label: 'International Boundary and Water Commission (IBWC)' },{ value: 'ICC', label: 'Interstate Commerce Commission (ICC)' },{ value: 'JCS', label: 'Joint Chiefs of Staff (JCS)' },{ value: 'MARAD', label: 'Maritime Administration (MARAD)' },{ value: 'MTB', label: 'Materials Transportation Bureau (MTB)' },{ value: 'MSHA', label: 'Mine Safety and Health Administration (MSHA)' },{ value: 'MMS', label: 'Minerals Management Service (MMS)' },{ value: 'MESA', label: 'Mining Enforcement and Safety (MESA)' },{ value: 'MRB', label: 'Missouri River Basin Commission (MRB)' },{ value: 'NASA', label: 'National Aeronautics and Space Administration (NASA)' },{ value: 'NCPC', label: 'National Capital Planning Commission (NCPC)' },{ value: 'NGA', label: 'National Geospatial-Intelligence Agency (NGA)' }
             ,{ value: 'NGB', label: 'National Guard Bureau (NGB)' },{ value: 'NHTSA', label: 'National Highway Traffic Safety Administration (NHTSA)' },{ value: 'NIGC', label: 'National Indian Gaming Commission (NIGC)' },{ value: 'NIH', label: 'National Institute of Health (NIH)' },{ value: 'NMFS', label: 'National Marine Fisheries Service (NMFS)' },{ value: 'NNSA', label: 'National Nuclear Security Administration (NNSA)' },{ value: 'NOAA', label: 'National Oceanic and Atmospheric Administration (NOAA)' },{ value: 'NPS', label: 'National Park Service (NPS)' },{ value: 'NSF', label: 'National Science Foundation (NSF)' },{ value: 'NSA', label: 'National Security Agency (NSA)' },{ value: 'NTSB', label: 'National Transportation Safety Board (NTSB)' },{ value: 'NRCS', label: 'Natural Resource Conservation Service (NRCS)' },{ value: 'NER', label: 'New England River Basin Commission (NER)' },{ value: 'NJDEP', label: 'New Jersey Department of Environmental Protection (NJDEP)' },{ value: 'NRC', label: 'Nuclear Regulatory Commission (NRC)' },{ value: 'OCR', label: 'Office of Coal Research (OCR)' }
@@ -720,42 +720,42 @@ class SearchTest extends React.Component {
         //         + "<td>&nbsp;</td><td>&nbsp;</td>"
         //     + "</tr>"
         //     + "<tr class=tooltip-line><td class=tooltip-connector>OR</td>"
-        //         + "<td>(all caps) to search for <span class=bold>any</span> of those words.</td>" 
+        //         + "<td>(all caps) to search for <span class=bold>any</span> of those words.</td>"
         //     + "</tr>"
         //     + "<tr class=tooltip-line>"
         //         + "<td>&nbsp;</td><td>&nbsp;</td>"
         //     + "</tr>"
         //     + "<tr class=tooltip-line><td class=tooltip-connector>NOT</td>"
-        //         + "<td>(all caps) to <span class=bold>exclude</span> a word or phrase.</td>" 
+        //         + "<td>(all caps) to <span class=bold>exclude</span> a word or phrase.</td>"
         //     + "</tr>"
         //     + "<tr class=tooltip-line>"
         //         + "<td>&nbsp;</td><td>&nbsp;</td>"
         //     + "</tr>"
         //     + "<tr class=tooltip-line><td class=tooltip-connector>&quot; &quot;</td>"
-        //         + "<td>Surround words with quotes (&quot; &quot;) to search for an <span class=bold>exact phrase.</td>" 
+        //         + "<td>Surround words with quotes (&quot; &quot;) to search for an <span class=bold>exact phrase.</td>"
         //     + "</tr>"
         //     + "<tr class=tooltip-line>"
         //         + "<td>&nbsp;</td><td>&nbsp;</td>"
         //     + "</tr>"
         //     + "<tr class=tooltip-line><td class=tooltip-connector></td>"
-        //         + "<td><a href=search-tips target=_blank rel=noopener noreferrer>More search tips.</a></td>" 
+        //         + "<td><a href=search-tips target=_blank rel=noopener noreferrer>More search tips.</a></td>"
         //     + "</tr>"
         // + "</tbody></table>";
 
 
-        
+
         return (
             <>
             {/* <div className="content" onSubmit={this.submitHandler}>
                 {this.props.parseError}
                 <div className="search-holder" >
-                    
+
                     <div className="search-bar-holder">
                         <h1 className="search-header-2">{this.getSearchBarText()}</h1>
 
                         <div className="pre-input-bar">
                             <div id="tooltip4Container">
-                                <Tippy className="tippy-tooltip--small searchTips" trigger='manual click' 
+                                <Tippy className="tippy-tooltip--small searchTips" trigger='manual click'
                                     hideOnClick={false}
                                     interactive={true}
                                     placement="bottom"
@@ -773,44 +773,44 @@ class SearchTest extends React.Component {
                                                 <td>&nbsp;</td><td>&nbsp;</td>
                                             </tr>
                                             <tr className="tooltip-line"><td className="tooltip-connector">OR</td>
-                                                <td>(all caps) to search for <span className="bold">any</span> of those words.</td> 
+                                                <td>(all caps) to search for <span className="bold">any</span> of those words.</td>
                                             </tr>
                                             <tr className="tooltip-line">
                                                 <td>&nbsp;</td><td>&nbsp;</td>
                                             </tr>
                                             <tr className="tooltip-line"><td className="tooltip-connector">NOT</td>
-                                                <td>(all caps) to <span className="bold">exclude</span> a word or phrase.</td> 
+                                                <td>(all caps) to <span className="bold">exclude</span> a word or phrase.</td>
                                             </tr>
                                             <tr className="tooltip-line">
                                                 <td>&nbsp;</td><td>&nbsp;</td>
                                             </tr>
                                             <tr className="tooltip-line"><td className="tooltip-connector">&quot; &quot;</td>
-                                                <td>Surround words with quotes (&quot; &quot;) to search for an <span className="bold">exact phrase.</span></td> 
+                                                <td>Surround words with quotes (&quot; &quot;) to search for an <span className="bold">exact phrase.</span></td>
                                             </tr>
                                             <tr className="tooltip-line">
                                                 <td>&nbsp;</td><td>&nbsp;</td>
                                             </tr>
                                             <tr className="tooltip-line"><td className="tooltip-connector"></td>
-                                                <td><a href="search-tips" target="_blank" rel="noopener noreferrer">More search tips.</a></td> 
+                                                <td><a href="search-tips" target="_blank" rel="noopener noreferrer">More search tips.</a></td>
                                             </tr>
                                         </tbody></table>
                                         </>
                                     )}>
-                                    {<span 
+                                    {<span
                                             className={"side-link inline"}>
                                         Search tips
                                     </span>}
                                 </Tippy>
-                                
-                                <Tippy className="tippy-tooltip--small searchTips" trigger='manual click' 
+
+                                <Tippy className="tippy-tooltip--small searchTips" trigger='manual click'
                                     hideOnClick={true}
                                     interactive={true}
                                     placement="bottom"
                                     size="small"
                                     content={
                                         <div>
-                                            Currently the site contains <b>{this.state.EISCount}</b> Draft or Final Environmental Impact Statements 
-                                            from: <b>{this.state.firstYear}-{this.state.lastYear}</b>. 
+                                            Currently the site contains <b>{this.state.EISCount}</b> Draft or Final Environmental Impact Statements
+                                            from: <b>{this.state.firstYear}-{this.state.lastYear}</b>.
                                             More files are being added continuously.
                                             <div className="text-center margin-top">
                                                 <a href="available-documents" target="_blank" rel="noopener noreferrer">Available files</a>
@@ -826,25 +826,25 @@ class SearchTest extends React.Component {
                         </div>
 
                         <span id="search-proximity">
-                            <Select 
+                            <Select
                                 id="proximity-select"
                                 className={this.state.proximityDisabled ? " disabled" : ""}
                                 classNamePrefix="react-select control"
                                 placeholder="Find within..."
-                                options={proximityOptions} 
+                                options={proximityOptions}
                                 value={this.state.proximityOption}
                                 // menuIsOpen={true}
-                                onChange={this.onProximityChange} 
+                                onChange={this.onProximityChange}
                                 isMulti={false} />
                         </span>
                         <input id="main-search-bar"
                             ref={(input) => { this.inputSearch = input; }}
-                            className="search-bar" 
-                            name="titleRaw" 
-                            placeholder="Enter search terms (or leave blank to get all results)" 
+                            className="search-bar"
+                            name="titleRaw"
+                            placeholder="Enter search terms (or leave blank to get all results)"
                             tabIndex="1"
                             value={this.state.titleRaw}
-                            autoFocus 
+                            autoFocus
                             onChange={this.onChangeHandler}
                             onInput={this.onInput} onKeyUp={this.onKeyUp}
                         />
@@ -858,13 +858,13 @@ class SearchTest extends React.Component {
                         </svg>
                         <div className="input-bar-2">
                             <div className="input-bar-left">
-                                <input id="check1" className="pre-search-input" type="checkbox" 
+                                <input id="check1" className="pre-search-input" type="checkbox"
                                         checked={this.state.searchOption==="C"}
                                         onChange={this.onTitleOnlyChecked}
                                 />
                                 <label className="sidebar-check-label no-select" htmlFor="check1">
                                     Search only within titles
-                                </label>                                
+                                </label>
 
                             </div>
                             <div className="surveyHolder" hidden={this.state.surveyChecked}>
@@ -907,7 +907,7 @@ class SearchTest extends React.Component {
 
             <div className="sidebar-filters" hidden={!this.state.filtersHidden}
                     style={FULLSTYLE}>
-                <span className="sidebar-header">Narrow your results 
+                <span className="sidebar-header">Narrow your results
                     <span className="filters-toggle" onClick={() => this.toggleFiltersHidden()}>
                         +
                     </span>
@@ -918,12 +918,12 @@ class SearchTest extends React.Component {
                 // this would launch a new search on enter key, in some child inputs
                 // onKeyUp={this.onKeyUp}
             >
-                <span className="sidebar-header">Narrow your results 
+                <span className="sidebar-header">Narrow your results
                     <span className="filters-toggle" onClick={() => this.toggleFiltersHidden()}>
                         -
                     </span>
                 </span>
-                
+
                 <div className="sidebar-hr"></div>
 
                 <div className="filter flex-1">
@@ -936,58 +936,58 @@ class SearchTest extends React.Component {
 
                     {this.renderClearFiltersButton()}
                 </div>
-                
+
                 <div className="sidebar-hr"></div>
-                
+
                 <div className="filter">
                     <label className="sidebar-label" htmlFor="searchAgency">Lead agency or <span className="link" onClick={this.orgClick}>agencies</span></label>
-                    <Select id="searchAgency" className="multi" classNamePrefix="react-select" isMulti name="agency" isSearchable isClearable 
+                    <Select id="searchAgency" className="multi" classNamePrefix="react-select" isMulti name="agency" isSearchable isClearable
                         styles={customStyles}
                         tabIndex="3"
-                        options={agencyOptions} 
-                        onChange={this.onAgencyChange} 
+                        options={agencyOptions}
+                        onChange={this.onAgencyChange}
                         value={this.state.agencyRaw}
-                        placeholder="Type or select agencies" 
+                        placeholder="Type or select agencies"
                         // (temporarily) specify menuIsOpen={true} parameter to keep menu open to inspect elements.
                         // menuIsOpen={true}
                     />
                 </div>
                 <div className="filter">
                     <label className="sidebar-label" htmlFor="searchAgency">Cooperating agencies</label>
-                    <Select id="searchAgency" className="multi" classNamePrefix="react-select" isMulti name="cooperatingAgency" isSearchable isClearable 
+                    <Select id="searchAgency" className="multi" classNamePrefix="react-select" isMulti name="cooperatingAgency" isSearchable isClearable
                         styles={customStyles}
                         tabIndex="4"
-                        options={agencyOptions} 
-                        onChange={this.onCooperatingAgencyChange} 
+                        options={agencyOptions}
+                        onChange={this.onCooperatingAgencyChange}
                         value={this.state.cooperatingAgencyRaw}
-                        placeholder="Type or select agencies" 
+                        placeholder="Type or select agencies"
                         // (temporarily) specify menuIsOpen={true} parameter to keep menu open to inspect elements.
                         // menuIsOpen={true}
                     />
                 </div>
                 <div className="filter">
                     <label className="sidebar-label" htmlFor="searchState">State(s) or location(s)</label>
-                    <Select id="searchState" className="multi" classNamePrefix="react-select" isMulti name="state" isSearchable isClearable 
+                    <Select id="searchState" className="multi" classNamePrefix="react-select" isMulti name="state" isSearchable isClearable
                         styles={customStyles}
                         tabIndex="5"
-                        options={stateOptions} 
-                        onChange={this.onLocationChange} 
+                        options={stateOptions}
+                        onChange={this.onLocationChange}
                         /** This filter logic is needed to work properly with interactive map */
                         value={stateOptions.filter(stateObj => this.state.state.includes(stateObj.value))}
-                        placeholder="Type or select states" 
+                        placeholder="Type or select states"
                     />
                 </div>
                 <div className="filter">
                     <label className="sidebar-label" htmlFor="searchCounty">County/counties</label>
-                    <Select id="searchCounty" className="multi" classNamePrefix="react-select" isMulti name="county" isSearchable isClearable 
+                    <Select id="searchCounty" className="multi" classNamePrefix="react-select" isMulti name="county" isSearchable isClearable
                         styles={customStyles}
                         tabIndex="5"
-                        options={this.state.countyOptions} 
-                        onChange={this.onCountyChange} 
+                        options={this.state.countyOptions}
+                        onChange={this.onCountyChange}
                         /** This filter logic is needed to work properly with interactive map */
                         value={this.state.countyOptions.filter(countyObj => this.state.county.includes(countyObj.value))}
                         // value={this.state.countyRaw}
-                        placeholder="Type or select a county" 
+                        placeholder="Type or select a county"
                     />
                 </div>
 
@@ -1001,17 +1001,17 @@ class SearchTest extends React.Component {
                         </span>
                         <DatePicker
                             ref={ref => (this.datePickerStart = ref)}
-                            selected={this.state.startPublish} onChange={this.onStartDateChange} 
+                            selected={this.state.startPublish} onChange={this.onStartDateChange}
                             onKeyDown={this.onKeyDown}
                             dateFormat="yyyy-MM-dd" placeholderText="YYYY-MM-DD"
-                            className="sidebar-date" 
+                            className="sidebar-date"
                             showMonthDropdown={true}
                             showYearDropdown={true}
                             adjustDateOnChange
                             tabIndex="6"
                             popperPlacement="right"
                             isClearable
-                            // preventOpenOnFocus={true} 
+                            // preventOpenOnFocus={true}
                         />
                         <span className="sidebar-date-text">
                             To
@@ -1021,21 +1021,21 @@ class SearchTest extends React.Component {
                             selected={this.state.endPublish} onChange={this.onEndDateChange}
                             onKeyDown={this.onKeyDown}
                             dateFormat="yyyy-MM-dd" placeholderText="YYYY-MM-DD"
-                            className="sidebar-date" 
+                            className="sidebar-date"
                             showMonthDropdown={true}
                             showYearDropdown={true}
                             adjustDateOnChange
                             tabIndex="7"
                             popperPlacement="right"
                             isClearable
-                            // preventOpenOnFocus={true} 
-                            // openToDate={new Date('12 31 2021')} 
+                            // preventOpenOnFocus={true}
+                            // openToDate={new Date('12 31 2021')}
                         />
                     </div>
                 </div>
 
                 <div className="sidebar-hr"></div>
-                
+
                 <div className="filter">
                     <label className="sidebar-label-date">Document Type</label>
                     <div className="sidebar-checkboxes">
@@ -1104,7 +1104,7 @@ class SearchTest extends React.Component {
                     </div>
 
                 </div>
-                
+
             </div>
             <div hidden={this.state.hideOrganization} id="agency-svg-holder">
                 <button onClick={this.orgClick}>x</button>
@@ -1135,14 +1135,14 @@ class SearchTest extends React.Component {
                 rehydrate.titleRaw = rehydrate.lastSearchedTerm;
                 this._lastSearchTerms = rehydrate.lastSearchedTerm;
             }
-            
+
             // console.log(rehydrate.startPublish);
             // console.log(new Date(rehydrate.startPublish));
 
             if(typeof(rehydrate.startPublish) === "string"){
                 rehydrate.startPublish = Globals.getCorrectDate(rehydrate.startPublish);
             } // else number
-            
+
             if(typeof(rehydrate.endPublish) === "string"){
                 rehydrate.endPublish = Globals.getCorrectDate(rehydrate.endPublish);
             }
@@ -1154,7 +1154,7 @@ class SearchTest extends React.Component {
         catch(e) {
             // do nothing
         }
-        
+
         this.getCounts();
 
         // Get search params on mount and run search on them (implies came from landing page)
@@ -1174,7 +1174,7 @@ class SearchTest extends React.Component {
         }).then(_response => {
             const rsp = this.resp += (JSON.stringify({data: _response.data, status: _response.status}));
             this.setState({
-                server_response: rsp 
+                server_response: rsp
             }, () => {
                 console.log(this.state.server_response);
             });
@@ -1183,7 +1183,7 @@ class SearchTest extends React.Component {
             console.error(error);
         })
     }
-    
+
 
     surveyClick = (evt) => {
         this.setState({
@@ -1211,7 +1211,7 @@ class SearchTest extends React.Component {
             } else {
                 dataForm.append('searchTerms', parseTerms(this._lastSearchTerms));
             }
-            
+
             this.post(postUrl,dataForm);
         })
     }
@@ -1221,21 +1221,21 @@ class SearchTest extends React.Component {
 
 export default withRouter(SearchTest);
 
-/** Does a .replace with regex for these rules: 
+/** Does a .replace with regex for these rules:
  * For the opening ', it could have either no characters before it, or whitespace.
- * Then another ' must be found after that one preceding either no characters, 
+ * Then another ' must be found after that one preceding either no characters,
  * or whitespace.  In between the two can be any characters, so technically this would count:
  * ' '.  That isn't really a problem, though.
- * 
- * In other words, enforce /([\s]|^)'(.+)'([\s]|$)/g and replace surrounding pair of ' with " 
- * 
- * Also before then turn probable (roughly definitive) proximity search attempts into proper proximity searches */ 
+ *
+ * In other words, enforce /([\s]|^)'(.+)'([\s]|$)/g and replace surrounding pair of ' with "
+ *
+ * Also before then turn probable (roughly definitive) proximity search attempts into proper proximity searches */
  function parseTerms(str) {
     if (!str) return str;
-    
+
     str = str.replace(/"(.+)"[\s]*~[\s]*([0-9]+)/g, "\"$1\"~$2"); // "this" ~ 100 -> "this"~100
 
-    // so this regex works correctly, but after replacing, it matches internal single quotes again.  
+    // so this regex works correctly, but after replacing, it matches internal single quotes again.
     // Therefore we shouldn't even run this if there are already double quotes.
     // If the user is using double quotes already, we don't need to try to help them out anyway.
     if(!str.includes('"')) {

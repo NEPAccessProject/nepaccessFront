@@ -13,7 +13,7 @@ console.log("🚀 ~ file: index.js:11 ~ theme:", theme)
 ReactDOM.render(
     <BrowserRouter>
     <ThemeProvider theme={theme}>
-        
+
             <Main />
     </ThemeProvider>
     </BrowserRouter>

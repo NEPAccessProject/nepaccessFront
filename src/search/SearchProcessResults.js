@@ -21,17 +21,12 @@ import SearchResultsMap from './SearchResultsMap';
 //import { List,Collection ,AutoSizer, CellMeasurer, CellMeasurerCache } from 'react-virtualized';
 import { useVirtual } from 'react-virtual'
 import SearchResultItem from "./SearchResultItem";
-import InfiniteLoader from "react-window-infinite-loader";
-//import { List, Collection, AutoSizer, CellMeasurer, CellMeasurerCache } from 'react-virtualized'
-import { VariableSizeList as List } from "react-window";
-import AutoSizer from "react-virtualized-auto-sizer";
 import Pagination from '@mui/material/Pagination';
 import PaginationItem from '@mui/material/PaginationItem';
 import Stack from '@mui/material/Stack';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import { Link } from "react-router-dom";
-
 
 const _ = require("lodash");
 
@@ -98,6 +93,7 @@ export default class SearchProcessResults extends React.Component {
 
   constructor(props) {
     super(props);
+    console.log(`file: SearchProcessResults.js:101 ~ SearchProcessResults ~ constructor ~ props:`, props);
     const ctx = this.context;
     this.state = {
       //     ...state,
@@ -204,23 +200,23 @@ export default class SearchProcessResults extends React.Component {
     else {
       return (
         <>
-        <SearchResultsMap
-        toggleMapHide={this.props.toggleMapHide}
-        isHidden={this.props.isMapHidden}
-        docList={this.props.geoResults}
-        results={this.props.results}
-      // searcherState={this.props.searcherState}
-      />
-        <Grid container flex={1} id="search-result-row-box" xs={12}>
-          <Typography variant="h3" padding={1}>Showing {ctxState.limit}  of {results.length} Results for "{ctxState.titleRaw}"</Typography>
-          <Divider/>
-          <Box border={0} width={'100%'} id="search-result-row-container">
-            {results.length && (
-              <ResultRow results={results} />
-            )}
-            <Divider/>
-          </Box>
-        </Grid>
+          <SearchResultsMap
+            toggleMapHide={this.props.toggleMapHide}
+            isHidden={this.props.isMapHidden}
+            docList={this.props.geoResults}
+            results={this.props.results}
+          // searcherState={this.props.searcherState}
+          />
+          <Grid container flex={1} id="search-result-row-box" xs={12}>
+            <Typography variant="h3" padding={1}>Showing {ctxState.limit}  of {results.length} Results for "{ctxState.titleRaw}"</Typography>
+            <Divider />
+            <Box border={0} width={'100%'} id="search-result-row-container">
+              {results.length && (
+                <ResultRow results={results} />
+              )}
+              <Divider />
+            </Box>
+          </Grid>
         </>
       )
     }
@@ -297,15 +293,18 @@ const ResultRow = (props) => {
     <Paper border={0} style={{
       marginTop: 0,
     }} elevation={0} id="search-result-render-row-wrapper-paper">
-      <Grid container id="search-result-row-grid-container" marginTop={1} borderTop={1} borderColor={'#ddd'} marginBottom={2} xs={12} flex={1}>
+      <Grid
+        container
+        id="search-result-row-grid-container"
+        marginTop={1}
+        borderTop={1}
+        borderColor={'#ddd'}
+        marginBottom={2} xs={12} flex={1}>
         {results.map((result, idx) => (
           <Grid item xs={12} key={result.id} id={`search-result-row-grid-item-${result.id}`}>
-            {/* <Typography variant="h5" paddingBottom={0}>
-              <Link href={`/record-detail/?id=${result.id}`}>{result.title}</Link>
-            </Typography> */}
             <SearchResultCards result={result} />
             <SearchResultItem records={result.records} />
-            <Divider/>
+            <Divider />
           </Grid>
         ))}
       </Grid>

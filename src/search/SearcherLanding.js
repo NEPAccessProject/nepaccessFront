@@ -106,8 +106,8 @@ class SearcherLanding extends React.Component {
         justifyContent: 'center',
         display: 'flex',
         alignItems: 'center',
-        // marginLeft: '5%',
-        // marginRight: '5%',
+        marginLeft: ' 2%',
+        marginRight: '2%',
       }}>
         <TextField
           fullWidth
@@ -126,8 +126,8 @@ class SearcherLanding extends React.Component {
           placeholder="Search for NEPA documents"
           value={this.state.titleRaw}
           sx={{
-            marginLeft:2,
-            marginRight:2,
+            marginLeft:5,
+            marginRight:5,
             borderRadius: 1,
             border:0,
             backgroundColor: '#fff',

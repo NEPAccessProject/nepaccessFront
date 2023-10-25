@@ -19,7 +19,7 @@ export default class AboutHelpContents extends React.Component {
             earliestYear: null,
             latestYear: '2021'
         }
-        
+
         this.get("stats/draft_count","draftCount");
         this.get("stats/final_count","finalCount");
         this.get("stats/draft_count_downloadable","draftCountDownloadable");
@@ -28,14 +28,14 @@ export default class AboutHelpContents extends React.Component {
         this.get("stats/earliest_year","earliestYear");
         this.get("stats/latest_year","latestYear");
     }
-    
 
-    get = (endPath,stateField) => {
+
+    get(endPath,stateField){
         let getUrl = Globals.currentHost + endPath;
-        
+
         axios.get(getUrl, {
             params: {
-                
+
             }
         }).then(response => {
             let responseOK = response && response.status === 200;
@@ -44,20 +44,20 @@ export default class AboutHelpContents extends React.Component {
             } else {
                 return null;
             }
-        }).then(parsedJson => { 
+        }).then(parsedJson => {
             console.log(parsedJson);
             if(parsedJson){
                 this.setState({
                     [stateField]: parsedJson
                 });
-            } else { 
+            } else {
                 console.log("Null/404: " + endPath);
             }
         }).catch(error => {
             console.error(error);
         });
     }
-    
+
 
     render () {
         return (
@@ -67,7 +67,7 @@ export default class AboutHelpContents extends React.Component {
                     <h1 className="about-nepa-title">
                         What the database contains
                     </h1>
-                    
+
                     <h2>
                         Environmental Impact Statements
                     </h2>
@@ -75,11 +75,11 @@ export default class AboutHelpContents extends React.Component {
                     <div><p>
                         <span className="dynamic-stat">Blue</span> items are dynamic (retrieved on demand from database).
                     </p></div>
-                    
+
                     <div>
-                        NEPAccess contains all (or almost all) records from environmental impact statements (EIS) created between 1987-{this.state.latestYear}. There are downloadable PDF files from <span className="dynamic-stat">{this.state.earliestYear}</span>-<span className="dynamic-stat">{this.state.latestYear}</span>. 
+                        NEPAccess contains all (or almost all) records from environmental impact statements (EIS) created between 1987-{this.state.latestYear}. There are downloadable PDF files from <span className="dynamic-stat">{this.state.earliestYear}</span>-<span className="dynamic-stat">{this.state.latestYear}</span>.
                     </div>
-                    
+
                     <div><p>
                         This includes <span className="dynamic-stat">{this.state.draftCount}</span> draft and <span className="dynamic-stat">{this.state.finalCount}</span> final EIS documents (supplemental/revised not counted here).
                         Of these, <span className="dynamic-stat">{this.state.draftCountDownloadable}</span> drafts and <span className="dynamic-stat">{this.state.finalCountDownloadable}</span> finals are in a format that supports full-text searching and downloading.

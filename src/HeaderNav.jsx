@@ -21,7 +21,7 @@ import theme from './styles/theme';
 import Grid from '@mui/material/Unstable_Grid2';
 import MenuIcon from '@material-ui/icons/Menu';
 import { withMediaQuery } from 'react-responsive';
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { Link as RouterLink, NavLink } from 'react-router-dom';
 import './index.css';
 import { Helmet } from 'react-helmet';
@@ -29,6 +29,8 @@ import Landing from './Landing';
 import CalloutContainer from './CalloutContainer';
 import { withStyles } from '@mui/styles';
 import globals from './globals';
+import SearchContext from './search/SearchContext';
+import { withRouter } from 'react-router-dom'
 const _MAX_WIDTH = '768px'
 const anchorRef = React.createRef();
 const headersData = [
@@ -97,14 +99,6 @@ const useStyles = makeStyles((theme) => ({
   header: {
     backgroundColor: '#abbdc4',
     height: '100%',
-    //height: '105px',
-    // paddingRight: '79px',
-    // paddingLeft: '118px',
-    // '@media (max-width: 768px)': {
-    //   paddingLeft: 0,
-    //   height: '50px',
-    //   backgroundColor: "#eeeddd"
-    // },
   },
   menuButton: {
     fontFamily: 'Open Sans, sans-serif',
@@ -119,12 +113,8 @@ const useStyles = makeStyles((theme) => ({
     height: '105px',
     justifyItems: 'center',
     backgroundColor: '#abbdc4',
-
-    // backgroundImage: 'url("logo2022.png")',
   },
   mobileToolbar: {
-    // display: 'flex',
-    // height: '65px',
     backgroundColor: '#abbdc4',
     boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)',
   },
@@ -145,7 +135,6 @@ const useStyles = makeStyles((theme) => ({
     display: "block",
   },
   logoBox: {
-    //width: '200px',
     backgroundImage: 'url("logo2022.png")',
   },
   menuContainer: {
@@ -156,9 +145,6 @@ const useStyles = makeStyles((theme) => ({
   mobileNavLink: {
     fontWeight: 'bold',
     fontSize: '1.1em',
-    // lineHeight: '25px',
-    // textDecoration: 'none',
-    //    marginLeft:0,
     textAlign: 'center',
     display: 'flex',
     alignContent: 'center',
@@ -187,7 +173,6 @@ const useStyles = makeStyles((theme) => ({
     justifyContent: 'center', //horizontal aligmnent
     alignItems: 'center', //verical aligment
     alignContent: '',
-    borderRight: '2px solid black'
 
   },
   accountNavLinksContainer: {
@@ -223,7 +208,26 @@ const useStyles = makeStyles((theme) => ({
 }));
 /* #endregion */
 
-export default function HeaderNav(props) {
+const linkStyle = {
+  color: 'black',
+  fontSize: 11,
+  fontWeight: 600,
+  textDecoration: 'underline',
+  padding: 0,
+};
+const accountLinkGridItemStyle = {
+  paddingLeft: 1,
+  paddingRight: 1,
+  paddingTop: 2,
+  paddingBottom: 2,
+  display: 'flex',
+  justifyContent: 'center',
+  alignItems: 'center',
+};
+
+
+const HeaderNav = (props) => {
+  //  console.log(`file: HeaderNav.jsx:227 ~ HeaderNav ~ props:`, props);
   const classes = useStyles(theme)
   const [state, setState] = useState({
     mobileView: false,
@@ -260,7 +264,7 @@ export default function HeaderNav(props) {
   }, []);
 
   const prevOpen = React.useRef(drawerOpen);
-  
+
   React.useEffect(() => {
     if (anchorRef.current && prevOpen.current === true && drawerOpen === false) {
       anchorRef.current.focus();
@@ -269,38 +273,6 @@ export default function HeaderNav(props) {
     prevOpen.current = drawerOpen;
   },);
 
-
-  const AdminMenu = () => {
-    console.log(`showMenuItems role: ${role} logged In Displayed: ${loggedInDisplay}`);
-    return (
-      <span
-        id="admin-span"
-        //hidden={(!role || role === 'user')} 
-        className={loggedInDisplay + " right-nav-item logged-in"}>
-
-        <div id="admin-dropdown" className="main-menu-link dropdown">
-          <Link id="admin-button" className="main-menu-link drop-button" to="/importer">
-            Admin
-          </Link>
-          <i className="fa fa-caret-down"></i>
-          <div className="dropdown-content">
-            <Link to="/admin" hidden={!(role === 'admin')}>Admin Panel</Link>
-            <Link to="/importer" hidden={!(role === 'curator' || role === 'admin')}>Import New Documents</Link>
-            <Link to="/adminFiles" hidden={!(role === 'curator' || role === 'admin')}>Find Missing Files</Link>
-            <Link to="/approve">Approve Users</Link>
-            <Link to="/pre_register">Pre-Register Users</Link>
-            <Link to="/interaction_logs">Interaction Logs</Link>
-            <Link to="/search_logs">Search Logs</Link>
-            <Link to="/abouthelpcontents">Database Contents</Link>
-            <Link to="/stats">Content Statistics</Link>
-            <Link to="/stat_counts">Stat Counts</Link>
-            <Link to="/surveys">Surveys</Link>
-          </div>
-        </div>
-
-      </span>
-    );
-  }
   const MobileNav = () => {
     const handleDrawerOpen = () => setState((prevState) => ({ ...prevState, drawerOpen: true }));
     const handleDrawerClose = (evt) => {
@@ -317,6 +289,8 @@ export default function HeaderNav(props) {
           position="sticky"
           elevation={1}
           style={{
+            paddingLeft: 5,
+            paddingRight: 5,
           }}
           color="primary"
 
@@ -329,7 +303,6 @@ export default function HeaderNav(props) {
             disableGutters={true}
             paperProps={{
               elevation: 1,
-              border: '4px solid red'
             }}
             paper
             style={{
@@ -442,15 +415,9 @@ export default function HeaderNav(props) {
       );
     });
   };
-
   //[TODO] make ToolBar full width
   const DesktopNav = (props) => {
-    const role = 'user';
-    const loggedInDisplay = 'none';
-    const loggedOutDisplay = '';
-    const loggedIn = false;
-    const headerLandingCss = ''; //props.headerLandingCss || '';
-    const currentPage = ''; //props.currentPage || '';
+    console.log(`file: HeaderNav.jsx:437 ~ DesktopNav ~ props:`, props);
     return (
       <>
         {!mobileView &&
@@ -479,13 +446,13 @@ export default function HeaderNav(props) {
                 {/* #region Main Menu Nav Container */}
                 <Grid
                   container
-                  item xs={10}
+                  xs={10}
                   justifyContent='flex-end'
                   id="main-nav-grid-container"
                   style={{
                   }}>
                   <Grid
-                    item
+                    container
                     id="main-menu-grid-container"
                     xs={12}
                     display='flex'
@@ -522,6 +489,7 @@ export default function HeaderNav(props) {
             display: 'flex',
             justifyContent: 'flex-start',
             alignContent: 'flex-end',
+            paddingLeft: 5,
           }}
         >
           <img
@@ -536,101 +504,37 @@ export default function HeaderNav(props) {
     )
   }
   const DesktopNavLinks = (props) => {
+    console.log(`file: HeaderNav.jsx:524 ~ DesktopNavLinks ~ props:`, props);
     const classes = useStyles(theme);
-    const { loggedInDisplay, loggedOutDisplay, role } = props;
+    const { loggedInDisplay, loggedOutDisplay, role, loggedIn } = props;
     return (
       <>
         <Grid container id="nav-toolbar-grid-container"
-          flexDirection="row"
-          flex={1}
           display="flex"
           xs={12}
           style={{
           }}
         >
-          <Grid
-            item
+          {/* <Grid
+            container
             id="nav-toolbar-top-nav-links-grid-item"
             xs={12}
             display='flex'
             justifyContent='flex-end'
             style={{
               display: 'flex',
-              justifyContent: 'flex-end',
+              justifyContent: 'flex-start',
+              border: '1px solid black',
             }}
-          >
-            <TopNavLinks />
-          </Grid>
-
-
-          {/* #region Start Main Menu */}
-          <Grid item id="nav-toolbar-main-nav-links-grid-item"
-            display="flex"
+          > */}
+          <Grid item display={'flex'}
             xs={12}
             style={{
-              display: 'flex',
-              justifyContent: 'center',
-              alignItems: 'center',
-              width: '100%',
-              height: '100%',
-              marginTop: 20,
-
+              justifyContent: 'flex-end'
             }}
           >
-            <NavLinks />
-            <Grid container
-              id="nav-toolbar-admin-grid"
-              hidden={!role || role === 'user'}
-              xs={2}
-              flex={1}
-              className={classes.adminGrid}
-              marginLeft={10}
-              justifyContent='flex-end'
-              style={{
-              }}
-            >
-              <span
-                id="admin-span"
-                style={{
-
-                }}
-              //hidden={!role || role === 'user'} 
-              //className={loggedIn ? 'right-nav-item logged-in' : ''}
-              >
-                <div id="admin-dropdown"
-                  className="main-menu-link dropdown"
-                >
-                  <Link id="admin-button"
-                    className="main-menu-link drop-button"
-                    to="/importer"
-                  >
-                    Admin
-                  </Link>
-                  <i className="fa fa-caret-down"></i>
-                  <div
-                    className="dropdown-content"
-                  >
-                    <Link to="/admin" hidden={!(role === 'admin')}>
-                      Admin Panel
-                    </Link>
-                    <Link to="/importer" hidden={!(role === 'curator' || role === 'admin')}>
-                      Import New Documents
-                    </Link>
-                    <Link to="/adminFiles" hidden={!(role === 'curator' || role === 'admin')}>
-                      Find Missing Files
-                    </Link>
-                    <Link to="/approve">Approve Users</Link>
-                    <Link to="/pre_register">Pre-Register Users</Link>
-                    <Link to="/interaction_logs">Interaction Logs</Link>
-                    <Link to="/search_logs">Search Logs</Link>
-                    <Link to="/abouthelpcontents">Database Contents</Link>
-                    <Link to="/stats">Content Statistics</Link>
-                    <Link to="/stat_counts">Stat Counts</Link>
-                    <Link to="/surveys">Surveys</Link>
-                  </div>
-                </div>
-              </span>
-            </Grid>
+            <Grid xs={10} item style={{ ...accountLinkGridItemStyle, justifyContent: 'center', display: 'flex' }}><NavLinks {...props} /></Grid>
+            <Grid xs={2} item style={{ ...accountLinkGridItemStyle, justifyContent: 'center', display: 'flex', alignItems:'center ', alignContent: 'flex-start' }}><TopNavLinks {...props} /></Grid>
           </Grid>
           {/* #endregion */}
           {/* END TOP NAV  */}
@@ -639,26 +543,6 @@ export default function HeaderNav(props) {
       </>
     )
   }
-
-  const getMenuButtons = () => {
-    return headersData.map(({ label, href }) => {
-      return (
-        <Button
-          className={classes.menuButton}
-          {...{
-            key: label,
-            color: 'inherit',
-            to: href,
-            component: RouterLink,
-
-          }}
-          key={label}
-        >
-          {label}
-        </Button>
-      );
-    });
-  };
   /* RETURN of the main function */
   return (
     <Paper id="header-root-paper-container" color='#A8B9C0' elevation={1} sx={{
@@ -674,98 +558,36 @@ export default function HeaderNav(props) {
 
         classes={{ root: classes.abRoot, positionStatic: classes.abStatic }}
       >
-        {mobileView ? MobileNav() : DesktopNav()}
+        {mobileView ? MobileNav(props) : DesktopNav(props)}
       </AppBar>
     </Paper>
   );
 }
 
 export function TopNavLinks(props) {
-  const { loggedInDisplay, loggedOutDisplay, role } = props;
+  console.log(`file: HeaderNav.jsx:652 ~ TopNavLinks ~ props:`, props);
+  const { loggedInDisplay, loggedOutDisplay, role, loggedIn, showMenuItems, currentPage } = props;
+
   const classes = useStyles(theme);
   return (
     <>
-      <Grid
-        container
+      <Grid id="admin-menu-dropdown-grid"
+        item
         xs={3}
-        id="top-menu-grid-container"
-        style={{
-          justifyContent: 'flex-end',
-          display: 'flex'
-        }}
-        //className="no-select"
-        className={classes.accountNavLinksContainer}
+        style={{...accountLinkGridItemStyle}}
       >
-        <Grid
-          item
-          flex={1}
-          xs={2}
-          id="profile-grid-item"
-          className={classes.accountNavLinkGridItem}
-        >
-          <Link id="profile-link"
-            className={classes.accountNavLink}
-            to="/profile">
-            Profile
-          </Link>
-        </Grid>
-        <Grid
-          item
-          flex={1}
-          xs={3}
-          //className={loggedInDisplay + " right-nav-item logged-in"}
-          className={classes.accountNavLinkGridItem}
-          id="login-grid-item">
-          <Link
-            className={classes.accountNavLink}
-
-            to="/login">Log In</Link>
-        </Grid>
-        <Grid
-          item
-          className={classes.accountNavLinkGridItem}
-          id="register-grid-item"
-          xs={3}
-          flex={1}
-        >
-          <Link
-            id='register-link'
-            className={classes.accountNavLink}
-            to="/register">
-            Register
-          </Link>
-        </Grid>
-        <Grid
-          item
-          className={classes.accountNavLinkGridItem}
-          flex={1}
-          xs={3}
-        >
-          <Link
-            id="logout-link"
-            className={classes.accountNavLink}
-            style={{ paddingRight: 3 }}
-            to="/logout">
-            Log out
-          </Link>
-        </Grid>
-      </Grid>
-    </>
-  )
-}
-
-const
-  AdminMenuItems = (props) => {
-    const { role,loggedInDisplay } = props;
-    console.log(`showMenuItems role: ${role} logged In Displayed: ${loggedInDisplay}`);
-    return (
-      <span id="admin-span" hidden={(!role || role === 'user')} className={loggedInDisplay + " right-nav-item logged-in"}>
-
         <div id="admin-dropdown" className="main-menu-link dropdown">
-          <Link id="admin-button" className="main-menu-link drop-button" to="/importer">
+          <NavLink
+            currentpage={(
+              currentPage === '/search-tips' || currentPage === '/available-documents'
+            ).toString()}
+//            id="admin-button"
+            to="/admin"
+            style={linkStyle}
+          >
             Admin
-          </Link>
-          <i className="fa fa-caret-down"></i>
+          </NavLink>
+          {/* <i className="fa fa-caret-down"></i> */}
           <div className="dropdown-content">
             <Link to="/admin" hidden={!(role === 'admin')}>Admin Panel</Link>
             <Link to="/importer" hidden={!(role === 'curator' || role === 'admin')}>Import New Documents</Link>
@@ -778,13 +600,103 @@ const
             <Link to="/stats">Content Statistics</Link>
             <Link to="/stat_counts">Stat Counts</Link>
             <Link to="/surveys">Surveys</Link>
+
+          </div>
+        </div>
+      </Grid>
+      <Grid
+        item
+        flex={1}
+        xs={3}
+        //          id="profile-grid-item"
+        style={{...accountLinkGridItemStyle,justifyContent:'center'}}
+      >
+        <a id="profile-link"
+          style={linkStyle}
+          href="/profile">
+          Profile
+        </a>
+      </Grid>
+      {!loggedIn && (
+        <>
+          <Grid
+            item
+            flex={1}
+            xs={3}
+            style={accountLinkGridItemStyle}
+            id="login-grid-item">
+            <a
+              style={linkStyle}
+              href="/login">Log In</a>
+          </Grid>
+          {/* It didn't seem to have a register link once you are logged in */}
+          <Grid
+            item
+            style={{...accountLinkGridItemStyle,justifyContent:'center'}}
+            id="register-grid-item"
+            xs={3}
+            flex={1}
+          >
+            <a href
+              id='register-link'
+              style={linkStyle}
+              href="/register">
+              Register
+            </a>
+          </Grid>
+        </>
+      )}
+      {loggedIn && (
+        <Grid
+          item
+          style={accountLinkGridItemStyle}
+          flex={1}
+          xs={3}
+        >
+          <a
+            id="logout-link"
+            //className={classes.accountNavLink}
+            style={linkStyle}
+            href="/logout">
+            Log out
+          </a>
+        </Grid>
+      )}
+    </>
+  )
+}
+
+const
+  AdminMenuItems = (props) => {
+    const { role, loggedInDisplay, loggedIn } = props;
+    console.log(`showMenuItems role: ${role} logged In Displayed: ${loggedInDisplay}`);
+    return (
+      <span id="admin-span" hidden={(!loggedIn || !role || role !== 'admin')}>
+        <div id="admin-dropdown"
+          className="main-menu-link">
+          <a id="admin-button" className="main-menu-link drop-button" href="/importer">
+            Admin
+          </a>
+          <i className="fa fa-caret-down"></i>
+          <div>
+            <a href="/admin" hidden={!(role === 'admin')}>Admin Panel</a>
+            <a href="/importer" hidden={!(role === 'curator' || role === 'admin')}>Import New Documents</a>
+            <a href="/adminFiles" hidden={!(role === 'curator' || role === 'admin')}>Find Missing Files</a>
+            <a href="/approve">Approve Users</a>
+            <a href="/pre_register">Pre-Register Users</a>
+            <a href="/interaction_logs">Interaction Logs</a>
+            <a href="/search_logs">Search Logs</a>
+            <a href="/abouthelpcontents">Database Contents</a>
+            <a href="/stats">Content Statistics</a>
+            <a href="/stat_counts">Stat Counts</a>
+            <a href="/surveys">Surveys</a>
           </div>
         </div>
 
       </span>
     );
   }
-export function NavLinks() {
+export function NavLinks(props) {
   const [headerLandingCss, setHeaderLandingCss] = useState();
   const [currentPage, setCurrentPage] = useState();
   const [loggedInDisplay, setLoggedInDisplay] = useState('display-none');
@@ -867,3 +779,4 @@ export function NavLinks() {
     </div>
   );
 }
+export default withRouter(HeaderNav);
