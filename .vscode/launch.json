@@ -1,5 +1,18 @@
 {
     "configurations": [
+      {
+        "name": "Launch Edge",
+        "request": "launch",
+        "type": "msedge",
+        "url": "http://localhost:3000",
+          "webRoot": "${workspaceFolder}"
+      },
+      {
+        "command": "sudo npm start",
+        "name": "Run npm start",
+        "request": "launch",
+        "type": "node-terminal"
+      },
 
       {
         "name": "Launch Chrome",
