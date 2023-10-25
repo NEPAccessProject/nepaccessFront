@@ -1,9 +1,7 @@
 @host = http://localhost:8080/
-@token = Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJnbXMiLCJleHAiOjE2OTg1MTI5NTEsImp0aSI6IjY0NSJ9.cDvudFpFkEwDVuJQowMBRo4wDzEUkdpGvTHNm21xgPVZE_A1BCHJxUyuC77T8oMxND5PKeLTDcfmr2EjhnNyBw
-
+@token = PUT TOKEN HERE
 ###
 GET {{host}}file/downloadFolder?filename=17781&id=17781
-Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ0ZXN0IiwiZXhwIjoxNjk4Njg2MzM2LCJqdGkiOiI3OTIifQ.wPiuAz-NU65omY08EE5IcNF-XZ3JO5NpvpAAYsEnlstsFXhCEMvvBJqaXJdek-pv6Kokan9hnLltOOehSnjCvQ
 key: test_key_only
 
 
