@@ -2,8 +2,9 @@ import React from 'react';
 import axios from 'axios';
 import './User/login.css';
 import Globals from './globals.js';
-import { Button } from '@mui/material'
+import { Button, Snackbar } from '@mui/material'
 import LoginModal from './User/LoginModal.js';
+import Notifications from './Notifications';
 import theme from './styles/theme';
 export default class DownloadFile extends React.Component {
 
@@ -13,9 +14,10 @@ export default class DownloadFile extends React.Component {
     this.state = { // Each and every download link via <DownloadFile /> has its own state
       progressValue: null,
       downloadPreText: null,
-      downloadText: 'Download single file',
+      downloadText: '',
       downloadClass: 'document-download',
-      downloadClass2: ''
+      downloadClass2: '',
+      message: ''
     };
   }
 
@@ -45,6 +47,8 @@ export default class DownloadFile extends React.Component {
       dataForm.append('docId', this.props.id); // TODO: May not have this every time unfortunately, need to clean up outside logic
     }
 
+    console.log(`Calling ${_url} with dataForm:`, dataForm);
+    this.showNotifications(`Calling ${_url} with dataForm:`,"info")
     axios({
       url: _url,
       method: 'POST',
@@ -54,6 +58,7 @@ export default class DownloadFile extends React.Component {
       console.log(response.status);
     }).catch(error => {
       console.error(error);
+      this.showNotifications(error, "error")
     })
   }
 
@@ -68,6 +73,9 @@ export default class DownloadFile extends React.Component {
     });
 
     let getRoute = Globals.currentHost + 'file/download_nepa_file';
+    console.log(`Getting file from ${getRoute} for file ${_filename}`);
+
+    this.showNotifications(`Getting file from ${getRoute} for file ${_filename}`,"info")
 
     axios.get(getRoute, {
       params: {
@@ -109,17 +117,20 @@ export default class DownloadFile extends React.Component {
             downloadText: 'File not found',
             downloadClass2: 'disabled_download'
           });
+          this.showNotifications('File not found', 'error');
         } else if (error.response && error.response.status === 403) {
           this.setState({
             downloadPreText: <LoginModal message="Session expired: Please click here to login again" />,
             downloadClass: 'document-download',
             downloadClass2: ''
           });
+          this.showNotifications('Session expired: Please click here to login again','error');
         } else {
           this.setState({
             downloadText: 'Server may be down for maintenance, please try again later',
             downloadClass2: 'disabled_download'
           });
+          this.showNotifications('Server may be down for maintenance, please try again later','error');
         }
       });
   }
@@ -129,90 +140,108 @@ export default class DownloadFile extends React.Component {
   // TODO: reset download link if canceled
   // these could be very difficult to figure out for low payoff, however
   download = (filenameOrID, isFolder) => {
-    console.log(`Downloading filename or id ${filenameOrID} isFolder ${isFolder}`);
-    const FileDownload = require('js-file-download');
+    try{
+      console.log(`Downloading filename or id ${filenameOrID} isFolder ${isFolder}`);
+      const FileDownload = require('js-file-download');
 
-    // Indicate download
-    this.setState({
-      downloadText: 'Downloading...',
-      downloadClass: 'disabled_download'
-    });
-
-    let _filename = filenameOrID;
-    if (isFolder) { // folder case handles this on download if _filename===null
-      _filename = null;
-    }
-
-    let getRoute = Globals.currentHost + 'file/downloadFile';
-    if (isFolder) {
-      getRoute = Globals.currentHost + 'file/downloadFolder';
-    }
-    axios.get(getRoute, {
-      params: {
-        filename: filenameOrID,
-        id: filenameOrID
-      },
-      responseType: 'blob',
-      onDownloadProgress: (progressEvent) => { // Show progress if available
-        const totalLength = progressEvent.lengthComputable ? progressEvent.total : progressEvent.target.getResponseHeader('content-length') || progressEvent.target.getResponseHeader('x-decompressed-content-length');
-
-        if (isFolder && !_filename) { // multi-file case, archive filename needs to be extracted from header
-          // filename is surrounded by "quotes" so get that and remove those
-          let fileInfo = progressEvent.target.getResponseHeader('content-disposition');
-          if (!fileInfo) {
-            return null; // Never mind
-          }
-          let fileInfoName = fileInfo.split("filename=");
-
-          // set filename for saving from backend, sans quotes
-          _filename = fileInfoName[1].substr(1, fileInfoName[1].length - 2);
-        }
-
-        if (totalLength !== null) { // Progress as percent, if we have total
-          this.setState({
-            progressValue: '(' + Math.round((progressEvent.loaded * 100) / totalLength) + '% downloaded)'
-          });
-        } else if (progressEvent.loaded) { // Progress as MB
-          this.setState({
-            progressValue: '(' + (Math.round(progressEvent.loaded / 1024 / 1024)) + 'MB downloaded)'
-          });
-        }
-        // else progress remains blank
-      }
-    }).then((response) => {
-
-      // Indicate download completed as file is saved/prompted save as (depending on browser settings)
-      if (response) {
-        this.setState({
-          downloadText: 'Done'
-        });
-        FileDownload(response.data, _filename);
-
-        this.logInteraction(true);
-      }
-
-      // verified = response && response.status === 200;
-    })
-      .catch((error) => {
-        if (error.response && error.response.status === 404) {
-          this.setState({
-            downloadText: 'File not found',
-            downloadClass2: 'disabled_download'
-          });
-        } else if (error.response && error.response.status === 403) {
-          this.setState({
-            downloadPreText: <LoginModal message="Session expired: Please click here to login again" />,
-            downloadClass: 'document-download',
-            downloadClass2: ''
-          });
-        } else {
-          this.setState({
-            downloadText: 'Server may be down for maintenance, please try again later',
-            downloadClass2: 'disabled_download'
-          });
-        }
+      // Indicate download
+      this.setState({
+        downloadText: `Downloading ${isFolder ? 'folder' : 'file'} ${filenameOrID}`,
+        downloadClass: 'disabled_download'
       });
 
+      let _filename = filenameOrID;
+      if (isFolder) { // folder case handles this on download if _filename===null
+        _filename = null;
+      }
+
+      let getRoute = Globals.currentHost + 'file/downloadFile';
+      if (isFolder) {
+        getRoute = Globals.currentHost + 'file/downloadFolder';
+      }
+      console.log(`Getting file from ${getRoute} for file ${filenameOrID}`);
+      axios.get(getRoute, {
+        params: {
+          filename: filenameOrID,
+          id: filenameOrID
+        },
+        responseType: 'blob',
+        onDownloadProgress: (progressEvent) => { // Show progress if available
+          const totalLength = progressEvent.lengthComputable ? progressEvent.total : progressEvent.target.getResponseHeader('content-length') || progressEvent.target.getResponseHeader('x-decompressed-content-length');
+
+          if (isFolder && !_filename) { // multi-file case, archive filename needs to be extracted from header
+            // filename is surrounded by "quotes" so get that and remove those
+            let fileInfo = progressEvent.target.getResponseHeader('content-disposition');
+            if (!fileInfo) {
+              return null; // Never mind
+            }
+            let fileInfoName = fileInfo.split("filename=");
+
+            // set filename for saving from backend, sans quotes
+            _filename = fileInfoName[1].substr(1, fileInfoName[1].length - 2);
+          }
+
+          if (totalLength !== null) { // Progress as percent, if we have total
+            this.setState({
+              progressValue: '(' + Math.round((progressEvent.loaded * 100) / totalLength) + '% downloaded)'
+            });
+          } else if (progressEvent.loaded) { // Progress as MB
+            this.setState({
+              progressValue: '(' + (Math.round(progressEvent.loaded / 1024 / 1024)) + 'MB downloaded)'
+            });
+          }
+          // else progress remains blank
+        }
+      }).then((response) => {
+
+        // Indicate download completed as file is saved/prompted save as (depending on browser settings)
+        if (response) {
+          this.setState({
+            downloadText: 'Done'
+          });
+          FileDownload(response.data, _filename);
+          this.showNotifications('Done','success');
+          this.logInteraction(true);
+        }
+
+        // verified = response && response.status === 200;
+      })
+        .catch((error) => {
+          if (error.response && error.response.status === 404) {
+            this.setState({
+              downloadText: 'File not found',
+              downloadClass2: 'disabled_download'
+            });
+            this.showNotifications('File not found','error');
+          } else if (error.response && error.response.status === 403) {
+            this.setState({
+              downloadPreText: <LoginModal message="Session expired: Please click here to login again" />,
+              downloadClass: 'document-download',
+              downloadClass2: ''
+            });
+            this.showNotifications('Session expired: Please click here to login again','error');
+          } else {
+            this.setState({
+              downloadText: 'Server may be down for maintenance, please try again later',
+              downloadClass2: 'disabled_download'
+            });
+            this.showNotifications('Server may be down for maintenance, please try again later','error');
+          }
+
+        }
+
+        );
+      }
+      catch(e){
+        console.log(`file: DownloadFile.js:219 ~ DownloadFile ~ e:`, e);
+        showNotifications(`An error occurred: ${e.message}`,'error');
+      }
+  }
+
+  showNotifications = (message,messageType) => {
+    return(
+      <Notifications message={message} messageType={messageType} open={true} />
+    )
   }
 
   handleLoginClick = () => {
@@ -221,11 +250,16 @@ export default class DownloadFile extends React.Component {
 
   render() {
     //[TODO][CRITICAL] Remove only for testing!!!
-    localStorage.role = "ADMIN";
+    /// localStorage.role = "ADMIN";
     if (localStorage.role === undefined) {
-      return <span className="not-logged-in">
-        Please <LoginModal /> or <a className="not-logged-in" href='register' target='_blank' rel='noopener noreferrer'>register</a> to download files.
-      </span>
+      const msg =  (`Please <a href="/login" target='_blank' rel='noopener noreferrer'>log in</a> to download files." or <a className="not-logged-in" href='register' target='_blank' rel='noopener noreferrer'>register</a> to download files.`)
+
+      return (
+        <>
+        <Notifications message={msg} messageType='error'/>
+        </>
+      )
+
     }
     else if (this.props) {
       let cellData = null;
@@ -261,11 +295,10 @@ export default class DownloadFile extends React.Component {
         propID = this.props.id;
         return (<>
           {this.state.downloadPreText}
-          <Button border={3} color="primary" variant='contained' className={this.state.downloadClass2} onClick={() => { this.downloadNepaFile(propFilename, propID) }}>
-            {this.state.downloadText} {sizeText} {this.state.progressValue}
-            Download {this.state.progressValue}
-          </Button>
-          <span className="propFilename">{propFilename}</span>
+          <Button border={3} fullWidth color="primary" variant='contained' className={this.state.downloadClass2} onClick={() => { this.downloadNepaFile(propFilename, propID) }}>
+              Download
+           </Button>
+          {/* <span className="propFilename">??? {propFilename}</span> */}
         </>
         );
       }
@@ -273,15 +306,15 @@ export default class DownloadFile extends React.Component {
         console.log(`file: DownloadFile.js:270 ~ DownloadFile ~ render ~ propFilename:`, propFilename);
         return (<>
           {this.state.downloadPreText}
+          <Notifications message="Test error message" messageType='error' />
           <Button
             color="primary"
             variant='contained'
             className={this.state.downloadClass}
             onClick={() => { this.download(propFilename, false) }}>
-            {/* {this.state.downloadText} {sizeText} {this.state.progressValue} */}
-            Download {this.state.progressValue}
+            316 - {this.state.downloadText} {sizeText} {this.state.progressValue}
           </Button>
-          <span className="propFilename">{propFilename}</span>
+          <span className="propFilename"> {propFilename}</span>
         </>
         );
       } else if (propID) {
@@ -295,17 +328,20 @@ export default class DownloadFile extends React.Component {
           <>
             {this.state.downloadPreText}
             <Button color="primary" variant='contained' className={this.state.downloadClass} onClick={() => { this.download(propID, true) }}>
-              Download
-              {this.state.downloadText} <b>{innerText.replaceAll(' ', '_')}</b> - {sizeText} {this.state.progressValue}
+              332 - {this.state.downloadText} <b>{innerText.replaceAll(' ', '_')}</b> - {sizeText} {this.state.progressValue}
             </Button>
+            {this.showNotifications(`${this.state.downloadText} - ${this.state.progressValue}}`,'info')}
           </>
         );
       } else {
+        this.showNotifications(`Returning File Name ${propFilename}`,'info');
         return propFilename;
       }
     }
     else {
-      return "";
+      return (
+        <Notifications message="Test error message" messageType='error' />
+      );
     }
   }
 }
