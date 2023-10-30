@@ -435,7 +435,7 @@ const SearchFilters = (props) => {
               <Item>
               <Box>
                   <FormControlLabel
-                    label={<Typography variant='filterLabel'>Final EIS {EISCount ? `"${EISCount}"` : ''}</Typography>}
+                    label={<Typography variant='filterLabel'>Final EIS {EISCount ? EISCount : ''}</Typography>}
                     control={
                       <Checkbox
                         name='typeDraft'
@@ -451,7 +451,7 @@ const SearchFilters = (props) => {
 
                 <Box>
                   <FormControlLabel
-                    label={<Typography variant='filterLabel'>Draft EIS {draftCount ? `"${draftCount}"` : ''}</Typography>}
+                    label={<Typography variant='filterLabel'>Draft EIS {draftCount ? draftCount : ''}</Typography>}
                     control={
                       <Checkbox
                         name='typeDraft'
@@ -510,7 +510,7 @@ const SearchFilters = (props) => {
                   </Box>
                   <Box>
                     <FormControlLabel
-                    label={<Typography variant='filterLabel'>Scoping Report {scopingCount ? `"${scopingCount}"` : ''}</Typography>}
+                    label={<Typography variant='filterLabel'>Scoping Report {scopingCount ? scopingCount : ''}</Typography>}
                     control={
                       <Checkbox
                         name='typeScoping'
@@ -534,7 +534,7 @@ const SearchFilters = (props) => {
                 <Typography variant='h6'>Advanced</Typography>
                 <div className='sidebar-checkboxes'>
                   <FormControlLabel
-                    label={<Typography variant='filterLabel'>Final {finalCount ? `"${finalCount}"` : ''}</Typography>}
+                    label={<Typography variant='filterLabel'>Final {finalCount ? finalCount : ''}</Typography>}
                     control={
                       <Checkbox
                         type='checkbox'
