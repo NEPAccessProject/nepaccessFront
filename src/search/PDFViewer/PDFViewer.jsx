@@ -13,7 +13,6 @@ const workerUrl = "https://unpkg.com/pdfjs-dist@3.4.120/build/pdf.worker.min.js"
 //[TODO][REFACTOR] need to break this into two components.  One as container responsible for get and handling the file and display component that just takes that as an arg
 const PDFViewer = (props) => {
   const [isLoading, setIsLoading] = React.useState(false);
-  console.log(`🚀 ~ file: PDFViewer.jsx:12 ~ PDFViewer ~ props:`, props);
   const { file, fileUrl } = props;
 
   //const path = file.filenames[0].path;
@@ -23,13 +22,9 @@ const PDFViewer = (props) => {
   const ctx = React.useContext(PDFViewerContext)
   const _mounted = React.useRef(false);
   const { state, setState } = ctx;
-  Object.keys(file).forEach((key) => {
-    console.log(`file: PDFViewer.jsx:15 ~ PDFViewer ~ key`, key, file[key])
-  })
 
   useEffect(() => {
     _mounted.current = true;
-    console.log(`file: PDFViewer.jsx:23 ~ useEffect ~ _mounted.current:`, _mounted.current);
     setState({
       ...state,
       infoMessage: `Loading document ${file.title}...`,
@@ -58,7 +53,7 @@ const PDFViewer = (props) => {
                     <ProgressBar progress={Math.round(percentages)} />
                 </div>
             )}
-            
+
             />
           </Worker>
         </Grid>
