@@ -74,6 +74,7 @@ const Globals = {
         } else {
             this.currentHost = new URL(window.location.protocol + window.location.hostname + ':8080/nepaBackend/');
         }
+        this.currentHost = 'https://bighorn.sbs.arizona.edu:8443/nepaBackend';
         // else if(window.location.hostname) {
         //     this.currentHost = new URL('https://' + window.location.hostname + ':8080/');
         // }
@@ -83,6 +84,7 @@ const Globals = {
         axios.defaults.headers.common['Access-Control-Allow-Origin'] = '*';
 
         let token = localStorage.JWT;
+        console.log(`file: globals.js:87 ~ setUp ~ token:`, token);
         if(token){
             axios.defaults.headers.common['Authorization'] = token; // Change to defaults works everywhere
         } // No token is fine, they will just be redirected to login on app init
@@ -90,6 +92,7 @@ const Globals = {
 
     signIn() {
         let token = localStorage.JWT;
+        console.log(`file: globals.js:94 ~ signIn ~ token:`, token);
         if(token){
             axios.defaults.headers.common['Authorization'] = token;
         }
@@ -97,6 +100,7 @@ const Globals = {
 
 
     signOut() {
+      console.log(`file: globals.js:103 ~ signOut ~ localStorage:`, localStorage);
         localStorage.clear();
         axios.defaults.headers.common['Authorization'] = null;
     },
