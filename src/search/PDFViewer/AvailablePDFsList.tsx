@@ -30,7 +30,8 @@ interface IStyles {
 }
 interface IProps {
 	files: IFiles;
-	currentFile: IFile;
+	filenames: [any];
+  record: IFile;
 	onFileLinkClicked: any; //[TODO][REFACTOR] Set to proper type (React.MouseEvent<React.HTMLElement>:evt,number) => {};
 }
 
@@ -68,10 +69,10 @@ export default function AvailablePDFsList(props: IProps) {
 		};
 	});
 
-	const { currentFile, files, onFileLinkClicked } = props;
+	const { filenames, onFileLinkClicked,record } = props;
 	const ctx = React.useContext(SearchContext);
 	const classes = useStyles(theme);
-	const zipPath: string = currentFile?.zipPath;
+	const zipPath: string = record.zipPath;
   console.log('PDFVIEWER ~ zipPath',zipPath);
 	function onDownloadZip(url: string, filename: string) {
 		Axios.get(url, {
@@ -80,8 +81,8 @@ export default function AvailablePDFsList(props: IProps) {
 			fileDownload(res.data, filename);
 		});
 	}
-  if(!files || !currentFile) {
-  return( 
+  if(!filenames) {
+  return(
   <Paper>
     <Grid container justifyContent='center' alignContent={'center'}>
       <Typography variant='h4'>Loading...</Typography>
@@ -90,7 +91,7 @@ export default function AvailablePDFsList(props: IProps) {
   </Paper>
   )
 }
-  else 
+  else
     return (
       <>
         <Paper id='available-pdfs-root-paper-container'>
@@ -101,20 +102,22 @@ export default function AvailablePDFsList(props: IProps) {
               textAlign={'center'}
               classes={classes.centered}
               padding={2}>
-              <Typography variant='h4'>{files.length} Related Files </Typography>
-              <Typography>{currentFile?.title}</Typography>
+              <Typography variant='h4'>{filenames.length} Files </Typography>
               <Divider />
             </Grid>
             <Grid item xs={12} id='available-pdfs-list-file-list-grid'>
-              {/* <FileList currentFile={currentFile} files={files} /> */}
+            {filenames.map((filename: string) => {
+							return <Box key={filename}><Button>{filename}</Button></Box>;
+						})}
+
             </Grid>
             <Grid item xs={12}>
               <Button
                 variant='contained'
                 onClick={() =>
-                  onDownloadZip(currentFile.zipPath, currentFile?.title)
+                  onDownloadZip(record.zipPath, record?.title)
                 }>
-                Download All {currentFile.zipPath}
+                Download All {record.zipPath}
               </Button>
             </Grid>
           </Grid>
