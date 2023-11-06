@@ -27,6 +27,7 @@ export default class App extends React.Component {
       agency: [],
       endPublish: "",
       limit: 25,
+      page:1,
       needsComments: false,
       needsDocument: true,
       startPublish: "",
@@ -45,6 +46,7 @@ export default class App extends React.Component {
     networkError: "",
     outputResults: [],
     parseError: "",
+    records:[],
     resultsText: "Results",
     searching: false,
     searchResults: [],
@@ -108,8 +110,7 @@ export default class App extends React.Component {
     });
   };
 
-  setPageInfo = (page = 0, pageSize = 10) => {
-    console.log(`file: App.js:111 ~ App ~ page = 0, pageSize = 10:`, page, pageSize);
+  setPageInfo = (page = 1, pageSize = 10) => {
     this._page = page;
     this._pageSize = pageSize;
 
@@ -215,7 +216,6 @@ export default class App extends React.Component {
 
     this._searcherState = searcherState; // for live filtering
     // Only filter if there are any results to filter
-    console.log(`file: App.js:218 ~ App ~ this.state.searchResults.length:`, this.state.searchResults.length);
     if (this.state.searchResults && this.state.searchResults.length > 0) {
       const filtered = Globals.doFilter(
         searcherState,
@@ -223,14 +223,11 @@ export default class App extends React.Component {
         this.state.searchResults.length,
         false
       );
-      console.log(`file: App.js:225 ~ App ~ filtered:`, filtered);
-
       // Even if there are no filters active we still need to update to reflect this,
       // because if there are no filters the results must be updated to the full unfiltered set
       const sortedResults = filtered.filteredResults.sort(
         this.alphabetically(this._sortVal, this._ascVal)
       );
-      console.log(`file: App.js:232 ~ App ~ sortedResults:`, sortedResults);
       this.setState(
         {
           outputResults: sortedResults,
@@ -241,7 +238,6 @@ export default class App extends React.Component {
         () => {
           // this.getGeoDebounced(filtered.filteredResults);
           this.getGeoDebounced();
-          console.log(`App.js 244 - getting Highlights for file`)
           this._searchId = this._searchId + 1;
           this.gatherPageHighlightsDebounced(
             this._searchId,
@@ -467,7 +463,7 @@ export default class App extends React.Component {
 
   // Start a brand new search.
   startNewSearch = (searcherState) => {
-
+  console.log(`!!!!!!!! APP.JS -- START NEW SEARCH`, searcherState);
 
     // Reset page, page size
     this._page = searcherState.page || 1;
@@ -497,7 +493,8 @@ export default class App extends React.Component {
 
   /** Just get the top results quickly before launching the "full" search with initialSearch() */
   startSearch = (searcherState) => {
-
+  console.log(`!!!!!!!!!!!!! -- START SEARCH with SEARCHER STATE`, searcherState);
+let searchUrl = new URL("text/search", Globals.currentHost);
     Globals.emitEvent("new_search");
     if (!this._mounted) {
       // User navigated away or reloaded
@@ -635,34 +632,32 @@ export default class App extends React.Component {
                 .map((result, idx) => {
                   let doc = result.doc;
                   let newObject = {
-                    title: doc.title,
+                    action: doc.action,
                     agency: doc.agency,
-                    cooperatingAgency: doc.cooperatingAgency,
                     commentDate: doc.commentDate,
-                    registerDate: doc.registerDate,
-                    state: doc.state,
+                    commentsFilename: doc.commentsFilename,
+                    cooperatingAgency: doc.cooperatingAgency,
+                    county: doc.county,
+                    decision: doc.decision,
                     documentType: doc.documentType,
                     filename: doc.filename,
-                    commentsFilename: doc.commentsFilename,
-                    size: doc.size,
-                    id: doc.id,
-                    luceneIds: result.ids,
-                    folder: doc.folder,
-                    plaintext: result.highlights,
-                    name: result.filenames,
-
-                    link: doc.link,
+                    filenames: result.filenames ? result.filenames.split('>') : [],//Files seemed to be stored as a textfield with a > as a seperator
                     firstRodDate: doc.firstRodDate,
-                    processId: doc.processId,
+                    folder: doc.folder,
+                    id: doc.id,
+                    link: doc.link,
+                    luceneIds: result.ids,
+                    name: result.filenames,
                     notes: doc.notes,
+                    plaintext: result.highlights,
+                    processId: doc.processId,
+                    registerDate: doc.registerDate,
+                    relevance: idx + 1, // sort puts "falsy" values at the bottom incl. 0
+                    size: doc.size,
+                    state: doc.state,
                     status: doc.status,
                     subtype: doc.subtype,
-                    county: doc.county,
-
-                    action: doc.action,
-                    decision: doc.decision,
-
-                    relevance: idx + 1, // sort puts "falsy" values at the bottom incl. 0
+                    title: doc.title,
                   };
                   return newObject;
                 });
@@ -671,9 +666,6 @@ export default class App extends React.Component {
               let processResults = {};
               processResults = this.buildData(_data);
               _data = processResults;
-
-
-
 
               // At this point we don't need the hashmap design anymore, it's just very fast for its purpose.
               // Now we have to iterate through all of it anyway, and it makes sense to put it in an array.
@@ -772,6 +764,7 @@ export default class App extends React.Component {
   /** Populates full results without text highlights and then starts the highlighting process */
   initialSearch = () => {
     if (!this._mounted) {
+      console.warn('INITAL SEARCH NOT MOUNTED')
       // User navigated away or reloaded
       return;
     }
@@ -861,7 +854,7 @@ export default class App extends React.Component {
             loggedIn: false,
           });
         } else {
-          console.log(response.status);
+          console.error(`Unexpected status code received: ${response.status} !!!!`,response);
           return null;
         }
       })
@@ -1285,15 +1278,19 @@ export default class App extends React.Component {
                   }
                 }
               }
-
+              let records = []
+              currentResults.forEach(record => {
+                records.push(record)
+              })
               this.setState(
                 {
+                  records: records,
                   searchResults: allResults,
                   outputResults: currentResults,
                   shouldUpdate: true,
                 },
                 () => {
-                  console.log("Got highlights, finish search");
+                  console.log(`Got highlights, finish search with ${currentResults.length} results for Search ID ${searchId}`, searchId);
                   this.initialSearch(_inputs);
                 }
               );
@@ -1329,8 +1326,7 @@ export default class App extends React.Component {
     );
   };
 
-  gatherPageHighlights = (searchId, _inputs, currentResults) => {
-
+  gatherPageHighlights = (searchId, _inputs, currentResults = []) => {
     if (!_inputs) {
       if (this.state.searcherInputs) {
         _inputs = this.state.searcherInputs;
@@ -1345,10 +1341,8 @@ export default class App extends React.Component {
     }
     if (searchId < this._searchId) {
       // Search interrupted
+      console.warn(`Search interrupted, exiting gatherPageHighlights - Search ID: ${searchId}`);
       return; // cancel search
-    }
-    if (typeof currentResults === "undefined") {
-      currentResults = [];
     }
 
     // No need for offset or limit. We just need to find the unhighlighted files on this page.
@@ -1723,6 +1717,7 @@ export default class App extends React.Component {
       const value = {
         state: this.state,
         setState: this.setState,
+        setPageInfo : this.setPageInfo,
       };
       return (
         <>
@@ -1747,6 +1742,7 @@ export default class App extends React.Component {
                   count={this.state.searchResults.length}
                   draftCount={this._draftCount}
                   eaCount={this._eaCount}
+                  setPageInfo={this.setPageInfo}
                   filterResultsBy={this.filterResultsBy}
                   filterToggle={this.filterToggle}
                   finalCount={this._finalCount}
@@ -1768,14 +1764,12 @@ export default class App extends React.Component {
                   useOptions={this.state.useSearchOptions}
                 >
                   <SearchProcessResults
+                    download={this.downloadCurrentAsTSV}
                     draftCount={this._draftCount}
                     eaCount={this._eaCount}
-                    rodCount={this._rodCount}
-                    scopingCount={this._scopingCount}
-                    finalCount={this._finalCount}
-                    download={this.downloadCurrentAsTSV}
                     exportToSpreadsheet={this.exportToCSV}
                     filtersHidden={this.state.filtersHidden}
+                    finalCount={this._finalCount}
                     gatherSpecificHighlights={this.gatherSpecificHighlights}
                     geoLoading={this.state.geoLoading}
                     geoResults={this.state.geoResults}
@@ -1783,6 +1777,8 @@ export default class App extends React.Component {
                     isMapHidden={this.state.isMapHidden}
                     results={this.state.outputResults}
                     resultsText={this.state.resultsText}
+                    rodCount={this._rodCount}
+                    scopingCount={this._scopingCount}
                     scrollToBottom={this.scrollToBottom}
                     scrollToTop={this.scrollToTop}
                     search={this.startNewSearch}
