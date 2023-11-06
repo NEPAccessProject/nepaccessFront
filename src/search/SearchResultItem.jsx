@@ -10,6 +10,7 @@ import { styled } from '@mui/styles';
 import DownloadFiles from '../DownloadFiles';
 import DownloadFile from '../DownloadFile';
 import { Link } from 'react-router-dom';
+import { useStyles } from './PDFViewer/PDFViewerContainer';
 const DataCell = styled(Grid)(({ theme }) => ({
   backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
   ...theme.typography.body2,
@@ -26,16 +27,8 @@ const DataCell = styled(Grid)(({ theme }) => ({
   justifyItems: 'center',
   alignContent: 'center',
   alignItems: 'center',
-  '&:hover': {
-    //           backgroundColor: //theme.palette.grey[200],
-    boxShadow: '0px 4px 8px rgba(0.5, 0.5, 0.5, 0.15)',
-    cursor: 'pointer',
-    '& .addIcon': {
-      color: 'purple',
-    },
-  },
 }));
-const useStyles = makeStyles((theme) => ({
+const styles = {
   centered: {
     alignContent: 'center',
     alignItems: 'center',
@@ -49,7 +42,7 @@ const useStyles = makeStyles((theme) => ({
     fontSize: "1rem",
     fontWeight: 'bold',
   }
-}));
+};
 
 export default function SearchResultItem(props) {
   const { records } = props;
@@ -77,35 +70,14 @@ export default function SearchResultItem(props) {
     })
   }, [])
 
-
-
-  //[TODO] Add download functionality
-  const handleDownloadClick = (evt, id) => {
-    evt.preventDefault();
-    console.log('Download ID Value and filename', id, filename);
-  };
-  const openModal = ((event, id) => {
-    event.preventDefault()
-    const { target: { dataset: { modal } } } = event
-    setCurrentModalId(`modal-${id}`)
-    setIsOpen(true)
-    if (modal) setModal(modal)
-  })
-
-
-  const onDialogClose = (evt, id) => {
-    setCurrentModalId(null)
-    setIsOpen(false)
-    setModal('')
-  }
-  //  const text = record.plaintext || '';
+  let cnt = 0
   return (
     <>
       <div id="portal-root">
-
+    {/* Used by modal manger to inject modal to DOM when opened  */}
       </div>
       <div id="modal-root">
-
+        {/* Used by modal manger to inject modal to DOM when opened  */}
       </div>
 
       {records.map((record, idx) => (
@@ -131,6 +103,7 @@ const RenderRecord = (props) => {
     decision,
     documentType,
     filename,
+    filenames,
     firstRodDate,
     luceneIds,
     id,
@@ -144,65 +117,43 @@ const RenderRecord = (props) => {
     title,
     processId,
   } = record;
-  //  const year = commentDate && commentDate.length > 0 ? new Date(commentDate).getFullYear() : 'N/A';
-  const year = 2023;
+  const year = commentDate && commentDate.length > 0 ? new Date(commentDate).getFullYear() : 'N/A';
+  //const year = 2023;
   const classes = useStyles(theme);
-  const [modalOpen,setModal] = useState(false);
-	const [currentModalId,setCurrentModalId] = useState(0)
-  function onPDFPreviewToggle(evt, fileId, record) {
-		console.log('PDF VIEW Toggle,evt', evt);
-		evt.preventDefault();
-		setIsOpen(true)
-	}
+  const [modalOpen, setModal] = useState(false);
+  const [currentModalId, setCurrentModalId] = useState(0);
 
-	function showPDFPreview(evt, fileId, record) {
-		console.log('PDF VIEW Toggle,evt', evt);
-		evt.preventDefault();
-		setIsOpen(true)
-	}
-	function onDocumentLoadSuccess({ numPages }) {
-		setState({ ...state, numPages: numPages });
-	}
-	const handleDownloadClick = (evt, id) => {
-		evt.preventDefault();
-		console.log('Download ID Value and filename', id, filename);
-	};
-
-	const onDetailLink = (evt, processId) => {
-		console.log("🚀 ~ file: SearchResultsItems.jsx:193 ~ onDetailLink ~ evt,processId:", evt, processId)
-	}
+  const openModal = ((event, id) => {
+    event.preventDefault()
+    const { target: { dataset: { modal } } } = event
+    setCurrentModalId(`modal-${id}`)
+    setIsOpen(true)
+    if (modal) setModal(modal)
+  })
 
 
-	const openModal = ((event,id) => {
-		event.preventDefault()
-		const { target: { dataset: { modal } } } = event
-		setCurrentModalId(`modal-${id}`)
-		setIsOpen(true)
-		if (modal) setModal(modal)
-	})
-
-
-	const closeModal = (evt,id) => {
+  const closeModal = (evt, id) => {
     setCurrentModalId(null)
     setIsOpen(false)
-		setModal('')
-	}
-	const ModalManager = (props) => {
-    const {record={},id=0,modal='',isOpen=false} = props
-    return (
-  <>
-  { isOpen &&
-  <PDFViewerDialog
-			id={`pdf-dialog-${id}`}
-			name={`modal-${record.id}`}
-			record={record}
-			//isOpen={isOpen[record.id]}
-			isOpen={isOpen && currentModalId === `modal-${record.id}`}
-			onDialogClose={(evt) => closeModal(evt, record.id)}
-			/>
+    setModal('')
   }
-	</>
-  )};
+  const ModalManager = (props) => {
+    const { record = {}, id = 0, modal = '', isOpen = false } = props
+    return (
+      <>
+        {/* {isOpen && */}
+          <PDFViewerDialog
+            id={`pdf-dialog-${id}`}
+            name={`modal-${record.id}`}
+            record={record}
+            //isOpen={isOpen[record.id]}
+            isOpen={isOpen && currentModalId === `modal-${record.id}`}
+            onDialogClose={(evt) => closeModal(evt, record.id)}
+          />
+        {/* {} */}
+      </>
+    )
+  };
   return (
     <>
       <Paper elevation={0} style={{
@@ -212,63 +163,63 @@ const RenderRecord = (props) => {
       }}>
         <Grid container>
           <DataCell>
-          Filename: {record.filename}
-          </DataCell>
+            # of Snippets {record.plaintext ? record.plaintext.length : 0}
+              </DataCell>
           <DataCell>
-            <Typography variant='h4'>
-              <Link to={`/record-details?id=${id}`}>{title}</Link>
+            <Typography variant='h4'> d
+              <Link to={`/record-details?id=${id}`}>{title} {record.plaintext && record.plaintext.length}</Link>
             </Typography>
           </DataCell>
           <Grid container id="search-result-row-container" borderTop={1} borderBottom={1} borderColor={'#ccc'}>
             <DataCell item id="year-box" xs={1} style={{ border: 'right 1px solid #ccc' }}>
-              <Typography id="year-typography" fontWeight={'bold'}>
+              <Typography id="year-typography" variant='bold'>
                 {year ? year : 'N/A'}
               </Typography>
             </DataCell>
 
             <DataCell item xs={3} borderLeft={1} borderColor={'#ccc'} id="status-document-type-grid-item">
-              <Typography className={classes.card}>
+              <Typography className={classes.card} style={styles.link}>
                 {documentType}
               </Typography>
             </DataCell>
             <DataCell item xs={6} flex={1} id="title-grid-container" borderRight={1} borderLeft={1} borderColor={'#ccc'}>
               <Typography id="snippets-title" variant='h5' >{(title) ? title : ''}</Typography>
             </DataCell>
-            <Grid container xs={2} flex={1} id="button-grid-container">
-              <DataCell item id="download-button-grid-item" item display={'flex'} xs={record.filename ? 6 : 12} >
-                {/* <Button onClick={(evt) => handleDownloadClick(evt)} variant='contained' color="primary">
-                  Download
-                </Button> */}
-                {record.filename &&
-                <DownloadFile
-                  key={record.filename}
-                  downloadType="nepafile"
-                  id={record.id}
-                  filename={record.filename}
-                  disabled={!record.filename}
-                />
-}
-              </DataCell>
-              <DataCell item id="preview-button-grid-item" item display={'flex'} xs={record.filename ? 6 : 12}>
-                <ModalManager
-                  record={record}
-                  id={record.id}
-                  isOpen={isOpen}
-                  closeFn={closeModal}
-                  modal={modalOpen} />
-                <Button
-                  onClick={(evt) => openModal(evt, record.id, record)}
-                  variant='contained'
-                  disabled={!record.filename}
-                  color="primary">
-                  Preview
-                </Button>
-              </DataCell>
-            </Grid>
+              <Grid container xs={2} flex={1} id="button-grid-container">
+                <DataCell border={1} borderColor={'#000'} item id="download-button-grid-item" display={'flex'} xs={6} >
+                    <DownloadFile
+                      key={record.filename}
+                      downloadType="nepafile"
+                      id={record.id}
+                      filename={record.filename}
+                      disabled={!record.filename}
+                    />
+                </DataCell>
+                <DataCell
+                  border={1}
+                  borderColor={'black'}
+                  item
+                  id="preview-button-grid-item"
+                  display={'flex'}
+                  xs={6}>
+                  <ModalManager
+                    record={record}
+                    id={record.id}
+                    isOpen={isOpen}
+                    closeFn={closeModal}
+                    modal={modalOpen} />
+                  <Button
+                    onClick={(evt) => openModal(evt, record.id, record)}
+                    variant='contained'
+                    // //disabled={!record.filename}
+                    color="primary">
+                    Preview
+                  </Button>
+                </DataCell>
+              </Grid>
           </Grid>
           <Grid id="render-snippets-record-grid-container" container xs={12}>
             <RenderSnippets record={record} />
-
           </Grid>
         </Grid>
 
