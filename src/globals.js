@@ -1,4 +1,5 @@
 import axios from 'axios';
+console.log('!!!!!!!!!!!! PROCESS ENV' , process.env)
 
 // const finalTypeLabels = ["Final",
 //     "Second Final",
@@ -71,21 +72,23 @@ const Globals = {
     setUp() {
         if(window.location.hostname === 'localhost' || window.location.hostname === 'www.nepaccess.org') {
             this.currentHost = new URL(window.location.protocol + 'localhost:8080/');
-        } else {
-            this.currentHost = new URL(window.location.protocol + window.location.hostname + ':8080/nepaBackend/');
-        }
-        this.currentHost = 'https://bighorn.sbs.arizona.edu:8443/nepaBackend';
+        } //        this.currentHost = 'https://bighorn.sbs.arizona.edu:8443/nepaBackend';
         // else if(window.location.hostname) {
         //     this.currentHost = new URL('https://' + window.location.hostname + ':8080/');
         // }
+        else {
+          this.currentHost = new URL(window.location.protocol + window.location.hostname + ':8080/nepaBackend/');
+      }
+        this.currentHost = 'https://bighorn.sbs.arizona.edu:8443/nepaBackend/';
+        console.log(`file: globals.js:82 ~ setUp ~ this.currentHost:`, this.currentHost);
 
         axios.defaults.headers.common['Content-Type'] = 'application/json;charset=utf-8';
         axios.defaults.headers.common['X-Content-Type-Options'] = 'no-sniff';
         axios.defaults.headers.common['Access-Control-Allow-Origin'] = '*';
 
         let token = localStorage.JWT;
-        console.log(`file: globals.js:87 ~ setUp ~ token:`, token);
         if(token){
+            console.log(`GOT TOKEN ${token}`, token);
             axios.defaults.headers.common['Authorization'] = token; // Change to defaults works everywhere
         } // No token is fine, they will just be redirected to login on app init
     },
@@ -94,6 +97,7 @@ const Globals = {
         let token = localStorage.JWT;
         console.log(`file: globals.js:94 ~ signIn ~ token:`, token);
         if(token){
+          console.log(`GOT TOKEN ${token}`, token);
             axios.defaults.headers.common['Authorization'] = token;
         }
     },
