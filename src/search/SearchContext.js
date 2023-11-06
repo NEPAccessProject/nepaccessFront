@@ -16,6 +16,8 @@ const SearchContext = createContext({
     geoResults: null,
     geoLoading: true,
     count: 0,
+    limit: 25,
+    page: 1,
     resultsText: "Results",
     networkError: "",
     parseError: "",
