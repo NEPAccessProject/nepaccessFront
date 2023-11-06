@@ -78,8 +78,6 @@ export default function PDFViewerDialog(props) {
               <Grid
                 container
                 display={'flex'}
-              // justifyContent={'flex-end'}
-              // alignItems={'center'}
               >
                 <IconButton onClick={(evt) => onDialogClose(evt)}>
                   <Typography fontWeight={'bold'} fontSize={'large'}>
