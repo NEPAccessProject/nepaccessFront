@@ -59,7 +59,6 @@ const useStyles = makeStyles((theme) => ({
 
 
 class Search extends React.Component {
-  static contextType = SearchContext;
   _lastSearchTerms = "";
 
   // static propTypes = {
@@ -97,12 +96,13 @@ class Search extends React.Component {
       isDirty: false,
       isQuickStartDialogOpen: false,
       isSearchTipsDialogOpen: false,
-      limit: 10,
+      limit: 25,
       markup: true,
       needsComments: false,
       needsDocument: false,
       offset: 0,
       optionsChecked: true,
+      page:1,
       proximityDisabled: true,
       proximityOption: null,
       searchOption: "B",
@@ -1295,8 +1295,8 @@ Search.propTypes = {
   isLoading: PropTypes.bool.isRequired,
   error: PropTypes.object,
 };
-
-export default withRouter(Search);
+Search.contextType = SearchContext;
+ export default withRouter(Search);
 
 /** Does a .replace with regex for these rules:
  * For the opening ', it could have either no characters before it, or whitespace.
