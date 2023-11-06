@@ -21,23 +21,6 @@
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
-src/NEPAccess frontend source/App.txt
-src/NEPAccess frontend source/DownloadFile.txt
-src/NEPAccess frontend source/ForgotPassword.txt
-src/NEPAccess frontend source/globals.txt
-src/NEPAccess frontend source/index.css
-src/NEPAccess frontend source/index.txt
-src/NEPAccess frontend source/login.css
-src/NEPAccess frontend source/Login.txt
-src/NEPAccess frontend source/Logout.txt
-src/NEPAccess frontend source/Main.txt
-src/NEPAccess frontend source/MatchResults.txt
-src/NEPAccess frontend source/MatchSearcher.txt
-src/NEPAccess frontend source/RecordDetails.txt
-src/NEPAccess frontend source/Reset.txt
-src/NEPAccess frontend source/Searcher.txt
-src/NEPAccess frontend source/SearchResults.txt
-src/NEPAccess frontend source/UserDetails.txt
 *.old
 *.old2
 src/NEPAccess.code-workspace
@@ -48,3 +31,15 @@ public/example-pdfs.zip
 /test-results/
 /playwright-report/
 /playwright/.cache/
+
+.env*
+.flaskenv*
+.env.project
+!.env.vault
+.env.production
+.env.development
+.cert/**
+.env.development
+.env.production
+generate-dev-ssl-cert.sh
+.env
