@@ -227,7 +227,7 @@ const accountLinkGridItemStyle = {
 
 
 const HeaderNav = (props) => {
-  //  console.log(`file: HeaderNav.jsx:227 ~ HeaderNav ~ props:`, props);
+
   const classes = useStyles(theme)
   const [state, setState] = useState({
     mobileView: false,
@@ -417,7 +417,6 @@ const HeaderNav = (props) => {
   };
   //[TODO] make ToolBar full width
   const DesktopNav = (props) => {
-    console.log(`file: HeaderNav.jsx:437 ~ DesktopNav ~ props:`, props);
     return (
       <>
         {!mobileView &&
@@ -504,7 +503,6 @@ const HeaderNav = (props) => {
     )
   }
   const DesktopNavLinks = (props) => {
-    console.log(`file: HeaderNav.jsx:524 ~ DesktopNavLinks ~ props:`, props);
     const classes = useStyles(theme);
     const { loggedInDisplay, loggedOutDisplay, role, loggedIn } = props;
     return (
@@ -565,7 +563,6 @@ const HeaderNav = (props) => {
 }
 
 export function TopNavLinks(props) {
-  console.log(`file: HeaderNav.jsx:652 ~ TopNavLinks ~ props:`, props);
   const { loggedInDisplay, loggedOutDisplay, role, loggedIn, showMenuItems, currentPage } = props;
 
   const classes = useStyles(theme);
