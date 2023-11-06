@@ -29,8 +29,9 @@ interface IProps {
   result : ISearchResult;
 }
 
-export default function SearchResultCards(props: IProps) {
+export default function SearchResultCards(props: any) {
 	const { result} = props;
+  const {id} = result;
 	return (
 		<div>
 			<Grid container padding={2} xs={12} flexDirection={'row'} flex={1}>
