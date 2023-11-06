@@ -466,7 +466,7 @@ const SearchFilters = (props) => {
                   </Box>
                   <Box>
                     <FormControlLabel
-                      label={<Typography variant='filterLabel'>EA {eaCount ? `"${eaCount}"` : ''}</Typography>}
+                      label={<Typography variant='filterLabel'>EA {eaCount ? eaCount : ''}</Typography>}
                       control={
                         <Checkbox
                           name='typeEA'
@@ -481,7 +481,7 @@ const SearchFilters = (props) => {
                   </Box>
                   <Box>
                     <FormControlLabel
-                      label={<Typography variant='filterLabel'>NOI {noiCount ? `"${noiCount}"` : ''}</Typography>}
+                      label={<Typography variant='filterLabel'>NOI {noiCount ? noiCount : ''}</Typography>}
                       control={
                         <Checkbox
                           name='typeNOI'
@@ -495,7 +495,7 @@ const SearchFilters = (props) => {
                   </Box>
                   <Box>
                     <FormControlLabel
-                      label={<Typography variant='filterLabel'>ROD {rodCount ? `"${rodCount}"` : ''}</Typography>}
+                      label={<Typography variant='filterLabel'>ROD {rodCount ? rodCount : ''}</Typography>}
                       control={
                         <Checkbox
                           name='typeROD'
