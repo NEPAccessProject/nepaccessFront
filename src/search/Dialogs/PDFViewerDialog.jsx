@@ -50,17 +50,6 @@ export const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const Item = styled(Paper)(({ theme }) => ({
-  backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
-  ...theme.typography.body2,
-  padding: theme.spacing(1),
-  color: theme.palette.text.secondary,
-  elevation: 1,
-  borderRadius: 1,
-}));
-
-//Function adds two numbers
-
 export default function PDFViewerDialog(props) {
   useEffect(() => {
     _mounted.current = true;
@@ -73,36 +62,41 @@ export default function PDFViewerDialog(props) {
   //  const { q,id } = useParams();
   const _mounted = React.useRef(false);
   return (
-      <Box sx={{ marginTop: 20 }}>
-        <Dialog
-          id='pdf-viewer-dialog'
-          open={isOpen}
-          //fullScreen
-          maxWidth='lg'
-          maxHeight='lg'
-          onClose={(evt) => onDialogClose(evt)}>
-          <DialogContent>
+    <Box sx={{ marginTop: 20 }}>
+      <Dialog
+        id='pdf-viewer-dialog'
+        open={isOpen}
+        fullScreen
+        sx={{
+          margin: '5%'
+        }}
+        onClose={(evt) => onDialogClose(evt)}>
+        <DialogContent>
 
-            <DialogContentText id='pdf-viewer-dialog-content'>
-              <DialogTitle>
-                <Grid
-                  container
-                  display={'flex'}
-                  justifyContent={'flex-end'}
-                  alignItems={'center'}>
-                  <IconButton onClick={(evt) => onDialogClose(evt)}>
-                    <Typography fontWeight={'bold'} fontSize={'large'}>
-                      X
-                    </Typography>
-                  </IconButton>
-                </Grid>
-              </DialogTitle>
-              <PDFViewerContainer {...props}/>
-              <Divider />
-            </DialogContentText>
-          </DialogContent>
-        </Dialog>
-      </Box>
+          <DialogContentText id='pdf-viewer-dialog-content'>
+            <DialogTitle>
+              <Grid
+                container
+                display={'flex'}
+              // justifyContent={'flex-end'}
+              // alignItems={'center'}
+              >
+                <IconButton onClick={(evt) => onDialogClose(evt)}>
+                  <Typography fontWeight={'bold'} fontSize={'large'}>
+                    X
+                  </Typography>
+                </IconButton>
+              </Grid>
+            </DialogTitle>
+            <Divider />
+            <DialogContent>
+              <PDFViewerContainer {...props} />
+            </DialogContent>
+            <Divider />
+          </DialogContentText>
+        </DialogContent>
+      </Dialog>
+    </Box>
   );
 }
 

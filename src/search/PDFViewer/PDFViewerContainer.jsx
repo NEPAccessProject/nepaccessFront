@@ -10,7 +10,8 @@ import {
   Snackbar,
   IconButton,
   Paper,
-  Typography
+  Typography,
+  CircularProgress
 } from '@mui/material';
 import { makeStyles, styled } from '@mui/styles';
 import React, { useState } from 'react';
@@ -62,7 +63,8 @@ const Item = styled(Paper)(({ theme }) => ({
 //Function adds two numbers
 
 export default function PDFViewerContainer(props) {
-  useEffect(() => {
+   console.log(`file: PDFViewerContainer.jsx:65 ~ PDFViewerContainer ~ props:`, props);
+   useEffect(() => {
     _mounted.current = true;
     return () => {
       _mounted.current = false;
@@ -117,27 +119,28 @@ export default function PDFViewerContainer(props) {
       console.log(`file: PDFViewerDialog.jsx:172 ~ getProcessByProcessId ~ response:`, response);
       let data = response.data;
 
-      let files = data.map((file) => {
-        console.log('FILE KEYS', Object.keys(file));
-        //              file.filenames.map((filename, idx) => { filenames.push(filename) });
-        const filenames = file.filenames.map((name, idx) => {
-          console.log('NAME!!', name);
+      let files = data.map((record) => {
+        console.log('RECORD !!!!!',record);
+        //Decorating the filename record with ID, ProcessID and title to make tying it to tie back processId or Id
+        const filenames = record.filenames.map((name, idx) => {
           return {
-            id: idx,
+            id: file.doc.id,
+            title: file.doc.title,
+            processId: file.doc.processId,
             filename: name,
             //path: `/docs/${file.doc.folder}/${name}`,
           }
         })
         console.log('FILENAMES', filenames);
-        return {
+        const rtn = {
           ...file,
           title: file.doc.title,
           filenames: filenames,
           size: file.doc.size ? Math.round(file.doc.size / 1024 / 1024) : 'N/A',
           //zipPath: `/doc/${file.doc.folder}/${file.doc.filename}`,
         }
+        return rtn;
       })
-      console.log('FILES !!!', files);
       return files;
     }
     catch (e) {
@@ -189,6 +192,7 @@ export default function PDFViewerContainer(props) {
           path: `/docs/${doc.folder}/${filename.filename}`,
           relativePath: doc.relativePath,
           zipPath: `/doc/${doc.folder}/${doc.filename}`,
+          names: record.name ? record.name.split('>') : [],
         }
         allFiles.push(_file)
       });
@@ -228,18 +232,16 @@ export default function PDFViewerContainer(props) {
       //   currentFile = files ? files[0] : null;
       // }
 
-      const currentFile = state.currentFile ? state.currentFile : filenames[0];
       console.log(`file: PDFViewerDialog.jsx:232 ~ getFiles ~ currentFile:`, currentFile);
       setState((prevState => {
         return {
           ...prevState,
-          files,
-          currentFile, //[TODO][REFACTOR] making the first file the default untill user selects otherwise
-          filenames,
-        }, () => {
-          console.log(`UPDATED STATE???`, state)
-        }
-      })
+          files,        }
+      },
+      () => {
+        console.log(`UPDATED STATE???`, state)
+      }
+      )
       );
 
     })
@@ -288,31 +290,13 @@ export default function PDFViewerContainer(props) {
     }
     evt.preventDefault();
   };
-  const onFileLinkClicked = (evt, id) => {
-    const file = state.files.filter((file) => file.id === id);
-
-    if (!file) {
-      // Hmm we could retain the current file as a fallback or set to empty.
-      //setCurrentFile({});
-      console.warn('No file  was found');
-      return;
-    } else {
-      const idx = state.currentFileIndex + 1;
-
-      console.log('Updated currentFileIndex', idx);
-
-      setState({
-        ...state,
-        currentFileIndex: idx,
-        currentFile: file[idx],
-      })
+  const onFileLinkClicked = (evt, filename) => {
+    console.log(`file: PDFViewerContainer.jsx:293 ~ onFileLinkClicked ~ evt, filename:`, evt, filename);
+    setState({
+      ...state,
+      currentFile : filename,
+    })
     }
-  };
-
-  // const Alert = React.forwardRef(function Alert(props, ref) {
-  // 	return <MuiAlert elevation={6} ref={ref} variant='filled' {...props} />;
-  // });
-
   const handleAlertClose = (evt) => {
     setState({
       ...state,
@@ -339,19 +323,13 @@ export default function PDFViewerContainer(props) {
   const onBackdropClicked = (evt) => {
     props.onDialogClose(evt);
   };
-
-  //Files take a while to load, debouncing handlers
-  //[TODO] Not a fan of having to manually set more than one session var for one action, files are required hence eisdoc is well
-
-  //wrap state func(s) into value so we can expand it to add funcs etc.
-  const value = {
-    state,
-    setState
-  }
   return (
     <Paper elevation={0} backgroundColor='#ddd'>
       <Grid
         container
+        xs={12}
+        border={1}
+        display={'flex'}
         id='pdf-file-list-grid-container'
         //rowGap={1}
         //columnSpacing={1}
@@ -360,18 +338,27 @@ export default function PDFViewerContainer(props) {
         <Grid
           item
           xs={3}
+          flex={1}
+          border={2}
+          borderColor={'green'}
           id='pdf-file-list-grid-item'
-        // justifyContent='flex-start'
-        // alignItems='flex-start'
         >
-
+          {state.currentFile
+          ?
+          (
           <AvailablePDFsList
             filenames={filenames}
             currentFile={state.currentFile}
             record={record}
             onFileLinkClicked={onFileLinkClicked}
             onDownloadZip={onDownloadZip}
-          />
+          />)
+          : (
+            <>
+              <CircularProgress color="secondary" size={300} className={classes.centered}  />
+            </>
+          )
+        }
         </Grid>
         <Grid
           container
@@ -385,8 +372,7 @@ export default function PDFViewerContainer(props) {
 
           <Grid container xs={12} flex={1} id='page-nav-button-grid-container'>
             <PageNavButtons
-              files={filenames}
-              currentFileIndex={state.currentFileIndex}
+            files={filenames}
               onFileLinkClicked={onFileLinkClicked}
               onLoadPreviousFile={onLoadPreviousFile}
               onLoadNextFile={onLoadNextFile}
@@ -399,11 +385,12 @@ export default function PDFViewerContainer(props) {
                 <PDFViewer
                   file={state.currentFile}
                   record={record}
+                  onFileLinkClicked={onFileLinkClicked}
                 />)
               :
               (
                 <><pre>
-                  {JSON.stringify(state, null, '\t')}
+                  <CircularProgress color="secondary" size={300} className={classes.centered}  />
                 </pre>
                 </>
               )

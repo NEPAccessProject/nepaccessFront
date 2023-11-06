@@ -5,7 +5,7 @@ import { useStyles } from './PDFViewerDialog';
 
 
 export function PageNavButtons(props) {
-  const { currentFileIndex, files, onFileLinkClicked, onLoadPreviousFile, onLoadNextFile } = props;
+  const { currentFileIndex, files=[], onFileLinkClicked, onLoadPreviousFile, onLoadNextFile } = props;
   const classes = useStyles(theme);
   return (
     <>
