@@ -93,8 +93,6 @@ export default class SearchProcessResults extends React.Component {
 
   constructor(props) {
     super(props);
-    console.log(`file: SearchProcessResults.js:101 ~ SearchProcessResults ~ constructor ~ props:`, props);
-    const ctx = this.context;
     this.state = {
       //     ...state,
       showContext: true,
@@ -129,6 +127,7 @@ export default class SearchProcessResults extends React.Component {
     this.setState({
       showContext: evt.target.checked,
     });
+    console.log(`file: SearchProcessResults.js:134 ~ SearchProcessResults ~ State:`, State);
   };
 
   setRowHeight(index, size) {
@@ -141,7 +140,7 @@ export default class SearchProcessResults extends React.Component {
   }
 
   renderRow({ index, key, style, parent }) {
-    console.log(`file: SearchProcessResults.js:318 ~ SearchProcessResults ~ renderRow ~ index, key, style, parent :`, index, key, style, parent);
+//    console.log(`file: SearchProcessResults.js:318 ~ SearchProcessResults ~ renderRow ~ index, key, style, parent :`, index, key, style, parent);
     const result = this.props.results[index];
     return (
       <>
@@ -198,6 +197,7 @@ export default class SearchProcessResults extends React.Component {
     }
     //If there are results, then diplay them
     else {
+      const {limit,page} = ctxState;
       return (
         <>
           <SearchResultsMap
@@ -205,14 +205,28 @@ export default class SearchProcessResults extends React.Component {
             isHidden={this.props.isMapHidden}
             docList={this.props.geoResults}
             results={this.props.results}
-          // searcherState={this.props.searcherState}
           />
           <Grid container flex={1} id="search-result-row-box" xs={12}>
-            <Typography variant="h3" padding={1}>Showing {ctxState.limit}  of {results.length} Results for "{ctxState.titleRaw}"</Typography>
+            <Typography variant="h3" padding={1}>Showing {results.length < limit ? results.length : limit} of {results.length ? results.length : 0} Results for "{ctxState.titleRaw}"</Typography>
             <Divider />
             <Box border={0} width={'100%'} id="search-result-row-container">
+              <Pagination
+                count={results.length}
+                hideNextButton={results.length % limit}
+                hidePrevButton={page >= results.length}
+                page={limit}
+                shape="rounded"
+                color="primary"
+                size={'large'}
+                disabled={results.length <= limit}
+                siblingCount={0}
+                onChange={(event, page) => {
+                  this.props.setPageInfo(page, limit)
+                }}
+              />
+
               {results.length && (
-                <ResultRow results={results} />
+                <ResultRow results={results} setPageInfo={this.props.setPageInfo} />
               )}
               <Divider />
             </Box>
@@ -253,13 +267,12 @@ const _noRowsRenderer = () => {
 }
 
 const ResultRow = (props) => {
-  console.log(`file: SearchProcessResults.js:482 ~ ResultRow ~ props:`, props);
-  // References
+  const ctx = useContext(SearchContext);
   const { results } = props;
+  const ctxState = ctx.state;
+  const { page = 0, limit = 10, offset = 0, setPageInfo } = ctxState;
   const listRef = useRef({});
   // const rowHeights = useRef({});
-  const ctx = useContext(SearchContext);
-  const { state } = ctx;
   // const { limit } = state.searcherInputs;
   // const [currentPage, setCurrentPage] = useState(0);
   const _mounted = useRef(false);
@@ -289,6 +302,12 @@ const ResultRow = (props) => {
     return rowHeights[index] + 8 || 82;
   }
 
+  const onDialogClose = (evt, id) => {
+    setCurrentModalId(null)
+    setIsOpen(false)
+    setModal('')
+  }
+
   return (
     <Paper border={0} style={{
       marginTop: 0,
@@ -300,14 +319,18 @@ const ResultRow = (props) => {
         borderTop={1}
         borderColor={'#ddd'}
         marginBottom={2} xs={12} flex={1}>
+        <Typography variant="h6">{results.length} Results</Typography>
         {results.map((result, idx) => (
-          <Grid item xs={12} key={result.id} id={`search-result-row-grid-item-${result.id}`}>
-            <SearchResultCards result={result} />
-            <SearchResultItem records={result.records} />
-            <Divider />
-          </Grid>
+         <span key={result.id}>
+            <Grid item xs={12} key={result.id} id={`search-result-row-grid-item-${result.id}`}>
+              <SearchResultCards result={result} />
+              <SearchResultItem records={result.records} />
+              <Divider />
+            </Grid>
+         </span>
         ))}
       </Grid>
+
     </Paper>
   );
 
