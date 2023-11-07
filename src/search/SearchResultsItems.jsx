@@ -103,8 +103,6 @@ export default function SearchResultItems(props) {
   let sortedRecords = result.records.sort(sortByDate);
   return (
     <>
-      {/* <h2>Search Result Items Result?</h2>
-    {JSON.stringify(result)} */}
       <Paper elevation={1} border={1} borderColor="red" margin={1} id="search-results-container-box">
         {sortedRecords.map((record, idx) => {
           return (

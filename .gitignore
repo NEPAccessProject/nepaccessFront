@@ -47,3 +47,4 @@ generate-dev-ssl-cert.sh
 !.env.project
 .env
 .env
+.env

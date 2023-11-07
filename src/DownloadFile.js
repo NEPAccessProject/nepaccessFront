@@ -5,7 +5,7 @@ import Globals from './globals.js';
 import { Button, Snackbar, Alert } from '@mui/material'
 import LoginModal from './User/LoginModal.js';
 import theme from './styles/theme';
-import {makeStyles,withStyles} from '@mui/material';
+import { makeStyles, withStyles } from '@mui/material';
 import SearchContext from './search/SearchContext';
 export default class DownloadFile extends React.Component {
 
@@ -13,7 +13,7 @@ export default class DownloadFile extends React.Component {
   static contextType = SearchContext;
   constructor(props) {
 
-      super(props);
+    super(props);
     this.state = { // Each and every download link via <DownloadFile /> has its own state
       progressValue: null,
       downloadPreText: null,
@@ -25,7 +25,8 @@ export default class DownloadFile extends React.Component {
   }
   componentDidMount() {
     const ctx = this.context;
-    console.log(`file: DownloadFile.js:28 ~ DownloadFile ~ componentDidMount ~ ctx:`, ctx);
+    this.onSetNotification = this.context.onSetNotification;
+    //    console.log(`file: DownloadFile.js:28 ~ DownloadFile ~ componentDidMount ~ ctx:`, ctx);
   }
 
   /** Log download */
@@ -82,7 +83,7 @@ export default class DownloadFile extends React.Component {
     let getRoute = Globals.currentHost + 'file/download_nepa_file';
     console.log(`Getting file from ${getRoute} for file ${_filename}`);
 
-//    this.props.onSetNotification(`Getting file from ${getRoute} for file ${_filename}`, "info")
+    //    this.props.onSetNotification(`Getting file from ${getRoute} for file ${_filename}`, "info")
 
     axios.get(getRoute, {
       params: {
@@ -121,30 +122,30 @@ export default class DownloadFile extends React.Component {
       .catch((error) => {
         if (error.response && error.response.status === 404) {
           //Although we are duplicating functionality for now untill the refactor on how we display error/info messages
-      //    this.props.onSetNotification('File not found', 'error');
+          //    this.props.onSetNotification('File not found', 'error');
           this.setState({
             downloadText: 'File not found',
             downloadClass2: 'disabled_download'
           });
 
-      //    this.props.onSetNotification('File not found', 'error');
+          //    this.props.onSetNotification('File not found', 'error');
         } else if (error.response && error.response.status === 403) {
-      //    this.props.onSetNotification('File not found', 'error');
+          //    this.props.onSetNotification('File not found', 'error');
 
           this.setState({
             downloadPreText: <LoginModal message="Session expired: Please click here to login again" />,
             downloadClass: 'document-download',
             downloadClass2: ''
           });
-      //    this.props.onSetNotification('Session expired: Please click here to login again', 'error');
+          //    this.props.onSetNotification('Session expired: Please click here to login again', 'error');
         } else {
-      //    this.props.onSetNotification('File not found', 'error');
+          //    this.props.onSetNotification('File not found', 'error');
 
           this.setState({
             downloadText: 'Server may be down for maintenance, please try again later',
             downloadClass2: 'disabled_download'
           });
-      //    this.props.onSetNotification('Server may be down for maintenance, please try again later', 'error');
+          //    this.props.onSetNotification('Server may be down for maintenance, please try again later', 'error');
         }
       });
   }
@@ -154,10 +155,10 @@ export default class DownloadFile extends React.Component {
   // TODO: reset download link if canceled
   // these could be very difficult to figure out for low payoff, however
   download = (filenameOrID, isFolder) => {
+    console.log(`file: DownloadFile.js:158 ~ DownloadFile ~ filenameOrID, isFolder:`, filenameOrID, isFolder);
     try {
-      console.log(`Downloading filename or id ${filenameOrID} isFolder ${isFolder}`);
+      //console.log(`Downloading filename or id ${filenameOrID} isFolder ${isFolder}`);
       const FileDownload = require('js-file-download');
-
       // Indicate download
       this.setState({
         downloadText: `Downloading ${isFolder ? 'folder' : 'file'} ${filenameOrID}`,
@@ -214,32 +215,33 @@ export default class DownloadFile extends React.Component {
             downloadText: 'Done'
           });
           FileDownload(response.data, _filename);
-      //    this.props.onSetNotification('Done', 'success');
+          //    this.props.onSetNotification('Done', 'success');
           this.logInteraction(true);
         }
 
         // verified = response && response.status === 200;
       })
         .catch((error) => {
+          console.error(`Error Downloading File : DownloadFile.js:224 ~ DownloadFile ~ error:`, error);
           if (error.response && error.response.status === 404) {
             this.setState({
               downloadText: 'File not found',
               downloadClass2: 'disabled_download'
             });
-        //    this.props.onSetNotification('File not found', 'error');
+            //    this.props.onSetNotification('File not found', 'error');
           } else if (error.response && error.response.status === 403) {
             this.setState({
               downloadPreText: <LoginModal message="Session expired: Please click here to login again" />,
               downloadClass: 'document-download',
               downloadClass2: ''
             });
-        //    this.props.onSetNotification('Session expired: Please click here to login again', 'error');
+            //    this.props.onSetNotification('Session expired: Please click here to login again', 'error');
           } else {
             this.setState({
               downloadText: 'Server may be down for maintenance, please try again later',
               downloadClass2: 'disabled_download'
             });
-        //    this.props.onSetNotification('Server may be down for maintenance, please try again later', 'error');
+            //    this.props.onSetNotification('Server may be down for maintenance, please try again later', 'error');
           }
 
         }
@@ -273,7 +275,7 @@ export default class DownloadFile extends React.Component {
 
     if (localStorage.role === undefined) {
       const msg = (`Please <a href="/login" target='_blank' rel='noopener noreferrer'>log in</a> to download files." or <a className="not-logged-in" href='register' target='_blank' rel='noopener noreferrer'>register</a> to download files.`)
-    //{ this.props.onSetNotification(msg, 'warn') }
+      //{ this.props.onSetNotification(msg, 'warn') }
       return (
         <>
           <Snackbar anchorOrigin={{ vertical: 'top', horizontal: 'right' }} transitionDuration={{ enter: 100, exit: 500 }}
@@ -288,7 +290,6 @@ export default class DownloadFile extends React.Component {
 
     }
     else if (this.props) {
-      console.log(`file: DownloadFile.js:266 ~ DownloadFile ~ render ~ this.props:`, this.props);
       let cellData = null;
       let propFilename = null;
       let propID = null;
@@ -322,7 +323,12 @@ export default class DownloadFile extends React.Component {
         propID = this.props.id;
         return (<>
           {this.state.downloadPreText}
-          <Button border={3} fullWidth color="primary" variant='contained' className={this.state.downloadClass2} onClick={() => { this.downloadNepaFile(propFilename, propID) }}>
+          <Button border={1}
+            fullWidth
+            color="primary"
+            variant='contained'
+            //className={this.state.downloadClass2}
+            onClick={() => { this.downloadNepaFile(propFilename, propID) }}>
             Download
           </Button>
           <span className="propFilename">??? {propFilename}</span>
@@ -336,10 +342,10 @@ export default class DownloadFile extends React.Component {
             color="primary"
             fullWidth
             variant='contained'
-            className={this.state.downloadClass}
+            //className={this.state.downloadClass}
             onClick={() => { this.download(propFilename, false) }}>
-              Download
-           {this.state.downloadText} {sizeText} {this.state.progressValue}
+            Download
+            {this.state.downloadText} {sizeText} {this.state.progressValue}
           </Button>
           {/* <span className="propFilename"> {propFilename}</span> */}
         </>
@@ -355,7 +361,12 @@ export default class DownloadFile extends React.Component {
         return (
           <>
             {this.state.downloadPreText}
-            <Button color="primary" variant='contained' className={this.state.downloadClass} onClick={() => { this.download(propID, true) }}>
+            <Button
+              color="primary"
+              fullWidth
+              variant='contained'
+              //className={this.state.downloadClass}
+              onClick={() => { this.download(propID, true) }}>
               {this.state.downloadText} <b>{innerText.replaceAll(' ', '_')}</b> - {sizeText} {this.state.progressValue}
             </Button>
             {/* {this.props.onSetNotification(`${this.state.downloadText} - ${this.state.progressValue}}`, 'info')} */}

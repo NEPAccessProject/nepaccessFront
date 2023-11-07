@@ -74,7 +74,7 @@ export default function SearchResultItem(props) {
   return (
     <>
       <div id="portal-root">
-    {/* Used by modal manger to inject modal to DOM when opened  */}
+        {/* Used by modal manger to inject modal to DOM when opened  */}
       </div>
       <div id="modal-root">
         {/* Used by modal manger to inject modal to DOM when opened  */}
@@ -142,14 +142,14 @@ const RenderRecord = (props) => {
     return (
       <>
         {/* {isOpen && */}
-          <PDFViewerDialog
-            id={`pdf-dialog-${id}`}
-            name={`modal-${record.id}`}
-            record={record}
-            //isOpen={isOpen[record.id]}
-            isOpen={isOpen && currentModalId === `modal-${record.id}`}
-            onDialogClose={(evt) => closeModal(evt, record.id)}
-          />
+        <PDFViewerDialog
+          id={`pdf-dialog-${id}`}
+          name={`modal-${record.id}`}
+          record={record}
+          //isOpen={isOpen[record.id]}
+          isOpen={isOpen && currentModalId === `modal-${record.id}`}
+          onDialogClose={(evt) => closeModal(evt, record.id)}
+        />
         {/* {} */}
       </>
     )
@@ -168,7 +168,7 @@ const RenderRecord = (props) => {
               textOverflow={'ellipsis'}
               flexWrap={'wrap'}
               overflow={'hidden'}>
-              <Link to={`/record-details?id=${id}`}>{title} {record.plaintext && record.plaintext.length}</Link>
+              <Link to={`/record-details?id=${id}`}>{title}</Link>
             </Typography>
           </DataCell>
           <Grid container id="search-result-row-container" borderTop={1} borderBottom={1} borderColor={'#ccc'}>
@@ -184,51 +184,42 @@ const RenderRecord = (props) => {
               </Typography>
             </DataCell>
             {title &&
-            (
-            <DataCell item flex={1} id="title-grid-container" borderRight={1} borderLeft={1} borderColor={'#ccc'}>
-              <Typography id="snippets-title" textOverflow={'ellipsis'} variant='h5' >
-                {/* {(title.length > 200) ?  title.slice(0, `${300} ...`) : title} */}
-                  {title}
-                </Typography>
-            </DataCell>
-            )}
-              <Grid item xs={3} flex={1} id="button-grid-container">
-                <DataCell border={1} borderColor={'#ccc'} item id="download-button-grid-item" display={'flex'} xs={12} >
-                    <DownloadFile
-                      key={record.filename}
-                      downloadType="folder"
-                      id={record.id}
-                      filename={record.filename}
-                      disabled={!record.filename}
-                      onSetNotification={props.onSetNotification}
-                    />
+              (
+                <DataCell item flex={1} id="title-grid-container" borderRight={1} borderLeft={1} borderColor={'#ccc'}>
+                  <Typography id="snippets-title" textOverflow={'ellipsis'} variant='h5' >
+                    {/* {(title.length > 200) ?  title.slice(0, `${300} ...`) : title} */}
+                    {title}
+                  </Typography>
                 </DataCell>
-                {/* <DataCell
-                  item
-                  id="preview-button-grid-item"
-                  display={'flex'}
-                  xs={6}>
-                  <ModalManager
-                    record={record}
-                    id={record.id}
-                    isOpen={isOpen}
-                    closeFn={closeModal}
-                    modal={modalOpen} />
-                  <Button
-                    onClick={(evt) => openModal(evt, record.id, record)}
-                    variant='contained'
-                    // //disabled={!record.filename}
-                    color="primary">
-                    Preview
-                  </Button>
-                </DataCell> */}
-              </Grid>
-          </Grid>
-          {/* <Grid id="render-snippets-record-grid-container" container xs={12}>
+              )}
+            <Grid container marginLeft={1} marginRight={1} item xs={3} flex={1} id="button-grid-container">
+              <DataCell item xs={6}>
+                <DownloadFile
+                  key={record.filename}
+                  downloadType="folder"
+                  id={record.id}
+                  filename={record.filename}
+                  disabled={!record.filename}
+                  onSetNotification={props.onSetNotification}
+                />
+              </DataCell>
+
+              <DataCell item xs={6}>
+                <Button
+                  fullWidth
+                  onClick={(evt) => openModal(evt, record.id, record)}
+                  variant='contained'
+                  // //disabled={!record.filename}
+                  color="primary">
+                  Preview
+                </Button>
+              </DataCell>
+            </Grid>
+            {/* <Grid id="render-snippets-record-grid-container" container xs={12}>
             <RenderSnippets record={record} />
           </Grid>*/}
+          </Grid>
         </Grid>
-
       </Paper>
     </>
   )

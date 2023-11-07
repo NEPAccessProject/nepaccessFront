@@ -37,16 +37,16 @@ export default function SearchResultCards(props: any) {
 		<div>
 			<Grid container padding={2} xs={12} flex={1}>
       <CardItem sx={{ padding:1, margin:0.5}}>
-					Agency: <b>{result.agency ? result.agency : 'N/A'}</b>
+					Agency: <b> {result.agency ? result.agency : 'N/A'}</b>
 				</CardItem>
         <CardItem sx={{ padding:1, margin:0.5}}>
-         Cooperating Agency: <b>{result.cooperatingAgency ? result.cooperatingAgency : 'N/A'}</b>
+         Cooperating Agency: <b> {result.cooperatingAgency ? result.cooperatingAgency : 'N/A'}</b>
         </CardItem>
 				<CardItem sx={{ padding:1, margin:0.5}}>
-					Status: <b>{result.decision ? result.decision : 'N/A'}</b>
+					Status: <b> {result.decision ? result.decision : 'N/A'}</b>
 				</CardItem>
 				<CardItem sx={{ padding:1, margin:0.5}}>
-					Date: <b>{result.commentDate ? result.commentDate : 'N/A'}</b>
+					Date: <b> {result.commentDate ? result.commentDate : 'N/A'}</b>
 				</CardItem>
 				<CardItem sx={{ padding:1, margin:0.5}}>
 					State: <b>{result.state ? result.state : 'N/A'}</b>
