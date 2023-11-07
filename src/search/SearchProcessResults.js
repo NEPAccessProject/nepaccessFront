@@ -140,7 +140,7 @@ export default class SearchProcessResults extends React.Component {
   }
 
   renderRow({ index, key, style, parent }) {
-//    console.log(`file: SearchProcessResults.js:318 ~ SearchProcessResults ~ renderRow ~ index, key, style, parent :`, index, key, style, parent);
+    //    console.log(`file: SearchProcessResults.js:318 ~ SearchProcessResults ~ renderRow ~ index, key, style, parent :`, index, key, style, parent);
     const result = this.props.results[index];
     return (
       <>
@@ -197,7 +197,7 @@ export default class SearchProcessResults extends React.Component {
     }
     //If there are results, then diplay them
     else {
-      const {limit,page} = ctxState;
+      const { limit, page } = ctxState;
       return (
         <>
           <SearchResultsMap
@@ -206,30 +206,38 @@ export default class SearchProcessResults extends React.Component {
             docList={this.props.geoResults}
             results={this.props.results}
           />
-          <Grid container flex={1} id="search-result-row-box" xs={12}>
+          <Grid container flex={1} id="search-result-row-grid-container" xs={12}>
             <Typography variant="h3" padding={1}>Showing {results.length < limit ? results.length : limit} of {results.length ? results.length : 0} Results for "{ctxState.titleRaw}"</Typography>
             <Divider />
-            <Box border={0} width={'100%'} id="search-result-row-container">
-              <Pagination
-                count={results.length}
-                hideNextButton={results.length % limit}
-                hidePrevButton={page >= results.length}
-                page={limit}
-                shape="rounded"
-                color="primary"
-                size={'large'}
-                disabled={results.length <= limit}
-                siblingCount={0}
-                onChange={(event, page) => {
-                  this.props.setPageInfo(page, limit)
-                }}
-              />
+            {results.length && limit <= results.length &&
 
+              <Grid item xs={12} id="search-result-pagination-grid-item" >
+                <Pagination
+                  id=""
+                  defaultPage={1}
+                  count={results.length > 0 ? Math.ceil(results.length / limit) : limit || 10}
+                  // hideNextButton={results.length % limit}
+                  // hidePrevButton={page >= results.length}
+                  // boundaryCount={10}
+                  // page={page}
+                  // shape="rounded"
+                  // color="primary"
+                  // size={'large'}
+                  // disabled={results.length <= limit}
+                  // siblingCount={0}
+                  onChange={(event, page) => {
+                    console.log(`Page: ${page} - limit: ${limit} - event:`, event);
+                    setPageInfo({ page, limit });
+                  }}
+                />
+              </Grid>
+            }
+            <Grid item xs={12}>
               {results.length && (
                 <ResultRow results={results} setPageInfo={this.props.setPageInfo} />
               )}
-              <Divider />
-            </Box>
+            </Grid>
+            <Divider />
           </Grid>
         </>
       )
@@ -318,16 +326,17 @@ const ResultRow = (props) => {
         marginTop={1}
         borderTop={1}
         borderColor={'#ddd'}
-        marginBottom={2} xs={12} flex={1}>
-        <Typography variant="h6">{results.length} Results</Typography>
+        marginBottom={2}
+        >
+        <Typography variant="h6">{limit} of {results.length} Results</Typography>
         {results.map((result, idx) => (
-         <span key={result.id}>
-            <Grid item xs={12} key={result.id} id={`search-result-row-grid-item-${result.id}`}>
+          <span key={result.id}>
+            <Grid item xs={12} id={`search-result-row-grid-item-${result.id}`}>
               <SearchResultCards result={result} />
               <SearchResultItem records={result.records} />
               <Divider />
             </Grid>
-         </span>
+          </span>
         ))}
       </Grid>
 

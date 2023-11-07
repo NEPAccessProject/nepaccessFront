@@ -43,3 +43,7 @@ public/example-pdfs.zip
 .env.production
 generate-dev-ssl-cert.sh
 .env
+
+!.env.project
+.env
+.env

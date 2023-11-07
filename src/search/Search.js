@@ -13,7 +13,7 @@ import {
   Container,
   Paper
 } from "@mui/material";
-import Grid from '@mui/material/Grid'; // Grid version 1
+import Grid from '@mui/material/Unstable_Grid2'; // Grid version 2 change back if unexpected layout behavior occurs
 import { ThemeProvider, styled } from "@mui/material/styles";
 import { makeStyles } from "@mui/styles";
 import "react-datepicker/dist/react-datepicker.css";
@@ -67,11 +67,19 @@ class Search extends React.Component {
   // history: PropTypes.object.isRequired
   // };
 
-  contextType = SearchContext;
+
   constructor(props) {
 
     super(props);
     console.log(`SEARCH PROPS`,props);
+    //enums for various notification types
+    this.messageTypeEnum = Object.freeze({
+      ERROR: "error",
+      INFO: "info",
+      SUCCESS: "success",
+      WARNING: "warning",
+    });
+
     this.ctx = this.context;
     this.state = {
 
@@ -98,6 +106,8 @@ class Search extends React.Component {
       isSearchTipsDialogOpen: false,
       limit: 25,
       markup: true,
+      message: 'Test Message',
+      messsageType: this.messageTypeEnum.ERROR,
       needsComments: false,
       needsDocument: false,
       offset: 0,
@@ -173,9 +183,6 @@ class Search extends React.Component {
   };
 
   doSearchFromParams = () => {
-    //
-    //
-
     var queryString = Globals.getParameterByName("q");
     this.setState({
       hasSearched: true
@@ -558,11 +565,8 @@ class Search extends React.Component {
   /** Helper method for onLocationChange limits county options to selected states in filter,
    * or resets to all counties if no states selected */
   narrowCountyOptions = (stateValues) => {
-    console.log(`file: Search.js:517 ~ Search ~ stateValues:`, stateValues.length, stateValues[0]);
-
     /** Filter logic for county array of specific label/value format given array of state abbreviations  */
     function countyFilter(stateValues) {
-      console.log(`file: Search.js:521 ~ Search ~ countyFilter ~ stateValues:`, stateValues);
       return function (a) {
         const matches = stateValues.some(item => a.label.split(":")[0] === item.value);
         return matches;
@@ -573,18 +577,13 @@ class Search extends React.Component {
     if (stateValues && stateValues.length > 0) {
       filteredCounties = filteredCounties.filter(countyFilter(stateValues));
     }
-    console.log(`file: Search.js:535 ~ Search ~ filteredCounties:`, filteredCounties);
-
-
     return filteredCounties;
   };
   //wraps the map's on county change event to the signature of the county filter
   onMapCountyChange = (selected) => {
-    console.log(`file: Search.js:561 ~ Search ~ selected:`, selected);
     this.onCountyChange("", selected, "selectOption");
   };
   onCountyChange = (evt, selected, reason) => {
-    console.log(`file: Search.js:571 ~ Search ~ ed, reason:`, selected, reason);
     let counties = [];
     if (reason && reason === 'selectOption') {
       //[TODO] Debuging only reseting state
@@ -595,7 +594,6 @@ class Search extends React.Component {
         })
       }
       else if (!reason && evt.length) {
-        console.log(`file: Search.js:556 ~ Search ~ evt:`, evt, evt.length);
         evt.map(s => {
           counties.push(s.value)
         })
@@ -603,7 +601,6 @@ class Search extends React.Component {
       }
       else if (reason && reason === "removeOption") {
         counties = this.state.county || [];
-        console.log(`file: Search.js:586 ~ Search ~ counties:`, counties);
         if (this.state.county && this.state.county.length > 0) {
           selected.map(s => {
             counties = counties.filter(county => county === s.value)
@@ -622,14 +619,12 @@ class Search extends React.Component {
           countyRaw: evt,
         },
         () => {
-          console.log('COUNTIES AFTER STATE UPDATE', this.state.county);
           this.filterResultsBy(this.state);
         }
       );
     }
   }
   filterCounties = (states) => {
-    console.log(`file: Search.js:506 ~ Search ~ states:`, states);
     //filter out counties not in the selected state(s)
     const countyOptions = this.narrowCountyOptions(states);
 
@@ -653,7 +648,6 @@ class Search extends React.Component {
           this.state.countyOptions.filter((countyObj) => {
 
             const matches = this.state.county.includes(countyObj.value)
-            console.log(`file: Search.js:507 ~ Search ~ this.state.countyOptions.filter ~ matches:`, matches);
             return matches;
           }),
           states,
@@ -682,7 +676,6 @@ class Search extends React.Component {
     }
   };
   onSortByChangeHandler = (evt) => {
-    console.log(`onSortByChangeHandler Event`, evt);
     this.setState({
       searcherInputs: {
         sortBy: evt.target.value,
@@ -713,12 +706,6 @@ class Search extends React.Component {
       return "Search full texts and titles of NEPA documents";
     }
   };
-
-  // onUseOptionsChecked = (evt) => {
-  // console.log(`file: Search.js:692 ~ Search ~ evt:`, evt);
-
-  //   this.props.optionsChanged(evt.target.checked);
-  // };
 
   onNeedsDocumentChecked = (evt) => {
     this.setState(
@@ -963,6 +950,13 @@ class Search extends React.Component {
       useOptionsChecked: evt.target.checked
     })
   }
+  onSetNotification(message="",messsageType=""){
+    console.log(`file: Search.js:954 ~ Search ~ onSetNotification ~ message="",messsageType="":`, message,messsageType);
+    this.setState((prevState)=>{
+      message,
+      messsageType
+    })
+  }
 
   render() {
     // const { history } = this.props;
@@ -990,6 +984,7 @@ class Search extends React.Component {
     const value = {
       state: this.state,
       setState: this.setState,
+      onSetNotification: this.onSetNotification,
     };
     return (
       <ThemeProvider theme={theme}>
@@ -1009,14 +1004,12 @@ class Search extends React.Component {
                 rowSpacing={2}
                 id='result-header-grid-container'
                 container>
-                {''}
                 <Grid
-                  container
+                  item
                   xs={12}
                   marginTop={1}
                   id='results-header-grid-container'
-                  flex={1}
-                  flexGrow={1}>
+                >
                   <ResultsHeader
                     {...this.props}
                     sort={this.props.sort}
@@ -1065,6 +1058,7 @@ class Search extends React.Component {
                       //[TODO] it would probably be simpler showing these into context
                       <SearchFilters
                         {...this.props}
+                        onSetNotification={this.onSetNotification}
                         onActionChange={this.onActionChange}
                         onAgencyChange={this.onAgencyChange}
                         onClearFilter={this.onClearFilter}
@@ -1141,10 +1135,13 @@ class Search extends React.Component {
         </SearchContext.Provider>
       </ThemeProvider>
     );
-  }
+                }
+
 
   orgClick = () => {
-    this.setState({ hideOrganization: !this.state.hideOrganization });
+    this.setState({
+      hideOrganization: !this.state.hideOrganization,
+    });
   };
 
   componentWillUnmount() {
@@ -1160,7 +1157,18 @@ class Search extends React.Component {
   componentDidMount() {
     try {
       Globals.registerListener("geoFilter", this.geoFilter);
-
+      <>
+      <Snackbar
+         anchorOrigin={{vertical: '', horizontal: 'center'}}
+         //transitionDuration={{enter: 100, exit: 500}}
+          open={this.state.message.length}
+          autoHideDuration={3000}
+        >
+          <Alert severity={this.state.messsageType}>
+            {this.state.message}
+          </Alert>
+      </Snackbar>
+        </>
       // For if user navigates back using top menu
       const rehydrate = JSON.parse(persist.getItem("appState"));
 

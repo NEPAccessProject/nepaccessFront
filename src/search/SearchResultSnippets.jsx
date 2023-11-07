@@ -99,7 +99,7 @@ function Snippets(props) {
       <Grid display={'flex'} xs={12} id="grid-snippet-container" container>
         {snippet && (
           <Grid item xs={12} display={'flex'}  id="grid-snippet-snippet-box">
-            <Typography variant='textSnippet' padding={2}>
+            <Typography variant='textSnippet' textOverflow={'ellipsis'} overflow={'hidden'} padding={2}>
                 {!isContentExpanded && snippet.length >= maxSnippetLength ? snippet.slice(0, maxSnippetLength) : snippet}
                 {isContentExpanded && snippet}
             </Typography>

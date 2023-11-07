@@ -11,10 +11,11 @@ const CardItem = styled(Paper)(({ theme }) => ({
   lineHeight: 1,
   justifyContent: 'center',
   justifyItems: 'center',
-
+  display: 'flex',
 	fontColor: "#111", //theme.palette.text.secondary,
 	elevation: 1,
 	borderRadius: 1,
+  wordWrap: 'break-word',
 
 	'&:hover': {
 		//           backgroundColor: //theme.palette.grey[200],
@@ -34,7 +35,7 @@ export default function SearchResultCards(props: any) {
   const {id} = result;
 	return (
 		<div>
-			<Grid container padding={2} xs={12} flexDirection={'row'} flex={1}>
+			<Grid container padding={2} xs={12} flex={1}>
       <CardItem sx={{ padding:1, margin:0.5}}>
 					Agency: <b>{result.agency ? result.agency : 'N/A'}</b>
 				</CardItem>

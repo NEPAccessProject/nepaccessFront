@@ -1,33 +1,33 @@
 @host = http://localhost:8080/
-@token = PUT TOKEN HERE
-###
-GET {{host}}file/downloadFolder?filename=17781&id=17781
-key: test_key_only
-
-
+@token = Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJnbXMiLCJleHAiOjE2OTg5NDA3MTIsImp0aSI6IjY0NSJ9.YF8GpROIg62u9nIApwU29FZbwZWyxRP84duUqA66_sfc2DBhIJpm_LspD_ezvyAXVa-CponElKEyG5_sMvUSDg
 ###
 
 GET {{host}}stats/eis_count HTTP/1.1
 key: test_key_only
 ###
 GET {{host}}file/download_nepa_file?filename=EisDocuments-374669.zip&id=17781 HTTP/1.1
-Authorization: {{token}}
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJnbXMiLCJleHAiOjE2OTg5NDA3MTIsImp0aSI6IjY0NSJ9.YF8GpROIg62u9nIApwU29FZbwZWyxRP84duUqA66_sfc2DBhIJpm_LspD_ezvyAXVa-CponElKEyG5_sMvUSDg
 key: test_key_only
 
 ###
 POST {{host}}test/check HTTP/1.1
-Authorization: {{token}}
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJnbXMiLCJleHAiOjE2OTg5NDA3MTIsImp0aSI6IjY0NSJ9.YF8GpROIg62u9nIApwU29FZbwZWyxRP84duUqA66_sfc2DBhIJpm_LspD_ezvyAXVa-CponElKEyG5_sMvUSDg
+key: test_key_only
+
+###
+POST {{host}}test/check HTTP/1.1
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJnbXMiLCJleHAiOjE2OTg5NDA3MTIsImp0aSI6IjY0NSJ9.YF8GpROIg62u9nIApwU29FZbwZWyxRP84duUqA66_sfc2DBhIJpm_LspD_ezvyAXVa-CponElKEyG5_sMvUSDg
 key: test_key_only
 
 ###
 GET {{host}}stats/draft_final_count_year HTTP/1.1
-Authorization: {{token}}
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJnbXMiLCJleHAiOjE2OTg5NDA3MTIsImp0aSI6IjY0NSJ9.YF8GpROIg62u9nIApwU29FZbwZWyxRP84duUqA66_sfc2DBhIJpm_LspD_ezvyAXVa-CponElKEyG5_sMvUSDg
 key: test_key_only
 Content-Type: application/json
 Accept: application/json
 ###
 POST {{host}}text/search_no_context HTTP/1.1
-Authorization: {{token}}
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJnbXMiLCJleHAiOjE2OTg5NDA3MTIsImp0aSI6IjY0NSJ9.YF8GpROIg62u9nIApwU29FZbwZWyxRP84duUqA66_sfc2DBhIJpm_LspD_ezvyAXVa-CponElKEyG5_sMvUSDg
 key: test_key_only
 Content-Type: application/json
 Accept: application/json
@@ -38,7 +38,7 @@ Accept: application/json
 
 ###
 POST {{host}}text/search_top/ HTTP/1.1
-Authorization: {{token}}
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJnbXMiLCJleHAiOjE2OTg5NDA3MTIsImp0aSI6IjY0NSJ9.YF8GpROIg62u9nIApwU29FZbwZWyxRP84duUqA66_sfc2DBhIJpm_LspD_ezvyAXVa-CponElKEyG5_sMvUSDg
 key: test_key_only
 Content-Type: application/json
 Accept: application/json
@@ -50,19 +50,19 @@ Accept: application/json
 
 ###
 POST {{host}}text/search/ HTTP/1.1
-Authorization: {{token}}
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJnbXMiLCJleHAiOjE2OTg5NDA3MTIsImp0aSI6IjY0NSJ9.YF8GpROIg62u9nIApwU29FZbwZWyxRP84duUqA66_sfc2DBhIJpm_LspD_ezvyAXVa-CponElKEyG5_sMvUSDg
 key: test_key_only
 Content-Type: application/json
 Accept: application/json
 
 {
 
-    "title": "Bay"
+    "title": ""
 }
 
 ###
 POST {{host}}text/search_test HTTP/1.1
-Authorization: {{token}}
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJnbXMiLCJleHAiOjE2OTg5NDA3MTIsImp0aSI6IjY0NSJ9.YF8GpROIg62u9nIApwU29FZbwZWyxRP84duUqA66_sfc2DBhIJpm_LspD_ezvyAXVa-CponElKEyG5_sMvUSDg
 key: test_key_only
 Content-Type: application/json
 Accept: application/json
@@ -72,7 +72,7 @@ Accept: application/json
 }
 ###
 GET {{host}}text/search_test HTTP/1.1
-Authorization: {{token}}
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJnbXMiLCJleHAiOjE2OTg5NDA3MTIsImp0aSI6IjY0NSJ9.YF8GpROIg62u9nIApwU29FZbwZWyxRP84duUqA66_sfc2DBhIJpm_LspD_ezvyAXVa-CponElKEyG5_sMvUSDg
 key: test_key_only
 Content-Type: application/json
 Accept: application/json
@@ -81,12 +81,9 @@ Accept: application/json
     "id": "2003"
 }
 
-###
-GET {{host}}test/get_process_full?processId=1000331 HTTP/1.1
-###
 
 POST {{host}}text/get_highlightsFVH HTTP/1.1
-Authorization: {{token}}
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJnbXMiLCJleHAiOjE2OTg5NDA3MTIsImp0aSI6IjY0NSJ9.YF8GpROIg62u9nIApwU29FZbwZWyxRP84duUqA66_sfc2DBhIJpm_LspD_ezvyAXVa-CponElKEyG5_sMvUSDg
 key: test_key_only
 Content-Type: application/json
 Accept: application/json
@@ -102,83 +99,83 @@ Accept: application/json
 
 ###
 GET {{host}}text/test_terms?terms=2020 HTTP/1.1
-Authorization: {{token}}
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJnbXMiLCJleHAiOjE2OTg5NDA3MTIsImp0aSI6IjY0NSJ9.YF8GpROIg62u9nIApwU29FZbwZWyxRP84duUqA66_sfc2DBhIJpm_LspD_ezvyAXVa-CponElKEyG5_sMvUSDg
 key: test_key_only
 Content-Type: application/json
 Accept: application/json
 ###
 GET {{host}}text/get_by_title?title=Meeks HTTP/1.1
-Authorization: {{token}}
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJnbXMiLCJleHAiOjE2OTg5NDA3MTIsImp0aSI6IjY0NSJ9.YF8GpROIg62u9nIApwU29FZbwZWyxRP84duUqA66_sfc2DBhIJpm_LspD_ezvyAXVa-CponElKEyG5_sMvUSDg
 key: test_key_only
 Content-Type: application/json
 Accept: application/json
 
 ###
 GET {{host}}text/search/suggest?terms=Bay HTTP/1.1
-{{token}}
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJnbXMiLCJleHAiOjE2OTg5NDA3MTIsImp0aSI6IjY0NSJ9.YF8GpROIg62u9nIApwU29FZbwZWyxRP84duUqA66_sfc2DBhIJpm_LspD_ezvyAXVa-CponElKEyG5_sMvUSDg
 key: test_key_only
 Content-Type: application/json
 Accept: application/json
 
 ###
 GET {{host}}text/get_by_filename?filename=CommentLetters-79624.zip HTTP/1.1
-{{token}}
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJnbXMiLCJleHAiOjE2OTg5NDA3MTIsImp0aSI6IjY0NSJ9.YF8GpROIg62u9nIApwU29FZbwZWyxRP84duUqA66_sfc2DBhIJpm_LspD_ezvyAXVa-CponElKEyG5_sMvUSDg
 key: test_key_only
 Content-Type: application/json
 Accept: application/json
 
 ###
 GET {{host}}stats/earliest_year HTTP/1.1
-{{token}}
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJnbXMiLCJleHAiOjE2OTg5NDA3MTIsImp0aSI6IjY0NSJ9.YF8GpROIg62u9nIApwU29FZbwZWyxRP84duUqA66_sfc2DBhIJpm_LspD_ezvyAXVa-CponElKEyG5_sMvUSDg
 key: test_key_only
 
 ###
 POST {{host}}user/get_role HTTP/1.1
-{{token}}
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJnbXMiLCJleHAiOjE2OTg5NDA3MTIsImp0aSI6IjY0NSJ9.YF8GpROIg62u9nIApwU29FZbwZWyxRP84duUqA66_sfc2DBhIJpm_LspD_ezvyAXVa-CponElKEyG5_sMvUSDg
 key: test_key_only
 ###
 POST {{host}}scraper/restart HTTP/1.1
-{{token}}
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJnbXMiLCJleHAiOjE2OTg5NDA3MTIsImp0aSI6IjY0NSJ9.YF8GpROIg62u9nIApwU29FZbwZWyxRP84duUqA66_sfc2DBhIJpm_LspD_ezvyAXVa-CponElKEyG5_sMvUSDg
 key: test_key_only
 
 ###
 GET {{host}}scraper/is_shutdown HTTP/1.1
-{{token}}
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJnbXMiLCJleHAiOjE2OTg5NDA3MTIsImp0aSI6IjY0NSJ9.YF8GpROIg62u9nIApwU29FZbwZWyxRP84duUqA66_sfc2DBhIJpm_LspD_ezvyAXVa-CponElKEyG5_sMvUSDg
 key: test_key_only
 
 
 
 ###
 GET http://localhost:8080/geojson/get_all_state_county HTTP/1.1
-{{token}}
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJnbXMiLCJleHAiOjE2OTg5NDA3MTIsImp0aSI6IjY0NSJ9.YF8GpROIg62u9nIApwU29FZbwZWyxRP84duUqA66_sfc2DBhIJpm_LspD_ezvyAXVa-CponElKEyG5_sMvUSDg
 key: test_key_only
 
 
 
 ###
-POST {{host}}scraper/sync HTTP/1.1
-{{token}}
+GET {{host}}scraper/sync HTTP/1.1
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJnbXMiLCJleHAiOjE2OTg5NDA3MTIsImp0aSI6IjY0NSJ9.YF8GpROIg62u9nIApwU29FZbwZWyxRP84duUqA66_sfc2DBhIJpm_LspD_ezvyAXVa-CponElKEyG5_sMvUSDg
 key: test_key_only
 ###
 
 
 ###
 POST {{host}}user/checkAdmin HTTP/1.1
-{{token}}
+Authorization: {{token}}
 key: test_key_only
 
 ###
 GET {{host}}text/sync HTTP/1.1
-{{token}}
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJnbXMiLCJleHAiOjE2OTg5NDA3MTIsImp0aSI6IjY0NSJ9.YF8GpROIg62u9nIApwU29FZbwZWyxRP84duUqA66_sfc2DBhIJpm_LspD_ezvyAXVa-CponElKEyG5_sMvUSDg
 key: test_key_only
 
 
 ###
 GET {{host}}text/get_by_id?id=24155 HTTP/1.1
-{{token}}
+Authorization: {{token}}
 key: test_key_only
 
 ###
 GET {{host}}text/get_length_ids?id=24155 HTTP/1.1
-{{token}}
+Authorization: {{token}}
 key: test_key_only

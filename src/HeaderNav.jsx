@@ -39,6 +39,10 @@ const headersData = [
     href: '/search?q=""',
   },
   {
+    label: 'Vision',
+    href: '/vision',
+  },
+  {
     label: 'Search Tips',
     href: '/search-tip',
   },
@@ -531,8 +535,12 @@ const HeaderNav = (props) => {
               justifyContent: 'flex-end'
             }}
           >
-            <Grid xs={10} item style={{ ...accountLinkGridItemStyle, justifyContent: 'center', display: 'flex' }}><NavLinks {...props} /></Grid>
-            <Grid xs={2} item style={{ ...accountLinkGridItemStyle, justifyContent: 'center', display: 'flex', alignItems:'center ', alignContent: 'flex-start' }}><TopNavLinks {...props} /></Grid>
+            <Grid xs={10}
+              item
+              style={{ ...accountLinkGridItemStyle, justifyContent: 'center', display: 'flex' }}>
+              <NavLinks {...props} />
+            </Grid>
+            <Grid xs={2} item style={{ ...accountLinkGridItemStyle, justifyContent: 'center', display: 'flex', alignItems: 'center ', alignContent: 'flex-start' }}><TopNavLinks {...props} /></Grid>
           </Grid>
           {/* #endregion */}
           {/* END TOP NAV  */}
@@ -571,14 +579,14 @@ export function TopNavLinks(props) {
       <Grid id="admin-menu-dropdown-grid"
         item
         xs={3}
-        style={{...accountLinkGridItemStyle}}
+        style={{ ...accountLinkGridItemStyle }}
       >
         <div id="admin-dropdown" className="main-menu-link dropdown">
           <NavLink
             currentpage={(
               currentPage === '/search-tips' || currentPage === '/available-documents'
             ).toString()}
-//            id="admin-button"
+            //            id="admin-button"
             to="/admin"
             style={linkStyle}
           >
@@ -606,7 +614,7 @@ export function TopNavLinks(props) {
         flex={1}
         xs={3}
         //          id="profile-grid-item"
-        style={{...accountLinkGridItemStyle,justifyContent:'center'}}
+        style={{ ...accountLinkGridItemStyle, justifyContent: 'center' }}
       >
         <a id="profile-link"
           style={linkStyle}
@@ -629,7 +637,7 @@ export function TopNavLinks(props) {
           {/* It didn't seem to have a register link once you are logged in */}
           <Grid
             item
-            style={{...accountLinkGridItemStyle,justifyContent:'center'}}
+            style={{ ...accountLinkGridItemStyle, justifyContent: 'center' }}
             id="register-grid-item"
             xs={3}
             flex={1}
@@ -718,6 +726,13 @@ export function NavLinks(props) {
             to="/search"
           >
             Search
+          </NavLink>
+          <NavLink
+            currentpage={(currentPage === '/contact').toString()}
+            className="main-menu-link"
+            to="/vision"
+          >
+            Vision
           </NavLink>
           <div id="about-dropdown-2" className="main-menu-link dropdown">
             <NavLink

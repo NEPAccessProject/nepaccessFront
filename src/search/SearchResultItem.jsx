@@ -163,10 +163,11 @@ const RenderRecord = (props) => {
       }}>
         <Grid container>
           <DataCell>
-            # of Snippets {record.plaintext ? record.plaintext.length : 0}
-              </DataCell>
-          <DataCell>
-            <Typography variant='h4'> d
+            <Typography
+              variant='h4'
+              textOverflow={'ellipsis'}
+              flexWrap={'wrap'}
+              overflow={'hidden'}>
               <Link to={`/record-details?id=${id}`}>{title} {record.plaintext && record.plaintext.length}</Link>
             </Typography>
           </DataCell>
@@ -177,27 +178,32 @@ const RenderRecord = (props) => {
               </Typography>
             </DataCell>
 
-            <DataCell item xs={3} borderLeft={1} borderColor={'#ccc'} id="status-document-type-grid-item">
+            <DataCell item xs={2} borderLeft={1} borderColor={'#ccc'} id="status-document-type-grid-item">
               <Typography className={classes.card} style={styles.link}>
                 {documentType}
               </Typography>
             </DataCell>
-            <DataCell item xs={6} flex={1} id="title-grid-container" borderRight={1} borderLeft={1} borderColor={'#ccc'}>
-              <Typography id="snippets-title" variant='h5' >{(title) ? title : ''}</Typography>
+            {title &&
+            (
+            <DataCell item flex={1} id="title-grid-container" borderRight={1} borderLeft={1} borderColor={'#ccc'}>
+              <Typography id="snippets-title" textOverflow={'ellipsis'} variant='h5' >
+                {/* {(title.length > 200) ?  title.slice(0, `${300} ...`) : title} */}
+                  {title}
+                </Typography>
             </DataCell>
-              <Grid container xs={2} flex={1} id="button-grid-container">
-                <DataCell border={1} borderColor={'#000'} item id="download-button-grid-item" display={'flex'} xs={6} >
+            )}
+              <Grid item xs={3} flex={1} id="button-grid-container">
+                <DataCell border={1} borderColor={'#ccc'} item id="download-button-grid-item" display={'flex'} xs={12} >
                     <DownloadFile
                       key={record.filename}
-                      downloadType="nepafile"
+                      downloadType="folder"
                       id={record.id}
                       filename={record.filename}
                       disabled={!record.filename}
+                      onSetNotification={props.onSetNotification}
                     />
                 </DataCell>
-                <DataCell
-                  border={1}
-                  borderColor={'black'}
+                {/* <DataCell
                   item
                   id="preview-button-grid-item"
                   display={'flex'}
@@ -215,12 +221,12 @@ const RenderRecord = (props) => {
                     color="primary">
                     Preview
                   </Button>
-                </DataCell>
+                </DataCell> */}
               </Grid>
           </Grid>
-          <Grid id="render-snippets-record-grid-container" container xs={12}>
+          {/* <Grid id="render-snippets-record-grid-container" container xs={12}>
             <RenderSnippets record={record} />
-          </Grid>
+          </Grid>*/}
         </Grid>
 
       </Paper>

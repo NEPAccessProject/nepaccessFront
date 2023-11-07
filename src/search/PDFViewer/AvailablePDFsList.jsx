@@ -10,6 +10,8 @@ import {
   Paper,
   Typography,
 } from '@mui/material';
+import DownloadFile from '../../DownloadFile';
+import DownloadFiles from '../../DownloadFiles';
 import theme from '../../styles/theme';
 //import {InboxIcon,MailIcon} from '@mui/icons-material'
 import { Theme } from '@mui/material/styles';
@@ -106,8 +108,15 @@ const AvailablePDFsList = (props) => {
         <Grid
           item
           xs={12}>
-          <Button
-            fullWidth={true}
+            <DownloadFile
+                      key={record.filename}
+                      downloadType="folder"
+                      id={record.id}
+                      filename={record.filename}
+                      disabled={!record.filename}
+                    />
+          {/* <Button
+            fullWidth
             variant='contained'
             onClick={() =>
               onDownloadZip(
@@ -116,7 +125,7 @@ const AvailablePDFsList = (props) => {
               )
             }>
             Download All {record.zipPath}
-          </Button>
+          </Button> */}
         </Grid>
       </>
     );
