@@ -74,10 +74,8 @@ export default function SearchResultItem(props) {
   return (
     <>
       <div id="portal-root">
-        {/* Used by modal manger to inject modal to DOM when opened  */}
       </div>
       <div id="modal-root">
-        {/* Used by modal manger to inject modal to DOM when opened  */}
       </div>
 
       {records.map((record, idx) => (
@@ -124,6 +122,7 @@ const RenderRecord = (props) => {
   const [currentModalId, setCurrentModalId] = useState(0);
 
   const openModal = ((event, id) => {
+    console.log(`file: SearchResultItem.jsx:127 ~ openModal ~ event, id:`, event, id);
     event.preventDefault()
     const { target: { dataset: { modal } } } = event
     setCurrentModalId(`modal-${id}`)
@@ -146,7 +145,7 @@ const RenderRecord = (props) => {
           id={`pdf-dialog-${id}`}
           name={`modal-${record.id}`}
           record={record}
-          //isOpen={isOpen[record.id]}
+          isOpen={isOpen[record.id]}
           isOpen={isOpen && currentModalId === `modal-${record.id}`}
           onDialogClose={(evt) => closeModal(evt, record.id)}
         />
@@ -199,7 +198,7 @@ const RenderRecord = (props) => {
                   downloadType="folder"
                   id={record.id}
                   filename={record.filename}
-                  disabled={!record.filename}
+//                  disabled={!record.filenames.length}
                   onSetNotification={props.onSetNotification}
                 />
               </DataCell>
@@ -207,17 +206,20 @@ const RenderRecord = (props) => {
               <DataCell item xs={6}>
                 <Button
                   fullWidth
-                  onClick={(evt) => openModal(evt, record.id, record)}
+                  onClick={(evt) => {
+                    console.log('openModal', evt, record,record.id);
+                    openModal(evt, record.id, record)
+                  }}
                   variant='contained'
-                  // //disabled={!record.filename}
+ //                 disabled={!record.filenames.length}
                   color="primary">
                   Preview
                 </Button>
               </DataCell>
             </Grid>
-            {/* <Grid id="render-snippets-record-grid-container" container xs={12}>
+          <Grid id="render-snippets-record-grid-container" container xs={12}>
             <RenderSnippets record={record} />
-          </Grid>*/}
+          </Grid>
           </Grid>
         </Grid>
       </Paper>
