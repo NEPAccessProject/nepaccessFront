@@ -329,10 +329,16 @@ const HeaderNav = (props) => {
                   justifyContent: 'flex-start',
                   display: 'flex',
                   paddingTop: 2,
-                  paddingBottom: 2
+                  paddingBottom: 2,
+                  paddingLeft: 1,
+                  marginLeft: 5,
                 }}
               >
-                <img src="/logo2022.png" width={250} alt="NEPAccess Mobile Logo" />
+                <a href='/'>
+                  <img src="/logo2022.png"
+                    width={250}
+                    alt="NEPAccess Mobile Logo" />
+                </a>
               </Grid>
               <Grid
                 item
