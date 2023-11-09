@@ -152,8 +152,8 @@ const SearchFilters = (props) => {
         <Paper elevation={1} sx={{
           boxShadow: '0px 4px 8px rgba(0.5, 0.5, 0.5, 0.15)'
         }}>
-          <Grid container>
-            <Item hidden={state.filtersHidden}>
+          <Grid container flex={1} hidden={state.filtersHidden}>
+            <Grid item>
               {/* #region search title */}
               <Box alignItems={'center'}>
                 <Checkbox
@@ -172,7 +172,7 @@ const SearchFilters = (props) => {
                 </FormLabel>
               </Box>
               {/* #endregion */}
-              <Box
+              <Grid item
                 padding={0}
                 margin={0}
                 justifyContent={'center'}
@@ -189,10 +189,10 @@ const SearchFilters = (props) => {
                   Clear Filters
                 </Button>
                 {/* {renderClearFiltersButton()} */}
-              </Box>
+              </Grid>
               <Divider />
               {/* #region search agencies */}
-              <Box>
+              <Grid item>
                 <FormControl
                   fullWidth
                   xs={{
@@ -230,10 +230,10 @@ const SearchFilters = (props) => {
                 </FormControl>
 
                 {/* #endregion */}
-              </Box>
+              </Grid>
               {/* #region search */}
               {/* #regionSearch Agency */}
-              <Box>
+              <Grid item xs={12}>
                 <FormControl
                   fullWidth
                   xs={{
@@ -271,7 +271,7 @@ const SearchFilters = (props) => {
                     }}
                   />
                 </FormControl>
-              </Box>
+              </Grid>
               {/* #endregion */}
               <Divider />
               {/* #region search states */}
@@ -551,7 +551,7 @@ const SearchFilters = (props) => {
                 </div>
               </div>
               {/* #endregion */}
-            </Item>
+            </Grid>
             {/* #region organization */}
             <Item
               hidden={state.hideOrganization}
