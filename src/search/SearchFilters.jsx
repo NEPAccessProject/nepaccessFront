@@ -423,7 +423,6 @@ const SearchFilters = (props) => {
 
               <Divider />
               {/* #region document type filters */}
-              <Grid container flex={1}>
               <Grid item xs={12}>
                   <FormControlLabel
                     label={<Typography variant='filterLabel'>Final EIS {EISCount ? EISCount : ''}</Typography>}
@@ -499,7 +498,7 @@ const SearchFilters = (props) => {
                       }
                     />
                   </Grid>
-                  <Box>
+                  <Grid item xs={12}>
                     <FormControlLabel
                     label={<Typography variant='filterLabel'>Scoping Report {scopingCount ? scopingCount : ''}</Typography>}
                     control={
@@ -513,7 +512,7 @@ const SearchFilters = (props) => {
                       />
                     }
                     />
-                  </Box>
+                  </Grid>
               </Grid>
               {/* #endregion */}
               {/* #region advanced */}
@@ -550,7 +549,6 @@ const SearchFilters = (props) => {
               <button onClick={(evt) => orgClick(evt)}>x</button>
             </Item>
             {/* #endregion */}
-          </Grid>
         </Paper>
     </>
   );
