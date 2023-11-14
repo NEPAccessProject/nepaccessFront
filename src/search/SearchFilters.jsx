@@ -153,7 +153,7 @@ const SearchFilters = (props) => {
           boxShadow: '0px 4px 8px rgba(0.5, 0.5, 0.5, 0.15)'
         }}>
           <Grid container flex={1} hidden={state.filtersHidden}>
-            <Grid item>
+            <Grid item xs={12}>
               {/* #region search title */}
               <Box alignItems={'center'}>
                 <Checkbox
@@ -173,6 +173,7 @@ const SearchFilters = (props) => {
               </Box>
               {/* #endregion */}
               <Grid item
+                xs={12}
                 padding={0}
                 margin={0}
                 justifyContent={'center'}
@@ -192,7 +193,7 @@ const SearchFilters = (props) => {
               </Grid>
               <Divider />
               {/* #region search agencies */}
-              <Grid item>
+              <Grid item xs={12}>
                 <FormControl
                   fullWidth
                   xs={{
@@ -275,7 +276,7 @@ const SearchFilters = (props) => {
               {/* #endregion */}
               <Divider />
               {/* #region search states */}
-              <Box>
+              <Grid item xs={12}>
                 <FormLabel htmlFor='state'>State(s) and Location(s):</FormLabel>
                 <Autocomplete
                   id='state'
@@ -303,10 +304,10 @@ const SearchFilters = (props) => {
                     );
                   }}
                 />
-              </Box>
+              </Grid>
               {/* #endregion */}
               {/* #region search counties */}
-              <Box>
+              <Grid item xs={12} >
                 <FormLabel
                   label
                   htmlFor='county'>
@@ -336,7 +337,7 @@ const SearchFilters = (props) => {
                     );
                   }}
                 />
-              </Box>
+              </Grid>
               {/* #endregion */}
               {/* #region dates */}
               {/* Authorized Only Filters */}
@@ -346,7 +347,7 @@ const SearchFilters = (props) => {
               {/* #region search action type */}
               {/* <div hidden={!Globals.authorized()}> */}
               <div>
-                <Box id="action-type-box">
+                <Grid item xs={12} flex={1} id="action-type-box">
 
                   <FormLabel htmlFor='searchAction'>Action Type:</FormLabel>
                   <Autocomplete
@@ -372,14 +373,14 @@ const SearchFilters = (props) => {
                       );
                     }}
                   />
-                </Box>
+                </Grid>
                 {/* #endregion */}
               </div>
               {/* </div> */}
               {/* #endregion */}
-              <div hidden={!Globals.authorized()}>
+              <Grid flexDirection={'column'} container flex={1} hidden={!Globals.authorized()}>
                 {/* #region search decision */}
-                <Item>
+                <Grid item xs={12}>
                   <FormLabel htmlFor='searchDecision'></FormLabel>
                   <Typography variant='filterLabel'>Decision Type</Typography>
                   <Autocomplete
@@ -405,35 +406,25 @@ const SearchFilters = (props) => {
                       />
                     )}
                   />
-                </Item>
+                </Grid>
                 {/* #endregion */}
-              </div>
+              </Grid>
               <Divider />
 
-              <Item>
-                <Box
-                  display={'flex'}
-                  xs={12}
-                  flexDirection={'column'}
-                  padding={0}
-                  margin={0}
-                  width={'100%'}
-                  alignContent={'center'}
-                  justifyItems={'center'}>
-                  <SearchDatePickers
-                    onStartDateChange={(evt) => onStartDateChange(evt)}
-                    onEndDateChange={(evt) => onEndDateChange(evt)}
-                    startDate={state.startDate}
-                    endDate={Date.now - 1}
-                  />
-                </Box>
-              </Item>
+                <Grid item xs={12}>
+                    <SearchDatePickers
+                      onStartDateChange={(evt) => onStartDateChange(evt)}
+                      onEndDateChange={(evt) => onEndDateChange(evt)}
+                      startDate={state.startDate}
+                      endDate={Date.now - 1}
+                    />
+                </Grid>
               {/* #endregion */}
 
               <Divider />
               {/* #region document type filters */}
-              <Item>
-              <Box>
+              <Grid container flex={1}>
+              <Grid item xs={12}>
                   <FormControlLabel
                     label={<Typography variant='filterLabel'>Final EIS {EISCount ? EISCount : ''}</Typography>}
                     control={
@@ -447,9 +438,9 @@ const SearchFilters = (props) => {
                       />
                     }
                   />
-                  </Box>
+                  </Grid>
 
-                <Box>
+                <Grid item xs={12}>
                   <FormControlLabel
                     label={<Typography variant='filterLabel'>Draft EIS {draftCount ? draftCount : ''}</Typography>}
                     control={
@@ -463,8 +454,8 @@ const SearchFilters = (props) => {
                       />
                     }
                   />
-                  </Box>
-                  <Box>
+                  </Grid>
+                  <Grid item xs={12}>
                     <FormControlLabel
                       label={<Typography variant='filterLabel'>EA {eaCount ? eaCount : ''}</Typography>}
                       control={
@@ -478,8 +469,8 @@ const SearchFilters = (props) => {
                         />
                       }
                     />
-                  </Box>
-                  <Box>
+                  </Grid>
+                  <Grid item xs={12}>
                     <FormControlLabel
                       label={<Typography variant='filterLabel'>NOI {noiCount ? noiCount : ''}</Typography>}
                       control={
@@ -492,8 +483,8 @@ const SearchFilters = (props) => {
                         />
                       }
                     />
-                  </Box>
-                  <Box>
+                  </Grid>
+                  <Grid item xs={12}>
                     <FormControlLabel
                       label={<Typography variant='filterLabel'>ROD {rodCount ? rodCount : ''}</Typography>}
                       control={
@@ -507,7 +498,7 @@ const SearchFilters = (props) => {
                         />
                       }
                     />
-                  </Box>
+                  </Grid>
                   <Box>
                     <FormControlLabel
                     label={<Typography variant='filterLabel'>Scoping Report {scopingCount ? scopingCount : ''}</Typography>}
@@ -523,7 +514,7 @@ const SearchFilters = (props) => {
                     }
                     />
                   </Box>
-              </Item>
+              </Grid>
               {/* #endregion */}
               {/* #region advanced */}
               <div
