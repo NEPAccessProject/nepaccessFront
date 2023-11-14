@@ -70,17 +70,26 @@ const Globals = {
 
     // Set up globals like axios default headers and base URL
     setUp() {
-        if(window.location.hostname === 'localhost' || window.location.hostname === 'www.nepaccess.org') {
+        if( window.location.hostname === 'www.nepaccess.org') {
             this.currentHost = new URL(window.location.protocol + 'localhost:8080/');
         } //        this.currentHost = 'https://bighorn.sbs.arizona.edu:8443/nepaBackend';
         // else if(window.location.hostname) {
         //     this.currentHost = new URL('https://' + window.location.hostname + ':8080/');
         // }
+
+        //Bighorn will reject request not maded via HTTPS
+        else if(window.location.hostname.includes('vercel')){
+          this.currentHost = 'https://bighorn.sbs.arizona.edu:8443/nepaBackend/';
+        }
+        else if(window.location.hostname.includes('localhost')){
+          this.currentHost = new URL(window.location.protocol + window.location.hostname + ':8080/nepaBackend/');
+        }
         else {
+          console.warn(`unexpected host received, falling back to the default`)
           this.currentHost = new URL(window.location.protocol + window.location.hostname + ':8080/nepaBackend/');
       }
         this.currentHost = 'https://bighorn.sbs.arizona.edu:8443/nepaBackend/';
-        console.log(`file: globals.js:82 ~ setUp ~ this.currentHost:`, this.currentHost);
+        console.log(`CURRENT HOST:`, this.currentHost);
 
         axios.defaults.headers.common['Content-Type'] = 'application/json;charset=utf-8';
         axios.defaults.headers.common['X-Content-Type-Options'] = 'no-sniff';
