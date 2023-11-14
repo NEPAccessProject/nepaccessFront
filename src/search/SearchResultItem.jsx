@@ -186,7 +186,6 @@ const RenderRecord = (props) => {
               (
                 <DataCell item flex={1} id="title-grid-container" borderRight={1} borderLeft={1} borderColor={'#ccc'}>
                   <Typography id="snippets-title" textOverflow={'ellipsis'} variant='h5' >
-                    {/* {(title.length > 200) ?  title.slice(0, `${300} ...`) : title} */}
                     {title}
                   </Typography>
                 </DataCell>
