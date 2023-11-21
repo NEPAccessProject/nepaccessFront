@@ -71,7 +71,7 @@ class Search extends React.Component {
   constructor(props) {
 
     super(props);
-    console.log(`SEARCH PROPS`,props);
+    console.log(`SEARCH PROPS`, props);
     //enums for various notification types
     this.messageTypeEnum = Object.freeze({
       ERROR: "error",
@@ -112,7 +112,7 @@ class Search extends React.Component {
       needsDocument: false,
       offset: 0,
       optionsChecked: true,
-      page:1,
+      page: 1,
       proximityDisabled: true,
       proximityOption: null,
       searchOption: "B",
@@ -719,12 +719,12 @@ class Search extends React.Component {
   };
 
   onTypeChecked = (evt) => {
-    if(!evt ||!evt.target ||!evt.target.name){
-      console.warn(`Error the checkbox event is either missing or has no target or name`,evt);
+    if (!evt || !evt.target || !evt.target.name) {
+      console.warn(`Error the checkbox event is either missing or has no target or name`, evt);
       return;
     }
-    if(!evt.target.name){
-      console.warn(`On Type Check requires a evt.target.name, evt:`,evt.target)
+    if (!evt.target.name) {
+      console.warn(`On Type Check requires a evt.target.name, evt:`, evt.target)
     }
     if (evt.target.name === "optionsChecked") {
       console.log(`file: Search.js:739 ~ Search ~ evt.target.name:`, evt.target.name);
@@ -950,11 +950,11 @@ class Search extends React.Component {
       useOptionsChecked: evt.target.checked
     })
   }
-  onSetNotification(message="",messsageType=""){
-    console.log(`file: Search.js:954 ~ Search ~ onSetNotification ~ message="",messsageType="":`, message,messsageType);
-    this.setState((prevState)=>{
+  onSetNotification(message = "", messsageType = "") {
+    console.log(`file: Search.js:954 ~ Search ~ onSetNotification ~ message="",messsageType="":`, message, messsageType);
+    this.setState((prevState) => {
       message,
-      messsageType
+        messsageType
     })
   }
 
@@ -982,160 +982,120 @@ class Search extends React.Component {
     const stateOptions = Globals.locations;
     //        const {state} = this.context
     const value = {
-      state: this.state,
-      setState: this.setState,
       onSetNotification: this.onSetNotification,
+      onSetNotification: this.onSetNotification,
+      sort: this.props.sort,
+      state: this.state,
+      setPageInfo: this.props.setPageInfo,
+      handleProximityValues: this.handleProximityValues,
+      onInput: this.onInput,
+      onKeyUp: this.onKeyUp,
+      onKeyDown: this.onKeyDown,
+      onIconClick: this.onIconClick,
+      titleRaw: this.state.titleRaw,
+      results: this.state.results,
+      total: this.state.total,
+      onUseOptionsChecked: this.onUseOptionsChecked.bind(this),
+      onCheckboxChecked: this.onCheckboxChecked.bind(this),
+      onSortByChangeHandler: this.onSortByChangeHandler,
+      onLimitChangeHandler: this.onLimitChangeHandler,
+      onDownloadClick: this.onDownloadClick,
+      onActionChange: this.onActionChange,
+      onAgencyChange: this.onAgencyChange,
+      onClearFilter: this.onClearFilter,
+      onCountyChange: this.onCountyChange,
+      onLocationChange: this.onLocationChange,
+      onDecisionChange: this.onDecisionChange,
+      onTypeChecked: this.onTypeChecked,
+      onClearFiltersClick:
+      this.onClearFiltersClick,
+      filtersHidden: this.state.filtersHidden,
+      orgClick: this.orgClick,
+      onCooperatingAgencyChange: this.onCooperatingAgencyChange,
+      onStartDateChange: this.onStartDateChange,
+      onEndDateChange: this.onEndDateChange,
+      toggleFiltersHidden: this.toggleFiltersHidden,
+      onNeedsDocumentChecked: this.onNeedsDocumentChecked,
+      renderClearFiltersButton: this.renderClearFiltersButton,
+      onTitleOnlyChecked: this.onTitleOnlyChecked,
     };
     return (
       <ThemeProvider theme={theme}>
         <SearchContext.Provider value={value}>
-            <Container
-              id="search-root-container"
-              maxWidth='xl'
-              disableGutters
-              sx={{
+          <Container
+            id="search-root-container"
+            maxWidth='xl'
+            disableGutters
+            sx={{
 
-                paddingLeft:2,
-                paddingRight:2,
-                marginTop:5,
-              }}>
+              paddingLeft: 2,
+              paddingRight: 2,
+              marginTop: 5,
+            }}>
+            <Grid
+              border={0}
+              rowSpacing={2}
+              id='result-header-grid-container'
+              container>
               <Grid
-                border={0}
-                rowSpacing={2}
-                id='result-header-grid-container'
-                container>
+                item
+                xs={12}
+                marginTop={1}
+                id='results-header-grid-container'
+              >
+                <ResultsHeader
+                  {...this.props}
+
+                />
+              </Grid>
+              <Grid
+                container
+                xs={12}
+                columnSpacing={1}
+                rowSpacing={1}
+                id='filters-grid-container'
+                style={{
+                  marginTop: 10
+                }}
+              >
                 <Grid
                   item
-                  xs={12}
-                  marginTop={1}
-                  id='results-header-grid-container'
-                >
-                  <ResultsHeader
-                    {...this.props}
-                    sort={this.props.sort}
-                    state={this.state}
-                    setPageInfo={this.props.setPageInfo}
-                    handleProximityValues={
-                      this.handleProximityValues
-                    }
-                    onInput={this.onInput} SearchResultOptions
-                    onKeyUp={this.onKeyUp}
-                    onKeyDown={this.onKeyDown}
-                    onIconClick={this.onIconClick}
-                    titleRaw={this.state.titleRaw}
-                    results={this.state.results}
-                    total={this.state.total}
-                    onUseOptionsChecked={
-                      this.onUseOptionsChecked.bind(this)
-                    }
-                    onCheckboxChecked={this.onCheckboxChecked.bind(this)}
-                    onSortByChangeHandler={
-                      this.onSortByChangeHandler
-                    }
-                    onLimitChangeHandler={
-                      this.onLimitChangeHandler
-                    }
-                    onDownloadClick={this.onDownloadClick}
-
-                  />
+                  md={3}
+                  sx={12}
+                  id='filters-grid-item'>
+                  {!this.state.filtersHidden && (
+                    <SearchFilters
+                      {...this.props}
+                    />
+                  )}
                 </Grid>
                 <Grid
-                  container
+                  item
+                  md={9}
                   xs={12}
-                  columnSpacing={1}
-                  rowSpacing={1}
-                  id='filters-grid-container'
-                  style={{
-                    marginTop: 10
-                  }}
                 >
-                  <Grid
-                    item
-                    md={3}
-                    sx={12}
-                    id='filters-grid-item'>
-                    {!this.state.filtersHidden && (
-                      //[TODO] it would probably be simpler showing these into context
-                      <SearchFilters
-                        {...this.props}
-                        onSetNotification={this.onSetNotification}
-                        onActionChange={this.onActionChange}
-                        onAgencyChange={this.onAgencyChange}
-                        onClearFilter={this.onClearFilter}
-                        onCountyChange={this.onCountyChange}
-                        onLocationChange={
-                          this.onLocationChange
-                        }
-                        onDecisionChange={
-                          this.onDecisionChange
-                        }
-                        onTypeChecked={this.onTypeChecked}
-                        onClearFiltersClick={
-                          this.onClearFiltersClick
-                        }
-                        filtersHidden={
-                          this.state.filtersHidden
-                        }
-                        orgClick={this.orgClick}
-                        onCooperatingAgencyChange={
-                          this.onCooperatingAgencyChange
-                        }
-                        onStartDateChange={
-                          this.onStartDateChange
-                        }
-                        onEndDateChange={
-                          this.onEndDateChange
-                        }
-                        toggleFiltersHidden={
-                          this.toggleFiltersHidden
-                        }
-                        onNeedsDocumentChecked={
-                          this.onNeedsDocumentChecked
-                        }
-                        renderClearFiltersButton={
-                          this.renderClearFiltersButton
-                        }
-                        onTitleOnlyChecked={
-                          this.onTitleOnlyChecked
-                        }
-                      />
-                    )}
-                  </Grid>
-                  <Grid
-                    item
-                    md={9}
-                    xs={12}
-                    >
-                    <Paper elevation={1} style={{padding:5}}>
-                      {this.props.children}
-                    </Paper>
-                  </Grid>
+                  <Paper elevation={1} style={{ padding: 5 }}>
+                    {this.props.children}
+                  </Paper>
                 </Grid>
               </Grid>
-              {/* End Header*/}
-              {/* <Item xs={2} id="filter-container-items" >
-  									</Item>
-  									<Item display={'flex'} xs={9}  id="results-container-items">
-  									</Item>  */}
-              {this.getSuggestions()}
-              <div id='loader-holder'>
-                {/* <div className="center" hidden={this.props.searching}>
-  									<span id="inputMessage"><CircularProgress/> {this.state.inputMessage}</span>
-  								</div> */}
-                <div
-                  className='lds-ellipsis'
-                  hidden={!this.props.searching}>
-                  <div></div>
-                  <div></div>
-                  <div></div>
-                  <div></div>
-                </div>
+            </Grid>
+            {this.getSuggestions()}
+            <div id='loader-holder'>
+              <div
+                className='lds-ellipsis'
+                hidden={!this.props.searching}>
+                <div></div>
+                <div></div>
+                <div></div>
+                <div></div>
               </div>
-            </Container>
+            </div>
+          </Container>
         </SearchContext.Provider>
       </ThemeProvider>
     );
-                }
+  }
 
 
   orgClick = () => {
@@ -1158,7 +1118,7 @@ class Search extends React.Component {
     try {
       Globals.registerListener("geoFilter", this.geoFilter);
       <>
-      <Snackbar
+        {/* <Snackbar
          anchorOrigin={{vertical: '', horizontal: 'center'}}
          //transitionDuration={{enter: 100, exit: 500}}
           open={this.state.message.length}
@@ -1167,8 +1127,8 @@ class Search extends React.Component {
           <Alert severity={this.state.messsageType}>
             {this.state.message}
           </Alert>
-      </Snackbar>
-        </>
+      </Snackbar> */}
+      </>
       // For if user navigates back using top menu
       const rehydrate = JSON.parse(persist.getItem("appState"));
 
@@ -1304,7 +1264,7 @@ Search.propTypes = {
   error: PropTypes.object,
 };
 Search.contextType = SearchContext;
- export default withRouter(Search);
+export default withRouter(Search);
 
 /** Does a .replace with regex for these rules:
  * For the opening ', it could have either no characters before it, or whitespace.
