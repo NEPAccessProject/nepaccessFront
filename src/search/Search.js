@@ -1,5 +1,5 @@
 import axios from "axios";
-import React from "react";
+import React, { useEffect } from "react";
 //import DatePicker from "react-datepicker";
 //import Select from 'react-select';
 
@@ -28,7 +28,7 @@ import PropTypes from "prop-types";
 import ResultsHeader from "./ResultsHeader";
 import SearchFilters from "./SearchFilters";
 import SearchResultsMap from "./SearchResultsMap";
-
+import Layouts from "../examples/Layouts";
 const _ = require("lodash");
 
 const FULLSTYLE = {
@@ -57,6 +57,14 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
+const GridContainer= styled(Grid)(({ theme }) => ({
+  container: true,
+  border: '1px solid #ddd',
+}))
+const GridItem = styled(Grid)(({ theme }) => ({
+  border: '1px solid #ddd',
+
+}))
 
 class Search extends React.Component {
   _lastSearchTerms = "";
@@ -102,6 +110,9 @@ class Search extends React.Component {
       iconClassName: "icon icon--effect",
       isAvailableFilesDialogOpen: false,
       isDirty: false,
+      isMobile: false,
+      isDesktop: true,
+      isTablet: false,
       isQuickStartDialogOpen: false,
       isSearchTipsDialogOpen: false,
       limit: 25,
@@ -863,7 +874,7 @@ class Search extends React.Component {
     }
   };
   /** If we can complete the current search terms into a title, show links to up to three suggested details pages.
-   * AnalyzingInfixSuggester.lookup logic seems to see if the rightmost term can be expanded to match titles.
+   * AnalyzingInfixSu ggester.lookup logic seems to see if the rightmost term can be expanded to match titles.
    *
    * So the terms 'rose mine' won't find anything, because a word MUST be 'rose' - but 'mine rose' will find rosemont
    * copper mine, because it's basically looking for mine AND rose*, whereas rose AND mine* doesn't match any titles.
@@ -957,6 +968,17 @@ class Search extends React.Component {
         messsageType
     })
   }
+  onResizeHandler(){
+    console.log(`onResizeHandler window.innerWidth: ${window.innerWidth} - window.innerHeight: ${window.innerHeight}`);
+    const isMobile = window.innerWidth <= 768;
+    const isTablet = window.innerWidth >= 768 && window.innerWidth <= 990;
+    const isDesktop = window.innerWidth > 990;
+
+    this.setState({
+      isMobile,
+      isTablet,
+      isDesktop });
+  };
 
   render() {
     // const { history } = this.props;
@@ -1025,72 +1047,60 @@ class Search extends React.Component {
           <Container
             id="search-root-container"
             maxWidth='xl'
-            disableGutters
+
             sx={{
 
               paddingLeft: 2,
               paddingRight: 2,
               marginTop: 5,
             }}>
-            <Grid
-              border={0}
-              rowSpacing={2}
-              id='result-header-grid-container'
-              container>
-              <Grid
-                item
-                xs={12}
-                marginTop={1}
-                id='results-header-grid-container'
-              >
-                <ResultsHeader
-                  {...this.props}
-
-                />
-              </Grid>
-              <Grid
-                container
-                xs={12}
-                columnSpacing={1}
-                rowSpacing={1}
-                id='filters-grid-container'
-                style={{
-                  marginTop: 10
-                }}
-              >
-                <Grid
-                  item
-                  md={3}
-                  sx={12}
-                  id='filters-grid-item'>
-                  {!this.state.filtersHidden && (
-                    <SearchFilters
-                      {...this.props}
-                    />
-                  )}
-                </Grid>
-                <Grid
-                  item
-                  md={9}
+              Height: {window.innerHeight} - Width: {window.innerWidth}
+              <h5><b>IsMobile:</b>{this.state.isMobile ? 'true': 'false'}</h5>
+              <h5><b>IsTablet:</b>{this.state.isTablet ? 'true': 'false'}</h5>
+             <h5> <b>isDesktop:</b>{this.state.isDesktop ? 'true': 'false'}</h5>
+<div id="root" sx={{flexGrow:1}}>
+              <GridContainer
+                border={0}
+                rowSpacing={2}
+                id='result-header-grid-container'
+                container>
+                <GridItem
                   xs={12}
+                  marginTop={1}
+                  id='results-header-grid-container'
                 >
-                  <Paper elevation={1} style={{ padding: 5 }}>
-                    {this.props.children}
-                  </Paper>
-                </Grid>
-              </Grid>
-            </Grid>
-            {this.getSuggestions()}
-            <div id='loader-holder'>
-              <div
-                className='lds-ellipsis'
-                hidden={!this.props.searching}>
-                <div></div>
-                <div></div>
-                <div></div>
-                <div></div>
-              </div>
-            </div>
+                  {/* <ResultsHeader
+                    {...this.props}
+                  /> */}
+                </GridItem>
+                <GridContainer
+                  spacing={0.5}
+                  id='filters-grid-container'
+                  style={{
+                    marginTop: 10
+                  }}
+                >
+                  <GridItem
+                    md={3}
+                    sx={12}
+                    id='filters-grid-item'>
+                    {!this.state.filtersHidden && (
+                      <SearchFilters
+                        {...this.props}
+                      />
+                    )}
+                  </GridItem>
+                  <GridItem
+                    md={9}
+                    xs={12}
+                  >
+                    <Paper elevation={1} style={{ padding: 5,flexGrow:1 }}>
+                      {this.props.children}
+                    </Paper>
+                  </GridItem>
+                </GridContainer>
+              </GridContainer>
+</div>
           </Container>
         </SearchContext.Provider>
       </ThemeProvider>
@@ -1117,6 +1127,8 @@ class Search extends React.Component {
   componentDidMount() {
     try {
       Globals.registerListener("geoFilter", this.geoFilter);
+      //window.addEventListener("resize", this.onResizeHandler.bind(this));
+
       <>
         {/* <Snackbar
          anchorOrigin={{vertical: '', horizontal: 'center'}}
