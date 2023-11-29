@@ -65,7 +65,7 @@ import Header from './Header'
 import HeaderNav from './HeaderNav';
 import SearchProcessResults from './search/SearchProcessResults';
 import { Link, Switch, Route, withRouter } from 'react-router-dom';
-
+import Publications from './Publications';
 import PropTypes from "prop-types";
 //import ResponsiveMenu from './examples/ResponsiveMenu';
 import ImporterAlignment from './ImporterAlignment';
@@ -146,8 +146,6 @@ class Main extends React.Component {
         }
       });
   }
-
-
   check = () => { // check if logged in (JWT is valid and not expired)
     // let verified = false;
     // let checkURL = new URL('test/check', Globals.currentHost);
@@ -317,7 +315,7 @@ class Main extends React.Component {
           <Route path="/stat_counts" component={StatCounts}></Route>
           <Route path="/surveys" component={Surveys}></Route>
           <Route path="/excel" component={Excel}></Route>
-
+          <Route path="/publications" component={Publications}></Route>
           <Route path="/test" component={Test} />
           <Route path="/search_test" component={SearchTest} />
           <Route path="/up_geo" component={ImporterGeo} />

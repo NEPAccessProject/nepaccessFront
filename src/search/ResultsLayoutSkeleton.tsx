@@ -50,7 +50,6 @@ export default function ResultsLayoutSkeleton() {
       container
       borderColor='#ccc'
       border={0}
-			xs={12}
       marginLeft={1}
 			flexGrow={1}
 			display='flex'
@@ -60,7 +59,6 @@ export default function ResultsLayoutSkeleton() {
         spacing={1}
         id="results-skeleton-cards-grid-container"
 				container
-				xs={12}
         marginLeft={1}
 				flexGrow={1}>
         <Grid item xs={12} paddingRight={1}>

@@ -263,14 +263,14 @@ export default class DownloadFile extends React.Component {
     /// localStorage.role = "ADMIN";
     // { this.props.onSetNotification('File not found', 'error') }
     <>
-      <Snackbar
+      {/* <Snackbar
         anchorOrigin={{ vertical: 'top', horizontal: 'right' }} transitionDuration={{ enter: 100, exit: 500 }}
         open={true}
         autoHideDuration={3000}>
         <Alert severity={'error'}>
           This is a Message
         </Alert>
-      </Snackbar>
+      </Snackbar> */}
     </>
 
     if (localStorage.role === undefined) {
@@ -278,13 +278,13 @@ export default class DownloadFile extends React.Component {
       //{ this.props.onSetNotification(msg, 'warn') }
       return (
         <>
-          <Snackbar anchorOrigin={{ vertical: 'top', horizontal: 'right' }} transitionDuration={{ enter: 100, exit: 500 }}
+          {/* <Snackbar anchorOrigin={{ vertical: 'top', horizontal: 'right' }} transitionDuration={{ enter: 100, exit: 500 }}
             open={open}
             autoHideDuration={3000}>
             <Alert severity={'info'}>
               This is a Message
             </Alert>
-          </Snackbar>
+          </Snackbar> */}
         </>
       )
 

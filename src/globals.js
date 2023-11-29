@@ -82,14 +82,15 @@ const Globals = {
           this.currentHost = 'https://bighorn.sbs.arizona.edu:8443/nepaBackend/';
         }
         else if(window.location.hostname.includes('localhost')){
-          this.currentHost = new URL(window.location.protocol + window.location.hostname + ':8080/nepaBackend/');
+          this.currentHost = new URL(window.location.protocol + window.location.hostname + ':8080/');
         }
         else {
           console.warn(`unexpected host received, falling back to the default`)
-          this.currentHost = new URL(window.location.protocol + window.location.hostname + ':8080/nepaBackend/');
-      }
-        this.currentHost = 'https://bighorn.sbs.arizona.edu:8443/nepaBackend/';
-        console.log(`CURRENT HOST:`, this.currentHost);
+          this.currentHost = new URL(window.location.protocol + window.location.hostname + ':8080/');
+        }
+        console.log(`CURRENT HOST BEFORE:`, this.currentHost);
+//      this.currentHost = new URL("http://localhost:8080/nepaBackend/");
+       //this.currentHost = 'https://bighorn.sbs.arizona.edu:8443/nepaBackend/';
 
         axios.defaults.headers.common['Content-Type'] = 'application/json;charset=utf-8';
         axios.defaults.headers.common['X-Content-Type-Options'] = 'no-sniff';

@@ -1,4 +1,4 @@
-import { Box, Container, Divider, Paper, Skeleton, Typography } from "@mui/material";
+import { Box, Container, Divider, Paper, Hidden, Skeleton, Typography } from "@mui/material";
 import Grid from '@mui/material/Unstable_Grid2';
 import { styled } from "@mui/styles";
 import React, { useContext, useEffect, useRef, useState } from "react";
@@ -189,7 +189,7 @@ export default class SearchProcessResults extends React.Component {
       return (
         <>
           <Typography variant="h4">
-            {results.length} Results Found for "{ctxState.titleRaw}"
+            {results.length <= limit ? results.length : limit} Results Found for "{ctxState.titleRaw}"
           </Typography>
           <SearchTips />
         </>
@@ -200,13 +200,18 @@ export default class SearchProcessResults extends React.Component {
       const { limit, page } = ctxState;
       return (
         <>
-          <SearchResultsMap
-            toggleMapHide={this.props.toggleMapHide}
-            isHidden={this.props.isMapHidden}
-            docList={this.props.geoResults}
-            results={this.props.results}
-          />
-          <Grid container flex={1} id="search-result-row-grid-container" xs={12}>
+
+          <Grid container id="search-result-row-grid-container" >
+            <Hidden smDown>
+              <Grid item xs={12}>
+                <SearchResultsMap
+                  toggleMapHide={this.props.toggleMapHide}
+                  isHidden={this.props.isMapHidden}
+                  docList={this.props.geoResults}
+                  results={this.props.results}
+
+                /></Grid>
+            </Hidden>
             <Typography variant="h3" padding={1}>Showing {results.length < limit ? results.length : limit} of {results.length ? results.length : 0} Results for "{ctxState.titleRaw}"</Typography>
             <Divider />
             {results.length && limit <= results.length &&
@@ -319,27 +324,35 @@ const ResultRow = (props) => {
   return (
     <Paper border={0} style={{
       marginTop: 0,
+      flexGrow:1
     }} elevation={0} id="search-result-render-row-wrapper-paper">
       <Grid
         container
+        flexGrow={1}
         id="search-result-row-grid-container"
         marginTop={1}
         borderTop={1}
         borderColor={'#ddd'}
         marginBottom={2}
-        >
+      >
         <Typography variant="h6">{limit} of {results.length} Results</Typography>
-        {results.map((result, idx) => (
-          <span key={result.id}>
-            <Grid item xs={12} id={`search-result-row-grid-item-${result.id}`}>
-              <SearchResultCards result={result} />
-              <SearchResultItem records={result.records} />
-              <Divider />
-            </Grid>
-          </span>
-        ))}
-      </Grid>
+        <div id="portal-root">
+        </div>
+        <div id="modal-root">
 
+        </div>
+        <Grid container flexGrow={1}>
+          {results.map((result, idx) => (
+            // <span key={result.id} className="search-result-row-span">
+              <Grid item key={result.id} xs={12} id={`search-result-row-grid-item-${result.id}`}>
+                <SearchResultCards result={result} />
+                <SearchResultItem records={result.records} />
+                <Divider />
+              </Grid>
+            // </span>
+          ))}
+        </Grid>
+      </Grid>
     </Paper>
   );
 

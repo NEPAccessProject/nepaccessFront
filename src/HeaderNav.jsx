@@ -305,10 +305,9 @@ const HeaderNav = (props) => {
             color='primary'
             elevation={1}
             disableGutters={true}
-            paperProps={{
-              elevation: 1,
-            }}
-            paper
+            // paperProps={{
+            //   elevation: 1,
+            // }}
             style={{
               justifyContent: 'flex-start',
               width: '100%'
@@ -321,7 +320,9 @@ const HeaderNav = (props) => {
               flex={1}>
 
               <Grid
-                item xs={2}
+                item
+                md={2}
+                xs={12}
                 id="mobile-nav-logo-grid-item"
                 justifyContent='flex-end'
                 paddingLeft={1}
@@ -343,7 +344,8 @@ const HeaderNav = (props) => {
               <Grid
                 item
                 flex={1}
-                xs={9}
+                xs={12}
+                md={9}
                 style={{
                   display: 'flex',
                   justifyContent: 'flex-end',
@@ -448,7 +450,7 @@ const HeaderNav = (props) => {
               <Grid container xs={12} flex={1}>
                 {/* #region Start Main Menu */}
                 {/* #region*/}
-                <Grid container xs={2}>
+                <Grid container xs={12} md={2}>
                   <DesktopLogo {...props} />
                 </Grid>
                 {/* #endregion Logo Container */}
@@ -557,10 +559,13 @@ const HeaderNav = (props) => {
   }
   /* RETURN of the main function */
   return (
-    <Paper id="header-root-paper-container" color='#A8B9C0' elevation={1} sx={{
-      backgroundColor: '#abbdc4'
-      // width: '100%',
-      // height: 50
+    <Paper
+      id="header-root-paper-container"
+      color='#A8B9C0'
+      elevation={1} sx={{
+        backgroundColor: '#abbdc4'
+        // width: '100%',
+        // height: 50
     }}>
       <AppBar elevation={1}
         id="header-desktop-appbar"
@@ -769,7 +774,8 @@ export function NavLinks(props) {
               currentpage={(
                 currentPage === '/about-nepaccess' ||
                 currentPage === '/people' ||
-                currentPage === '/media'
+                currentPage === '/media' ||
+                currentPage === '/pubications'
               ).toString()}
               id="about-button"
               className="main-menu-link drop-button"
@@ -780,7 +786,7 @@ export function NavLinks(props) {
             <i className="fa fa-caret-down"></i>
             <div className="dropdown-content">
               <Link to="/about-nepaccess">About NEPAccess</Link>
-              <Link to="/media">News</Link>
+              <Link to="/media">Media</Link>
               <Link to="/people">People</Link>
             </div>
           </div>

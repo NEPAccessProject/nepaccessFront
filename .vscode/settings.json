@@ -1,8 +1,8 @@
 {
   "editor.codeActionsOnSave": {
-    "source.fixAll.eslint": true,
-    "source.fixAll": true
-   },
+    "source.fixAll.eslint": "explicit",
+    "source.fixAll": "explicit"
+  },
   "editor.defaultFormatter": "esbenp.prettier-vscode",
   "editor.formatOnSave": false,
   "sqltools.connections": [
@@ -15,9 +15,9 @@
       "server": "localhost",
       "port": 3306,
       "driver": "MySQL",
-      "name": "Nepaccess",
-      "group": "local",
-      "database": "nepaccess_7_21",
+      "name": "nepaccess-local",
+      "group": "DEV",
+      "database": "nepaccess",
       "username": "root",
       "password": "rsbr220Sql!"
     }

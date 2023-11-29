@@ -6,13 +6,13 @@ export default function Notifications(props) {
   console.log(`file: Notifications.jsx:6 ~ Notifications ~ props:`, props);
   return (
     <>
-    {message &&
+    {/* {message &&
       <Snackbar anchorOrigin={{vertical: 'top', horizontal: 'right'}} transitionDuration={{enter: 100, exit: 500}} open={open} autoHideDuration={3000}>
         <Alert severity={'info'}>
           This is a Message{message}
         </Alert>
       </Snackbar>
-      }
+      } */}
     </>
   )
 }

@@ -1,7 +1,10 @@
-@host = http://localhost:8080/
+
+#@host = http://localhost:8080/
+@host = https://bighorn.sbs.arizona.edu:8443/nepaBackend/
 @token = Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJnbXMiLCJleHAiOjE2OTg5NDA3MTIsImp0aSI6IjY0NSJ9.YF8GpROIg62u9nIApwU29FZbwZWyxRP84duUqA66_sfc2DBhIJpm_LspD_ezvyAXVa-CponElKEyG5_sMvUSDg
 ###
-
+GET about.nepaccess.org/search/ HTTP/1.1
+###
 GET {{host}}stats/eis_count HTTP/1.1
 key: test_key_only
 ###
@@ -166,7 +169,7 @@ key: test_key_only
 
 ###
 GET {{host}}text/sync HTTP/1.1
-Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJnbXMiLCJleHAiOjE2OTg5NDA3MTIsImp0aSI6IjY0NSJ9.YF8GpROIg62u9nIApwU29FZbwZWyxRP84duUqA66_sfc2DBhIJpm_LspD_ezvyAXVa-CponElKEyG5_sMvUSDg
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJnbXMiLCJleHAiOjE3MDEwMzY2OTYsImp0aSI6IjY0NSJ9.2aDzY3a_qdMIqusOBcI0-vR_LvobIx2bfo4pI0BV4am9UC8UR1EbHsEb0G33MIq94A6gVb2i0VHStSn-Klmqiw
 key: test_key_only
 
 

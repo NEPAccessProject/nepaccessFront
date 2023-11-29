@@ -208,10 +208,14 @@ const RenderRecord = (props) => {
   )};
 
   const Item = styled(Grid)(({ theme }) => ({
-      border: '1px solid #ddd',
       justifyContent: 'center',
       alignContent: 'center',
-      padding: 2,
+      textAlign: 'center',
+      padding:1,
+      flexGrow:1,
+      // padding: 2,
+      // paddingTop: 10,
+      // paddingBottom: 10,
   }));
   return (
     <>
@@ -219,41 +223,31 @@ const RenderRecord = (props) => {
         marginLeft: 2,
         marginRight: 2,
         marginTop: 10,
-        flexGrow: 1,
+        marginBottom: 5,
       }}>
 
-          <Grid flexGrow={1} container id="search-result-row-container" borderTop={1} borderBottom={1} borderColor={'#ccc'}>
-            <Item xs={12}>
+          <Grid flexGrow={1} container id="search-result-row-container">
+            <Item border={0} borderColor={'#ddd'} padding={3}  xs={12}>
             <Typography variant='h4'>
               <Link to={`/record-details?id=${id}`}>{title}</Link>
             </Typography>
-              <h3>
-                <div>
-                  <h5>Width : {window.innerWidth} Height : {window.innerHeight}
-                  - isMobile: {isMobile}
-                  - isDesktop: {isDesktop}
-                  - isTablet: {isTablet}
-
-                  </h5>
-                </div>
-              </h3>
             </Item>
-            <Item id="year-box" xs={6} md={1} style={{ border: 'right 1px solid #ccc' }}>
+            <Item padding={3} id="year-box" xs={6} md={1} style={{ border: 'right 1px solid #ccc' }}>
               <Typography id="year-typography" fontWeight={'bold'}>
                 {year ? year : 'N/A'}
               </Typography>
             </Item>
 
-            <Item md={3} xs={6} borderLeft={1} borderColor={'#ccc'} id="status-document-type-grid-item">
+            <Item padding={3}  md={3} xs={6} borderLeft={1} borderColor={'#ccc'} id="status-document-type-grid-item">
               <Typography className={classes.card}>
                 {documentType}
               </Typography>
             </Item>
-            <Item sx={12} md={5} flex={1} id="title-grid-container" borderRight={1} borderLeft={1} borderColor={'#ccc'}>
+            <Item padding={3} xs={12} md={5} flex={1} id="title-grid-container" borderRight={1} borderLeft={1} borderColor={'#ccc'}>
               <Typography id="snippets-title" variant='h5' >{(title) ? title : ''}</Typography>
             </Item>
             <Grid container xs={12} md={3} flexGrow={1} id="button-grid-container">
-              <Item id="download-button-grid-item" item display={'flex'} xs={12} md={6} >
+              <Item padding={3} id="download-button-grid-item" item display={'flex'} xs={6}>
                 <Button onClick={(evt) => handleDownloadClick(evt)}
                   variant='contained'
                   color="primary">
@@ -268,7 +262,7 @@ const RenderRecord = (props) => {
                 />
 
               </Item>
-              <DataCell item id="preview-button-grid-item" xs={12} md={6}>
+              <Item style={{ borderRight: 'right 1px solid #ccc' }} padding={3} id="preview-button-grid-item" xs={6} md={6}>
                 <ModalManager
                   record={record}
                   id={record.id}
@@ -282,14 +276,12 @@ const RenderRecord = (props) => {
                   color="primary">
                   Preview
                 </Button>
-              </DataCell>
+              </Item>
             </Grid>
           </Grid>
-          {/* <h5>SNIPPETS</h5>
-          <Item id="render-snippets-record-grid-container" flex={1} container xs={12}>
+          <Grid container id="render-snippets-record-grid-container" flex={1} overflow={'scroll'}>
             <RenderSnippets record={record} />
-
-          </Item> */}
+          </Grid>
 
       </Paper>
     </>

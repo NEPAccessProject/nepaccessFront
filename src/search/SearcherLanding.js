@@ -12,18 +12,20 @@ import {
   TextField
 } from '@mui/material';
 import MediaQuery from 'react-responsive';
+import SearchContext from './SearchContext';
 
 // import FlipNumbers from 'react-flip-numbers';
 
 /** Search box with planned autocomplete suggestion that loads the main search page (app.js) with the search input
  *  or preloaded results when search is confirmed */
 class SearcherLanding extends React.Component {
-
+  static contextType = SearchContext;
   constructor(props) {
     super(props);
+    console.log(`file: SearcherLanding.js:24 ~ SearcherLanding ~ constructor ~ props:`, props);
     this.state = {
       titleRaw: '',
-      num: 0
+      num: 0,
     };
 
     this.getTitles = this.getTitles.bind(this);
@@ -82,7 +84,25 @@ class SearcherLanding extends React.Component {
       // Don't necessarily need to do anything, autocomplete won't work and user probably needs to login anyway
     });
   }
+  componentDidMount() {
+    this.onResizeHandler();
+    console.log("Searcher Landing is mounted with This scope:",this);
+    console.log("Searcher Landing is mounted with PROPS:",this.props);
+    console.log("Searcher Landing is mounted with Context:",this.context);
 
+
+  }
+  onResizeHandler(){
+    console.log(`onResizeHandler window.innerWidth: ${window.innerWidth} - window.innerHeight: ${window.innerHeight}`);
+    const isMobile = window.innerWidth <= 768;
+    const isTablet = window.innerWidth >= 768 && window.innerWidth <= 990;
+    const isDesktop = window.innerWidth > 990;
+
+    this.setState({
+      isMobile,
+      isTablet,
+      isDesktop });
+  };
 
 
   get = (url, stateName) => {
@@ -108,6 +128,9 @@ class SearcherLanding extends React.Component {
         alignItems: 'center',
         marginLeft: ' 2%',
         marginRight: '2%',
+        border:2,
+//        marignTop: this.isMobile ? 10 : 0,
+marginTop: 2,
       }}>
         <TextField
           fullWidth
@@ -126,6 +149,9 @@ class SearcherLanding extends React.Component {
           placeholder="Search for NEPA documents"
           value={this.state.titleRaw}
           sx={{
+            marginTop: this.props.isDesktop ? 2 : 10,
+            marginBottom: 2,
+            border: '2px solid black',
             marginLeft:5,
             marginRight:5,
             borderRadius: 1,

@@ -1,11 +1,14 @@
 import React from "react";
 import { styled } from '@mui/material/styles';
 import {Link} from 'react-router-dom';
-import { Divider,Box, Hidden, Card, CardContent, Paper, Typography,List,ListItem } from "@material-ui/core";
+//import { Divider,Box,Button, Hidden, Card, CardContent, Paper, Typography,List,ListItem } from "@material-ui/core";
+import {Input,Autocomplete,TextField,FormLabel,Checkbox,FormControl,FormControlLabel,InputLabel, Divider,Box,Button, Hidden, Card, CardContent, Paper, Typography,List,ListItem } from "@mui/material";
+
 //import Grid from '@mui/material/Grid'
 import Grid from '@mui/material/Unstable_Grid2'
-
+import theme from "../styles/theme";
 import '../index.css';
+import { withTheme } from "@emotion/react";
 const words = [
   "fee",
   "fi",
@@ -30,6 +33,46 @@ const Item = styled(Grid)(({ theme }) => ({
   item: true,
 }));
 
+const SearchFilter = ()=>{
+  return (
+    <Box sx={{flexGrow:1}}>
+      <FormControl
+                  fullWidth
+                  xs={{
+                    p: 1,
+                    mb: 1,
+                    mt: 1,
+                  }}>
+                  <FormLabel htmlFor='searchAgency'>
+                    Cooperating Agencies:
+                  </FormLabel>
+                  <Autocomplete
+                    fullWidth
+                    id='searchAgency'
+                    name='cooperatingAgency'
+                    tabIndex={4}
+                    options={[
+                      'one','two','three'
+                    ]}
+                    renderInput={(params) => {
+                      return (
+                        <TextField
+                          {...params}
+                          placeholder='Type or Select Cooperating Agencies'
+                          variant='outlined'
+                          sx={{
+                            wordWrap: 'break-word',
+                            overflow: 'hidden',
+                            p: 0,
+                          }}
+                        />
+                      );
+                    }}
+                  />
+                </FormControl>
+    </Box>
+  )}
+
 const styles = {
   gridContainer: {
     border: '1px solid black',
@@ -43,7 +86,7 @@ const styles = {
   }
 };
 
-function App() {
+function Layouts() {
   const [width, setWidth] = React.useState(window.innerWidth);
   const [height, setHeight] = React.useState(window.innerHeight);
 
@@ -70,9 +113,9 @@ function App() {
 
   return (
   <Paper id="root" sx={{ flexGrow: 1 }}>
-    <Grid flex={1} container spacing={1}>
-      <GridItem xs={12}><SearchHeader /></GridItem>
-      <GridItem xs={12}><SearchResults/></GridItem>
+    <Grid flexGrow={1} container spacing={1}>
+      <Item xs={12}><SearchHeader /></Item>
+      <Item xs={12}><SearchResults /></Item>
     </Grid>
     {/* <GridItem id="search-results-grid" flex={1} container spacing={3}>
         <GridItem md={3} xs={12}>
@@ -92,11 +135,12 @@ function App() {
 }
 
 const SearchHeader = ()=> {
+
   return (
-    <>
+    <Paper sx={{flexGrow:1}}>
     <Grid id="search-results-header" flex={1} border={2} borderColor={'black'} container spacing={0.5}>
           <GridItem md={3} xs={12}>
-              <Paper>
+              <Paper sx={{flexGrow:1}}>
                 <b>Links</b>
               </Paper>
           </GridItem>
@@ -118,25 +162,113 @@ const SearchHeader = ()=> {
               </GridItem>
         </GridItem>
       </Grid>
-    </>
+    </Paper>
   )
 }
+
+const SearchResultItem = ()=> {
+  // const Item = styled(Grid)(({ theme }) => ({
+  //   border: 1,
+  //   borderColor: '#ccc',
+  //   toLocaleLowerCase: true,
+
+  //   justifyContent: 'center',
+  //   alignContent: 'cemter'
+  // }))
+  return(
+    <Paper sx={{flexGrow:1}}>
+      <GridItem container flex={1} xs={12}>
+              <GridItem md={2} xs={6}>Year</GridItem>
+              <GridItem md={2}>Document Type</GridItem>
+              <GridItem md={5}><Typography variant="body1">
+                Do do fugiat quis occaecat occaecat pariatur non fugiat do nostrud occaecat esse in. Et anim dolore in sint adipisicing cupidatat.</Typography></GridItem>
+              <GridItem md={2}>
+                <Box flexGrow={1}>
+                  <Button fullWidth variant="filled" color="primary">Preview</Button>
+                  <Button fullWidth variant="filled" color="secondary">Download</Button>
+                </Box>
+              </GridItem>
+        </GridItem>
+        <GridItem container xs={12}>
+            <b>Toggle</b>
+        </GridItem>
+        <GridItem container>
+          <Typography variant="body2">
+            Sit ipsum quis reprehenderit aliqua. Officia velit aliqua culpa velit aute enim magna consectetur ut. Consectetur commodo ea culpa cupidatat reprehenderit. Laboris qui eiusmod consequat pariatur consequat amet. Ipsum labore elit duis labore anim culpa eu. Id elit in eu labore cupidatat eu ut esse pariatur non commodo. Sit dolore anim veniam incididunt nostrud excepteur laboris ex voluptate non do.
+          </Typography>
+        </GridItem>
+    </Paper>
+  )
+}
+
 const SearchResults = ()=> {
   return (
-    <>
-        <GridItem md={3} xs={12}>
-          <Paper sx={{flexGrow:1}}>
-            <b>Search Fitlers</b>
-          </Paper>
-        </GridItem>
-        <GridItem md={9} xs={12}>
-          <Paper sx={{flexGrow:1}}>
-              <h3>Search Results</h3>
-          </Paper>
-        </GridItem>
-    </>
+    <Box flexGrow={1}>
+        <Grid container columnSpacing={1} flexGrow={1}>
+          <GridItem md={3} xs={12}>
+            <Paper sx={{flexGrow:1}}>
+              <SearchFilters/>
+            </Paper>
+          </GridItem>
+          <GridItem md={9} xs={12}>
+            <Paper sx={{flexGrow:1}}>
+                <h3>Search Results</h3>
+                <SearchResults/>
+            </Paper>
+          </GridItem>
+        </Grid>
+    </Box>
   )
 }
+
+const SearchFilters = () => {
+  return (
+    <Paper sx={{flexGrow:1}}>
+      <b>Search Filters</b>
+      <Box sx={{flexGrow:1}}>
+          <SearchFilter/>
+      </Box>
+    </Paper>
+  )
+};
+// <FormControl
+//                   fullWidth
+//                   xs={{
+//                     p: 1,
+//                     mb: 1,
+//                     mt: 1,
+//                   }}>
+//                   <FormLabel htmlFor='searchAgency'>
+//                     Cooperating Agencies:
+//                   </FormLabel>
+//                   <Autocomplete
+//                     fullWidth
+//                     id='searchAgency'
+//                     name='cooperatingAgency'
+//                     {...filterProps}
+//                     tabIndex={4}
+//                     options={agencies}
+//                     value={agencies.filter((v) =>
+//                       state.cooperatingAgency.includes(v.value),
+//                     )}
+//                     onChange={(evt, value, tag) => onCooperatingAgencyChange(evt, value, tag)}
+//                     renderInput={(params) => {
+//                       return (
+//                         <TextField
+//                           {...params}
+//                           placeholder='Type or Select Cooperating Agencies'
+//                           variant='outlined'
+//                           sx={{
+//                             wordWrap: 'break-word',
+//                             overflow: 'hidden',
+//                             p: 0,
+//                           }}
+//                         />
+//                       );
+//                     }}
+//                   />
+//                 </FormControl>
+
 const SearchFooter = ()=> {
   return (
     <>
@@ -271,4 +403,4 @@ const Header = (props) => {
   )
 }
 
-export default App;
+export default Layouts;

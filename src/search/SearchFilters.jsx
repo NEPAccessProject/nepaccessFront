@@ -72,18 +72,18 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const SearchFilters = (props) => {
-  const { state, setState } = useContext(SearchContext);
   const classes = useStyles(theme);
+  const ctx = useContext(SearchContext);
   const {
+    draftCount,
     eaCount,
-    finalCount,
+    EISCount,
     filtersHidden,
+    finalCount,
     noiCount,
-    rodCount,
-    typeScopingCount,
-    scopingCount,
     onActionChange,
     onAgencyChange,
+    onClearFilter,
     onCooperatingAgencyChange,
     onCountyChange,
     onDateChange,
@@ -96,16 +96,15 @@ const SearchFilters = (props) => {
     onStartDateChange,
     onTitleOnlyChecked,
     onTypeChecked,
-    onUseOptionsChecked,
     orgClick,
     renderClearFiltersButton,
+    rodCount,
+    scopingCount,
+    state,
     toggleFiltersHidden,
-    onClearFilter,
-    EISCount,
-    draftCount,
-
-  } = props;
-
+    typeScopingCount,
+    useOptionsChecked,
+  } = ctx;
   //Common Settings used by all autocomplete filters
   const filterProps = {
     //fullWidth: true,
@@ -149,11 +148,11 @@ const SearchFilters = (props) => {
 
   return (
     <>
-        <Paper elevation={1} sx={{
-          boxShadow: '0px 4px 8px rgba(0.5, 0.5, 0.5, 0.15)'
-        }}>
-          <Grid container flex={1} hidden={state.filtersHidden}>
-            <Grid item xs={12}>
+          <Grid id="search-filters-container-grid"
+            container
+            flex={1}
+            hidden={state.filtersHidden} id="search-filter-filter-grid-container">
+            <Grid item >
               {/* #region search title */}
               <Box alignItems={'center'}>
                 <Checkbox
@@ -173,7 +172,7 @@ const SearchFilters = (props) => {
               </Box>
               {/* #endregion */}
               <Grid item
-                xs={12}
+
                 padding={0}
                 margin={0}
                 justifyContent={'center'}
@@ -190,10 +189,10 @@ const SearchFilters = (props) => {
                   Clear Filters
                 </Button>
                 {/* {renderClearFiltersButton()} */}
-              </Grid>
+            </Grid>
               <Divider />
               {/* #region search agencies */}
-              <Grid item xs={12}>
+              <Grid item >
                 <FormControl
                   fullWidth
                   xs={{
@@ -234,7 +233,7 @@ const SearchFilters = (props) => {
               </Grid>
               {/* #region search */}
               {/* #regionSearch Agency */}
-              <Grid item xs={12}>
+              <Grid item >
                 <FormControl
                   fullWidth
                   xs={{
@@ -276,7 +275,7 @@ const SearchFilters = (props) => {
               {/* #endregion */}
               <Divider />
               {/* #region search states */}
-              <Grid item xs={12}>
+              <Grid item >
                 <FormLabel htmlFor='state'>State(s) and Location(s):</FormLabel>
                 <Autocomplete
                   id='state'
@@ -307,7 +306,7 @@ const SearchFilters = (props) => {
               </Grid>
               {/* #endregion */}
               {/* #region search counties */}
-              <Grid item xs={12} >
+              <Grid item  >
                 <FormLabel
                   label
                   htmlFor='county'>
@@ -347,7 +346,7 @@ const SearchFilters = (props) => {
               {/* #region search action type */}
               {/* <div hidden={!Globals.authorized()}> */}
               <div>
-                <Grid item xs={12} flex={1} id="action-type-box">
+                <Grid item  flex={1} id="action-type-box">
 
                   <FormLabel htmlFor='searchAction'>Action Type:</FormLabel>
                   <Autocomplete
@@ -380,7 +379,7 @@ const SearchFilters = (props) => {
               {/* #endregion */}
               <Grid flexDirection={'column'} container flex={1} hidden={!Globals.authorized()}>
                 {/* #region search decision */}
-                <Grid item xs={12}>
+                <Grid item >
                   <FormLabel htmlFor='searchDecision'></FormLabel>
                   <Typography variant='filterLabel'>Decision Type</Typography>
                   <Autocomplete
@@ -411,7 +410,7 @@ const SearchFilters = (props) => {
               </Grid>
               <Divider />
 
-                <Grid item xs={12}>
+                <Grid item >
                     <SearchDatePickers
                       onStartDateChange={(evt) => onStartDateChange(evt)}
                       onEndDateChange={(evt) => onEndDateChange(evt)}
@@ -423,7 +422,7 @@ const SearchFilters = (props) => {
 
               <Divider />
               {/* #region document type filters */}
-              <Grid item xs={12}>
+              <Grid item >
                   <FormControlLabel
                     label={<Typography variant='filterLabel'>Final EIS {EISCount ? EISCount : ''}</Typography>}
                     control={
@@ -439,7 +438,7 @@ const SearchFilters = (props) => {
                   />
                   </Grid>
 
-                <Grid item xs={12}>
+                <Grid item >
                   <FormControlLabel
                     label={<Typography variant='filterLabel'>Draft EIS {draftCount ? draftCount : ''}</Typography>}
                     control={
@@ -454,7 +453,7 @@ const SearchFilters = (props) => {
                     }
                   />
                   </Grid>
-                  <Grid item xs={12}>
+                  <Grid item >
                     <FormControlLabel
                       label={<Typography variant='filterLabel'>EA {eaCount ? eaCount : ''}</Typography>}
                       control={
@@ -469,7 +468,7 @@ const SearchFilters = (props) => {
                       }
                     />
                   </Grid>
-                  <Grid item xs={12}>
+                  <Grid item >
                     <FormControlLabel
                       label={<Typography variant='filterLabel'>NOI {noiCount ? noiCount : ''}</Typography>}
                       control={
@@ -483,7 +482,7 @@ const SearchFilters = (props) => {
                       }
                     />
                   </Grid>
-                  <Grid item xs={12}>
+                  <Grid item >
                     <FormControlLabel
                       label={<Typography variant='filterLabel'>ROD {rodCount ? rodCount : ''}</Typography>}
                       control={
@@ -498,7 +497,7 @@ const SearchFilters = (props) => {
                       }
                     />
                   </Grid>
-                  <Grid item xs={12}>
+                  <Grid item >
                     <FormControlLabel
                     label={<Typography variant='filterLabel'>Scoping Report {scopingCount ? scopingCount : ''}</Typography>}
                     control={
@@ -513,23 +512,22 @@ const SearchFilters = (props) => {
                     }
                     />
                   </Grid>
-              </Grid>
-              {/* #endregion */}
-              {/* #region advanced */}
-              <div
+                  <Grid
+                  item
                 className='filter'
+                borderTop={1}
+                borderColor={'#ddd'}
                 hidden={!Globals.curatorOrHigher()}>
                 <Divider />
-
                 <Typography variant='h6'>Advanced</Typography>
-                <div className='sidebar-checkboxes'>
+                <Box className='sidebar-checkboxes'>
                   <FormControlLabel
                     label={<Typography variant='filterLabel'>Final {finalCount ? finalCount : ''}</Typography>}
                     control={
                       <Checkbox
                         type='checkbox'
                         name='typeFinal'
-                        checked={props.useOptions}
+                        checked={useOptionsChecked}
                         onClick={(evt) => onTypeChecked(evt)}
                         onChange={(evt) => {
                           console.log(`file: SideBarFilters.jsx:492 ~ SideBarFilters ~ evt:`, evt);
@@ -538,18 +536,21 @@ const SearchFilters = (props) => {
                       />
                     }
                   />
-                </div>
-              </div>
+                </Box>
+              </Grid>
+              </Grid>
               {/* #endregion */}
-            </Grid>
+              {/* #region advanced */}
+
+              {/* #endregion */}
+          </Grid>
             {/* #region organization */}
-            <Item
+            {/* <Item
               hidden={state.hideOrganization}
               id='agency-svg-holder'>
               <button onClick={(evt) => orgClick(evt)}>x</button>
-            </Item>
+            </Item> */}
             {/* #endregion */}
-        </Paper>
     </>
   );
 };

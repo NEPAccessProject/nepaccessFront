@@ -1,5 +1,5 @@
 import axios from "axios";
-import React, { useEffect } from "react";
+import React from "react";
 //import DatePicker from "react-datepicker";
 //import Select from 'react-select';
 
@@ -15,7 +15,7 @@ import {
 } from "@mui/material";
 import Grid from '@mui/material/Unstable_Grid2'; // Grid version 2 change back if unexpected layout behavior occurs
 import { ThemeProvider, styled } from "@mui/material/styles";
-import { makeStyles } from "@mui/styles";
+import { makeStyles,withStyles } from "@mui/styles";
 import "react-datepicker/dist/react-datepicker.css";
 import { withRouter } from "react-router";
 //import "tippy.js/dist/tippy.css"; // optional
@@ -29,6 +29,7 @@ import ResultsHeader from "./ResultsHeader";
 import SearchFilters from "./SearchFilters";
 import SearchResultsMap from "./SearchResultsMap";
 import Layouts from "../examples/Layouts";
+import { withTheme } from "@emotion/react";
 const _ = require("lodash");
 
 const FULLSTYLE = {
@@ -59,10 +60,10 @@ const useStyles = makeStyles((theme) => ({
 
 const GridContainer= styled(Grid)(({ theme }) => ({
   container: true,
-  border: '1px solid #ddd',
+  //border: '1px solid #ddd',
 }))
 const GridItem = styled(Grid)(({ theme }) => ({
-  border: '1px solid #ddd',
+  //border: '1px solid #ddd',
 
 }))
 
@@ -80,7 +81,7 @@ class Search extends React.Component {
 
     super(props);
     console.log(`SEARCH PROPS`, props);
-    //enums for various notification types
+    //enums for various logging types
     this.messageTypeEnum = Object.freeze({
       ERROR: "error",
       INFO: "info",
@@ -110,9 +111,6 @@ class Search extends React.Component {
       iconClassName: "icon icon--effect",
       isAvailableFilesDialogOpen: false,
       isDirty: false,
-      isMobile: false,
-      isDesktop: true,
-      isTablet: false,
       isQuickStartDialogOpen: false,
       isSearchTipsDialogOpen: false,
       limit: 25,
@@ -351,6 +349,7 @@ class Search extends React.Component {
   };
 
   onInput = (evt) => {
+    console.log(`file: Search.js:354 ~ Search ~ evt:`, evt);
     //
     let userInput = evt.target.value;
 
@@ -982,7 +981,9 @@ class Search extends React.Component {
 
   render() {
     // const { history } = this.props;
+    console.log(`file: Search.js:986 ~ Search ~ render ~ this.props:`, this.props);
     const { state } = this.state;
+    this.classes = this.props.classes
     const customStyles = {
       option: (styles, state) => ({
         ...styles,
@@ -1020,6 +1021,7 @@ class Search extends React.Component {
       onUseOptionsChecked: this.onUseOptionsChecked.bind(this),
       onCheckboxChecked: this.onCheckboxChecked.bind(this),
       onSortByChangeHandler: this.onSortByChangeHandler,
+      onResizeHandler: this.onResizeHandler,
       onLimitChangeHandler: this.onLimitChangeHandler,
       onDownloadClick: this.onDownloadClick,
       onActionChange: this.onActionChange,
@@ -1047,21 +1049,18 @@ class Search extends React.Component {
           <Container
             id="search-root-container"
             maxWidth='xl'
-
             sx={{
+              // // border: '2px solid black',
+              // // paddingLeft: 2,
+              // // paddingRight: 2,
+              // // marginTop: 5,
+              // // marginLeft:'2%',
+              // // marginRight: '2%'
 
-              paddingLeft: 2,
-              paddingRight: 2,
-              marginTop: 5,
             }}>
-              Height: {window.innerHeight} - Width: {window.innerWidth}
-              <h5><b>IsMobile:</b>{this.state.isMobile ? 'true': 'false'}</h5>
-              <h5><b>IsTablet:</b>{this.state.isTablet ? 'true': 'false'}</h5>
-             <h5> <b>isDesktop:</b>{this.state.isDesktop ? 'true': 'false'}</h5>
-<div id="root" sx={{flexGrow:1}}>
               <GridContainer
-                border={0}
-                rowSpacing={2}
+                flex={1}
+                spacing={1}
                 id='result-header-grid-container'
                 container>
                 <GridItem
@@ -1069,38 +1068,30 @@ class Search extends React.Component {
                   marginTop={1}
                   id='results-header-grid-container'
                 >
-                  {/* <ResultsHeader
+                  <ResultsHeader
                     {...this.props}
-                  /> */}
+                  />
                 </GridItem>
-                <GridContainer
-                  spacing={0.5}
-                  id='filters-grid-container'
-                  style={{
-                    marginTop: 10
-                  }}
-                >
                   <GridItem
                     md={3}
-                    sx={12}
+                    xs={12}
                     id='filters-grid-item'>
-                    {!this.state.filtersHidden && (
-                      <SearchFilters
-                        {...this.props}
-                      />
-                    )}
+                    <Paper elevation={1} sx={{
+                      flexGrow:1,
+                    }}><SearchFilters/></Paper>
                   </GridItem>
                   <GridItem
                     md={9}
                     xs={12}
                   >
-                    <Paper elevation={1} style={{ padding: 5,flexGrow:1 }}>
-                      {this.props.children}
-                    </Paper>
+                  <Paper sx={{
+                    paddingLeft: 3,
+                    paddingRight: 3,
+                    flexGrow: 1,
+                    }} elevation={1}>
+                  {this.props.children}</Paper>
                   </GridItem>
                 </GridContainer>
-              </GridContainer>
-</div>
           </Container>
         </SearchContext.Provider>
       </ThemeProvider>
@@ -1127,7 +1118,7 @@ class Search extends React.Component {
   componentDidMount() {
     try {
       Globals.registerListener("geoFilter", this.geoFilter);
-      //window.addEventListener("resize", this.onResizeHandler.bind(this));
+      window.addEventListener("resize", this.onResizeHandler.bind(this));
 
       <>
         {/* <Snackbar
@@ -1276,7 +1267,6 @@ Search.propTypes = {
   error: PropTypes.object,
 };
 Search.contextType = SearchContext;
-export default withRouter(Search);
 
 /** Does a .replace with regex for these rules:
  * For the opening ', it could have either no characters before it, or whitespace.
@@ -1301,3 +1291,7 @@ function parseTerms(str) {
 
   return str;
 }
+//export default (withStyles(styles), withRouter)(Search);
+
+//export default (withRouter(Search)(withStyles(styles)(Search)
+export default withRouter(Search);
