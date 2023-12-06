@@ -24,6 +24,7 @@ export default class App extends React.Component {
 			startPublish: '',
 			endPublish: '',
 			agency: [],
+            fast41: false,
 			state: [],
 			needsComments: false,
 			needsDocument: false,
@@ -537,9 +538,7 @@ export default class App extends React.Component {
                     needsDocument: this.state.searcherInputs.needsDocument
                 };
             }
-
             dataToPass.title = postProcessTerms(dataToPass.title);
-
             // Proximity search from UI - surround with quotes, append ~#
             if(!this.state.searcherInputs.proximityDisabled && this.state.searcherInputs.proximityOption)
             {
@@ -590,11 +589,12 @@ export default class App extends React.Component {
                     
                     _data = currentResults
                     // .filter((result) => { // Soft rollout logic
-                    //     return result.doc.size > 200; // filter out if no files (200 bytes or less)
+                    //     return result.doc.size > 200; // filter out if no files (200 bytes or   less)
                     // })
                     .map((result, idx) =>{
                         let doc = result.doc;
                         let newObject = {title: doc.title, 
+                            fast41: doc.fast41,
                             agency: doc.agency, 
                             cooperatingAgency: doc.cooperatingAgency,
                             commentDate: doc.commentDate, 
@@ -724,6 +724,7 @@ export default class App extends React.Component {
         // OPTION: If we restore a way to use search options for faster searches, we'll assign here
         if(this.state.useSearchOptions) {
             dataToPass = { 
+                fast41: this.state.searcherInputs.fast41,
                 title: this.state.searcherInputs.titleRaw, 
                 startPublish: this.state.searcherInputs.startPublish,
                 endPublish: this.state.searcherInputs.endPublish,
@@ -1461,8 +1462,9 @@ export default class App extends React.Component {
                         state: result.state,
                         county: result.county,
                         // action: result.action,
-                        // decision: result.decision,
-                        processId: result.processId
+                        decision: result.decision,
+                        processId: result.processId,
+                        fast41: result.fast41,
                     }
                     if(!newRecord.processId) { // don't want to imply zeroes are valid
                         newRecord.processId = '';
@@ -1503,7 +1505,8 @@ export default class App extends React.Component {
                         folder: result.folder,
                         action: result.action,
                         decision: result.decision,
-                        size: result.size
+                        size: result.size,
+                        fast41: result.fast41,
                     }
                     if(!newRecord.processId) { // don't want to imply zeroes are valid
                         newRecord.processId = '';
@@ -1588,6 +1591,7 @@ export default class App extends React.Component {
                         noiCount={this._noiCount}
                         rodCount={this._rodCount}
                         scopingCount={this._scopingCount}
+                        onFast
                     />
                     <SearchProcessResults 
                         sort={this.sort}

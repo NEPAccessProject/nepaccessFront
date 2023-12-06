@@ -35,7 +35,7 @@ const draftTypeLabelsLower = ["draft",
     "third draft supplemental"];
 
 const Globals = {
-    currentHost: new URL('https://bighorn.sbs.arizona.edu:8443/nepaBackend/'),
+    currentHost: new URL('http://localhost:8080/'),
 
     listeners: {},
 
@@ -68,12 +68,12 @@ const Globals = {
     
     // Set up globals like axios default headers and base URL
     setUp() {
-        if(window.location.hostname === 'localhost' || window.location.protocol  === "https:") {
+        if(window.location.hostname === 'localhost') {
+            this.currentHost = new URL('http://localhost:8080/');
+        } else {
             this.currentHost = new URL('https://bighorn.sbs.arizona.edu:8443/nepaBackend/');
-        } else if(window.location.protocol  === "http:") {
-            this.currentHost = new URL(window.location.protocol + window.location.hostname + ':8080/');
         } 
-
+        this.currentHost = new URL("http://localhost:8080/");
         // else if(window.location.hostname) {
         //     this.currentHost = new URL('https://' + window.location.hostname + ':8080/');
         // }
@@ -218,6 +218,7 @@ const Globals = {
             message = "Server appears to be down right now, please try again later."
         }
 
+        console.log(`file: globals.js:222 ~ getErrorMessage ~ message:`, message);
         return message;
     },
 

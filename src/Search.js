@@ -92,7 +92,7 @@ class Search extends React.Component {
             surveyDone: true,
             surveyResult: "Haven't searched yet",
             filtersHidden: false,
-
+            fast41: false,
             countyOptions: Globals.counties
 		};
         this.debouncedSearch = _.debounce(this.props.search, 300);
@@ -492,6 +492,12 @@ class Search extends React.Component {
         });
     }
     
+    onFast41Toggled= (evt)=> {
+        console.log(`file: Search.js:496 ~ Search ~ evt:`, evt);
+        this.setState({
+            fast41: !this.state.fast41,
+        })
+    }
     onTypeChecked = (evt) => {
         if(evt.target.name==="optionsChecked") {
             this.setState({ 
@@ -790,7 +796,6 @@ class Search extends React.Component {
         //     + "</tr>"
         // + "</tbody></table>";
 
-
         
         return (
             <>
@@ -871,21 +876,25 @@ class Search extends React.Component {
                         {/* <div className="pre-checkbox-bar"></div> */}
                         <div className="input-bar-2">
                             <div className="input-bar-left">
-                                <input id="check1" className="pre-search-input" type="checkbox" 
-                                        checked={this.state.searchOption==="C"}
-                                        onChange={this.onTitleOnlyChecked}
+
+
+                            <label className="sidebar-check-label no-select" htmlFor="check1">
+                                    Fast41 Documents Only
+                                </label>
+
+                            <input id="fast41-checkbox" name="fast41" className="pre-search-input" type="checkbox" 
+                                        checked={this.state.fast41}
+                                        onChange={this.onFast41Clicked}
                                 />
+
                                 <label className="sidebar-check-label no-select" htmlFor="check1">
                                     Search only within titles
                                 </label>
-                                {/* &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                <input id="check2" className="pre-search-input" type="checkbox" 
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                <input id="check2" name="margkup" className="pre-search-input" type="checkbox" 
                                         checked={this.state.markup}
                                         onChange={this.onMarkupChange}
                                 />
-                                <label className="sidebar-check-label no-select" htmlFor="check2">
-                                    Normalize snippet whitespace
-                                </label> */}
                                 {/* &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                 <div className="inline-block">
                                     <Select id="fragmentSize" className="multi" classNamePrefix="react-select" name="fragmentSize"
