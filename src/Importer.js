@@ -122,6 +122,7 @@ class Importer extends Component {
             url: checkUrl,
             method: 'POST'
           }).then(response => {
+            console.log(`file: Importer.js:125 ~ Importer ~ constructor ~ response:`, response);
             let responseOK = response && response.status === 200;
             if (!responseOK) { // this probably isn't possible with current backend design (either 200 or error?)
                 this.props.history.push('/');
@@ -166,10 +167,12 @@ class Importer extends Component {
     getDirectoryName = () => {
         //this logic works for both Edge and Chrome (10/30/2020), expected first folder format: /folder/
         let pathSegments = this.state.files[0].path.split('/');
+        console.log(`file: Importer.js:169 ~ Importer ~ pathSegments:`, pathSegments);
         let baseFolder = "";
         if(pathSegments[1] && pathSegments[0].length === 0 && pathSegments[1].length > 0) {
             baseFolder = pathSegments[1];
         }
+        console.log(`file: Importer.js:174 ~ Importer ~ baseFolder:`, baseFolder);
         return baseFolder;
     }
 
@@ -184,6 +187,7 @@ class Importer extends Component {
 
     /** returns true if this.state.shouldReplace or if the file at idx is a .zip and it is in the list of missing filenames */
     shouldUpload = (idx) => {
+        console.log(`file: Importer.js:189 ~ Importer ~ idx:`, idx);
         if(this.state.shouldReplace) {
             return true;
         } else {
@@ -427,7 +431,7 @@ class Importer extends Component {
         let resultString = "" + this.state.importResults;
 
         let importUrl = new URL('file/uploadFilesBulk', Globals.currentHost);
-            
+            console.log(`file: Importer.js:433 ~ Importer ~ importUrl:`, importUrl);
         let uploadFiles = new FormData();
         uploadFiles.append("files", renameFile(this.state.files[i], this.state.files[i].path));
 
@@ -439,6 +443,7 @@ class Importer extends Component {
             },
             data: uploadFiles
         }).then(response => {
+            console.log(`file: Importer.js:446 ~ Importer ~ response:`, response);
             // console.log("Import response",response);
             let responseOK = response && response.status === 200;
             if (responseOK) {
@@ -510,6 +515,7 @@ class Importer extends Component {
         // skip 0 byte files
         if(this.state.files[i] && this.state.files[i].size != null && this.state.files[i].size === 0) {
             resultString += this.state.files[i].path + ": Skipped uploading (0 byte file)\n";
+            console.log(`file: Importer.js:519 ~ Importer ~ doSingleImport ~ resultString:`, resultString);
             if(i+1 < limit) {
                 this.setState({
                     importResults: resultString,
@@ -543,6 +549,7 @@ class Importer extends Component {
             }).then(response => {
                 // data should be boolean
                 if (response && response.data && this.shouldUpload(i)) { 
+                    console.log(`file: Importer.js:551 ~ Importer ~ doSingleImport ~ response:`, response);
                     // import
                     this.doImport(i,limit);
                 } else {
@@ -610,6 +617,7 @@ class Importer extends Component {
             uploadFiles.append("files", renameFile(this.state.files[i], this.state.files[i].path));
         }
         uploadFiles.append("doc", JSON.stringify(this.state.doc));
+        console.log(`file: Importer.js:619 ~ Importer ~ uploadFiles:`, uploadFiles);
 
         let networkString = '';
         let successString = '';
@@ -622,6 +630,7 @@ class Importer extends Component {
             },
             data: uploadFiles
         }).then(response => {
+            console.log(`file: Importer.js:632 ~ Importer ~ response:`, response);
             let responseOK = response && response.status === 200;
             if (responseOK) {
                 return true;
@@ -683,6 +692,7 @@ class Importer extends Component {
         });
         
         let importUrl = new URL('file/uploadFile', Globals.currentHost);
+        console.log(`file: Importer.js:694 ~ Importer ~ importUrl:`, importUrl);
 
         let uploadFile = new FormData();
         uploadFile.append("file", this.state.file);
@@ -710,6 +720,7 @@ class Importer extends Component {
             },
             data: uploadFile
         }).then(response => {
+            console.log(`file: Importer.js:722 ~ Importer ~ response:`, response);
             let responseOK = response && response.status === 200;
             if (responseOK) {
                 return true;
@@ -1625,7 +1636,6 @@ class Importer extends Component {
     componentDidMount() {
         // console.log(this.state.importOption);
         this.checkAdmin();
-
         if(!this.state.filenamesRun) {
             this.getMissingFilenames();
         }

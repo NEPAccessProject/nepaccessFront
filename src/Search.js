@@ -493,7 +493,7 @@ class Search extends React.Component {
     }
     
     onFast41Toggled= (evt)=> {
-        console.log(`file: Search.js:496 ~ Search ~ evt:`, evt);
+        console.log(`onFast41Toggled ${evt.target.checked} - current: ${this.state.fast41} next ${!this.state.fast41}`, evt);
         this.setState({
             fast41: !this.state.fast41,
         })
@@ -876,17 +876,6 @@ class Search extends React.Component {
                         {/* <div className="pre-checkbox-bar"></div> */}
                         <div className="input-bar-2">
                             <div className="input-bar-left">
-
-
-                            <label className="sidebar-check-label no-select" htmlFor="check1">
-                                    Fast41 Documents Only
-                                </label>
-
-                            <input id="fast41-checkbox" name="fast41" className="pre-search-input" type="checkbox" 
-                                        checked={this.state.fast41}
-                                        onChange={this.onFast41Clicked}
-                                />
-
                                 <label className="sidebar-check-label no-select" htmlFor="check1">
                                     Search only within titles
                                 </label>
@@ -980,6 +969,12 @@ class Search extends React.Component {
                                 tabIndex="2"
                                 checked={this.state.needsDocument} onChange={this.onNeedsDocumentChecked} />
                         <label className="checkbox-text no-select cursor-pointer" htmlFor="needsDocument">Has downloadable files</label>
+                    </div>
+                    <div className="checkbox-container-flex">
+                        <input type="checkbox" name="fast41" id="fast41" className="sidebar-checkbox"
+                                tabIndex="2"
+                                checked={this.state.fast41} onChange={this.onFast41Toggled} />
+                        <label className="checkbox-text no-select cursor-pointer" htmlFor="fast41">Fast41 Documents only - state value {this.state.fast41 ? 'true' : 'false'}</label>
                     </div>
 
                     {this.renderClearFiltersButton()}

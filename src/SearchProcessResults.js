@@ -276,13 +276,13 @@ export default class SearchProcessResults extends React.Component {
                                         </Tippy>
                                 </h2>
                             </div>
-                            <SearchResultsMap 
+                            {/* <SearchResultsMap 
                                 toggleMapHide={this.props.toggleMapHide}
                                 isHidden={this.props.isMapHidden}
                                 docList={this.props.geoResults}
                                 results={this.props.results}
                                 // searcherState={this.props.searcherState}
-                            />
+                            /> */}
 
                             <ResultsHeader 
                                 sort={this.props.sort}

@@ -272,24 +272,25 @@ const MyData = (props) => {
                     jsonName += `; ${jsonData.count} ${(jsonData.count === 1) ? "Result" : "Results"}`;
 
                     return (
-                        <GeoJSON key = {"leaflet"+i}
-                            data={jsonData} 
-                            color={jsonData.style.color} 
-                            fillColor={jsonData.style.fillColor} 
-                            onEachFeature={(feature, layer) => {
-                                layer.on({
-                                    click: () => onPolyClick(feature,layer)
-                                })
-                            }}
-                        >
-                            {/* <Popup>{jsonData.properties.NAME}</Popup> */}
-                            {alaskaFlag ?(
-                                <Tooltip sticky>{jsonName}</Tooltip>
-                            ) : (
-                                <Tooltip>{jsonName}</Tooltip>
-                            )}
-                            <Popup>Filter toggled for: {originalName}</Popup>
-                        </GeoJSON>
+                        <div><h3>MAP PLACEHOLDER</h3></div>
+                        // <GeoJSON key = {"leaflet"+i}
+                        //     data={jsonData} 
+                        //     color={jsonData.style.color} 
+                        //     fillColor={jsonData.style.fillColor} 
+                        //     onEachFeature={(feature, layer) => {
+                        //         layer.on({
+                        //             click: () => onPolyClick(feature,layer)
+                        //         })
+                        //     }}
+                        // >
+                        //     <Popup>{jsonData.properties.NAME}</Popup>
+                        //     {alaskaFlag ?(
+                        //         <Tooltip sticky>{jsonName}</Tooltip>
+                        //     ) : (
+                        //         <Tooltip>{jsonName}</Tooltip>
+                        //     )}
+                        //     <Popup>Filter toggled for: {originalName}</Popup>
+                        // </GeoJSON>
                     );
                 }
                 
