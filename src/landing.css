@@ -60,7 +60,7 @@ span.glow {
     /* min-height: 400px;
     height: 50%;
     width: 100%; */
-    height: calc(100vh - 350px);
+    height: calc(100vh - 450px);
     min-width: 800px;
     min-height: 600px;
 
@@ -78,7 +78,7 @@ span.glow {
     max-width: 1120px;
     margin: 0 auto;
 
-    padding-top: 140px;
+    padding-top: 20px;
 
     -webkit-column-count: 2; /* Chrome, Safari, Opera */
     -moz-column-count: 2; /* Firefox */
@@ -135,10 +135,12 @@ span.glow {
     /* width: clamp(557px, 72%, 1200px); */
     width: 76%;
     max-width: 1100px;
-    margin-top: 50px;
+    margin-bottom: 20px;
+    /* margin-top: 20px; */
 }
 
 #landing-search-holder {
+    border: '2px solid red';
     /* Allow centering of child element #landing-search-bar-holder */
     position: relative;
     /* height: 170px; */

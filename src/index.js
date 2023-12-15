@@ -1,7 +1,7 @@
 import React from 'react';
 import { createRoot } from 'react-dom/client';
-import { BrowserRouter, Route,Routes,HashRouter,useHistory,useLocation } from 'react-router-dom';
-
+import { useHistory,useLocation,BrowserRouter } from 'react-router-dom';
+import { ThemeProvider } from '@mui/material/styles';
 import './index.css';
 import {
     Paper,
@@ -69,95 +69,10 @@ console.log(`file: index.js:20 ~ history:`, history);
   
 
 root.render(
-
-    <HashRouter basename="/" future={{ v7Routing: true }}>
-        <Routes>
-            <Route path="/profile" element={<UserDetails/>}/>
-                    <Route errorElement={<ErrorComponent />} path="/login" element={<Login/>}/>
-                    <Route errorElement={<ErrorComponent />} path="/register" element={<Register/>}/>
-                    <Route errorElement={<ErrorComponent />} path="/pre_register" element={<PreRegister />}/>
-                    <Route errorElement={<ErrorComponent />} path="/forgotPassword" element={<ForgotPassword/>}/>
-                    <Route errorElement={<ErrorComponent />} path="/reset" element={<Reset/>}/>
-                    <Route errorElement={<ErrorComponent />} path="/logout" element={<Logout/>}/>
-                    <Route errorElement={<ErrorComponent />} path="/about-nepa" element={<AboutNepa/>}/>
-                    <Route errorElement={<ErrorComponent />} path="/about-nepaccess" component={<AboutNepaccess/>}/>
-                    <Route errorElement={<ErrorComponent />} path="/people" element={<People/>}/>
-                    <Route errorElement={<ErrorComponent />} path="/search-tips" element={<SearchTips/>}/>
-                    <Route errorElement={<ErrorComponent />} path="/available-documents" element={<AvailableDocuments/>}/>
-                    <Route errorElement={<ErrorComponent />} path="/abouthelpcontents" component={<AboutHelpContents/>}/>
-                    <Route errorElement={<ErrorComponent />} path="/stats" element={<AboutStats/>}/>
-                    <Route errorElement={<ErrorComponent />} path="/media" element={<Media/>}/>
-                    <Route errorElement={<ErrorComponent />} path="/contact" element={<Contact/>}/>
-                    <Route errorElement={<ErrorComponent />} path="/future" element={<Future/>}/>    
-                    <Route errorElement={<ErrorComponent />} path="/record-details" element={<RecordDetailsTab/>}/>
-                    <Route errorElement={<ErrorComponent />} path="/process-details" element={<ProcessDetailsTab/>}/>
-                    <Route errorElement={<ErrorComponent />} path="/importer" element={<Importer/>}/>
-                    <Route errorElement={<ErrorComponent />} path="/adminFiles" element={<AdminFiles/>}/>    
-                    <Route errorElement={<ErrorComponent />} path="/iframes" element={<Iframes/>} />
-                    <Route errorElement={<ErrorComponent />} path="/privacy-policy" element={<PrivacyPolicy/>} />
-                    <Route errorElement={<ErrorComponent />} path="/disclaimer-terms-of-use" element={<DisclaimerTermsOfUse/>} />
-                    <Route errorElement={<ErrorComponent />} path="/verify" element={<Verify/>} />
-                    <Route errorElement={<ErrorComponent />} path="/approve" element={<Approve/>} />
-                    <Route errorElement={<ErrorComponent />} path="/admin" element={<Admin/>} />
-                    <Route errorElement={<ErrorComponent />} path="/pairs" element={<Pairs/>}></Route>
-                    <Route errorElement={<ErrorComponent />} path="/pairs2" element={<Pairs2/>}></Route>
-                    <Route errorElement={<ErrorComponent />} path="/pairs3" element={<Pairs3/>}></Route>
-                    <Route errorElement={<ErrorComponent />} path="/search_logs" element={<SearchLogs/>}></Route>
-                    <Route errorElement={<ErrorComponent />} path="/interaction_logs" element={<InteractionLogs/>}></Route>
-                    <Route errorElement={<ErrorComponent />} path="/stat_counts" element={<StatCounts/>}></Route>
-                    <Route errorElement={<ErrorComponent />} path="/surveys" element={<Surveys/>}></Route>
-                    <Route errorElement={<ErrorComponent />} path="/excel" element={<Excel/>}></Route>
-                    <Route errorElement={<ErrorComponent />} path="/search_test" element={<SearchTest/>} />
-                    <Route errorElement={<ErrorComponent />} path="/up_geo" element={ImporterGeo} />
-                    <Route errorElement={<ErrorComponent />} path="/up_geo_links" element={ImporterGeoLinks} />
-                    <Route errorElement={<ErrorComponent />} path="/up_alignment" element={ImporterAlignment} />
-            <Route errorElement={<ErrorComponent />} path="/record-details/?id=:id" element={<RecordDetailsTab history={history} />} />
-            <Route errorElement={<ErrorComponent />} path="/record-details/"  element={<RecordDetailsTab history={history} />} />
-
-            <Route errorElement={<ErrorComponent />} index path="/process-details/processId=:id" element={<ProcessDetailsTab history={history} />} />
-            <Route  errorElement={<ErrorComponent />} path="/search" element={<App history={window.history} />}>
-                <Route index element={<App history={window.history} location={window.location} />} />
-                <Route path="q=:q" element={<App history={window.location.history} />} />
-            </Route>
-
-
-            <Route  errorElement={<ErrorComponent />}  exact path="/" element={<Landing history={window.history} location={location} />} />
-            <Route  errorElement={<ErrorComponent />} path="*" element={<NoMatch />} />
-        </Routes>
-        {/* <Main location={window.location} history={window.history} /> */}
-    </HashRouter>
-);
-function NoMatch() {
-    let location = useLocation();
-    console.log(`file: index.js:41 ~ NoMatch ~ location:`, location);
-  
-    return (
-    <Container>
-          <Paper elevation={1} styles={{
-            flex:1,
-            justifyContent:'center',
-            alignContent:'center',
-            height:'300vh',
-          }}>
-            <Grid container minHeight={'100vh'} justifyContent="center" alignItems="center">
-            <Grid item xs={12} margin={20}>
-                 <h2> No match for <code>{location.pathname}</code></h2>
-            </Grid>
-            </Grid>
-          </Paper>
-    </Container>
-    );
-  }  function ErrorComponent(){
-    return(
-        <Countainer styles={{
-            border:'1px solid red',
-            justifyContent:'center',
-        }}>
-            <h1>ERROR</h1>
-        </Countainer>
-    )
-  }
-  
+  <BrowserRouter>
+    <Main/>
+  </BrowserRouter>
+)  
   // Listen for changes to the current location.
 let unlisten = history.listen(({ location, action }) => {
     console.log(action, location.pathname, location.state);

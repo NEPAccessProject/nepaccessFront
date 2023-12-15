@@ -65,7 +65,7 @@ const Globals = {
         if (!results[2]) return '';
         return decodeURIComponent(results[2].replace(/\+/g, ' '));
     },
-    
+    //
     // Set up globals like axios default headers and base URL
     setUp() {
         if((window.location.hostname.includes('localhost') && window.location.protocol === 'https:') || window.location.hostname === 'www.nepaccess.org') {
