@@ -1,11 +1,11 @@
 import React from 'react';
 // import { Link } from 'react-router-dom';
-import {Helmet} from 'react-helmet';
+import { Helmet } from 'react-helmet';
 
 import axios from 'axios';
 
-import SearchProcessResults from './SearchProcessResults.js';
 import Search from './Search.js';
+import SearchProcessResults from './SearchProcessResults.js';
 
 import Footer from './Footer.js';
 
@@ -53,6 +53,7 @@ export default class App extends React.Component {
     
     constructor(props){
         super(props);
+        console.log('App constructor with PROPS:', props);
         this.endRef = React.createRef();
         // this.getGeoDebounced = _.debounce(this.getGeoData,1000);
         this.getGeoDebounced = _.debounce(this.getAllGeoData,1000);
@@ -513,7 +514,8 @@ export default class App extends React.Component {
             // We could also probably clear them on reload (component will unmount) if anyone wants
             let currentUrlParams = new URLSearchParams(window.location.search);
             currentUrlParams.set('q', this._searchTerms);
-            this.props.history.push(window.location.pathname + "?" + currentUrlParams.toString());
+            console.log(`Pushing history`,this.props.history)
+            this.props.history.pushState(window.location.pathname + "?" + currentUrlParams.toString(),{location:window.location});
 
 			let dataToPass = { 
 				title: this._searchTerms
@@ -1652,7 +1654,7 @@ export default class App extends React.Component {
 	componentDidMount() {
         this.check();
         this._mounted = true;
-        
+        console.log('MOUNTED APP W/ PROPS',this.props)
         // Running this here fixes polygons if user interrupts this process initiated by child component by navigating away
         this.getGeoDebounced();
 

@@ -33,6 +33,7 @@ body {
 }
 
 #header {
+height: 102px;
   position: fixed;
   width: 100%;
   min-width: 700px;
@@ -45,7 +46,7 @@ body {
   z-index: 99999; /* Geojson map introduces some very high z-index items */
 
   /* background: #8FBC3F; */
-  background: #B6C4C8;
+  background: #ABBDC4;
 }
 
 /* Header contents */
@@ -284,6 +285,7 @@ body {
 
 #app-content {
     min-width: 1300px;
+    margin-top: -52px;
 }
 /* .footer-content {
     margin-bottom: 15px;
@@ -333,6 +335,7 @@ body {
 }
 
 .no-select {
+    
   -webkit-touch-callout: none; /* iOS Safari */
     -webkit-user-select: none; /* Safari */
      -khtml-user-select: none; /* Konqueror HTML */

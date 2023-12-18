@@ -291,7 +291,6 @@ input[type=checkbox] {
   display: flex;
   align-items: center;
   text-align: center;
-  
   color: #737272;
 
   border: 1px solid #000000;
@@ -797,6 +796,9 @@ a.link {
     #app-content, .content, .content .search-holder {
         min-height: 220px;
         min-width: 700px;
+    }
+    .search-holder{
+      background-color: #ABBDC4;
     }
     .search-bar-holder .search-header-2 {
         display: block;

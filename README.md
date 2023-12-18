@@ -1,3 +1,13 @@
+
+## Deployment - Frontend
+* run npm run build
+* Upload the "build" folder.
+* Go into the currently live webapps at /var/lib/tomcat9/webapps/ and copy the "WEB-INF" folder into the newly uploaded build folder.
+* Rename nepAccess
+* Restart the frontend via https://bighorn.sbs.arizona.edu:8443/manager/html for the app nepaFrontend
+
+## General Instructions
+
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 ## Available Scripts

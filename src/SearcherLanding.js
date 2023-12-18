@@ -138,11 +138,7 @@ class SearcherLanding extends React.Component {
     render () {
         return (
             <div id="landing-search-box-container">
-                
                 <div id="landing-search-holder">
-                
-                        
-                    
                     <div id="landing-search-bar-holder">
                         {/* <h3 id="landing-search-header">
                             <span className="glow">

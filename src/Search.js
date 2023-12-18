@@ -19,7 +19,8 @@ import Tippy from '@tippyjs/react';
 import Globals from './globals.js';
 import persist from './persist.js';
 
-import { withRouter } from "react-router";
+//import { withRouter } from "react-router";
+//import {withRouter} from './withRouter';
 import TippySearchTips from './TippySearchTips.js';
 
 // import PropTypes from "prop-types";
@@ -47,6 +48,7 @@ class Search extends React.Component {
 
     constructor(props) {
         super(props);
+        console.log(`file: Search.js:50 ~ Search ~ constructor ~ props:`, props);
 		this.state = {
             titleRaw: '',
             startPublish: null,
@@ -1294,8 +1296,8 @@ class Search extends React.Component {
 
 }
 
-export default withRouter(Search);
-
+export default Search;
+//export default Search;
 /** Does a .replace with regex for these rules: 
  * For the opening ', it could have either no characters before it, or whitespace.
  * Then another ' must be found after that one preceding either no characters, 
