@@ -14,7 +14,9 @@ export default class SearchProcessResult extends React.Component {
 
 	constructor(props) {
 		super(props);
+        console.log(`SearchProcessResult ~ constructor ~ props:`, props);
 		this.state = { 
+            
             fileProgressValue: null,
             downloadText: 'Download',
             downloadClass: 'bold',
@@ -373,7 +375,16 @@ export default class SearchProcessResult extends React.Component {
             return docType;
         }
     }
-
+    showFast41 = (docType="") => {
+        if(docType.toLowerCase().trim() === "fast41") {
+        console.log(`SearchProcessResult ~ docType:`, docType);
+        return(
+            <div><span className="cardHeader">Agency:
+                <span>{this.props.cell._cell.row.data.isFast41}</span></span>
+            </div>
+        )
+        }
+    }
     renderDownload = (_id,_size,_filename,_results, _downloadType) => {
         return (<DownloadFiles key={_id} downloadType={_downloadType}
                         recordId={_id}
@@ -407,6 +418,7 @@ export default class SearchProcessResult extends React.Component {
                             {this.showCounty()}
                             {this.showAction()}
                             {this.showDecision()}
+                            {this.showFast41()}
                         </div>
                     </div>
                     <div className="records">

@@ -60,10 +60,14 @@ import Excel from './Excel.js';
 import ImporterGeo from './ImporterGeo.js';
 import ImporterGeoLinks from './ImporterGeoLinks.js';
 
+//import RecordDetailsTab from './RecordDetailsTab'
+
+
 import Globals from './globals.js';
-
-import { Link, Switch, Route, withRouter } from 'react-router-dom';
-
+import Search from './Search.js';
+import NoMatch from './components/Router/NoMatch';
+import RouteError from './components/Router/RouterError';
+import { BrowserRouter, Route,Link,Routes} from 'react-router-dom';
 import PropTypes from "prop-types";
 
 import ImporterAlignment from './ImporterAlignment';

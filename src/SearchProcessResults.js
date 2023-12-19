@@ -38,6 +38,7 @@ export default class SearchProcessResults extends React.Component {
 
     constructor(props) {
         super(props);
+        console.log('SEARCH PROCESS RESULTS PROPS')
         this.state = {
             showContext: true,
             size: 0,
@@ -295,7 +296,7 @@ export default class SearchProcessResults extends React.Component {
                             />
                             
                             {/* {this.props.searching ? <>Please wait...</> : <></>} */}
-
+                            <h2>Number of Results {this.state.results.length}</h2>
                             <ReactTabulator
                                 ref={ref => (this.ref = ref)}
                                 data={this.props.results}

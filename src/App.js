@@ -86,6 +86,7 @@ export default class App extends React.Component {
     _noiCount = "";
     _rodCount = "";
     _scopingCount = "";
+    _fast41Count = "";
 
     resetTypeCounts = () => {
        this._finalCount = "";
@@ -95,9 +96,11 @@ export default class App extends React.Component {
        this._noiCount = "";
        this._rodCount = "";
        this._scopingCount = "";
+       this._fast41Count = "";
     }
 
     optionsChanged = (val) => {
+        console.log(`Search App ~ Options changed to`, val);
         this.setState({
             useSearchOptions: val
         });
@@ -118,6 +121,7 @@ export default class App extends React.Component {
         let rods = 0;
         let nois = 0;
         let scopings = 0;
+        let fast41 = 0;
 
         this.state.searchResults.forEach(process => {
             process.records.forEach(item => {
@@ -137,6 +141,9 @@ export default class App extends React.Component {
                     scopings++;
                 } else if(matchesNOI(item.documentType)) {
                     nois++;
+                }
+                else if(matchesFast41(item.documentType)) {
+                    fast41++;
                 }
             })
         })
@@ -293,7 +300,7 @@ export default class App extends React.Component {
         console.log(`Merge highlight with ${data.length} data records and $`)
 
         if(!this.state.searchResults || !this.state.searchResults[0]) {
-            console.log("No results here yet from state.searchResults returning data:",data,'state.searchresults', state.searchResults);
+            console.log("No results here yet from state.searchResults returning data:",data,'state.searchresults', this.state.searchResults);
             return data;
         }
 
@@ -334,7 +341,7 @@ export default class App extends React.Component {
      * using Object.keys(), Object.values(), or Object.entries() 
      */
     buildData = (data) => {
-        // console.log("Building",data);
+        console.log("BUILD DATA:",data);
         let processResults = {};
         let newUniqueKey = -1;
         let i = 0;
@@ -372,6 +379,12 @@ export default class App extends React.Component {
                 processResults[key].title = datum.title;
             }
             
+                if(!processResults[key].fast41 == true) {
+                    processResults[key].fast41=true;
+                }
+                else{
+                    processResults[key].fast41=false;
+                }
             // Try to simply get first non-null county, if available (if multiple choices, we don't know which is
             // the most accurate)
             if(!processResults[key].county) {
@@ -522,7 +535,6 @@ export default class App extends React.Component {
 
 			let dataToPass = { 
 				title: this._searchTerms,
-                fast41: this.state.searcherInputs.fast41,//this.state.fast41,
             };
 
             // OPTION: If we restore a way to use search options for faster searches, we'll assign here
@@ -541,7 +553,7 @@ export default class App extends React.Component {
                     typeOther: this.state.searcherInputs.typeOther,
                     needsComments: this.state.searcherInputs.needsComments,
                     needsDocument: this.state.searcherInputs.needsDocument,
-                    fast41: this.state.searcherInputs.fast41,
+                    fast41: Number.parseInt(this.state.searcherInputs.fast41),
                 };
             }
             dataToPass.title = postProcessTerms(dataToPass.title);
@@ -602,7 +614,7 @@ export default class App extends React.Component {
                     .map((result, idx) =>{
                         let doc = result.doc;
                         let newObject = {title: doc.title, 
-                            fast41: doc.fast41,
+                            fast41: Number.parseInt(doc.fast41)  ,
                             agency: doc.agency, 
                             cooperatingAgency: doc.cooperatingAgency,
                             commentDate: doc.commentDate, 
@@ -628,10 +640,9 @@ export default class App extends React.Component {
                             
                             action: doc.action,
                             decision: doc.decision,
-
+                            fast41: Number.parseInt(doc.fast41),
                             relevance: idx + 1 // sort puts "falsy" values at the bottom incl. 0
                         };
-                        console.log(`file: App.js:632 ~ App ~ at index: ${idx} ~ newObject:`, newObject);
                         return newObject;
                     }); 
 
@@ -667,7 +678,11 @@ export default class App extends React.Component {
                             // got all results already, so stop searching and start highlighting.
                             //this.filterResultsBy(this.state.searcherInputs);
                             this.countTypes();
-                        } else {
+                            this.setState({
+                                searching: false,
+                                resultsText:"",
+                        })} 
+                        else {
                             // Highlight first page using function which then gets the rest of the metadata
                             console.log("Gather first page highlights");
                             //this.gatherFirstPageHighlightsThenFinishSearch(this._searchId, this.state.searcherInputs, this.state.searchResults);
@@ -683,6 +698,8 @@ export default class App extends React.Component {
                     });
                 }
             }).catch(error => { // Server down or 408 (timeout)
+                console.log(`App ~ error:`, error);
+                this.resultsText= error.message;
                 if(error.response && error.response.status === 408) {
                     this.setState({
                         networkError: 'Request has timed out.'
@@ -709,7 +726,8 @@ export default class App extends React.Component {
                     });
                 }
                 this.setState({
-                    searching: false
+                    searching: false,
+                    resultsText: "",
                 });
             })
     
@@ -731,9 +749,10 @@ export default class App extends React.Component {
         };
 
         // OPTION: If we restore a way to use search options for faster searches, we'll assign here
+        console.log(`App ~ this.state.useSearchOptions:`, this.state.useSearchOptions);
         if(this.state.useSearchOptions) {
+            console.log(`App ~ Doing SearchOptions Search:`, dataToPass);
             dataToPass = { 
-                fast41: this.state.searcherInputs.fast41,
                 title: this.state.searcherInputs.titleRaw, 
                 startPublish: this.state.searcherInputs.startPublish,
                 endPublish: this.state.searcherInputs.endPublish,
@@ -746,7 +765,9 @@ export default class App extends React.Component {
                 typeDraft: this.state.searcherInputs.typeDraft,
                 typeOther: this.state.searcherInputs.typeOther,
                 needsComments: this.state.searcherInputs.needsComments,
-                needsDocument: this.state.searcherInputs.needsDocument
+                needsDocument: this.state.searcherInputs.needsDocument,
+                fast41: Number.parseInt(this.state.searcherInputs.fast41),
+           
             };
         }
 
@@ -822,10 +843,9 @@ export default class App extends React.Component {
                         status: doc.status,
                         subtype: doc.subtype,
                         county: doc.county,
-
+                        fast41: doc.fast41,
                         action: doc.action,
                         decision: doc.decision,
-
                         relevance: idx + 1 // sort puts "falsy" values at the bottom incl. 0
                     };
                     return newObject;
@@ -1719,6 +1739,12 @@ function matchesScoping(docType) {
 function matchesNOI(docType) {
     return (
         (docType.toLowerCase() === "noi") );
+}
+
+function matchesFast41(docType) {
+    console.log(`matchesFast41 ~ docType:`, docType);
+    return (
+        (docType.toLowerCase() === "Fast41 Documents") );
 }
 
 /** Return modified terms for user to see */

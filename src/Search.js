@@ -93,6 +93,7 @@ class Search extends React.Component {
             surveyResult: "Haven't searched yet",
             filtersHidden: false,
             fast41: false,
+            fast41Count: 0,
             countyOptions: Globals.counties
 		};
         this.debouncedSearch = _.debounce(this.props.search, 300);
@@ -494,8 +495,13 @@ class Search extends React.Component {
     
     onFast41Toggled= (evt)=> {
         console.log(`onFast41Toggled ${evt.target.checked} - current: ${this.state.fast41} next ${!this.state.fast41}`, evt);
+        //turns searches via titles vs all filter fields. When the checkbox is checked we need to set this to true
+        const fast41 = evt.target.checked;
+        this.props.optionsChanged(!this.state.fast41);
         this.setState({
-            fast41: !this.state.fast41,
+            //Set Search Options to either title only (B) or all props like checkbox (C)
+            searchOption: fast41 ? "C" : "B",
+            fast41: fast41,
         })
     }
     onTypeChecked = (evt) => {
@@ -590,6 +596,8 @@ class Search extends React.Component {
         this.get('stats/earliest_year','firstYear');
         this.get('stats/latest_year','lastYear');
         this.get('stats/eis_count','EISCount')
+        //[TODO] Implement Spring Service to Return this
+        //this.get('stats/fast41','fast41Count')
     }
     get = (url, stateName) => {
         const _url = new URL(url, Globals.currentHost);
@@ -601,6 +609,7 @@ class Search extends React.Component {
             const rsp = _response.data;
             this.setState({ [stateName]: rsp });
         }).catch(error => { 
+            console.warn(`Error determining the count of ${stateName}.`)
         })
     }
 
@@ -962,7 +971,6 @@ class Search extends React.Component {
                 </span>
                 
                 <div className="sidebar-hr"></div>
-
                 <div className="filter flex-1">
                     <div className="checkbox-container-flex">
                         <input type="checkbox" name="needsDocument" id="needsDocument" className="sidebar-checkbox"
@@ -970,13 +978,6 @@ class Search extends React.Component {
                                 checked={this.state.needsDocument} onChange={this.onNeedsDocumentChecked} />
                         <label className="checkbox-text no-select cursor-pointer" htmlFor="needsDocument">Has downloadable files</label>
                     </div>
-                    <div className="checkbox-container-flex">
-                        <input type="checkbox" name="fast41" id="fast41" className="sidebar-checkbox"
-                                tabIndex="2"
-                                checked={this.state.fast41} onChange={this.onFast41Toggled} />
-                        <label className="checkbox-text no-select cursor-pointer" htmlFor="fast41">Fast41 Documents only - state value {this.state.fast41 ? 'true' : 'false'}</label>
-                    </div>
-
                     {this.renderClearFiltersButton()}
                 </div>
                 
@@ -1166,6 +1167,12 @@ class Search extends React.Component {
                                 <span className="checkbox-text">Scoping Report <i>{this.props.scopingCount}</i></span>
                             </label>
                         </div>
+                        <div className="clickable checkbox-text">
+                        <input type="checkbox" name="fast41" id="fast41" className="sidebar-checkbox"
+                                tabIndex="2"
+                                checked={this.state.fast41} onChange={this.onFast41Toggled} />
+                        <label className="checkbox-text no-select cursor-pointer" htmlFor="fast41">Fast41<i>{this.props.fast41Count}</i> </label>
+                    </div>
                     </div>
                 </div>
 
