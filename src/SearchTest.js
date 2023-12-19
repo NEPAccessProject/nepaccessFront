@@ -1255,8 +1255,8 @@ class SearchTest extends React.Component {
 
 }
 
-export default withRouter(SearchTest);
-
+//export default withRouter(SearchTest);
+export default SearchTest;
 /** Does a .replace with regex for these rules: 
  * For the opening ', it could have either no characters before it, or whitespace.
  * Then another ' must be found after that one preceding either no characters, 
