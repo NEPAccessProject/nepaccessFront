@@ -1,17 +1,26 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
-import { BrowserRouter } from 'react-router-dom';
-
+import { createRoot } from 'react-dom/client';
+import { BrowserRouter, Route,Routes,HashRouter,useHistory,useLocation } from 'react-router-dom';
 import './index.css';
-
-import Main from './Main.js';
-
+import { createBrowserHistory } from 'history';
 import * as serviceWorker from './serviceWorker';
 
+import Main from './Main.js';
+const container = document.getElementById('app');
+const root = createRoot(document.getElementById('root'));
+const history = createBrowserHistory();
+console.log(`file: index.js:20 ~ history:`, history);
 
-ReactDOM.render(
+  history.listen(({ action, location }) => {
+    console.log(
+      `The current URL is ${location.pathname}${location.search}${location.hash}`
+    );
+    console.log(`The last navigation action was ${action}`);
+  });
+
+root.render(
     <BrowserRouter>
-        <Main />
+        <Main history={history} />
     </BrowserRouter>
     , document.getElementById('root')
 );
