@@ -45,7 +45,7 @@ body {
   z-index: 99999; /* Geojson map introduces some very high z-index items */
 
   /* background: #8FBC3F; */
-  background: #B6C4C8;
+  background: #ACBDC4;
 }
 
 /* Header contents */
@@ -214,7 +214,7 @@ body {
     /* left: calc(25vw + 10px); */
     margin-left: clamp(315px, calc(25vw + 15px), 390px); 
     min-width: 400px;
-    height: 52px;
+    height: 104px;
     top: 50px;
 }
 #main-menu>.main-menu-link:first-child{

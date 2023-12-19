@@ -75,20 +75,24 @@ export default class DownloadFiles extends React.Component {
 				},
 				responseType: 'blob',
 				onDownloadProgress: (progressEvent) => { // Show progress if available
-					const totalLength = progressEvent.lengthComputable ? progressEvent.total : progressEvent.target.getResponseHeader('content-length') || progressEvent.target.getResponseHeader('x-decompressed-content-length');
+//                    const progressEvent = evt;
+                    console.log(`DownloadFiles ~ progressEvent:`, progressEvent);
+
+					const totalLength = progressEvent.event.lengthComputable ? progressEvent.event.total : progressEvent.target.getResponseHeader('content-length') || progressEvent.event.target.getAllResponseHeaders('x-decompressed-content-length');
                     
 					if (totalLength !== null) { // Progress as percent, if we have total
 						this.setState({
-							progressValue: '('+Math.round((progressEvent.loaded * 100) / totalLength) + '% downloaded)'
+							progressValue: '('+Math.round((progressEvent.event.loaded * 100) / totalLength) + '% downloaded)'
 						});
                     } else if(progressEvent.loaded) { // Progress as MB
 						this.setState({
-							progressValue: '('+( Math.round(progressEvent.loaded / 1024 / 1024) ) + 'MB downloaded)'
+							progressValue: '('+( Math.round(progressEvent.event.loaded / 1024 / 1024) ) + 'MB downloaded)'
 						});
                     }
                     // else progress remains blank
 				}
 			}).then((response) => {
+			console.log(`DownloadFiles ~ response:`, response);
 
                 // Indicate download completed as file is saved/prompted save as (depending on browser settings)
                 if(response) {
@@ -153,8 +157,9 @@ export default class DownloadFiles extends React.Component {
                     id: filenameOrID
 				},
 				responseType: 'blob',
-				onDownloadProgress: (progressEvent) => { // Show progress if available
-					const totalLength = progressEvent.lengthComputable ? progressEvent.total : progressEvent.target.getResponseHeader('content-length') || progressEvent.target.getResponseHeader('x-decompressed-content-length');
+				onDownloadProgress: (evt) => { // Show progress if available
+                    const progressEvent = evt.event;
+                    const totalLength = progressEvent.lengthComputable ? progressEvent.total : progressEvent.target.getResponseHeader('content-length') || progressEvent.target.getResponseHeader('x-decompressed-content-length');
                     
                     if(isFolder && !_filename) { // multi-file case, archive filename needs to be extracted from header
                         // filename is surrounded by "quotes" so get that and remove those

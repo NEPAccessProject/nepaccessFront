@@ -119,7 +119,7 @@ class Main extends React.Component {
             }
         })
         .catch((err) => { // Token expired or invalid, or server is down
-            console.log(err);
+            console.error('Error Retrieving Role',err);
             if(err.message === "Network Error") {
                 // do nothing
             } else { // token problem
@@ -168,6 +168,7 @@ class Main extends React.Component {
     }
 
     refreshNav() {
+        console.log('REFRESHING NAVBAR');
         this.setState({
             loggedOutDisplay: 'display-none',
             loggedInDisplay: 'display-none'
@@ -194,13 +195,14 @@ class Main extends React.Component {
 
 
     componentDidUpdate(prevProps) {
-        // console.log("Main update");
+        console.log("Main Component update Previous PROPS: ", prevProps);
+        console.log("Main Component update Current PROPS: ", this.props);
         if (this.props.location !== prevProps.location) {
             this.onRouteChanged();
         }
     }
     onRouteChanged() {
-        // console.log("Route changed",this.props.location.pathname);
+        console.log("Route changed",this.props.location.pathname);
         this.setState({
             currentPage: this.props.location.pathname
         });

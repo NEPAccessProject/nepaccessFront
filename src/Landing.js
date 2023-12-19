@@ -44,7 +44,7 @@ class Landing extends React.Component {
                     <link rel="canonical" href="https://nepaccess.org/" />
                 </Helmet>
 
-                <div id="landing-images">
+                <div id="landing-images" style={{marginTop: '102px'}}>
                     <div id="headline" className="no-select cursor-default">
                         <div id="landing-headline-container">
                             <h1 id="landing-headline-left">

@@ -124,6 +124,7 @@ class Login extends React.Component {
                 method: 'POST', // or 'PUT'
                 url: checkURL
             }).then(response => {
+                console.log(`Login ~ response:`, response);
                 // console.log(response.data);
                 verified = response && response.status === 200;
                 // Logged in user hitting login with valid JWT should be redirected to search, or user should logout.
@@ -131,6 +132,7 @@ class Login extends React.Component {
                     this.props.history.push('/search');
                 }
             }).catch(error => { // JWT is invalid or missing, or server problem
+                console.error(`Login ~ error:`, error);
                 if (!error.response) { // If no response, should mean server is down
                     this.setState({
                         networkError: 'Error: Network Error'
@@ -163,6 +165,7 @@ class Login extends React.Component {
             url: loginUrl,
             data: this.state.user
         }).then(response => {
+            console.log(`Login ~ response:`, response);
             let responseOK = response && response.status === 200;
             if (responseOK) {
                 return response.data;
@@ -170,6 +173,7 @@ class Login extends React.Component {
                 return null;
             }
         }).then(jsonResponse => {
+            console.log(`Login ~ jsonResponse:`, jsonResponse);
             if(jsonResponse){
                 // if HTTP 200 (ok), save JWT, username, role and clear login
                 localStorage.JWT = jsonResponse.Authorization;
@@ -208,6 +212,7 @@ class Login extends React.Component {
             }
             this.setState({busy: false});
         }).catch(error => {
+            console.log(`Login ~ error:`, error);
             // TODO: Less brittle way to check error type
             if(error.toString() === 'Error: Network Error') {
                 this.setState({

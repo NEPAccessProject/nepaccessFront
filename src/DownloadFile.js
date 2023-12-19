@@ -74,7 +74,8 @@ export default class DownloadFile extends React.Component {
                     id: _id
 				},
 				responseType: 'blob',
-				onDownloadProgress: (progressEvent) => { // Show progress if available
+				onDownloadProgress: (evt) => { // Show progress if available
+                    const progressEvent = evt.event;
 					const totalLength = progressEvent.lengthComputable ? progressEvent.total : progressEvent.target.getResponseHeader('content-length') || progressEvent.target.getResponseHeader('x-decompressed-content-length');
                     
 					if (totalLength !== null) { // Progress as percent, if we have total
@@ -153,7 +154,9 @@ export default class DownloadFile extends React.Component {
                     id: filenameOrID
 				},
 				responseType: 'blob',
-				onDownloadProgress: (progressEvent) => { // Show progress if available
+				onDownloadProgress: (evt) => { // Show progress if available
+                    const progressEvent = evt.event;
+
 					const totalLength = progressEvent.lengthComputable ? progressEvent.total : progressEvent.target.getResponseHeader('content-length') || progressEvent.target.getResponseHeader('x-decompressed-content-length');
                     
                     if(isFolder && !_filename) { // multi-file case, archive filename needs to be extracted from header
