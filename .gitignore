@@ -41,4 +41,3 @@ src/NEPAccess frontend source/UserDetails.txt
 *.old
 *.old2
 src/NEPAccess.code-workspace
-**/.certs
