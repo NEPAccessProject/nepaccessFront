@@ -200,6 +200,7 @@ class Login extends React.Component {
                 
                 // TODO: Other logic than .push() for navigation?
                 this.props.history.push('/')
+                this.props.history.refresh();
                 // this.setState({
                 //     username: '',
                 //     password: ''
@@ -212,7 +213,7 @@ class Login extends React.Component {
             }
             this.setState({busy: false});
         }).catch(error => {
-            console.log(`Login ~ error:`, error);
+            console.error(`Failed to Login ~ error:`, error);
             // TODO: Less brittle way to check error type
             if(error.toString() === 'Error: Network Error') {
                 this.setState({
@@ -224,7 +225,6 @@ class Login extends React.Component {
                     passwordError: "Couldn't login with that username/password combination, please try again."
                 });
             }
-            console.error('error message', error);
             this.setState({busy: false});
         });
 
