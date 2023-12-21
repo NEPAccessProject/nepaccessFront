@@ -21,6 +21,7 @@ import persist from './persist.js';
 
 import { withRouter } from "react-router";
 import TippySearchTips from './TippySearchTips.js';
+import HelpIcon from '@mui/icons-material/Help';
 
 // import PropTypes from "prop-types";
 
@@ -73,6 +74,7 @@ class Search extends React.Component {
             typeROD: false,
             typeScoping: false,
             typeOther: false,
+            typeFast41: false,
             needsComments: false,
             needsDocument: false,
             optionsChecked: true,
@@ -584,6 +586,7 @@ class Search extends React.Component {
         this.get('stats/earliest_year','firstYear');
         this.get('stats/latest_year','lastYear');
         this.get('stats/eis_count','EISCount')
+        this.get('stats/fast41_count','Fast41Count')
     }
     get = (url, stateName) => {
         const _url = new URL(url, Globals.currentHost);
@@ -733,7 +736,7 @@ class Search extends React.Component {
             {value:"Project", label:"Project"},
             {value:"Legislative", label:"Legislative"}];
 
-        // const tooltipTitle = "<p class=tooltip-line><span class=bold>Search word connectors</span></p>"
+        // const tooltipTitle = "   p class=tooltip-line><span class=bold>Search word connectors</span></p>"
         // + "<p class=tooltip-line><span class=tooltip-connector>AND</span>This is the default. <span class=bold>All</span> words you enter must be found together to return a result.</p>"
         // + "<p class=tooltip-line><span class=tooltip-connector>OR</span> (all caps) to search for <span class=bold>any</span> of those words.</p>"
         // + "<p class=tooltip-line><span class=tooltip-connector>NOT</span> (all caps) to <span class=bold>exclude</span> a word or phrase.</p>"
@@ -1124,6 +1127,41 @@ class Search extends React.Component {
                         </div>
                         <div className="checkbox-container">
                             <label className="clickable checkbox-text">
+                                <input type="checkbox" name="typeScoping" className="sidebar-checkbox"
+                                        tabIndex="16"
+                                    checked={this.state.typeFast41} onChange={this.onTypeChecked} />
+                                <span className="checkbox-text">Scoping Report <i>{this.props.fast41Count}</i></span>
+                            </label>
+                        </div>
+                        <div className="checkbox-container">
+                            <label className="clickable checkbox-text">
+                                <input type="checkbox" name="typeFast41" className="sidebar-checkbox"
+                                        tabIndex="12"
+                                        checked={this.state.typeFast41} onChange={this.onTypeChecked} />
+                                <span className="checkbox-text">Fast-41 <i>{this.props.fast41Count}</i></span>
+                            </label>
+                            <Tippy className="tippy-tooltip--small searchTips" trigger='manual click' 
+                                        hideOnClick={true}
+                                        interactive={true}
+                                        placement="bottom"
+                                        content={
+                                            <div>
+                                                Currently the site contains <b>{this.state.EISCount}</b> Draft or Final Environmental Impact Statements 
+                                                from: <b>{this.state.firstYear}-{this.state.lastYear}</b>. 
+                                                More files are being added continuously.
+                                                <div className="text-center margin-top">
+                                                    <a href="available-documents" target="_blank" rel="noopener noreferrer">Available files</a>
+                                                </div>
+                                            </div>}
+                                        >
+                                        {<span className={"side-link inline"}>
+                                          <HelpIcon fontSize='small' />
+                                        </span>}
+                                    </Tippy>
+                        </div>
+
+                        <div className="checkbox-container">
+                            <label className="clickable checkbox-text">
                                 <input type="checkbox" name="typeFinal" className="sidebar-checkbox"
                                         tabIndex="12"
                                         checked={this.state.typeFinal} onChange={this.onTypeChecked} />
@@ -1152,14 +1190,6 @@ class Search extends React.Component {
                                         tabIndex="15"
                                     checked={this.state.typeROD} onChange={this.onTypeChecked} />
                                 <span className="checkbox-text">ROD <i>{this.props.rodCount}</i></span>
-                            </label>
-                        </div>
-                        <div className="checkbox-container">
-                            <label className="clickable checkbox-text">
-                                <input type="checkbox" name="typeScoping" className="sidebar-checkbox"
-                                        tabIndex="16"
-                                    checked={this.state.typeScoping} onChange={this.onTypeChecked} />
-                                <span className="checkbox-text">Scoping Report <i>{this.props.scopingCount}</i></span>
                             </label>
                         </div>
                     </div>
