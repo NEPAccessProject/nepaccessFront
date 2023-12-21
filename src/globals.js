@@ -68,11 +68,15 @@ const Globals = {
     
     // Set up globals like axios default headers and base URL
     setUp() {
-        if(window.location.hostname === 'localhost' || window.location.protocol  === "https:") {
+        console.log('SETUP WITH WINDOW',window);
+        if(window.location.hostname === 'localhost' &&  window.location.protocol  === "https:") {
             this.currentHost = new URL('https://bighorn.sbs.arizona.edu:8443/nepaBackend/');
-        } else if(window.location.protocol  === "http:") {
-            this.currentHost = new URL(window.location.protocol + window.location.hostname + ':8080/');
-        } 
+        } else if(window.location.hostname === 'localhost' &&  window.location.protocol  === "http:") {
+            this.currentHost = new URL('http://localhost:8080/');
+        }
+        else{
+            this.currentHost = new URL('https://bighorn.sbs.arizona.edu:8443/nepaBackend/');            
+        }
 
         // else if(window.location.hostname) {
         //     this.currentHost = new URL('https://' + window.location.hostname + ':8080/');
