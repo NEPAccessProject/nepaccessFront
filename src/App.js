@@ -27,7 +27,8 @@ export default class App extends React.Component {
 			state: [],
 			needsComments: false,
 			needsDocument: false,
-            limit: 1000000
+            limit: 1000000,
+            isFast41: false,
 		},
         searchResults: [],
         outputResults: [],
@@ -94,6 +95,7 @@ export default class App extends React.Component {
        this._noiCount = "";
        this._rodCount = "";
        this._scopingCount = "";
+       this._fast41Count = 0;
     }
 
     optionsChanged = (val) => {
@@ -131,6 +133,9 @@ export default class App extends React.Component {
                 }
                 else if(matchesRod(item.documentType)) {
                     rods++;
+                }
+                else if(matchesFast41(item.documentType)) {
+                    this._fast41Count++;
                 }
                 else if(matchesScoping(item.documentType)) {
                     scopings++;
@@ -397,7 +402,6 @@ export default class App extends React.Component {
             if(!processResults[key].state) {
                 processResults[key].state = datum.state;
             }
-
             // titles change, which makes everything harder.
             // This logic just assigns the first final type's title as the title.
             // if(!processResults[key].title) {
@@ -534,7 +538,7 @@ export default class App extends React.Component {
                     typeDraft: this.state.searcherInputs.typeDraft,
                     typeOther: this.state.searcherInputs.typeOther,
                     needsComments: this.state.searcherInputs.needsComments,
-                    needsDocument: this.state.searcherInputs.needsDocument
+                    needsDocument: this.state.searcherInputs.needsDocument,
                 };
             }
 
@@ -620,7 +624,6 @@ export default class App extends React.Component {
                             
                             action: doc.action,
                             decision: doc.decision,
-
                             relevance: idx + 1 // sort puts "falsy" values at the bottom incl. 0
                         };
                         return newObject;
@@ -736,7 +739,8 @@ export default class App extends React.Component {
                 typeDraft: this.state.searcherInputs.typeDraft,
                 typeOther: this.state.searcherInputs.typeOther,
                 needsComments: this.state.searcherInputs.needsComments,
-                needsDocument: this.state.searcherInputs.needsDocument
+                needsDocument: this.state.searcherInputs.needsDocument,
+                fast41: this.state.searcherInputs.fast41,
             };
         }
 
@@ -1588,6 +1592,7 @@ export default class App extends React.Component {
                         noiCount={this._noiCount}
                         rodCount={this._rodCount}
                         scopingCount={this._scopingCount}
+                        fast41Count={this._fast41Count}
                     />
                     <SearchProcessResults 
                         sort={this.sort}
@@ -1699,7 +1704,11 @@ function matchesNOI(docType) {
     return (
         (docType.toLowerCase() === "noi") );
 }
-
+function matchesFast41(docType) {
+    return (
+        (docType.toLowerCase().includes("fast41")) 
+    );
+}
 /** Return modified terms for user to see */
 function preProcessTerms(terms) {
     return terms;
