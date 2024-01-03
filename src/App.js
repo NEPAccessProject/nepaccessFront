@@ -293,6 +293,7 @@ export default class App extends React.Component {
     /** Assign any existing highlights from the first-page highlight pass, which is now done before full record population */
     mergeHighlights = (data) => {
         // console.log("Merge highlights",data, this.state.searchResults);
+        Globals.emitEvent('merge_highlights', data);
         if(!this.state.searchResults || !this.state.searchResults[0]) {
             // console.log("Nothing here yet");
             return data;
@@ -499,8 +500,6 @@ export default class App extends React.Component {
 		}, () => {
             // title-only
             let searchUrl = new URL('text/search', Globals.currentHost);
-
-            
             // For the new search logic, the idea is that the limit and offset are only for the text
             // fragments.  The first search should get all of the results, without context.
             // We'll need to consolidate them in the frontend and also ask for text fragments and assign them

@@ -8,6 +8,7 @@ import { ReactTabulator } from 'react-tabulator';
 import { reactFormatter } from "react-tabulator";
 import 'react-tabulator/lib/styles.css'; // required styles
 import 'react-tabulator/lib/css/tabulator_site.min.css'; // theme
+import PropTypes from 'prop-types';
 
 import './card.css';
 

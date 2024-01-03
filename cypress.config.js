@@ -1,7 +1,5 @@
 const { defineConfig } = require("cypress");
-const webpackPreprocessor = require('@cypress/webpack-preprocessor');
-const { startDevServer } = require('@cypress/webpack-dev-server');
-const webpackDevServerConfig = require('@cypress/webpack-dev-server/dist/webpack-dev-server.config.js');
+const HtmlWebPackPlugin = require("html-webpack-plugin");
 
 module.exports = defineConfig({
   projectId: "7x4r9s",
@@ -13,13 +11,18 @@ module.exports = defineConfig({
   screenshotOnRunFailure: true,
   screenshotsFolder: "cypress/screenshots",
   videosFolder: "cypress/videos",
+
   e2e: {
-    baseUrl: "https://localhost:3000/",
-    //specPattern: "cypress/e2e/*.{js,jsx}",
-    testIsolation: true,
     setupNodeEvents(on, config) {
-      console.log('Cypress e2e config', config)
+      console.log("Cypress e2e config", config);
       // implement node event listeners here
     },
-  }
+  },
+
+  component: {
+    devServer: {
+      framework: "create-react-app",
+      bundler: "webpack",
+    },
+  },
 });

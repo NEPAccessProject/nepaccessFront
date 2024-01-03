@@ -7,6 +7,7 @@ import DownloadFile from './DownloadFile.js';
 import DownloadFiles from './DownloadFiles';
 
 import Tippy from '@tippyjs/react'
+import PropTypes from 'prop-types';
 
 // TODO: Filtering results etc. rerenders and loses track of downloads
 

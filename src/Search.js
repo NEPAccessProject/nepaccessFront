@@ -22,7 +22,7 @@ import persist from './persist.js';
 import { withRouter } from "react-router";
 import TippySearchTips from './TippySearchTips.js';
 import HelpIcon from '@mui/icons-material/Help';
-
+import PropTypes from 'prop-types';
 // import PropTypes from "prop-types";
 
 const _ = require('lodash');

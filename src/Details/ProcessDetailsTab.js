@@ -9,6 +9,7 @@ import Chart from './Chart.js';
 
 import Globals from '../globals.js';
 import DownloadFiles from '../DownloadFiles.js';
+import PropTypes from 'prop-types';
 
 // TODO: Get all data for all records for process (needs new backend route)
 // buildProcess() gets all metadata for process ID.  Move that to the ?id= param and give it the process ID from the results
