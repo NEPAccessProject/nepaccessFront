@@ -16,19 +16,19 @@ import './card.css';
 const options = {
     // maxHeight: "100%",           // for limiting table height
     // layoutColumnsOnNewData: true,
-    selectable:false,
-    tooltips:false,
+    selectable: false,
+    tooltips: false,
     // responsiveLayout:"collapse",    //collapse columns that dont fit on the table
     // responsiveLayoutCollapseUseFormatters:false,
-    pagination:"local",             //paginate the data
-    paginationSize:10,              //allow 10 rows per page of data
-    paginationSizeSelector:[10, 25, 50], // with all the text, even 50 is a lot.
-    movableColumns:false,            //don't allow column order to be changed
-    resizableRows:false,             
-    resizableColumns:false,
-    layout:"fitColumns",
-    invalidOptionWarnings:false, // spams warnings without this
-    footerElement:("<span class=\"tabulator-paginator-replacer\"><label>Results Per Page:</label></span>")
+    pagination: "local",             //paginate the data
+    paginationSize: 10,              //allow 10 rows per page of data
+    paginationSizeSelector: [10, 25, 50], // with all the text, even 50 is a lot.
+    movableColumns: false,            //don't allow column order to be changed
+    resizableRows: false,
+    resizableColumns: false,
+    layout: "fitColumns",
+    invalidOptionWarnings: false, // spams warnings without this
+    footerElement: ("<span class=\"tabulator-paginator-replacer\"><label>Results Per Page:</label></span>")
 };
 
 
@@ -47,19 +47,20 @@ class SearchResults extends React.Component {
         }
         this.my_table = React.createRef();
         window.addEventListener('resize', this.handleResize);
-        
+
         this._columns = [
-            { title: "", field: "", formatter: reactFormatter(
+            {
+                title: "", field: "", formatter: reactFormatter(
                     <SearchResult show={this.state.showContext}
-                                saveDownloaded={this.saveDownloaded}
-                                checkDownloaded={this.checkDownloaded} 
-                                hideText={this.hideText}
-                                hidden={this.hide} />
+                        saveDownloaded={this.saveDownloaded}
+                        checkDownloaded={this.checkDownloaded}
+                        hideText={this.hideText}
+                        hidden={this.hide} />
                 )
             }
         ];
     }
-    
+
     page = 1;
 
     hide = (props) => {
@@ -68,19 +69,19 @@ class SearchResults extends React.Component {
     }
 
     hideText = (id) => {
-        if(this.hidden.has(id)) {
+        if (this.hidden.has(id)) {
             this.hidden.delete(id);
-            this.setState({hidden: this.hidden});
+            this.setState({ hidden: this.hidden });
         } else {
             this.hidden.add(id);
-            this.setState({hidden: this.hidden});
+            this.setState({ hidden: this.hidden });
         }
     }
 
     /**Giving up on this again for now.  A ton of work would be required to have this AND:
     * automatic result population 
     * mid-search filtering
-    * mid-search sorting*/ 
+    * mid-search sorting*/
     // shouldComponentUpdate(nextProps, nextState) {
     //     // console.log("Next state",nextState);
     //     // console.log("Inc props",nextProps);
@@ -97,7 +98,7 @@ class SearchResults extends React.Component {
     //         return false;
     //     }
     // }
-    
+
     // Table needs help to resize its cells if window is resized
     handleResize = () => {
         this.setState({
@@ -105,12 +106,12 @@ class SearchResults extends React.Component {
             width: window.innerWidth
         });
     }
-    
+
     onPageLoaded = (pageNumber) => {
-        if(this.page !== pageNumber){
+        if (this.page !== pageNumber) {
             // console.log("#",pageNumber);
             this.page = pageNumber;
-            
+
             // Scrolling is done by footer at the bottom, so when scrolling pages (of variable height)
             // this will keep the user at the bottom of the page, using a referenced div
             // const pageChanged = this.props.pageChanged;
@@ -124,7 +125,7 @@ class SearchResults extends React.Component {
                 // const scroll = this.props.scrollToBottom;
                 // scroll(currentPageRows);
                 this.props.scrollToTop();
-            } catch(e) {
+            } catch (e) {
                 console.error(e);
                 // do nothing
             }
@@ -137,14 +138,14 @@ class SearchResults extends React.Component {
     }
 
     onClearFiltersClick = (e) => {
-        if(this.my_table && this.my_table.current){
+        if (this.my_table && this.my_table.current) {
             const tbltr = this.my_table.current;
             tbltr.table.clearFilter(true);
         }
     }
-    
+
     onCheckboxChange = (evt) => {
-        this.setState({ 
+        this.setState({
             showContext: evt.target.checked
         });
     }
@@ -152,21 +153,23 @@ class SearchResults extends React.Component {
     // resetSort = () => {
     //     this.my_table.current.table.setData(this.props.results);
     // }
-    
+
     updateTable = () => {
         try {
             // Tried to use this to make things better but it seemed to make them worse
             // this.my_table.current.table.blockRedraw();
 
             let _columns = [];
-            if(this.props.results && this.props.results[0]){
+            if (this.props.results && this.props.results[0]) {
                 _columns = [
-                    { title: "", field: "", formatter: reactFormatter(<SearchResult 
-                        show={this.state.showContext} 
-                        saveDownloaded={this.saveDownloaded}
-                        checkDownloaded={this.checkDownloaded} 
-                        hideText={this.hideText}
-                        hidden={this.hide} />)}
+                    {
+                        title: "", field: "", formatter: reactFormatter(<SearchResult
+                            show={this.state.showContext}
+                            saveDownloaded={this.saveDownloaded}
+                            checkDownloaded={this.checkDownloaded}
+                            hideText={this.hideText}
+                            hidden={this.hide} />)
+                    }
                 ];
             }
             this.my_table.current.table.setColumns(_columns); // needed for text snippets show/hide
@@ -188,8 +191,8 @@ class SearchResults extends React.Component {
         return this.downloaded[_name];
     }
 
-	render() {
-        if(this.props.results && this.props.results.length > 0) {
+    render() {
+        if (this.props.results && this.props.results.length > 0) {
 
         }
         else {
@@ -199,7 +202,7 @@ class SearchResults extends React.Component {
              * simultaneously have 100 props.results
              * After a search we won't hit this logic because we'll have props.results
              */
-            if(this.props.resultsText && this.props.resultsText!=="Results") {
+            if (this.props.resultsText && this.props.resultsText !== "Results") {
                 return (
                     <div className="sidebar-results">
                         <div id="search-results">
@@ -217,7 +220,7 @@ class SearchResults extends React.Component {
                 );
             }
         }
-        
+
         try {
             // let data = this.setupData(results);
             // let columns = this.setupColumns();
@@ -230,15 +233,15 @@ class SearchResults extends React.Component {
                 <div className="sidebar-results">
                     <div id="search-results">
                         <div className="tabulator-holder">
-                            <ResultsHeader 
+                            <ResultsHeader
                                 sort={this.props.sort}
-                                resultsText={this.props.resultsText} 
+                                resultsText={this.props.resultsText}
                                 searching={this.props.searching}
-                                snippetsDisabled={this.props.snippetsDisabled} 
+                                snippetsDisabled={this.props.snippetsDisabled}
                                 showContext={this.state.showContext}
                                 onCheckboxChange={this.onCheckboxChange}
                                 download={this.props.download}
-                                // page={this.state.page}
+                            // page={this.state.page}
                             />
                             {/* <button className="link margin" onClick={() => this.onClearFiltersClick()}>Clear filters</button> */}
                             <ReactTabulator
@@ -254,11 +257,11 @@ class SearchResults extends React.Component {
             );
         }
         catch (e) {
-            if(e instanceof TypeError){
-                console.error("TypeError",e);
+            if (e instanceof TypeError) {
+                console.error("TypeError", e);
                 // expected problem with Tabulator trying to render new results before it switches to new column definitions
             } else {
-                console.error("Other",e);
+                console.error("Other", e);
             }
             /** Wishlist: Put the most relevant error message in here */
             return (
@@ -268,14 +271,14 @@ class SearchResults extends React.Component {
             )
         }
     }
-    
+
     // TODO: Preserve scroll position on rerender/redraw if possible
     componentDidUpdate() {
         console.log("Results Updated");
         /** setTimeout with 0ms activates at the end of the Event Loop, redrawing the table and thus fixing the text wrapping.
          * Does not work when simply fired on componentDidUpdate().
          */
-        if(this.my_table && this.my_table.current){
+        if (this.my_table && this.my_table.current) {
             // console.log("Updating data and columns");
             // console.log(this.props);
             this.updateTable();
@@ -285,15 +288,15 @@ class SearchResults extends React.Component {
             // card height can't figure itself out precisely without a redraw so for now we disable 
             // this check: even while more results are loading, first page will redraw and look good
             // if(!this.props.searching){ 
-                try {
-                    const tbltr = this.my_table.current;
-                    setTimeout(function() {
-                        tbltr.table.redraw(true);
-                        // console.log("Redrawn");
-                    },0)
-                } catch(e) {
-                    console.error("Redraw error",e);
-                }
+            try {
+                const tbltr = this.my_table.current;
+                setTimeout(function () {
+                    tbltr.table.redraw(true);
+                    // console.log("Redrawn");
+                }, 0)
+            } catch (e) {
+                console.error("Redraw error", e);
+            }
             // }
 
             // tbltr.table.restoreRedraw();
@@ -301,5 +304,11 @@ class SearchResults extends React.Component {
 
     }
 }
-
+SearchResult.propTypes = {
+    show: PropTypes.bool,
+    saveDownloaded: PropTypes.func,
+    checkDownloaded: PropTypes.func,
+    hideText: PropTypes.func,
+    hidden: PropTypes.func,
+}
 export default SearchResults;

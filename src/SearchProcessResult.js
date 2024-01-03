@@ -424,4 +424,35 @@ export default class SearchProcessResult extends React.Component {
     // componentDidUpdate() {
     //     console.log("*****UPDATE*****");
     // }
+
 }
+SearchProcessResult.propTypes = {
+    cell: PropTypes.shape({
+      _cell: PropTypes.shape({
+        row: PropTypes.shape({
+          data: PropTypes.shape({
+            action: PropTypes.string,
+            agency: PropTypes.string,
+            county: PropTypes.string,
+            decision: PropTypes.string,
+            processId: PropTypes.string,
+            state: PropTypes.string,
+            title: PropTypes.string,
+            records: PropTypes.arrayOf(
+              PropTypes.shape({
+                id: PropTypes.string,
+                registerDate: PropTypes.string,
+                documentType: PropTypes.string,
+                name: PropTypes.string,
+                size: PropTypes.number,
+                plaintext: PropTypes.arrayOf(PropTypes.string),
+              })
+            ),
+          })
+        })
+      })
+    }),
+    hidden: PropTypes.func,
+    hideText: PropTypes.func,
+    show: PropTypes.bool,
+  };

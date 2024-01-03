@@ -605,3 +605,32 @@ function parentWidth(elem) {
         return 400;
     }
 }
+ProcessDetailsTab.propTypes = {
+    detailsID: PropTypes.number,
+    exists: PropTypes.bool,
+    hasGeojson: PropTypes.bool,
+    hasGeojson: PropTypes.func,
+    interpretProcess: PropTypes.func,
+    logInteraction: PropTypes.func,
+    onChange: PropTypes.func,
+    otherTitles: PropTypes.array,
+    parentWidth: PropTypes.func,
+    populate: PropTypes.func,
+    processId: PropTypes.number,
+    renderDownload: PropTypes.func,
+    reportText: PropTypes.string,
+    showDataIssueLink: PropTypes.func,
+    showDetails: PropTypes.func,
+    showFilesNew: PropTypes.func,
+    showFilesNew: PropTypes.func,
+    showMap: PropTypes.func,
+    showMore: PropTypes.array,
+    showMoreToggle: PropTypes.func,
+    showOtherTitles: PropTypes.func,
+    showRecordLine: PropTypes.func,
+    showRecordLine: PropTypes.func,
+    showTimeline: PropTypes.func,
+    showTitle: PropTypes.func,
+    width: PropTypes.number,
+  }
+

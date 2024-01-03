@@ -345,7 +345,44 @@ export default class SearchProcessResults extends React.Component {
         this.updateTableDebounced();
     }
 }
-
+SearchResultsMap.propTypes = {
+    docList: PropTypes.array,
+    results: PropTypes.array,
+    toggleMapHide: PropTypes.func,
+    isHidden: PropTypes.bool,
+    searcherState: PropTypes.object,
+  };
+  
+  SearchProcessResult.propTypes = {
+    cell: PropTypes.shape({
+      _cell: PropTypes.shape({
+        row: PropTypes.shape({
+          data: PropTypes.shape({
+            processId: PropTypes.string,
+            title: PropTypes.string,
+            agency: PropTypes.string,
+            state: PropTypes.string,
+            county: PropTypes.string,
+            action: PropTypes.string,
+            decision: PropTypes.string,
+            records: PropTypes.arrayOf(
+              PropTypes.shape({
+                id: PropTypes.string,
+                registerDate: PropTypes.string,
+                documentType: PropTypes.string,
+                name: PropTypes.string,
+                size: PropTypes.number,
+                plaintext: PropTypes.arrayOf(PropTypes.string),
+              })
+            ),
+          })
+        })
+      })
+    }),
+    hidden: PropTypes.func,
+    hideText: PropTypes.func,
+    show: PropTypes.bool,
+  };
 // function uuidv4() {
 //     let returnVal = ([1e7]+-1e3+-4e3+-8e3+-1e11).replace(/[018]/g, c =>
 //         (c ^ crypto.getRandomValues(new Uint8Array(1))[0] & 15 >> c / 4).toString(16)
