@@ -35,6 +35,7 @@
     "axios": "^1.6.2",
     "chart.js": "^2.9.4",
     "cypress": "^13.6.2",
+    "cypress-react-unit-test": "^4.17.2",
     "d3": "^3.5.17",
     "dayjs": "^1.11.8",
     "dotenv": "^16.3.1",
@@ -90,6 +91,7 @@
     "eslint-plugin-react": "^7.33.2",
     "eslint-plugin-react-hooks": "^4.3.0",
     "flow-bin": "^0.218.1",
+    "html-webpack-plugin": "^5.6.0",
     "prop-types": "15.8.1",
     "webpack": "5.88.1"
   },
@@ -101,10 +103,10 @@
     "fix": "eslint --fix",
     "lint": "./node_modules/.bin/eslint",
     "serve": "serve build -l 8000",
-    "cypress:open": "cypress open",
+    "cypress": "cypress open",
     "cypress:run": "cypress run",
     "cypress:record": "cypress run --record --key a42c44b4-bbb3-40c5-9605-22fc2bedb05f",
-    "cypress": "npx wait-on https://localhost:3000/ && npx cypress run"
+    "cypress:localhost": "npx wait-on https://localhost:3000/ && npx cypress run"
   },
   "browserslist": {
     "production": [
