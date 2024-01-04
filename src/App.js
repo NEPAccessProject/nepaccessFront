@@ -13,12 +13,12 @@ import './User/login.css';
 
 import Globals from './globals.js';
 import persist from './persist.js';
+import PropTypes from 'prop-types';
 
 const _ = require('lodash');
 
 /** For testing redesigned, consolidated search which is in progress */
 export default class App extends React.Component {
-
 	state = {
 		searcherInputs: {
 			startPublish: '',
@@ -1684,6 +1684,18 @@ export default class App extends React.Component {
     }
 	
 }
+
+App.propTypes = {
+  docType: PropTypes.string,
+  terms: PropTypes.string,
+  matchesEa: PropTypes.func,
+  matchesRod: PropTypes.func,
+  matchesScoping: PropTypes.func,
+  matchesNOI: PropTypes.func,
+  matchesFast41: PropTypes.func,
+  preProcessTerms: PropTypes.func,
+  postProcessTerms: PropTypes.func,
+};
 
 function matchesEa(docType) {
     return (
