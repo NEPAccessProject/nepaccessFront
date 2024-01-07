@@ -14,9 +14,17 @@ describe('template spec', () => {
   
   })
   it('Gets Search Result Details', () => {
-    cy.visit('https://localhost:3000/record-details?id=17704');
+    cy.visit('https://wwww.nepaccess.org/record-details?id=17704');
     cy.wait(5000);
     cy.get('span.record-details-title').should('contain', 'I-35');
 
   })
+
+  it('Shouls display the search page correctly', () => {
+    cy.visit('https://www.nepaccess.org/search?q=test');
+    cy.wait(5000);
+    cy.get('H2#results-label').contains('Results');
+    cy.compareSnapshot('login', 0.0);
+    cy.compareSnapshot('login', 0.1);
+  });
 });
