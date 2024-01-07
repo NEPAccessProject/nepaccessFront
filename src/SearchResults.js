@@ -305,7 +305,7 @@ class SearchResults extends React.Component {
 
     }
 }
-SearchResult.propTypes = {
+SearchResult.PropTypes = {
     show: PropTypes.bool,
     saveDownloaded: PropTypes.func,
     checkDownloaded: PropTypes.func,

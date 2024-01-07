@@ -39,6 +39,7 @@ export default class ProcessDetailsTab extends React.Component {
         }
         
         window.addEventListener('resize', this.handleResize);
+        console.log('ProcessDetailsTab constructor props',this.props);
     }
 
     handleResize = () => {
@@ -606,7 +607,7 @@ function parentWidth(elem) {
         return 400;
     }
 }
-ProcessDetailsTab.propTypes = {
+ProcessDetailsTab.PropTypes = {
     detailsID: PropTypes.number,
     exists: PropTypes.bool,
     hasGeojson: PropTypes.bool,

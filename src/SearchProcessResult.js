@@ -427,7 +427,7 @@ export default class SearchProcessResult extends React.Component {
     // }
 
 }
-SearchProcessResult.propTypes = {
+SearchProcessResult.PropTypes = {
     cell: PropTypes.shape({
       _cell: PropTypes.shape({
         row: PropTypes.shape({

@@ -11,8 +11,8 @@ import { ReactTabulator } from 'react-tabulator';
 import { reactFormatter } from "react-tabulator";
 import 'react-tabulator/lib/styles.css'; // required styles
 import 'react-tabulator/lib/css/tabulator_site.min.css'; // theme
-
-import Tippy from '@tippyjs/react';
+import PropTypes from 'prop-types';
+ import Tippy from '@tippyjs/react';
 
 import './loader.css';
 
@@ -71,6 +71,9 @@ export default class SearchProcessResults extends React.Component {
 
         this.updateTableDebounced = _.debounce(this.updateTable, 0);
         this.doneRenderDebounced = _.debounce(this.doneRender, 0);
+        console.log("SearchProcessResults PROPS",JSON.stringify(this.props));
+        console.log("SearchProcessResults PROPS",this.props);
+        console.log("SearchProcessResults PROPS.RESULTS",this.props.results);
     }
     
     resetHidden = () => {
@@ -246,7 +249,6 @@ export default class SearchProcessResults extends React.Component {
                 <div className="sidebar-results" style={this.getCorrectResultsStyle()}>
 
                     <div id="process-results">
-
                         <div className="tabulator-holder">
 
                             <div className="results-count-holder">
@@ -345,7 +347,7 @@ export default class SearchProcessResults extends React.Component {
         this.updateTableDebounced();
     }
 }
-SearchResultsMap.propTypes = {
+SearchResultsMap.PropTypes = {
     docList: PropTypes.array,
     results: PropTypes.array,
     toggleMapHide: PropTypes.func,
@@ -353,7 +355,7 @@ SearchResultsMap.propTypes = {
     searcherState: PropTypes.object,
   };
   
-  SearchProcessResult.propTypes = {
+  SearchProcessResult.PropTypes = {
     cell: PropTypes.shape({
       _cell: PropTypes.shape({
         row: PropTypes.shape({

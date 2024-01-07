@@ -1685,7 +1685,7 @@ export default class App extends React.Component {
 	
 }
 
-App.propTypes = {
+App.PropTypes = {
   docType: PropTypes.string,
   terms: PropTypes.string,
   matchesEa: PropTypes.func,
