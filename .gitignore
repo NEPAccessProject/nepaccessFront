@@ -41,3 +41,7 @@ src/NEPAccess frontend source/UserDetails.txt
 *.old
 *.old2
 src/NEPAccess.code-workspace
+**cypress/videos/**
+**cypress/screenshots/**
+*.mp4
+**/cypress/*.png
