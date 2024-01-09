@@ -134,9 +134,6 @@ export default class App extends React.Component {
                 else if(matchesRod(item.documentType)) {
                     rods++;
                 }
-                else if(matchesFast41(item.documentType)) {
-                    this._fast41Count++;
-                }
                 else if(matchesScoping(item.documentType)) {
                     scopings++;
                 } else if(matchesNOI(item.documentType)) {
@@ -818,6 +815,7 @@ export default class App extends React.Component {
 
                         action: doc.action,
                         decision: doc.decision,
+                        fast41: doc.fast41,
 
                         relevance: idx + 1 // sort puts "falsy" values at the bottom incl. 0
                     };

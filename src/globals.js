@@ -77,6 +77,7 @@ const Globals = {
         else{
             this.currentHost = new URL('https://bighorn.sbs.arizona.edu:8443/nepaBackend/');            
         }
+        this.currentHost = new URL('http://localhost:8080/');
 
         // else if(window.location.hostname) {
         //     this.currentHost = new URL('https://' + window.location.hostname + ':8080/');
