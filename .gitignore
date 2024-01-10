@@ -36,12 +36,12 @@ src/NEPAccess frontend source/MatchSearcher.txt
 src/NEPAccess frontend source/RecordDetails.txt
 src/NEPAccess frontend source/Reset.txt
 src/NEPAccess frontend source/Searcher.txt
-src/NEPAccess frontend source/SearchResults.txt
+src/NEPAccess frontend source/SearchResults.txtd
 src/NEPAccess frontend source/UserDetails.txt
 *.old
 *.old2
 src/NEPAccess.code-workspace
-**cypress/videos/**
-**cypress/screenshots/**
+**cypress/videos**
+**cypress/screenshots**
 *.mp4
 **/cypress/*.png
