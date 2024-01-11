@@ -1,13 +1,16 @@
 import React from 'react';
 import { createRoot } from 'react-dom/client';
 import { BrowserRouter, Route,Routes,HashRouter,useHistory,useLocation } from 'react-router-dom';
+
 import './index.css';
 import { createBrowserHistory } from 'history';
 import * as serviceWorker from './serviceWorker';
 
 import Main from './Main.js';
-const container = document.getElementById('app');
-const root = createRoot(document.getElementById('root'));
+const container = document.getElementById('root');
+console.log(`file: index.js:20 ~ container:`, container);
+const root = createRoot(container);
+console.log(`file: index.js:20 ~ root:`, root);
 const history = createBrowserHistory();
 console.log(`file: index.js:20 ~ history:`, history);
 
@@ -22,7 +25,6 @@ root.render(
     <BrowserRouter>
         <Main history={history} />
     </BrowserRouter>
-    , document.getElementById('root')
 );
 
 
