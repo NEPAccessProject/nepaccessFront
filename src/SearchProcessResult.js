@@ -9,6 +9,8 @@ import DownloadFiles from './DownloadFiles';
 import Tippy from '@tippyjs/react'
 import PropTypes from 'prop-types';
 import CheckIcon from '@mui/icons-material/Check';
+import { VerticalAlignBottom } from '@material-ui/icons';
+import { Grid, Container, Box, Typography } from '@mui/material';
 // TODO: Filtering results etc. rerenders and loses track of downloads
 
 export default class SearchProcessResult extends React.Component {
@@ -363,20 +365,25 @@ export default class SearchProcessResult extends React.Component {
     }
 
     showFast41 = () => {
-        console.log('MATCHES FAST 41', this.props.cell._cell.row.data.records);
-        //10.192.196.55
         let records = this.props.cell._cell.row.data.records
         let match = false
+        //If we find any records under the document that has isFast41 set to true, then the whole document and it's records are assumed to be a fast41 project
         records.map((record) => {
             match = true
         })
-        if(match){
+        if (match) {
             return (
-                <span>
-                    <span className="cardHeader">
-                    Fast 41:<span><CheckIcon variant="small" color="primary" /></span>
-                    </span>
-                </span>
+                <>
+
+                    <Box item xs={12} flex={1} sx={{
+                    }}>
+                        Fast41 ?
+                        <CheckIcon color='primary' sx={{
+                            padding: 0,
+                            margin: 0
+                        }} className="fast41-icon" />
+                    </Box>
+                </>
             );
         }
     }
@@ -406,6 +413,13 @@ export default class SearchProcessResult extends React.Component {
             results={_results} />);
     }
 
+    gridItemStyle = {
+        display: 'flex',
+        alignContent: 'flex-start',
+        justifyContent: 'flex-start',
+        margin: 0,
+        padding: 0.5
+    }
 
 
     render() {
@@ -418,27 +432,25 @@ export default class SearchProcessResult extends React.Component {
         }
 
         return (
-            <div className="table-holder" key={_key}>
-                <div className="">
-                    <div className="table-like">
-                        <div className="table-row cardTitle">
-                            {this.showTitle()}
-                        </div>
-                        <div className="table-meta">
-                            {this.showAgency()}
-                            {this.showState()}
-                            {this.showCounty()}
-                            {this.showAction()}
-                            {this.showDecision()}
-                            {this.showFast41()}
-
-                        </div>
-                    </div>
-                    <div className="records">
-                        {this.showRecords()}
-                    </div>
-                </div>
+        
+        <Box className="table-like">
+            <div className="table-row cardTitle">
+                {this.showTitle()}
             </div>
+
+            <Box display={'flex'}>
+                <Box style={this.gridItemStyle}>{this.showAgency()}</Box>
+                <Box style={this.gridItemStyle}>{this.showAgency()}</Box>
+                <Box style={this.gridItemStyle}>{this.showAgency()}</Box>
+                <Box style={this.gridItemStyle}>{this.showCounty()}</Box>
+                <Box style={this.gridItemStyle}>{this.showAction()}</Box>
+                <Box style={this.gridItemStyle}>{this.showState()}</Box>
+                <Box style={this.gridItemStyle}>{this.showDecision()}</Box>
+                <Box style={this.gridItemStyle}> {this.showFast41()}</Box>
+            </Box>
+            <div className='records'>{this.showRecords()}</div>
+        </Box>
+
         );
     }
 

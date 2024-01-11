@@ -77,6 +77,10 @@ const Globals = {
         } else if (window.location.hostname === 'localhost' && window.location.protocol === "http:") {
             this.currentHost = new URL('http://localhost:8080/');
         }
+        else if(window.location.hostname.includes('vercel')) {
+            //used when deployed to vercel
+            this.currentHost = new URL('https://bighorn.sbs.arizona.edu:8443/nepaBackend/');
+        }
         else {
             this.currentHost = new URL('https://bighorn.sbs.arizona.edu:8443/nepaBackend/');
         }
