@@ -45,3 +45,4 @@ src/NEPAccess.code-workspace
 **cypress/screenshots**
 *.mp4
 **/cypress/*.png
+*.mp4
