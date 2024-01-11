@@ -195,8 +195,6 @@ class Main extends React.Component {
 
 
     componentDidUpdate(prevProps) {
-        console.log("Main Component update Previous PROPS: ", prevProps);
-        console.log("Main Component update Current PROPS: ", this.props);
         if (this.props.location !== prevProps.location) {
             this.onRouteChanged();
         }
