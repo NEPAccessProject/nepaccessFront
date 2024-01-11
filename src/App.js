@@ -1,6 +1,6 @@
 import React from 'react';
 // import { Link } from 'react-router-dom';
-import {Helmet} from 'react-helmet';
+import { Helmet } from 'react-helmet';
 
 import axios from 'axios';
 
@@ -14,32 +14,31 @@ import './User/login.css';
 import Globals from './globals.js';
 import persist from './persist.js';
 import PropTypes from 'prop-types';
-
 const _ = require('lodash');
 
 /** For testing redesigned, consolidated search which is in progress */
 export default class App extends React.Component {
-	state = {
-		searcherInputs: {
-			startPublish: '',
-			endPublish: '',
-			agency: [],
-			state: [],
-			needsComments: false,
-			needsDocument: false,
+    state = {
+        searcherInputs: {
+            startPublish: '',
+            endPublish: '',
+            agency: [],
+            state: [],
+            needsComments: false,
+            needsDocument: false,
             limit: 1000000,
             isFast41: false,
-		},
+        },
         searchResults: [],
         outputResults: [],
         displayRows: [],
         geoResults: null,
         geoLoading: true,
         count: 0,
-		resultsText: 'Results',
-		networkError: '',
+        resultsText: 'Results',
+        networkError: '',
         parseError: '',
-		verified: false,
+        verified: false,
         searching: false,
         useSearchOptions: false,
         snippetsDisabled: false,
@@ -51,19 +50,19 @@ export default class App extends React.Component {
         lookupResult: null,
         lastSearchedTerm: ''
     }
-    
-    constructor(props){
+
+    constructor(props) {
         super(props);
         this.endRef = React.createRef();
         // this.getGeoDebounced = _.debounce(this.getGeoData,1000);
-        this.getGeoDebounced = _.debounce(this.getAllGeoData,1000);
+        this.getGeoDebounced = _.debounce(this.getAllGeoData, 1000);
         this.gatherPageHighlightsDebounced = _.debounce(this.gatherPageHighlights, 1000);
     }
 
     // Necessary for on-demand highlighting per page
     _page = 1;
     _pageSize = 10;
-    
+
     // For canceling a search when component unloads
     _mounted = false;
 
@@ -71,7 +70,7 @@ export default class App extends React.Component {
     _searchId = 1;
 
     // For filtering results mid-search
-    _searcherState = null; 
+    _searcherState = null;
 
     // For display
     _searchTerms = "";
@@ -88,14 +87,14 @@ export default class App extends React.Component {
     _scopingCount = "";
 
     resetTypeCounts = () => {
-       this._finalCount = "";
-       this._draftCount = "";
-       
-       this._eaCount = "";
-       this._noiCount = "";
-       this._rodCount = "";
-       this._scopingCount = "";
-       this._fast41Count = 0;
+        this._finalCount = "";
+        this._draftCount = "";
+
+        this._eaCount = "";
+        this._noiCount = "";
+        this._rodCount = "";
+        this._scopingCount = "";
+        this._fast41Count = 0;
     }
 
     optionsChanged = (val) => {
@@ -122,54 +121,54 @@ export default class App extends React.Component {
 
         this.state.searchResults.forEach(process => {
             process.records.forEach(item => {
-                if(Globals.isFinalType(item.documentType)) {
+                if (Globals.isFinalType(item.documentType)) {
                     finals++;
                 }
-                else if(Globals.isDraftType(item.documentType)) {
+                else if (Globals.isDraftType(item.documentType)) {
                     drafts++;
                 }
-                else if(matchesEa(item.documentType)) {
+                else if (matchesEa(item.documentType)) {
                     eas++;
                 }
-                else if(matchesRod(item.documentType)) {
+                else if (matchesRod(item.documentType)) {
                     rods++;
                 }
-                else if(matchesScoping(item.documentType)) {
+                else if (matchesScoping(item.documentType)) {
                     scopings++;
-                } else if(matchesNOI(item.documentType)) {
+                } else if (matchesNOI(item.documentType)) {
                     nois++;
                 }
             })
         })
 
-        this._finalCount = "("+finals+")";
-        this._draftCount = "("+drafts+")";
-        this._eaCount = "("+eas+")";
-        this._rodCount = "("+rods+")";
-        this._noiCount = "("+nois+")";
-        this._scopingCount = "("+scopings+")";
+        this._finalCount = "(" + finals + ")";
+        this._draftCount = "(" + drafts + ")";
+        this._eaCount = "(" + eas + ")";
+        this._rodCount = "(" + rods + ")";
+        this._noiCount = "(" + nois + ")";
+        this._scopingCount = "(" + scopings + ")";
         // this.setState({finalCount: "("+count+")"});
     }
 
     /** Get all state/county geodata. Doesn't hit backend if we have the data in state. */
     getAllGeoData = () => {
-        if(!this.state.geoResults || !this.state.geoResults[0]) {
+        if (!this.state.geoResults || !this.state.geoResults[0]) {
             let url = Globals.currentHost + "geojson/get_all_state_county";
 
             axios.get(url).then(response => {
-                if(response.data && response.data[0]) {
-                    for(let i = 0; i < response.data.length; i++) {
+                if (response.data && response.data[0]) {
+                    for (let i = 0; i < response.data.length; i++) {
                         // console.log(response.data[i].count); // TODO: use count
                         let json = JSON.parse(response.data[i]['geojson']);
                         json.style = {};
                         json.sortPriority = 0;
 
-                        if(json.properties.COUNTYFP) {
+                        if (json.properties.COUNTYFP) {
                             json.originalColor = "#3388ff";
                             json.style.color = "#3388ff"; // county: default (blue)
                             json.style.fillColor = "#3388ff";
                             json.sortPriority = 5;
-                        } else if(json.properties.STATENS) {
+                        } else if (json.properties.STATENS) {
                             json.originalColor = "#000";
                             json.style.color = "#000"; // state: black
                             json.style.fillColor = "#000";
@@ -184,7 +183,7 @@ export default class App extends React.Component {
                     }
 
                     let sortedData = response.data.sort((a, b) => parseInt(a.sortPriority) - parseInt(b.sortPriority));
-                    
+
                     // console.log("Called for geodata", sortedData);
                     this.setState({
                         geoResults: sortedData,
@@ -204,13 +203,14 @@ export default class App extends React.Component {
     * Sorts by existing sort/asc values before updating state for a more responsive UX. 
     * Gets highlights for current page whenever it's called. */
     filterResultsBy = (searcherState) => {
-        // console.log("Filtering");
+        console.log("Filtering Results by searcherState ", searcherState);
         this._searcherState = searcherState; // for live filtering
         // Only filter if there are any results to filter
-        if(this.state.searchResults && this.state.searchResults.length > 0) {
+        if (this.state.searchResults && this.state.searchResults.length > 0) {
 
             const filtered = Globals.doFilter(searcherState, this.state.searchResults, this.state.searchResults.length, false);
-            
+            console.log(`App ~ filtered ${filtered.length}`, filtered);
+
             // Even if there are no filters active we still need to update to reflect this,
             // because if there are no filters the results must be updated to the full unfiltered set
             this.setState({
@@ -251,7 +251,7 @@ export default class App extends React.Component {
 
     /** Do all cleanup needed: Just set searching to false */
     endEarly = () => {
-        if(this.state.searching) {
+        if (this.state.searching) {
             this.setState({
                 searching: false
             });
@@ -262,7 +262,7 @@ export default class App extends React.Component {
     alphabetically(field, ascending) {
 
         return function (a, b) {
-      
+
             // equal items sort equally
             if (a[field] === b[field]) {
                 return 0;
@@ -279,34 +279,34 @@ export default class App extends React.Component {
                 return a[field] < b[field] ? -1 : 1;
             }
             // if descending, highest sorts first
-            else { 
+            else {
                 return a[field] < b[field] ? 1 : -1;
             }
-        
+
         };
-      
+
     }
 
     /** Assign any existing highlights from the first-page highlight pass, which is now done before full record population */
     mergeHighlights = (data) => {
         // console.log("Merge highlights",data, this.state.searchResults);
         Globals.emitEvent('merge_highlights', data);
-        if(!this.state.searchResults || !this.state.searchResults[0]) {
+        if (!this.state.searchResults || !this.state.searchResults[0]) {
             // console.log("Nothing here yet");
             return data;
         }
 
-        for(let i = 0; i < this.state.searchResults.length; i++) {
-            if(data[i]) {
-                for(let j = 0; j < this.state.searchResults[i].records.length; j++) {
-                    if(data[i].records[j] 
-                        && this.state.searchResults[i].records[j] 
-                        && this.state.searchResults[i].records[j].plaintext 
+        for (let i = 0; i < this.state.searchResults.length; i++) {
+            if (data[i]) {
+                for (let j = 0; j < this.state.searchResults[i].records.length; j++) {
+                    if (data[i].records[j]
+                        && this.state.searchResults[i].records[j]
+                        && this.state.searchResults[i].records[j].plaintext
                         && this.state.searchResults[i].records[j].plaintext[0]
                     ) {
                         let same = data[i].records[j].id === this.state.searchResults[i].records[j].id;
                         // console.log("Same?", same, data[i].records[j].id, this.state.searchResults[i].records[j].id);
-                        if(same) {
+                        if (same) {
                             data[i].records[j].plaintext = this.state.searchResults[i].records[j].plaintext;
                             // console.log("Assigned plaintext", this.state.searchResults[i].records[j].plaintext);
                         }
@@ -342,44 +342,44 @@ export default class App extends React.Component {
             let key = datum.processId;
 
             // Set impossible process ids as keys for records without one and use them as "solo" process items
-            if(key === null || key === 0) {
+            if (key === null || key === 0) {
                 key = newUniqueKey;
                 newUniqueKey = newUniqueKey - 1;
-            } 
+            }
 
             // Init if necessary
-            if(!processResults[key]) {
+            if (!processResults[key]) {
                 // New card: New original card index, can be useful later
-                processResults[key] = {records: [], processId: key, isProcess: true, originalIndex: i};
+                processResults[key] = { records: [], processId: key, isProcess: true, originalIndex: i };
                 i++;
             }
-            if(key < 0) { // Solo process, use ID
+            if (key < 0) { // Solo process, use ID
                 processResults[key].processId = datum.id;
                 processResults[key].isProcess = false;
             }
 
 
             // Assign latest date and latest title at the same time
-            if(!processResults[key].registerDate && datum.registerDate) {
+            if (!processResults[key].registerDate && datum.registerDate) {
                 processResults[key].registerDate = datum.registerDate;
                 processResults[key].title = datum.title;
-            } else if(datum.registerDate && 
-                        processResults[key].registerDate && 
-                        processResults[key].registerDate < datum.registerDate) {
+            } else if (datum.registerDate &&
+                processResults[key].registerDate &&
+                processResults[key].registerDate < datum.registerDate) {
                 processResults[key].registerDate = datum.registerDate;
                 processResults[key].title = datum.title;
             }
-            
+
             // Try to simply get first non-null county, if available (if multiple choices, we don't know which is
             // the most accurate)
-            if(!processResults[key].county) {
+            if (!processResults[key].county) {
                 processResults[key].county = datum.county;
             }
-            
-            if(!processResults[key].action) {
+
+            if (!processResults[key].action) {
                 processResults[key].action = datum.action;
             }
-            if(!processResults[key].decision) {
+            if (!processResults[key].decision) {
                 processResults[key].decision = datum.decision;
             }
 
@@ -387,17 +387,17 @@ export default class App extends React.Component {
             processResults[key].records.push(datum);
 
             // Lowest number = highest relevance; keep the highest relevance.  All datums have a relevance value.
-            if(processResults[key].relevance) { // already have relevance: use lowest
-                processResults[key].relevance = Math.min(datum.relevance,processResults[key].relevance)
+            if (processResults[key].relevance) { // already have relevance: use lowest
+                processResults[key].relevance = Math.min(datum.relevance, processResults[key].relevance)
             } else { // don't have relevance yet: init
                 processResults[key].relevance = datum.relevance;
             }
 
             // Assume state and agency are consistent
-            if(!processResults[key].agency) {
+            if (!processResults[key].agency) {
                 processResults[key].agency = datum.agency;
             }
-            if(!processResults[key].state) {
+            if (!processResults[key].state) {
                 processResults[key].state = datum.state;
             }
             // titles change, which makes everything harder.
@@ -408,11 +408,11 @@ export default class App extends React.Component {
             //     processResults[key].title = datum.title;
             // }
         });
-        
+
         // Have to "flatten" and also sort that by relevance, then merge any existing highlights
         return this.mergeHighlights(
-                Object.values(processResults).sort(function(a,b){return a.relevance - b.relevance;})
-            );
+            Object.values(processResults).sort(function (a, b) { return a.relevance - b.relevance; })
+        );
     }
 
     // Start a brand new search.
@@ -448,15 +448,15 @@ export default class App extends React.Component {
         //             parseError: ''
         //         })
         //     }
-            
+
         // reset sort
-        this._sortVal = "relevance"; 
+        this._sortVal = "relevance";
         this._ascVal = true;
 
         this._searcherState = searcherState; // for live filtering
 
         this.resetTypeCounts();
-        
+
         // 0: Get top 100 results
         // 1: Collect contextless results
         //        - Consolidate all of the filenames by metadata record into singular results
@@ -474,55 +474,57 @@ export default class App extends React.Component {
 
     /** Just get the top results quickly before launching the "full" search with initialSearch() */
     startSearch = (searcherState) => {
+        console.log(`App ~ START SEARCH - searcherState:`, searcherState);
         Globals.emitEvent('new_search');
-        if(!this._mounted){ // User navigated away or reloaded
+        if (!this._mounted) { // User navigated away or reloaded
             return;
         }
 
         // console.log("Start search");
 
-		this.setState({
+        this.setState({
             // Fresh search, fresh results
             searchResults: [],
             outputResults: [],
             // geoResults: null,
             count: 0,
             searcherInputs: searcherState,
-            snippetsDisabled: searcherState.searchOption==="C",
-			resultsText: "Loading results...",
+            snippetsDisabled: searcherState.searchOption === "C",
+            resultsText: "Loading results...",
             networkError: "", // Clear network error
             searching: true,
             shouldUpdate: true,
             lastSearchedTerm: searcherState.titleRaw
-		}, () => {
+        }, () => {
             // title-only
             let searchUrl = new URL('text/search', Globals.currentHost);
+            let dataToPass = {
+                title: this._searchTerms,
+            };
+
             // For the new search logic, the idea is that the limit and offset are only for the text
             // fragments.  The first search should get all of the results, without context.
             // We'll need to consolidate them in the frontend and also ask for text fragments and assign them
             // properly
-            if(searcherState.searchOption && searcherState.searchOption === "A") {
+            if (searcherState.searchOption && searcherState.searchOption === "A") {
                 searchUrl = new URL('text/search_top', Globals.currentHost);
-            } else if(searcherState.searchOption && searcherState.searchOption === "B") {
+            } else if (searcherState.searchOption && searcherState.searchOption === "B") {
                 searchUrl = new URL('text/search_top', Globals.currentHost);
             }
 
             this._searchTerms = searcherState.titleRaw;
-
             // Update query params
             // We could also probably clear them on reload (component will unmount) if anyone wants
             let currentUrlParams = new URLSearchParams(window.location.search);
             currentUrlParams.set('q', this._searchTerms);
             this.props.history.push(window.location.pathname + "?" + currentUrlParams.toString());
 
-			let dataToPass = { 
-				title: this._searchTerms
-            };
+
 
             // OPTION: If we restore a way to use search options for faster searches, we'll assign here
-            if(this.state.useSearchOptions) {
-                dataToPass = { 
-                    title: this.state.searcherInputs.titleRaw, 
+            if (this.state.useSearchOptions || this.state.searcherInputs.isFast41) {
+                dataToPass = {
+                    title: this.state.searcherInputs.titleRaw,
                     startPublish: this.state.searcherInputs.startPublish,
                     endPublish: this.state.searcherInputs.endPublish,
                     startComment: this.state.searcherInputs.startComment,
@@ -535,20 +537,20 @@ export default class App extends React.Component {
                     typeOther: this.state.searcherInputs.typeOther,
                     needsComments: this.state.searcherInputs.needsComments,
                     needsDocument: this.state.searcherInputs.needsDocument,
+                    isFast41: this.state.searcherInputs.isFast41,
                 };
             }
-
+            console.log('DATA TO PASS?', dataToPass);
             dataToPass.title = postProcessTerms(dataToPass.title);
 
             // Proximity search from UI - surround with quotes, append ~#
-            if(!this.state.searcherInputs.proximityDisabled && this.state.searcherInputs.proximityOption)
-            {
-                if(this.state.searcherInputs.proximityOption.value >= 0) {
+            if (!this.state.searcherInputs.proximityDisabled && this.state.searcherInputs.proximityOption) {
+                if (this.state.searcherInputs.proximityOption.value >= 0) {
                     try {
-                        dataToPass.title = 
+                        dataToPass.title =
                             ("\"" + dataToPass.title + "\"~" + this.state.searcherInputs.proximityOption.value);
-                    } catch(e) {
-                        
+                    } catch (e) {
+
                     }
                 }
             }
@@ -571,12 +573,12 @@ export default class App extends React.Component {
                         resultsText: "No results: Please check use of term modifiers"
                     });
                     return null;
-                } else if(response.status === 403) {
+                } else if (response.status === 403) {
                     // Not authorized
                     Globals.emitEvent('refresh', {
                         loggedIn: false
                     });
-                } else if(response.status === 202) {
+                } else if (response.status === 202) {
                     shouldContinue = false; // found all results already
                     return response.data;
                 } else {
@@ -585,45 +587,47 @@ export default class App extends React.Component {
                 }
             }).then(currentResults => {
                 let _data = [];
-                if(currentResults && currentResults[0] && currentResults[0].doc) {
+                if (currentResults && currentResults[0] && currentResults[0].doc) {
                     // console.log("Raw results",currentResults);
-                    
-                    _data = currentResults
-                    // .filter((result) => { // Soft rollout logic
-                    //     return result.doc.size > 200; // filter out if no files (200 bytes or less)
-                    // })
-                    .map((result, idx) =>{
-                        let doc = result.doc;
-                        let newObject = {title: doc.title, 
-                            agency: doc.agency, 
-                            cooperatingAgency: doc.cooperatingAgency,
-                            commentDate: doc.commentDate, 
-                            registerDate: doc.registerDate, 
-                            state: doc.state, 
-                            documentType: doc.documentType, 
-                            filename: doc.filename, 
-                            commentsFilename: doc.commentsFilename,
-                            size: doc.size,
-                            id: doc.id,
-                            luceneIds: result.ids,
-                            folder: doc.folder,
-                            plaintext: result.highlights,
-                            name: result.filenames,
 
-                            link: doc.link,
-                            firstRodDate: doc.firstRodDate,
-                            processId: doc.processId,
-                            notes: doc.notes,
-                            status: doc.status,
-                            subtype: doc.subtype,
-                            county: doc.county,
-                            
-                            action: doc.action,
-                            decision: doc.decision,
-                            relevance: idx + 1 // sort puts "falsy" values at the bottom incl. 0
-                        };
-                        return newObject;
-                    }); 
+                    _data = currentResults
+                        // .filter((result) => { // Soft rollout logic
+                        //     return result.doc.size > 200; // filter out if no files (200 bytes or less)
+                        // })
+                        .map((result, idx) => {
+                            let doc = result.doc;
+                            let newObject = {
+                                title: doc.title,
+                                agency: doc.agency,
+                                cooperatingAgency: doc.cooperatingAgency,
+                                commentDate: doc.commentDate,
+                                registerDate: doc.registerDate,
+                                state: doc.state,
+                                documentType: doc.documentType,
+                                filename: doc.filename,
+                                commentsFilename: doc.commentsFilename,
+                                size: doc.size,
+                                id: doc.id,
+                                luceneIds: result.ids,
+                                folder: doc.folder,
+                                plaintext: result.highlights,
+                                name: result.filenames,
+
+                                link: doc.link,
+                                firstRodDate: doc.firstRodDate,
+                                processId: doc.processId,
+                                notes: doc.notes,
+                                status: doc.status,
+                                subtype: doc.subtype,
+                                county: doc.county,
+
+                                action: doc.action,
+                                decision: doc.decision,
+                                isFast41: doc.isFast41,
+                                relevance: idx + 1 // sort puts "falsy" values at the bottom incl. 0
+                            };
+                            return newObject;
+                        });
 
                     // Important: This is where we're shifting to process-based results.
                     let processResults = {};
@@ -639,11 +643,10 @@ export default class App extends React.Component {
                         outputResults: _data,
                     }, () => {
                         // console.log("All results", _data);
-                    
+
                         // title-only (or blank search===no text search at all): return
-                        if(Globals.isEmptyOrSpaces(dataToPass.title) || 
-                                (this.state.searcherInputs.searchOption && this.state.searcherInputs.searchOption === "C"))
-                        {
+                        if (Globals.isEmptyOrSpaces(dataToPass.title) ||
+                            (this.state.searcherInputs.searchOption && this.state.searcherInputs.searchOption === "C")) {
                             this.filterResultsBy(this.state.searcherInputs);
                             this.countTypes();
 
@@ -652,7 +655,7 @@ export default class App extends React.Component {
                                 snippetsDisabled: true,
                                 shouldUpdate: true
                             });
-                        } else if(!shouldContinue) {
+                        } else if (!shouldContinue) {
                             console.log("First pass got everything");
                             // got all results already, so stop searching and start highlighting.
                             this.filterResultsBy(this.state.searcherInputs);
@@ -673,7 +676,7 @@ export default class App extends React.Component {
                     });
                 }
             }).catch(error => { // Server down or 408 (timeout)
-                if(error.response && error.response.status === 408) {
+                if (error.response && error.response.status === 408) {
                     this.setState({
                         networkError: 'Request has timed out.'
                     });
@@ -687,7 +690,7 @@ export default class App extends React.Component {
                     Globals.emitEvent('refresh', {
                         loggedIn: false
                     });
-                } else if(error.response && error.response.status === 400) { // bad request
+                } else if (error.response && error.response.status === 400) { // bad request
                     this.setState({
                         networkError: Globals.errorMessage.default,
                         resultsText: "Couldn't parse terms, please try removing any special characters"
@@ -702,28 +705,27 @@ export default class App extends React.Component {
                     searching: false
                 });
             })
-    
+
         });
     }
 
     /** Populates full results without text highlights and then starts the highlighting process */
     initialSearch = () => {
-        if(!this._mounted){ // User navigated away or reloaded
+        if (!this._mounted) { // User navigated away or reloaded
             return;
         }
 
         // console.log("initialSearch");
 
         let searchUrl = new URL('text/search_no_context', Globals.currentHost);
-
-        let dataToPass = { 
-            title: this.state.searcherInputs.titleRaw
+        let dataToPass = {
+                title: this.state.searcherInputs.titleRaw
         };
 
         // OPTION: If we restore a way to use search options for faster searches, we'll assign here
-        if(this.state.useSearchOptions) {
-            dataToPass = { 
-                title: this.state.searcherInputs.titleRaw, 
+        if (this.state.useSearchOptions) {
+            dataToPass = {
+                title: this.state.searcherInputs.titleRaw,
                 startPublish: this.state.searcherInputs.startPublish,
                 endPublish: this.state.searcherInputs.endPublish,
                 startComment: this.state.searcherInputs.startComment,
@@ -736,21 +738,21 @@ export default class App extends React.Component {
                 typeOther: this.state.searcherInputs.typeOther,
                 needsComments: this.state.searcherInputs.needsComments,
                 needsDocument: this.state.searcherInputs.needsDocument,
-                fast41: this.state.searcherInputs.fast41,
+                fast41: this.state.searcherInputs.isFast41,
             };
         }
 
         dataToPass.title = postProcessTerms(dataToPass.title);
+        console.log(`App ~ dataToPass:`, dataToPass);
 
         // Proximity search from UI - surround with quotes, append ~#
-        if(!this.state.searcherInputs.proximityDisabled && this.state.searcherInputs.proximityOption)
-        {
-            if(this.state.searcherInputs.proximityOption.value >= 0) {
+        if (!this.state.searcherInputs.proximityDisabled && this.state.searcherInputs.proximityOption) {
+            if (this.state.searcherInputs.proximityOption.value >= 0) {
                 try {
-                    dataToPass.title = 
+                    dataToPass.title =
                         ("\"" + dataToPass.title + "\"~" + this.state.searcherInputs.proximityOption.value);
-                } catch(e) {
-                    
+                } catch (e) {
+
                 }
             }
         }
@@ -758,7 +760,7 @@ export default class App extends React.Component {
         //Send the AJAX call to the server
 
         // console.log("Search init");
-        
+
         axios({
             method: 'POST', // or 'PUT'
             url: searchUrl,
@@ -772,55 +774,56 @@ export default class App extends React.Component {
                     resultsText: "No results: Please check use of term modifiers"
                 });
                 return null;
-            } else if(response.status === 403) {
+            } else if (response.status === 403) {
                 // Not logged in
                 Globals.emitEvent('refresh', {
                     loggedIn: false
                 });
-            
+
             } else {
                 console.log(response.status);
                 return null;
             }
         }).then(currentResults => {
             let _data = [];
-            if(currentResults && currentResults[0] && currentResults[0].doc) {
-                
+            if (currentResults && currentResults[0] && currentResults[0].doc) {
+
                 _data = currentResults
-                .map((result, idx) =>{
-                    let doc = result.doc;
-                    let newObject = {title: doc.title, 
-                        agency: doc.agency, 
-                        cooperatingAgency: doc.cooperatingAgency,
-                        commentDate: doc.commentDate, 
-                        registerDate: doc.registerDate, 
-                        state: doc.state, 
-                        documentType: doc.documentType, 
-                        filename: doc.filename, 
-                        commentsFilename: doc.commentsFilename,
-                        size: doc.size,
-                        id: doc.id,
-                        luceneIds: result.ids,
-                        folder: doc.folder,
-                        plaintext: result.highlights,
-                        name: result.filenames,
+                    .map((result, idx) => {
+                        let doc = result.doc;
+                        let newObject = {
+                            title: doc.title,
+                            agency: doc.agency,
+                            cooperatingAgency: doc.cooperatingAgency,
+                            commentDate: doc.commentDate,
+                            registerDate: doc.registerDate,
+                            state: doc.state,
+                            documentType: doc.documentType,
+                            filename: doc.filename,
+                            commentsFilename: doc.commentsFilename,
+                            size: doc.size,
+                            id: doc.id,
+                            luceneIds: result.ids,
+                            folder: doc.folder,
+                            plaintext: result.highlights,
+                            name: result.filenames,
 
-                        link: doc.link,
-                        firstRodDate: doc.firstRodDate,
-                        processId: doc.processId,
-                        notes: doc.notes,
-                        status: doc.status,
-                        subtype: doc.subtype,
-                        county: doc.county,
+                            link: doc.link,
+                            firstRodDate: doc.firstRodDate,
+                            processId: doc.processId,
+                            notes: doc.notes,
+                            status: doc.status,
+                            subtype: doc.subtype,
+                            county: doc.county,
 
-                        action: doc.action,
-                        decision: doc.decision,
-                        fast41: doc.fast41,
+                            action: doc.action,
+                            decision: doc.decision,
+                            isFast41: doc.isFast41,
 
-                        relevance: idx + 1 // sort puts "falsy" values at the bottom incl. 0
-                    };
-                    return newObject;
-                }); 
+                            relevance: idx + 1 // sort puts "falsy" values at the bottom incl. 0
+                        };
+                        return newObject;
+                    });
 
                 // Important: This is where we're shifting to process-based results.
                 let processResults = {};
@@ -847,7 +850,7 @@ export default class App extends React.Component {
                 });
             }
         }).catch(error => { // Server down or 408 (timeout)
-            if(error.response && error.response.status === 408) {
+            if (error.response && error.response.status === 408) {
                 this.setState({
                     networkError: 'Request has timed out.'
                 });
@@ -861,7 +864,7 @@ export default class App extends React.Component {
                 Globals.emitEvent('refresh', {
                     loggedIn: false
                 });
-            } else if(error.response && error.response.status === 400) { // bad request
+            } else if (error.response && error.response.status === 400) { // bad request
                 this.setState({
                     networkError: Globals.errorMessage.default,
                     resultsText: "Couldn't parse terms, please try removing any special characters"
@@ -879,16 +882,16 @@ export default class App extends React.Component {
     }
 
     suggestFromTerms = (_terms) => {
-        if(_terms) {
+        if (_terms) {
             axios({
-                method: 'GET', 
+                method: 'GET',
                 url: Globals.currentHost + 'text/search/suggest',
                 params: {
                     terms: _terms
                 }
             }).then(response => {
                 // console.log("Suggester response", response);
-    
+
                 this.setState({
                     // lookupResult: response.data
                     lookupResult: response.data
@@ -910,12 +913,12 @@ export default class App extends React.Component {
      */
     gatherSpecificHighlights = (_index, record) => {
         console.log("gatherSpecificHighlights")
-        if(!this._mounted){ // User navigated away or reloaded
+        if (!this._mounted) { // User navigated away or reloaded
             console.log("Cancel specific highlighting")
             return; // cancel search
         }
 
-        if(!this.state.outputResults) {
+        if (!this.state.outputResults) {
             console.log("Nothing here right now to highlight specifically");
             return;
         }
@@ -928,12 +931,12 @@ export default class App extends React.Component {
             snippetsDisabled: false,
             searching: true,
             networkError: "", // Clear network error
-		}, () => {
-            
+        }, () => {
+
             let searchUrl = new URL('text/get_highlightsFVH', Globals.currentHost);
             // Need to skip this entry on both sides if it already has full plaintext (has been toggled at least once
             // before and therefore has at least 2 highlights)
-            if(!record.plaintext 
+            if (!record.plaintext
                 || record.plaintext[0]
                 || record.plaintext[1]) {
 
@@ -945,28 +948,28 @@ export default class App extends React.Component {
                 // Filenames delimited by > (impossible filename character)
                 _unhighlighted.push(
                     {
-                        luceneIds: endLuceneIds, 
+                        luceneIds: endLuceneIds,
                         filename: endFilenames
                     }
                 );
-            } 
+            }
 
-            if(_unhighlighted.length === 0) {
+            if (_unhighlighted.length === 0) {
                 // nothing to do
                 console.log("Specific record already highlighted fully.");
                 this.endEarly();
                 return;
             }
-            
+
             // console.log("terms, last", this._searchTerms, this.state.lastSearchedTerm);
 
-            if(!this._searchTerms) {
+            if (!this._searchTerms) {
                 this._searchTerms = this.state.lastSearchedTerm;
             }
 
-			let dataToPass = 
-            { 
-				unhighlighted: _unhighlighted,
+            let dataToPass =
+            {
+                unhighlighted: _unhighlighted,
                 terms: this._searchTerms,
                 markup: true, // default
                 fragmentSizeValue: 2 // default
@@ -985,29 +988,29 @@ export default class App extends React.Component {
                     return null;
                 }
             }).then(parsedJson => {
-                if(parsedJson){
+                if (parsedJson) {
                     // console.log("Adding highlights", parsedJson);
                     let allResults = this.state.searchResults;
 
                     // Iterate through records until we find the correct one (sort/filter could change index within card)
-                    for(let j = 0; j < allResults[_index].records.length; j++) {
+                    for (let j = 0; j < allResults[_index].records.length; j++) {
                         // Only bother checking ID if it has files
-                        if(!Globals.isEmptyOrSpaces(allResults[_index].records[j].name)){ 
-                            if(record.id === allResults[_index].records[j].id) {
-                                allResults[_index].records[j].plaintext = 
+                        if (!Globals.isEmptyOrSpaces(allResults[_index].records[j].name)) {
+                            if (record.id === allResults[_index].records[j].id) {
+                                allResults[_index].records[j].plaintext =
                                     allResults[_index].records[j].plaintext.concat(parsedJson[0]);
-                                    
+
                                 // done
                                 j = allResults[_index].records.length;
                             }
                         }
                     }
-                    
+
                     // Fin
                     this.setState({
                         searchResults: allResults,
                         // outputResults: currentResults,
-                        searching: false, 
+                        searching: false,
                         shouldUpdate: true
                     }, () => {
                         // Run our filter + sort which will intelligently populate outputResults from updated searchResults
@@ -1017,15 +1020,15 @@ export default class App extends React.Component {
                         //     allResults, currentResults);
                     });
                 }
-            }).catch(error => { 
-                if(error.name === 'TypeError') {
+            }).catch(error => {
+                if (error.name === 'TypeError') {
                     console.error(error);
                 } else { // Server down or 408 (timeout)
                     let _networkError = 'Server may be down or you may need to login again.';
                     let _resultsText = Globals.errorMessage.default;
 
-                    if(error.response && error.response.status === 408) {
-                        _networkError= 'Request has timed out.';
+                    if (error.response && error.response.status === 408) {
+                        _networkError = 'Request has timed out.';
                         _resultsText = 'Timed out';
                     }
 
@@ -1042,18 +1045,18 @@ export default class App extends React.Component {
 
     gatherFirstPageHighlightsThenFinishSearch = (searchId, _inputs, currentResults) => {
         console.log("gatherFirstPageHighlightsThenFinishSearch")
-        if(!_inputs) {
-            if(this.state.searcherInputs) {
+        if (!_inputs) {
+            if (this.state.searcherInputs) {
                 _inputs = this.state.searcherInputs;
-            } else if(Globals.getParameterByName("q")) {
-                _inputs = {titleRaw: Globals.getParameterByName("q")};
+            } else if (Globals.getParameterByName("q")) {
+                _inputs = { titleRaw: Globals.getParameterByName("q") };
             }
         }
         // console.log("Gathering page highlights", searchId, this._page, this._pageSize);
-        if(!this._mounted){ // User navigated away or reloaded
+        if (!this._mounted) { // User navigated away or reloaded
             return; // cancel search
         }
-        if(searchId < this._searchId) { // Search interrupted
+        if (searchId < this._searchId) { // Search interrupted
             return; // cancel search
         }
         if (typeof currentResults === 'undefined') {
@@ -1064,8 +1067,8 @@ export default class App extends React.Component {
             snippetsDisabled: false,
             searching: true,
             networkError: "", // Clear network error
-		}, () => {
-            
+        }, () => {
+
             let searchUrl = new URL('text/get_highlightsFVH', Globals.currentHost);
 
             let mustSkip = {};
@@ -1077,16 +1080,16 @@ export default class App extends React.Component {
             // additional logic elsewhere could ask for all of the highlights.
             // Then we would never get any "hidden" highlights, resulting in more responsive UX
 
-            for(let i = startPoint; i < Math.min(currentResults.length, endPoint); i++) { // For each result card on current page
-                for(let j = 0; j < currentResults[i].records.length; j++) { // For each record in result card
+            for (let i = startPoint; i < Math.min(currentResults.length, endPoint); i++) { // For each result card on current page
+                for (let j = 0; j < currentResults[i].records.length; j++) { // For each record in result card
                     // Push first lucene ID and filename
-                    if(!Globals.isEmptyOrSpaces(currentResults[i].records[j].name)) {
+                    if (!Globals.isEmptyOrSpaces(currentResults[i].records[j].name)) {
 
                         // console.log("Pushing",i,j,currentResults[i].records[j].id);
 
                         // Need to skip this entry on both sides if it already has plaintext.
                         // If it has any, then skip here - we can get more on demand elsewhere, in separate logic.
-                        if(!currentResults[i].records[j].plaintext || !currentResults[i].records[j].plaintext[0]) {
+                        if (!currentResults[i].records[j].plaintext || !currentResults[i].records[j].plaintext[0]) {
 
                             // Filenames delimited by > (impossible filename character)
                             let firstFilename = currentResults[i].records[j].name.split(">")[0];
@@ -1097,7 +1100,7 @@ export default class App extends React.Component {
 
                             _unhighlighted.push(
                                 {
-                                    luceneIds: firstLuceneId, 
+                                    luceneIds: firstLuceneId,
                                     filename: firstFilename
                                 }
                             );
@@ -1111,22 +1114,22 @@ export default class App extends React.Component {
 
 
             // If nothing to highlight, nothing to do on this page
-            if(_unhighlighted.length === 0 || searchId < this._searchId) {
+            if (_unhighlighted.length === 0 || searchId < this._searchId) {
                 console.log("nothing to highlight: finish search");
                 this.initialSearch(_inputs);
                 return;
             }
 
-			let dataToPass = 
-            { 
-				unhighlighted: _unhighlighted,
+            let dataToPass =
+            {
+                unhighlighted: _unhighlighted,
                 terms: postProcessTerms(_inputs.titleRaw),
                 markup: _inputs.markup,
                 fragmentSizeValue: _inputs.fragmentSizeValue
             };
 
             // console.log("For backend",dataToPass);
-            
+
             //Send the AJAX call to the server
             axios({
                 method: 'POST', // or 'PUT'
@@ -1140,20 +1143,20 @@ export default class App extends React.Component {
                     return null;
                 }
             }).then(parsedJson => {
-                if(parsedJson){
+                if (parsedJson) {
 
                     // console.log("Adding highlights", parsedJson);
 
                     let allResults = this.state.searchResults;
 
                     let x = 0;
-                    for(let i = startPoint; i < Math.min(currentResults.length, endPoint); i++) {
-                        for(let j = 0; j < currentResults[i].records.length; j++) {
+                    for (let i = startPoint; i < Math.min(currentResults.length, endPoint); i++) {
+                        for (let j = 0; j < currentResults[i].records.length; j++) {
                             // If search is interrupted, updatedResults[i] may be undefined (TypeError)
-                            if(!Globals.isEmptyOrSpaces(currentResults[i].records[j].name)){
+                            if (!Globals.isEmptyOrSpaces(currentResults[i].records[j].name)) {
                                 // console.log("Assigning",i,j,currentResults[i].records[j].name);
 
-                                if(mustSkip[currentResults[i].records[j].id]) {
+                                if (mustSkip[currentResults[i].records[j].id]) {
                                     // do nothing; skip
                                     // console.log("Skipping ID " + [currentResults[i].records[j].id]);
                                 } else {
@@ -1175,17 +1178,17 @@ export default class App extends React.Component {
                         console.log("Got highlights, finish search");
                         this.initialSearch(_inputs);
                     });
-                    
+
                 }
-            }).catch(error => { 
-                if(error.name === 'TypeError') {
+            }).catch(error => {
+                if (error.name === 'TypeError') {
                     console.error(error);
                 } else { // Server down or 408 (timeout)
                     let _networkError = 'Server is down or you may need to login again.';
                     let _resultsText = Globals.errorMessage.default;
 
-                    if(error.response && error.response.status === 408) {
-                        _networkError= 'Request has timed out.';
+                    if (error.response && error.response.status === 408) {
+                        _networkError = 'Request has timed out.';
                         _resultsText = 'Timed out';
                     }
 
@@ -1194,7 +1197,6 @@ export default class App extends React.Component {
                         resultsText: _resultsText,
                         shouldUpdate: true
                     }, () => {
-                        console.log("Error, finish search");
                         this.initialSearch(_inputs);
                     });
                 }
@@ -1203,18 +1205,18 @@ export default class App extends React.Component {
     }
 
     gatherPageHighlights = (searchId, _inputs, currentResults) => {
-        if(!_inputs) {
-            if(this.state.searcherInputs) {
+        if (!_inputs) {
+            if (this.state.searcherInputs) {
                 _inputs = this.state.searcherInputs;
-            } else if(Globals.getParameterByName("q")) {
-                _inputs = {titleRaw: Globals.getParameterByName("q")};
+            } else if (Globals.getParameterByName("q")) {
+                _inputs = { titleRaw: Globals.getParameterByName("q") };
             }
         }
         // console.log("Gathering page highlights", searchId, this._page, this._pageSize);
-        if(!this._mounted){ // User navigated away or reloaded
+        if (!this._mounted) { // User navigated away or reloaded
             return; // cancel search
         }
-        if(searchId < this._searchId) { // Search interrupted
+        if (searchId < this._searchId) { // Search interrupted
             return; // cancel search
         }
         if (typeof currentResults === 'undefined') {
@@ -1224,7 +1226,7 @@ export default class App extends React.Component {
         // No need for offset or limit. We just need to find the unhighlighted files on this page.
         // This requires only page number, number of cards per page and number of cards on page 
         // (could be less than max page size)
-            
+
         let searchUrl = new URL('text/get_highlightsFVH', Globals.currentHost);
 
         let mustSkip = {};
@@ -1236,16 +1238,16 @@ export default class App extends React.Component {
         // additional logic elsewhere could ask for all of the highlights.
         // Then we would never get any "hidden" highlights, resulting in more responsive UX
 
-        for(let i = startPoint; i < Math.min(currentResults.length, endPoint); i++){
-            for(let j = 0; j < currentResults[i].records.length; j++) {
+        for (let i = startPoint; i < Math.min(currentResults.length, endPoint); i++) {
+            for (let j = 0; j < currentResults[i].records.length; j++) {
                 // Push first lucene ID and filename
-                if(!Globals.isEmptyOrSpaces(currentResults[i].records[j].name)) {
+                if (!Globals.isEmptyOrSpaces(currentResults[i].records[j].name)) {
 
                     // console.log("Pushing",i,j,currentResults[i].records[j].id);
 
                     // Need to skip this entry on both sides if it already has plaintext.
                     // If it has any, then skip here - we can get more on demand elsewhere, in separate logic.
-                    if(!currentResults[i].records[j].plaintext || !currentResults[i].records[j].plaintext[0]) {
+                    if (!currentResults[i].records[j].plaintext || !currentResults[i].records[j].plaintext[0]) {
 
                         // Filenames delimited by > (impossible filename character)
                         let firstFilename = currentResults[i].records[j].name.split(">")[0];
@@ -1256,7 +1258,7 @@ export default class App extends React.Component {
 
                         _unhighlighted.push(
                             {
-                                luceneIds: firstLuceneId, 
+                                luceneIds: firstLuceneId,
                                 filename: firstFilename
                             }
                         );
@@ -1270,11 +1272,11 @@ export default class App extends React.Component {
 
 
         // If nothing to highlight, nothing to do on this page
-        if(_unhighlighted.length === 0 || searchId < this._searchId) {
+        if (_unhighlighted.length === 0 || searchId < this._searchId) {
             this.endEarly();
             return;
         }
-        
+
         // Set state a little later to avoid table updating on a page that hasn't actually changed
         this.setState({
             snippetsDisabled: false,
@@ -1282,15 +1284,13 @@ export default class App extends React.Component {
             networkError: "", // Clear network error
         }, () => {
 
-			let dataToPass = 
-            { 
-				unhighlighted: _unhighlighted,
+            let dataToPass =
+            {
+                unhighlighted: _unhighlighted,
                 terms: postProcessTerms(_inputs.titleRaw),
                 markup: _inputs.markup,
                 fragmentSizeValue: _inputs.fragmentSizeValue
             };
-
-            // console.log("For backend",dataToPass);
 
             //Send the AJAX call to the server
             axios({
@@ -1305,7 +1305,7 @@ export default class App extends React.Component {
                     return null;
                 }
             }).then(parsedJson => {
-                if(parsedJson){
+                if (parsedJson) {
                     // console.log("Adding highlights", parsedJson);
 
                     // TODO: If we want to avoid checking every ID until we run out of highlights,
@@ -1314,13 +1314,13 @@ export default class App extends React.Component {
                     let allResults = this.state.searchResults;
 
                     let x = 0;
-                    for(let i = startPoint; i < Math.min(currentResults.length, endPoint); i++) {
-                        for(let j = 0; j < currentResults[i].records.length; j++) {
+                    for (let i = startPoint; i < Math.min(currentResults.length, endPoint); i++) {
+                        for (let j = 0; j < currentResults[i].records.length; j++) {
                             // If search is interrupted, updatedResults[i] may be undefined (TypeError)
-                            if(!Globals.isEmptyOrSpaces(currentResults[i].records[j].name)){
+                            if (!Globals.isEmptyOrSpaces(currentResults[i].records[j].name)) {
                                 // console.log("Assigning",i,j,currentResults[i].records[j].name);
 
-                                if(mustSkip[currentResults[i].records[j].id]) {
+                                if (mustSkip[currentResults[i].records[j].id]) {
                                     // console.log("Skipping ID " + [currentResults[i].records[j].id]);
                                 } else {
                                     currentResults[i].records[j].plaintext = parsedJson[x];
@@ -1330,10 +1330,10 @@ export default class App extends React.Component {
                             }
                         }
                     }
-                    
+
                     // Verify one last time we want this before we actually commit to these results,
                     // otherwise it could be jarring UX to setState here
-                    if(searchId < this._searchId) {
+                    if (searchId < this._searchId) {
                         // console.log("There's another search call happening");
                         return;
                     } else {
@@ -1343,7 +1343,7 @@ export default class App extends React.Component {
                             searchResults: allResults,
                             outputResults: currentResults,
                             // count: updatedResults.length,
-                            searching: false, 
+                            searching: false,
                             // resultsText: resultsText, 
                             shouldUpdate: true
                         }, () => {
@@ -1352,15 +1352,15 @@ export default class App extends React.Component {
                         });
                     }
                 }
-            }).catch(error => { 
-                if(error.name === 'TypeError') {
+            }).catch(error => {
+                if (error.name === 'TypeError') {
                     console.error(error);
                 } else { // Server down or 408 (timeout)
                     let _networkError = 'Server is down or you may need to login again.';
                     let _resultsText = Globals.errorMessage.default;
 
-                    if(error.response && error.response.status === 408) {
-                        _networkError= 'Request has timed out.';
+                    if (error.response && error.response.status === 408) {
+                        _networkError = 'Request has timed out.';
                         _resultsText = 'Timed out';
                     }
 
@@ -1376,39 +1376,39 @@ export default class App extends React.Component {
     }
 
     /** Currently this should always get a 200 back since searches were allowed when not logged in. */
-	check = () => { // check if JWT is expired/invalid
-        this.setState({loaded:false,down:false});
+    check = () => { // check if JWT is expired/invalid
+        this.setState({ loaded: false, down: false });
 
-		let checkURL = new URL('test/check', Globals.currentHost);
-		let result = false;
-		axios.post(checkURL)
-		.then(response => {
-			result = response && response.status === 200;
-			this.setState({
-				verified: result,
-			})
-		})
-		.catch((err) => { // This will catch a 403 from the server from a malformed/expired JWT, will also fire if server down
-			if(!err.response){ // server isn't responding
-				this.setState({
-					networkError: Globals.errorMessage.default,
-                    shouldUpdate: true,
-                    down: true
-				});
-			} else if(err.response && err.response.status===403) {
+        let checkURL = new URL('test/check', Globals.currentHost);
+        let result = false;
+        axios.post(checkURL)
+            .then(response => {
+                result = response && response.status === 200;
                 this.setState({
-                    verified: false,
-                    shouldUpdate: true
-                });
-            }
-		})
-		.finally(() => {
-            this.setState({loaded:true});
-			// console.log("Returning... " + result);
-		});
-		// console.log("App check");
+                    verified: result,
+                })
+            })
+            .catch((err) => { // This will catch a 403 from the server from a malformed/expired JWT, will also fire if server down
+                if (!err.response) { // server isn't responding
+                    this.setState({
+                        networkError: Globals.errorMessage.default,
+                        shouldUpdate: true,
+                        down: true
+                    });
+                } else if (err.response && err.response.status === 403) {
+                    this.setState({
+                        verified: false,
+                        shouldUpdate: true
+                    });
+                }
+            })
+            .finally(() => {
+                this.setState({ loaded: true });
+                // console.log("Returning... " + result);
+            });
+        // console.log("App check");
     }
-    
+
     /** Scroll to bottom on page change and populate full table with latest results */
     scrollToBottom = (_rows) => {
         try {
@@ -1421,7 +1421,7 @@ export default class App extends React.Component {
                     this.endRef.current.scrollIntoView({ behavior: 'smooth' })
                 }, 100);
             });
-        } catch(e) {
+        } catch (e) {
             console.log("Scroll error", e);
         }
     }
@@ -1429,7 +1429,7 @@ export default class App extends React.Component {
     scrollToTop = () => {
         try {
             window.scrollTo({ top: 0, behavior: 'smooth' });
-        } catch(e) {
+        } catch (e) {
             console.log("Scroll error", e);
         }
     }
@@ -1437,9 +1437,9 @@ export default class App extends React.Component {
 
     displayedRowsUnpopulated = () => {
         // console.log("Checking displayed rows...");
-        for(let i = 0; i < this.state.displayRows.length; i++) {
+        for (let i = 0; i < this.state.displayRows.length; i++) {
             // console.log(this.state.displayRows[i].data);
-            if(this.state.displayRows[i].data.plaintext.length === 0){
+            if (this.state.displayRows[i].data.plaintext.length === 0) {
                 console.log("No text.  Should populate.");
                 return true;
             }
@@ -1450,7 +1450,7 @@ export default class App extends React.Component {
 
     /** Flattens results to relevant fields for basic users */
     exportToCSV = () => {
-        if(this.state.outputResults && this.state.outputResults.length > 0) {
+        if (this.state.outputResults && this.state.outputResults.length > 0) {
             const resultsForDownload = this.state.outputResults.map((process, idx) => {
                 let newResult = process.records.map((result, idx) => {
                     let newRecord = {
@@ -1465,13 +1465,13 @@ export default class App extends React.Component {
                         // decision: result.decision,
                         processId: result.processId
                     }
-                    if(!newRecord.processId) { // don't want to imply zeroes are valid
+                    if (!newRecord.processId) { // don't want to imply zeroes are valid
                         newRecord.processId = '';
                     }
                     return newRecord;
                 });
                 return newResult;
-                
+
             });
 
             // flatten, sort, convert to TSV, download
@@ -1486,7 +1486,7 @@ export default class App extends React.Component {
 
     /** Flattens process-oriented data to download as record metadata */
     downloadCurrentAsTSV = () => {
-        if(this.state.outputResults && this.state.outputResults.length > 0) {
+        if (this.state.outputResults && this.state.outputResults.length > 0) {
             const resultsForDownload = this.state.outputResults.map((process, idx) => {
                 let newResult = process.records.map((result, idx) => {
                     let newRecord = {
@@ -1506,21 +1506,21 @@ export default class App extends React.Component {
                         decision: result.decision,
                         size: result.size
                     }
-                    if(!newRecord.processId) { // don't want to imply zeroes are valid
+                    if (!newRecord.processId) { // don't want to imply zeroes are valid
                         newRecord.processId = '';
                     }
                     return newRecord;
                 });
                 return newResult;
-                
+
             });
 
             // flatten, sort, convert to TSV, download
             this.downloadResults(Globals
                 .jsonToTSV(resultsForDownload
                     .flat() // have to flatten from process structure
-                    .sort( 
-                        function(a, b) { // sort by ID
+                    .sort(
+                        function (a, b) { // sort by ID
                             return a.id - b.id;
                         }
                     )
@@ -1531,12 +1531,12 @@ export default class App extends React.Component {
 
     // best performance is to Blob it on demand
     downloadResults = (results, fileExt) => {
-        if(results) {
+        if (results) {
             const csvBlob = new Blob([results]);
             const today = new Date().toISOString();
             const csvFilename = `search_results_${today}.${fileExt}`;
 
-    
+
             if (window.navigator.msSaveOrOpenBlob) {  // IE hack; see http://msdn.microsoft.com/en-us/library/ie/hh779016.aspx
                 window.navigator.msSaveBlob(csvBlob, csvFilename);
             }
@@ -1552,87 +1552,89 @@ export default class App extends React.Component {
         }
     }
     toggleMapHide = () => {
-        this.setState({isMapHidden: !this.state.isMapHidden});
+        this.setState({ isMapHidden: !this.state.isMapHidden });
     }
     filterToggle = (boolVal) => {
         this.setState({ filtersHidden: boolVal });
     }
-	
 
-	render() {
-		if(this.state.verified){
 
-			return (
+    render() {
+        if (this.state.verified) {
+
+            return (
                 <>
-				<div id="app-content" className="footer-content">
+                    <div id="app-content" className="footer-content">
+                        <Helmet>
+                            <meta charSet="utf-8" />
+                            <title>Search - NEPAccess</title>
+                            <meta name="description" content="Search, download, and analyze environmental impact statements and other NEPA documents created under the US National Environmental Policy Act of 1969." data-react-helmet="true" />
+                            <link rel="canonical" href="https://www.nepaccess.org/search" />
+                        </Helmet>
+                        <Search
+                            search={this.startNewSearch}
+                            suggest={this.suggestFromTerms}
+                            lookupResult={this.state.lookupResult}
+                            filterResultsBy={this.filterResultsBy}
+                            searching={this.state.searching}
+                            useOptions={this.state.useSearchOptions}
+                            optionsChanged={this.optionsChanged}
+                            count={this.state.searchResults.length}
+                            filterToggle={this.filterToggle}
+                            networkError={this.state.networkError}
+                            parseError={this.state.parseError}
+                            finalCount={this._finalCount}
+                            draftCount={this._draftCount}
+                            eaCount={this._eaCount}
+                            noiCount={this._noiCount}
+                            rodCount={this._rodCount}
+                            scopingCount={this._scopingCount}
+                            fast41Count={this._fast41Count}
+                            onFast41Checked={this.onFast41Checked}
+                        />
+                        <SearchProcessResults
+                            sort={this.sort}
+                            informAppPage={this.setPageInfo}
+                            gatherSpecificHighlights={this.gatherSpecificHighlights}
+                            results={this.state.outputResults}
+                            geoResults={this.state.geoResults}
+                            filtersHidden={this.state.filtersHidden}
+                            searcherState={this._searcherState}
+                            geoLoading={this.state.geoLoading}
+                            resultsText={this.state.resultsText}
+                            searching={this.state.searching}
+                            snippetsDisabled={this.state.snippetsDisabled}
+                            scrollToBottom={this.scrollToBottom}
+                            scrollToTop={this.scrollToTop}
+                            shouldUpdate={this.state.shouldUpdate}
+                            download={this.downloadCurrentAsTSV}
+                            exportToSpreadsheet={this.exportToCSV}
+                            isMapHidden={this.state.isMapHidden}
+                            toggleMapHide={this.toggleMapHide}
+                            isFast41={this.state.searcherInputs.isFast41}
+                        />
+                    </div>
+                    <div ref={this.endRef} />
+                    <Footer id="footer"></Footer>
+                </>
+            )
+
+        }
+        else if (this.state.down) {
+            return (
+                <div className="content">
                     <Helmet>
                         <meta charSet="utf-8" />
                         <title>Search - NEPAccess</title>
                         <meta name="description" content="Search, download, and analyze environmental impact statements and other NEPA documents created under the US National Environmental Policy Act of 1969." data-react-helmet="true" />
                         <link rel="canonical" href="https://www.nepaccess.org/search" />
                     </Helmet>
-                    <Search 
-                        search={this.startNewSearch} 
-                        suggest={this.suggestFromTerms}
-                        lookupResult={this.state.lookupResult}
-                        filterResultsBy={this.filterResultsBy} 
-                        searching={this.state.searching} 
-                        useOptions={this.state.useSearchOptions}
-                        optionsChanged={this.optionsChanged}
-                        count={this.state.searchResults.length}
-                        filterToggle={this.filterToggle}
-                        networkError={this.state.networkError}
-                        parseError={this.state.parseError}
-                        finalCount={this._finalCount}
-                        draftCount={this._draftCount}
-                        eaCount={this._eaCount}
-                        noiCount={this._noiCount}
-                        rodCount={this._rodCount}
-                        scopingCount={this._scopingCount}
-                        fast41Count={this._fast41Count}
-                    />
-                    <SearchProcessResults 
-                        sort={this.sort}
-                        informAppPage={this.setPageInfo}
-                        gatherSpecificHighlights={this.gatherSpecificHighlights}
-                        results={this.state.outputResults} 
-                        geoResults={this.state.geoResults}
-                        filtersHidden={this.state.filtersHidden}
-                        // searcherState={this._searcherState}
-                        geoLoading={this.state.geoLoading}
-                        resultsText={this.state.resultsText} 
-                        searching={this.state.searching}
-                        snippetsDisabled={this.state.snippetsDisabled} 
-                        scrollToBottom={this.scrollToBottom}
-                        scrollToTop={this.scrollToTop}
-                        shouldUpdate={this.state.shouldUpdate}
-                        download={this.downloadCurrentAsTSV}
-                        exportToSpreadsheet={this.exportToCSV}
-                        isMapHidden={this.state.isMapHidden}
-                        toggleMapHide={this.toggleMapHide}
-                    />
-				</div>
-                <div ref={this.endRef} />
-                <Footer id="footer"></Footer>
-                </>
-			)
-
-		}
-        else if(this.state.down) {
-            return (
-            <div className="content">
-                <Helmet>
-                    <meta charSet="utf-8" />
-                    <title>Search - NEPAccess</title>
-                    <meta name="description" content="Search, download, and analyze environmental impact statements and other NEPA documents created under the US National Environmental Policy Act of 1969." data-react-helmet="true" />
-                    <link rel="canonical" href="https://www.nepaccess.org/search" />
-                </Helmet>
-                <div>
-                    <label className="logged-out-header">
-                        Sorry, the server isn't responding. If you're on a VPN, please try a different network, or else the server may be down for maintenance.
-                    </label>
-                </div>
-            </div>);
+                    <div>
+                        <label className="logged-out-header">
+                            Sorry, the server isn't responding. If you're on a VPN, please try a different network, or else the server may be down for maintenance.
+                        </label>
+                    </div>
+                </div>);
         }
         else { // show nothing until at least we've loaded
             return (<div className="content">
@@ -1649,12 +1651,12 @@ export default class App extends React.Component {
             </div>);
         }
     }
-    
-	// After render
-	componentDidMount() {
+
+    // After render
+    componentDidMount() {
         this.check();
         this._mounted = true;
-        
+
         // Running this here fixes polygons if user interrupts this process initiated by child component by navigating away
         this.getGeoDebounced();
 
@@ -1666,58 +1668,70 @@ export default class App extends React.Component {
                 rehydrate
             );
         }
-        catch(e) {
+        catch (e) {
             // do nothing
         }
     }
-    
+
     async componentWillUnmount() {
         // console.log("Unmount app");
         this._mounted = false;
 
         // Option: Rehydrate only if not interrupting a search?
         // if(!this.state.searching){
-            persist.setItem('results', JSON.stringify(this.state));
+        persist.setItem('results', JSON.stringify(this.state));
         // }
     }
-	
+
 }
 
 App.PropTypes = {
-  docType: PropTypes.string,
-  terms: PropTypes.string,
-  matchesEa: PropTypes.func,
-  matchesRod: PropTypes.func,
-  matchesScoping: PropTypes.func,
-  matchesNOI: PropTypes.func,
-  matchesFast41: PropTypes.func,
-  preProcessTerms: PropTypes.func,
-  postProcessTerms: PropTypes.func,
+    docType: PropTypes.string,
+    terms: PropTypes.string,
+    matchesEa: PropTypes.func,
+    matchesRod: PropTypes.func,
+    matchesScoping: PropTypes.func,
+    matchesNOI: PropTypes.func,
+    matchesFast41: PropTypes.func,
+    preProcessTerms: PropTypes.func,
+    postProcessTerms: PropTypes.func,
 };
 
 function matchesEa(docType) {
     return (
-        (docType.toLowerCase() === "ea") );
+        (docType.toLowerCase() === "ea"));
 }
 
 function matchesRod(docType) {
     return (
-        (docType.toLowerCase() === "rod") );
+        (docType.toLowerCase() === "rod"));
 }
 
 function matchesScoping(docType) {
     return (
-        (docType.toLowerCase() === "scoping report") );
+        (docType.toLowerCase() === "scoping report"));
 }
 function matchesNOI(docType) {
     return (
-        (docType.toLowerCase() === "noi") );
+        (docType.toLowerCase() === "noi"));
 }
 function matchesFast41(docType) {
     return (
-        (docType.toLowerCase().includes("fast41")) 
+        (docType.toLowerCase().includes("fast41"))
     );
 }
+
+function onFast41Checked(checked) {
+    console.log('onFast41Checked', checked);
+    this.setState({
+        ...this.state,
+        searcherState: {
+            ...this.state.searcherState,
+            fast41: checked
+        },
+    });
+}
+
 /** Return modified terms for user to see */
 function preProcessTerms(terms) {
     return terms;
@@ -1725,7 +1739,7 @@ function preProcessTerms(terms) {
 
 /** Return modified terms but not for user to see */
 function postProcessTerms(terms) {
-    return terms.replaceAll(':','');
-        // .replaceAll(/(^|[\s]+)US($|[\s]+)/g,' ("U. S." | U.S. | US) ') // this was a very bad idea
-        // .replaceAll(/(^|[\s]+)U\.S\.($|[\s]+)/g,' ("U. S." | U.S. | US) ');
+    return terms.replaceAll(':', '');
+    // .replaceAll(/(^|[\s]+)US($|[\s]+)/g,' ("U. S." | U.S. | US) ') // this was a very bad idea
+    // .replaceAll(/(^|[\s]+)U\.S\.($|[\s]+)/g,' ("U. S." | U.S. | US) ');
 }
