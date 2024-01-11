@@ -11,6 +11,7 @@ import DetailsUpdate from './DetailsUpdate.js';
 import DetailsFileResults from './DetailsFileResults.js';
 import DetailsRestore from './DetailsRestore.js';
 import GeojsonMap from '../GeojsonMap.js';
+import CheckIcon from '@mui/icons-material/Check';
 
 import '../index.css';
 import './match.css';
@@ -249,6 +250,7 @@ export default class RecordDetailsTab extends React.Component {
                 size: result.size,
                 id: result.id,
                 folder: result.folder,
+                isFast41: result.isFast41 ? "yes" : "no"
             };
             return newObject;
         });
@@ -599,7 +601,20 @@ export default class RecordDetailsTab extends React.Component {
                 // Title now outside this structure, skip nulls here also
                 if(key==='title' || cellData[key] === null) {
                     return '';
-                } 
+                }
+                else if(key === 'isFast41' && cellData[key] === true){
+                   return( 
+                   <div>
+                    <span class="modal-title">
+                        
+                        Fast 41 Project?
+                    </span>
+                        <span class="modal-line">
+                             <CheckIcon variant="small" color="primary" />
+                        </span>
+                    </div>
+                   )
+                }
                 // Space after semicolon
                 else if(key==='state') {
                     return (<p key={i} className='modal-line'><span className='modal-title'>{keyName}:</span> <span className="bold">{cellData[key].replaceAll(';',"; ")}</span></p>);

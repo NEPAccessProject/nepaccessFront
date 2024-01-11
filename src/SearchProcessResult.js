@@ -8,14 +8,14 @@ import DownloadFiles from './DownloadFiles';
 
 import Tippy from '@tippyjs/react'
 import PropTypes from 'prop-types';
-
+import CheckIcon from '@mui/icons-material/Check';
 // TODO: Filtering results etc. rerenders and loses track of downloads
 
 export default class SearchProcessResult extends React.Component {
 
-	constructor(props) {
-		super(props);
-		this.state = { 
+    constructor(props) {
+        super(props);
+        this.state = {
             fileProgressValue: null,
             downloadText: 'Download',
             downloadClass: 'bold',
@@ -43,15 +43,15 @@ export default class SearchProcessResult extends React.Component {
         // this.scrollTo(offs);
     }
     scrollTo = (offs) => {
-        setTimeout(function() {
-            window.scrollTo(0,offs);
+        setTimeout(function () {
+            window.scrollTo(0, offs);
         }, 250);
     }
 
     showTitle = () => {
         if (this.props) {
             let _href = `./process-details?id=${this.props.cell._cell.row.data.processId}`;
-            if(!this.props.cell._cell.row.data.isProcess) {
+            if (!this.props.cell._cell.row.data.isProcess) {
                 _href = `./record-details?id=${this.props.cell._cell.row.data.processId}`;
             }
 
@@ -61,9 +61,9 @@ export default class SearchProcessResult extends React.Component {
                         Title:
                         <Tippy className="tippy-tooltip"
                             trigger='mouseenter focus' content="Opens a new tab with more details">
-                            <a className="link" target="_blank" rel="noopener noreferrer" 
-                                    href={_href}>
-                                            {this.props.cell._cell.row.data.title} 
+                            <a className="link" target="_blank" rel="noopener noreferrer"
+                                href={_href}>
+                                {this.props.cell._cell.row.data.title}
                             </a>
                         </Tippy>
                     </span>
@@ -80,10 +80,10 @@ export default class SearchProcessResult extends React.Component {
         );
     }
     showState = () => {
-        if(this.props && this.props.cell._cell.row.data.state){
+        if (this.props && this.props.cell._cell.row.data.state) {
             return (
                 <div><span className="cardHeader">State:
-                    <span>{this.props.cell._cell.row.data.state.replaceAll(";","; ")}</span></span>
+                    <span>{this.props.cell._cell.row.data.state.replaceAll(";", "; ")}</span></span>
                 </div>
             );
         } else {
@@ -95,8 +95,8 @@ export default class SearchProcessResult extends React.Component {
         }
     }
     showCounty = () => {
-        if(this.props && this.props.cell._cell.row.data.county){
-            const countyDisplay = this.props.cell._cell.row.data.county.replaceAll(";","; ");
+        if (this.props && this.props.cell._cell.row.data.county) {
+            const countyDisplay = this.props.cell._cell.row.data.county.replaceAll(";", "; ");
             return (
                 <div><span className="cardHeader">County:
                     <span>{countyDisplay}</span></span>
@@ -107,8 +107,8 @@ export default class SearchProcessResult extends React.Component {
         }
     }
     showAction = () => {
-        if(this.props && this.props.cell._cell.row.data.action && Globals.authorized()){
-            const actionDisplay = this.props.cell._cell.row.data.action.replaceAll(";","; ");
+        if (this.props && this.props.cell._cell.row.data.action && Globals.authorized()) {
+            const actionDisplay = this.props.cell._cell.row.data.action.replaceAll(";", "; ");
             return (
                 <div><span className="cardHeader">Action:
                     <span>{actionDisplay}</span></span>
@@ -119,8 +119,8 @@ export default class SearchProcessResult extends React.Component {
         }
     }
     showDecision = () => {
-        if(this.props && this.props.cell._cell.row.data.decision && Globals.authorized()){
-            const decisionDisplay = this.props.cell._cell.row.data.decision.replaceAll(";","; ");
+        if (this.props && this.props.cell._cell.row.data.decision && Globals.authorized()) {
+            const decisionDisplay = this.props.cell._cell.row.data.decision.replaceAll(";", "; ");
             return (
                 <div><span className="cardHeader">Decision:
                     <span>{decisionDisplay}</span></span>
@@ -130,17 +130,17 @@ export default class SearchProcessResult extends React.Component {
             return <></>;
         }
     }
-    
+
     /** Used by showText(). 
      * Takes: record ID,filename,text,index; 
      * Returns: HTML for React incl. DownloadFile (which handles logging downloads)
      */
-    showFragment = (_id,_filename,text,index) => {
-        if(text) { // got text highlight for this file
+    showFragment = (_id, _filename, text, index) => {
+        if (text) { // got text highlight for this file
             return (
-                <span className="fragment-container" key={ `${_id}-${index}` }>
+                <span className="fragment-container" key={`${_id}-${index}`}>
                     <span className="cardHeader bold filename-inner">
-                        <DownloadFile key={_filename} downloadType="nepafile" 
+                        <DownloadFile key={_filename} downloadType="nepafile"
                             recordId={_id}
                             id={_id}
                             filename={_filename}
@@ -148,23 +148,23 @@ export default class SearchProcessResult extends React.Component {
                     </span>
 
                     <span className="card-highlight fragment"
-                            dangerouslySetInnerHTML={{
-                                __html:text
-                            }}>
+                        dangerouslySetInnerHTML={{
+                            __html: text
+                        }}>
                     </span>
                 </span>
             );
-        } else if(typeof(text) === 'undefined') { // still loading
+        } else if (typeof (text) === 'undefined') { // still loading
             return (
-                <span className="fragment-container" key={ `${_id}-${index}` }>
+                <span className="fragment-container" key={`${_id}-${index}`}>
                     <span className="cardHeader bold filename-inner">
-                        <DownloadFile key={_filename} downloadType="nepafile" 
+                        <DownloadFile key={_filename} downloadType="nepafile"
                             recordId={_id}
                             id={_id}
                             filename={_filename}
                             results={true} />
                     </span>
-                    
+
                     <div className="card-loader-holder">
                         <div className="loader">Loading text snippet...</div>
                     </div>
@@ -173,9 +173,9 @@ export default class SearchProcessResult extends React.Component {
             );
         } else { // else we didn't find any text snippet and it's just blank (this is likely impossible).
             return (
-                <span className="fragment-container" key={ `${_id}-${index}` }>
+                <span className="fragment-container" key={`${_id}-${index}`}>
                     <span className="cardHeader bold filename-inner">
-                        <DownloadFile key={_filename} downloadType="nepafile" 
+                        <DownloadFile key={_filename} downloadType="nepafile"
                             recordId={_id}
                             id={_id}
                             filename={_filename}
@@ -186,31 +186,31 @@ export default class SearchProcessResult extends React.Component {
         }
     }
     /** Used by showRecord(). 
-     * Returns HTML for downloadable filenames each with highlight(s) as highlights are populated; show more/less buttons */ 
+     * Returns HTML for downloadable filenames each with highlight(s) as highlights are populated; show more/less buttons */
     showText = (record, _index) => {
-        if(record && record.name){
+        if (record && record.name) {
             let filenames = record.name.split(">");
             // Note: texts should be an array already
             let texts = record.plaintext;
-            let combined = filenames.map(function (value, index){
+            let combined = filenames.map(function (value, index) {
                 return [value, texts[index]]
             });
 
-            let _id = record.id; 
+            let _id = record.id;
             // console.log(record.name.substring(0,10));
-            if(!this.props.show) {
+            if (!this.props.show) {
                 return (
                     <div className="margins" key={_id}>
                         (all text snippets hidden)
                     </div>
                 );
-            } else if(!this.hidden(record.id)) {
-                if(combined.length > 1) {
+            } else if (!this.hidden(record.id)) {
+                if (combined.length > 1) {
 
                     return (
                         <div key={_id}>
-                            {this.showFragment(_id,combined[0][0],combined[0][1],0)}
-        
+                            {this.showFragment(_id, combined[0][0], combined[0][1], 0)}
+
                             <div className="margins" >
                                 <div>
                                     <span className="hide-button" onClick={(e) => this.hide(e, _index, record)}>
@@ -220,16 +220,16 @@ export default class SearchProcessResult extends React.Component {
                             </div>
                         </div>);
                 } else {
-                    return this.showFragment(_id,combined[0][0],combined[0][1],0);
+                    return this.showFragment(_id, combined[0][0], combined[0][1], 0);
                 }
-            } else if(record.folder) {
+            } else if (record.folder) {
                 return (
                     <div>
                         {combined.map((combo, index) => {
-                            if(index === 0) {
+                            if (index === 0) {
                                 return (
                                     <div key={_id}>
-                                        {this.showFragment(_id,combo[0],combo[1],index)}
+                                        {this.showFragment(_id, combo[0], combo[1], index)}
                                         <div className="margins">
                                             <span className="hide-button" onClick={(e) => this.hide(e, _index, record)}>
                                                 Show fewer text snippets
@@ -238,7 +238,7 @@ export default class SearchProcessResult extends React.Component {
                                     </div>
                                 );
                             } else {
-                                return this.showFragment(_id,combo[0],combo[1],index);
+                                return this.showFragment(_id, combo[0], combo[1], index);
                             }
                         })}
                     </div>
@@ -249,18 +249,18 @@ export default class SearchProcessResult extends React.Component {
                         <div className="wide-flex">
                             <span className="hide-button" onClick={(e) => this.hide(e, _index, record)}>Hide these text snippets</span>
                         </div>
-                        {combined.map(function(combo, index){
+                        {combined.map(function (combo, index) {
                             return (
-                                <span className="fragment-container" key={ combo[0] }>
+                                <span className="fragment-container" key={combo[0]}>
                                     <span className="cardHeader bold filename-inner">
                                         {combo[0]}
                                     </span>
-                                    
-                                    
-                                    <span className="card-highlight fragment" 
-                                            dangerouslySetInnerHTML={{
-                                                __html:combo[1]
-                                            }}>
+
+
+                                    <span className="card-highlight fragment"
+                                        dangerouslySetInnerHTML={{
+                                            __html: combo[1]
+                                        }}>
                                     </span>
                                 </span>
                             );
@@ -268,47 +268,47 @@ export default class SearchProcessResult extends React.Component {
                     </div>
                 );
             }
-            
 
-        } else if(record && record.matchPercent) {
+
+        } else if (record && record.matchPercent) {
             return (
                 <div className="fragment-container">
                     <div>
                         <span className="cardHeader"><span>
-                            {"" + (record.matchPercent*100) + "% Match"}
+                            {"" + (record.matchPercent * 100) + "% Match"}
                         </span></span>
                     </div>
                 </div>
             );
         }
     }
-    
+
     // Show download availability, filename, size, and download progress if downloading/downloaded
     showFileDownload = (record) => {
         if (record) {
             let size = 0;
-            if(record.size && record.size > 0) {
-                size = (Math.ceil((record.size / 1024) / 10.24)/100);
+            if (record.size && record.size > 0) {
+                size = (Math.ceil((record.size / 1024) / 10.24) / 100);
             }
 
-            if(record.size && record.size > 200) {
-                if(record.folder) {
-                    return this.renderDownload(record.id,size,record.folder + "_" + record.documentType + ".zip",true,"Folder");
-                } else if(record.filename) {
-                    return this.renderDownload(record.id,size,record.filename,true,"EIS");
+            if (record.size && record.size > 200) {
+                if (record.folder) {
+                    return this.renderDownload(record.id, size, record.folder + "_" + record.documentType + ".zip", true, "Folder");
+                } else if (record.filename) {
+                    return this.renderDownload(record.id, size, record.filename, true, "EIS");
                 }
             } else {
                 return <div className="table-row"><span className="cardHeader filename missing">File(s) not yet available</span></div>;
             }
-		}
-		else {
-			return "";
-		}
+        }
+        else {
+            return "";
+        }
     }
 
 
     showRecords = () => {
-        if(this.props && this.props.cell._cell.row.data.records){
+        if (this.props && this.props.cell._cell.row.data.records) {
             const records = this.props.cell._cell.row.data.records;
 
             // Sort records by date instead of relevance
@@ -320,24 +320,24 @@ export default class SearchProcessResult extends React.Component {
             // const newRecords = records
             // Deep clone
             const newRecords = JSON.parse(JSON.stringify(records))
-            .sort(
-                (b,a) => {
-                    if (b.registerDate > a.registerDate) {
-                      return 1;
-                    }
-                    if (b.registerDate < a.registerDate) {
-                      return -1;
-                    }
-                    return 0;
-                })
-            .map(record => {
-                return this.showRecord(record, this.props.cell._cell.row.data.originalIndex);
-            });
+                .sort(
+                    (b, a) => {
+                        if (b.registerDate > a.registerDate) {
+                            return 1;
+                        }
+                        if (b.registerDate < a.registerDate) {
+                            return -1;
+                        }
+                        return 0;
+                    })
+                .map(record => {
+                    return this.showRecord(record, this.props.cell._cell.row.data.originalIndex);
+                });
 
             return newRecords;
         }
     }
-    
+
     showRecord = (record, _index) => {
         return (<div key={record.relevance} className="record">
             <div className="record-line">
@@ -350,8 +350,8 @@ export default class SearchProcessResult extends React.Component {
             {this.showText(record, _index)}
         </div>)
     }
-    showRecordLink = (id,type) => {
-        if(Globals.approverOrHigher()) {
+    showRecordLink = (id, type) => {
+        if (Globals.approverOrHigher()) {
             return <a className="link" target="_blank" rel="noopener noreferrer" href={`./record-details?id=${id}`}>
                 {this.showDocumentType(type)}
             </a>;
@@ -361,35 +361,57 @@ export default class SearchProcessResult extends React.Component {
             </span>;
         }
     }
+
+    showFast41 = () => {
+        console.log('MATCHES FAST 41', this.props.cell._cell.row.data.records);
+        //10.192.196.55
+        let records = this.props.cell._cell.row.data.records
+        let match = false
+        records.map((record) => {
+            match = true
+        })
+        if(match){
+            return (
+                <span>
+                    <span className="cardHeader">
+                    Fast 41:<span><CheckIcon variant="small" color="primary" /></span>
+                    </span>
+                </span>
+            );
+        }
+    }
+
+
     showDocumentType = (docType) => {
-        if(docType.toLowerCase() === "rod") {
+        if (docType.toLowerCase() === "rod") {
             return "Record of Decision (ROD)";
-        } else if(Globals.isFinalType(docType) || Globals.isDraftType(docType)) {
-            if(docType.toLowerCase()==='final and rod') {
-                return "Final Environmental Impact Statement And ROD"; 
+        } else if (Globals.isFinalType(docType) || Globals.isDraftType(docType)) {
+            if (docType.toLowerCase() === 'final and rod') {
+                return "Final Environmental Impact Statement And ROD";
             } else {
-                return docType + " Environmental Impact Statement"; 
+                return docType + " Environmental Impact Statement";
             }
         } else {
             return docType;
         }
     }
 
-    renderDownload = (_id,_size,_filename,_results, _downloadType) => {
+    renderDownload = (_id, _size, _filename, _results, _downloadType) => {
         return (<DownloadFiles key={_id} downloadType={_downloadType}
-                        recordId={_id}
-                        id={_id}
-                        size={_size}
-                        filename={_filename}
-                        innerText={_filename}
-                        results={_results} />);
+            recordId={_id}
+            id={_id}
+            size={_size}
+            filename={_filename}
+            innerText={_filename}
+            results={_results} />);
     }
 
 
 
-	render() {
+    render() {
+        const records = this.props.cell._cell.row.data.records;
         let _key = "";
-        if(this.props.cell._cell.row.data.records[0].id) {
+        if (this.props.cell._cell.row.data.records[0].id) {
             _key = this.props.cell._cell.row.data.records[0].id;
         } else {
             console.log("** ** ** NO KEY", this.props.cell._cell.row.data.records[0]);
@@ -408,6 +430,8 @@ export default class SearchProcessResult extends React.Component {
                             {this.showCounty()}
                             {this.showAction()}
                             {this.showDecision()}
+                            {this.showFast41()}
+
                         </div>
                     </div>
                     <div className="records">
@@ -429,31 +453,32 @@ export default class SearchProcessResult extends React.Component {
 }
 SearchProcessResult.PropTypes = {
     cell: PropTypes.shape({
-      _cell: PropTypes.shape({
-        row: PropTypes.shape({
-          data: PropTypes.shape({
-            action: PropTypes.string,
-            agency: PropTypes.string,
-            county: PropTypes.string,
-            decision: PropTypes.string,
-            processId: PropTypes.string,
-            state: PropTypes.string,
-            title: PropTypes.string,
-            records: PropTypes.arrayOf(
-              PropTypes.shape({
-                id: PropTypes.string,
-                registerDate: PropTypes.string,
-                documentType: PropTypes.string,
-                name: PropTypes.string,
-                size: PropTypes.number,
-                plaintext: PropTypes.arrayOf(PropTypes.string),
-              })
-            ),
-          })
+        _cell: PropTypes.shape({
+            row: PropTypes.shape({
+                data: PropTypes.shape({
+                    action: PropTypes.string,
+                    agency: PropTypes.string,
+                    county: PropTypes.string,
+                    decision: PropTypes.string,
+                    processId: PropTypes.string,
+                    state: PropTypes.string,
+                    title: PropTypes.string,
+                    records: PropTypes.arrayOf(
+                        PropTypes.shape({
+                            id: PropTypes.string,
+                            registerDate: PropTypes.string,
+                            documentType: PropTypes.string,
+                            name: PropTypes.string,
+                            size: PropTypes.number,
+                            isFast41: PropTypes.bool,
+                            plaintext: PropTypes.arrayOf(PropTypes.string),
+                        })
+                    ),
+                })
+            })
         })
-      })
     }),
     hidden: PropTypes.func,
     hideText: PropTypes.func,
     show: PropTypes.bool,
-  };
+};

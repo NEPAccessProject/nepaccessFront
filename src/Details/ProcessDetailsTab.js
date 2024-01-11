@@ -10,6 +10,7 @@ import Chart from './Chart.js';
 import Globals from '../globals.js';
 import DownloadFiles from '../DownloadFiles.js';
 import PropTypes from 'prop-types';
+import CheckIcon from '@mui/icons-material/Check';
 
 // TODO: Get all data for all records for process (needs new backend route)
 // buildProcess() gets all metadata for process ID.  Move that to the ?id= param and give it the process ID from the results
@@ -20,6 +21,7 @@ import PropTypes from 'prop-types';
 export default class ProcessDetailsTab extends React.Component {
 
 	constructor(props){
+		console.log(`ProcessDetailsTab ~ constructor ~ props:`, props);
 		super(props);
         this.state = {
             process: null,
@@ -348,6 +350,7 @@ export default class ProcessDetailsTab extends React.Component {
 
             //Send the AJAX call to the server
             this.get(url, params).then(response => {
+                console.log('PROCESS Response',response)
                 if(response && response.length > 0) {
                     let _title = response[0].doc.title;
                     let _latestDate = response[0].doc.registerDate;
@@ -474,16 +477,26 @@ export default class ProcessDetailsTab extends React.Component {
                 if(Globals.isFinalType(el.doc.documentType)) {
                     cellData = el.doc;
                     return true;
-                }
+                }    
                 return false;
             });
-
+            console.log('CELL DATAAA', cellData);
             return Object.keys(cellData).map( (key, i) => {
                 let keyName = key;
-                // hide blank fields
-                if(!cellData[key] || cellData[key].length === 0) {
-                    return '';
-                } else if(key==='state') {
+                // hide blank fields - fast41 is a boolean value so we want to exclude it from this check
+                if(key !== "isFast41" && !cellData[key]) {
+                    return (<></>)
+                }                
+                else if(keyName==='isFast41'){
+                     return 
+                    (<p className='modal-line'>
+                        <span className='modal-title'>{key}:</span> <span className="bold">
+                                <CheckIcon variant="small" color="primary" />
+                        </span>
+                    </p>
+                    );
+                }  
+                else if(key==='state') {
                     return (<p key={i} className='modal-line'><span className='modal-title'>{keyName}:</span> <span className="bold">{cellData[key].replaceAll(';',"; ")}</span></p>);
                 } else if(key==='county') {
                     return (<p key={i} className='modal-line'><span className='modal-title'>{keyName}:</span> <span className="bold">{cellData[key].replaceAll(';',"; ")}</span></p>);
@@ -508,7 +521,8 @@ export default class ProcessDetailsTab extends React.Component {
                 } else if (key==='firstRodDate') {
                     keyName = 'Record of Decision (ROD) date'
                 // exclusions:
-                } else if(key==='size' || key==='matchPercent' || key==='commentDate' || key==='id' || key==='id_' || 
+                }
+                else if(key==='size' || key==='matchPercent' || key==='commentDate' || key==='id' || key==='id_' || 
                         key==='plaintext' || key==='folder' || key==='link' || key==='notes' || key==='commentsFilename'
                         || key === 'filename' || key==='luceneIds' || key==='status' || key==='processId' || key==='summaryText'
                         || key==='registerDate' || key==='title' || key==='documentType') { 

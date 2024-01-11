@@ -995,7 +995,7 @@ class Search extends React.Component {
                                 checked={this.state.isFast41}
                                 onChange={this.onFast41Checked} />
                             <label className="checkbox-text no-select cursor-pointer" htmlFor="fast41">Fast 41 Documents Only</label>
-                        </div>
+                        </div>  
                         {this.renderClearFiltersButton()}
                     </div>
 
@@ -1153,33 +1153,6 @@ class Search extends React.Component {
                                     <span className="checkbox-text">Scoping Report <i>{this.props.fast41Count}</i></span>
                                 </label>
                             </div>
-                            <div className="checkbox-container">
-                                <label className="clickable checkbox-text">
-                                    <input type="checkbox" name="typeFast41" className="sidebar-checkbox"
-                                        tabIndex="12"
-                                        checked={this.state.typeFast41} onChange={this.onTypeChecked} />
-                                    <span className="checkbox-text">Fast-41 <i>{this.props.fast41Count}</i></span>
-                                </label>
-                                <Tippy className="tippy-tooltip--small searchTips" trigger='manual click'
-                                    hideOnClick={true}
-                                    interactive={true}
-                                    placement="bottom"
-                                    content={
-                                        <div>
-                                            Currently the site contains <b>{this.state.EISCount}</b> Draft or Final Environmental Impact Statements
-                                            from: <b>{this.state.firstYear}-{this.state.lastYear}</b>.
-                                            More files are being added continuously.
-                                            <div className="text-center margin-top">
-                                                <a href="available-documents" target="_blank" rel="noopener noreferrer">Available files</a>
-                                            </div>
-                                        </div>}
-                                >
-                                    {<span className={"side-link inline"}>
-                                        <HelpIcon fontSize='small' />
-                                    </span>}
-                                </Tippy>
-                            </div>
-
                             <div className="checkbox-container">
                                 <label className="clickable checkbox-text">
                                     <input type="checkbox" name="typeFinal" className="sidebar-checkbox"
