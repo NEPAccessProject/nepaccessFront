@@ -46,3 +46,4 @@ src/NEPAccess.code-workspace
 *.mp4
 **/cypress/*.png
 *.mp4
+src/quokaa.js
