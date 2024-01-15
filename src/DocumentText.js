@@ -1,6 +1,7 @@
 import React from 'react';
 import axios from 'axios';
-import Globals from './globals.js';
+import Globals from './globals.jsx';
+
 
 class DocumentText extends React.Component {
     state = {

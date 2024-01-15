@@ -81,8 +81,6 @@ export function showTimeline(dates, WIDTH) {
     }
 }
 
-// d3-timeline
-
 d3.timeline = function() {
     var DISPLAY_TYPES = ["circle", "rect"];
 
