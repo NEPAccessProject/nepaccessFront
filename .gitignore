@@ -41,3 +41,5 @@ src/NEPAccess frontend source/UserDetails.txt
 *.old
 *.old2
 src/NEPAccess.code-workspace
+reactcert/key.pem
+*.pem
