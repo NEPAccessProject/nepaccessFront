@@ -27,7 +27,8 @@ export default class App extends React.Component {
 			state: [],
 			needsComments: false,
 			needsDocument: false,
-            limit: 1000000
+            limit: 1000000,
+            isFast41: false,
 		},
         searchResults: [],
         outputResults: [],
@@ -94,6 +95,7 @@ export default class App extends React.Component {
        this._noiCount = "";
        this._rodCount = "";
        this._scopingCount = "";
+       this._fast41Count = "";
     }
 
     optionsChanged = (val) => {
@@ -534,7 +536,8 @@ export default class App extends React.Component {
                     typeDraft: this.state.searcherInputs.typeDraft,
                     typeOther: this.state.searcherInputs.typeOther,
                     needsComments: this.state.searcherInputs.needsComments,
-                    needsDocument: this.state.searcherInputs.needsDocument
+                    needsDocument: this.state.searcherInputs.needsDocument,
+                    isFast41: this.state.searcherInputs.isFast41,
                 };
             }
 
@@ -620,6 +623,7 @@ export default class App extends React.Component {
                             
                             action: doc.action,
                             decision: doc.decision,
+                            isFast41: true,
 
                             relevance: idx + 1 // sort puts "falsy" values at the bottom incl. 0
                         };
@@ -736,7 +740,8 @@ export default class App extends React.Component {
                 typeDraft: this.state.searcherInputs.typeDraft,
                 typeOther: this.state.searcherInputs.typeOther,
                 needsComments: this.state.searcherInputs.needsComments,
-                needsDocument: this.state.searcherInputs.needsDocument
+                needsDocument: this.state.searcherInputs.needsDocument,
+                isFast41: this.state.searcherInputs.isFast41,
             };
         }
 
@@ -815,7 +820,7 @@ export default class App extends React.Component {
 
                         action: doc.action,
                         decision: doc.decision,
-
+                        isFast41: doc.isFast41,
                         relevance: idx + 1 // sort puts "falsy" values at the bottom incl. 0
                     };
                     return newObject;

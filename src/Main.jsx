@@ -119,11 +119,12 @@ class Main extends React.Component {
             }
         })
         .catch((err) => { // Token expired or invalid, or server is down
-            console.error('Error Retrieving Role',err);
             if(err.message === "Network Error") {
+                console.error('UNHANDLED NETWORK ERROR ',err);
                 // do nothing
             } else { // token problem
                 localStorage.clear();
+                console.log('UNHANDLED TOKEN ERROR - Clean localstorage ',err);
                 this.setState({ role: undefined, loggedIn: false, anonymous: true });
             }
         });
@@ -195,8 +196,6 @@ class Main extends React.Component {
 
 
     componentDidUpdate(prevProps) {
-        console.log("Main Component update Previous PROPS: ", prevProps);
-        console.log("Main Component update Current PROPS: ", this.props);
         if (this.props.location !== prevProps.location) {
             this.onRouteChanged();
         }

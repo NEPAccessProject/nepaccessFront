@@ -54,6 +54,7 @@ export default class Approve extends React.Component {
     }
     
     checkApprover = () => {
+        try{
         let checkUrl = new URL('user/checkApprover', Globals.currentHost);
         axios({
             url: checkUrl,
@@ -67,34 +68,42 @@ export default class Approve extends React.Component {
             }
         }).catch(error => {
             //
+            console.error('Error Checking appr', error);
         })
+    } catch (error) {
+        console.error('Un expected ERROR checking approver',error);
+    }
     }
 
     getUsers = () => {
         let getUrl = Globals.currentHost + "user/getAll";
-        
-        axios.get(getUrl, {
-            params: {
-                
-            }
-        }).then(response => {
-            let responseOK = response && response.status === 200;
-            if (responseOK && response.data) {
-                return response.data;
-            } else {
-                return null;
-            }
-        }).then(parsedJson => { 
-            if(parsedJson){
-                this.setState({
-                    users: this.setupData(parsedJson)
-                });
-            } else { // null/404
+        try{
+            axios.get(getUrl, {
+                params: {
+                    
+                }
+            }).then(response => {
+                let responseOK = response && response.status === 200;
+                if (responseOK && response.data) {
+                    return response.data;
+                } else {
+                    return null;
+                }
+            }).then(parsedJson => { 
+                if(parsedJson){
+                    this.setState({
+                        users: this.setupData(parsedJson)
+                    });
+                } else { // null/404
 
-            }
-        }).catch(error => {
-            console.error(error);
-        });
+                }
+            }).catch(error => {
+                console.error(error);
+            });
+        }
+        catch(e){
+            console.error('FAILED TO GET USERS',e);
+        }
     }
 
     setupData = (results) => {
@@ -142,6 +151,9 @@ export default class Approve extends React.Component {
             // let responseOK = response && response.status === 200;
         }).catch(error => { // redirect
             console.error(error);
+        })
+        .finally(() => {
+            this.updateTable();
         })
         
         // this.updateTable();

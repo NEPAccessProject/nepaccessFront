@@ -1,0 +1,61 @@
+@host=http://localhost:8080/
+@host=https://bighorn.sbs.arizona.edu:8443/nepaBackend/
+###
+# GET {{host}}/check HTTP/1.1
+
+###
+
+GET {{host}}text/sync HTTP/1.1
+
+###
+GET {{host}}/file/uploadCSV_ids HTTP/1.1
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJnbXMiLCJleHAiOjE3MDUxMDIwOTMsImp0aSI6IjY0NSJ9.m5ncV6LWWy6iMkyZyNZiMpMrbuyjHAd-b9bxGhqv3isKy6oN8FlXMVNrBJ0Cas5nOyCAa8xWto7X9b3Hq0y7LA
+
+###
+GET {{host}}file/can_link_folder_type?path=EisDocuments-441633.zip HTTP/1.1
+#Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJnbXMiLCJleHAiOjE3MDUyNzE2OTUsImp0aSI6IjY0NSJ9.zh_om30fE8wQtHTSCrdiX3miXfFpo9D_Xo3lCTj8Kh9kLb6R4jvL8nThrPba_6grJ0nxpf2Mv5ux3V35q2Hn1A
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJnbXMiLCJleHAiOjE3MDU1MjMyNDMsImp0aSI6IjY0NSJ9.qSEMFaEqUedMadbR3bpyJITt2hdw7PdFo2VaRmwtX_4bMN_h9GmSr3CkE_ET8M9IB1JeHBLJ6RNkoolhwUoE-Q
+
+#localhost
+###
+GET {{host}}file/can_link_folder_type?path=EisDocuments-442559.zip
+Authorization: Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJnbXMiLCJleHAiOjE3MDUyNzE2OTUsImp0aSI6IjY0NSJ9.zh_om30fE8wQtHTSCrdiX3miXfFpo9D_Xo3lCTj8Kh9kLb6R4jvL8nThrPba_6grJ0nxpf2Mv5ux3V35q2Hn1
+Content-Type: multipart/form-data
+
+###
+GET {{host}}stats/fast41_count HTTP/1.1
+
+
+###
+
+POST {{host}}text/search_no_context HTTP/1.1
+Content-Type: application/json
+
+{   
+    "title": "KC-46A"
+}
+
+###
+POST {{host}}text/search_top HTTP/1.1
+Content-Type: application/json
+
+{   
+    "isFast41": true
+}
+
+###
+POST {{host}}text/search_no_context HTTP/1.1
+Content-Type: application/json
+
+{   
+    "isFast41": 1
+
+}
+
+
+###
+GET {{host}}user/get_role HTTP/1.1
+
+###
+GET {{host}}stats/fast41_count HTTP/1.1
+
