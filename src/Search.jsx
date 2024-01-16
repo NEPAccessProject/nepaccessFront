@@ -21,6 +21,10 @@ import persist from './persist.jsx';
 
 import { withRouter } from "react-router";
 import TippySearchTips from './TippySearchTips.jsx';
+import { actionOptions,
+    agencyOptions,
+    locations,
+    stateOptions} from './options.js'
 
 // import PropTypes from "prop-types";
 
@@ -30,7 +34,6 @@ const FULLSTYLE = {display: 'block',
     margin: '0 auto',
     width: '80%',
     minWidth: '20%',
-    maxWidth: '100%',
     marginBottom: '20px',
     border: '2px solid rgba(218, 218, 218, 1)',
     background: 'rgba(240, 239, 237, 1)'
@@ -65,6 +68,7 @@ class Search extends React.Component {
             decisionRaw: [],
             action: [],
             actionRaw: [],
+            isFast41: false,
             typeAll: true,
             typeFinal: false,
             typeDraft: false,
@@ -199,6 +203,7 @@ class Search extends React.Component {
             agencyRaw: [],
             cooperatingAgency: [],
             cooperatingAgencyRaw: [],
+            isFast41: false,
             state: [],
             stateRaw: [],
             county: [],
@@ -226,6 +231,16 @@ class Search extends React.Component {
         
     }
 
+    onFast41Checked = (evt) => {
+        console.log(`Changing fast41 to ${!this.state.isFast41}`, evt);
+        this.setState({
+            isFast41: !this.state.isFast41,
+        }, () => {
+            //this.props.onFast41Checked(evt.target.checked);
+            console.log('Starting  filterBy on fast41', this.state);
+            this.filterBy(this.state);
+        });
+    }
     onRadioChange = (evt) => {
         this.setState({ [evt.target.name]: evt.target.value }, () => {
             // this.debouncedSearch(this.state);
@@ -705,33 +720,7 @@ class Search extends React.Component {
 
         // original data has some abbreviation-only/incorrect/missing entries (ARD, FirstNet, NGB, URC?)
         // { value: 'ARD', label: 'ARD' }
-        const agencyOptions = [	
-            { value: 'ACHP', label: 'Advisory Council on Historic Preservation (ACHP)' },{ value: 'USAID', label: 'Agency for International Development (USAID)' },{ value: 'ARS', label: 'Agriculture Research Service (ARS)' },{ value: 'APHIS', label: 'Animal and Plant Health Inspection Service (APHIS)' },{ value: 'AFRH', label: 'Armed Forces Retirement Home (AFRH)' },{ value: 'BPA', label: 'Bonneville Power Administration (BPA)' },{ value: 'BIA', label: 'Bureau of Indian Affairs (BIA)' },{ value: 'BLM', label: 'Bureau of Land Management (BLM)' },{ value: 'USBM', label: 'Bureau of Mines (USBM)' },{ value: 'BOEM', label: 'Bureau of Ocean Energy Management (BOEM)' },{ value: 'BOP', label: 'Bureau of Prisons (BOP)' },{ value: 'BR', label: 'Bureau of Reclamation (BR)' },{ value: 'Caltrans', label: 'California Department of Transportation (Caltrans)' },{ value: 'CHSRA', label: 'California High-Speed Rail Authority (CHSRA)' },{ value: 'CIA', label: 'Central Intelligence Agency (CIA)' },{ value: 'NYCOMB', label: 'City of New York, Office of Management and Budget (NYCOMB)' },{ value: 'CDBG', label: 'Community Development Block Grant (CDBG)' },{ value: 'CTDOH', label: 'Connecticut Department of Housing (CTDOH)' },{ value: 'BRAC', label: 'Defense Base Closure and Realignment Commission (BRAC)' },{ value: 'DLA', label: 'Defense Logistics Agency (DLA)' },{ value: 'DNA', label: 'Defense Nuclear Agency (DNA)' },{ value: 'DNFSB', label: 'Defense Nuclear Fac. Safety Board (DNFSB)' },{ value: 'DSA', label: 'Defense Supply Agency (DSA)' },{ value: 'DRB', label: 'Delaware River Basin Commission (DRB)' },{ value: 'DC', label: 'Denali Commission (DC)' },{ value: 'USDA', label: 'Department of Agriculture (USDA)' },{ value: 'DOC', label: 'Department of Commerce (DOC)' },{ value: 'DOD', label: 'Department of Defense (DOD)' },{ value: 'DOE', label: 'Department of Energy (DOE)' },{ value: 'HHS', label: 'Department of Health and Human Services (HHS)' },{ value: 'DHS', label: 'Department of Homeland Security (DHS)' },{ value: 'HUD', label: 'Department of Housing and Urban Development (HUD)' },{ value: 'DOJ', label: 'Department of Justice (DOJ)' },{ value: 'DOL', label: 'Department of Labor (DOL)' },{ value: 'DOS', label: 'Department of State (DOS)' },{ value: 'DOT', label: 'Department of Transportation (DOT)' },{ value: 'TREAS', label: 'Department of Treasury (TREAS)' },{ value: 'VA', label: 'Department of Veteran Affairs (VA)' },{ value: 'DOI', label: 'Department of the Interior (DOI)' },{ value: 'DEA', label: 'Drug Enforcement Administration (DEA)' },{ value: 'EDA', label: 'Economic Development Administration (EDA)' },{ value: 'ERA', label: 'Energy Regulatory Administration (ERA)' },{ value: 'ERDA', label: 'Energy Research and Development Administration (ERDA)' },{ value: 'EPA', label: 'Environmental Protection Agency (EPA)' },{ value: 'FSA', label: 'Farm Service Agency (FSA)' },{ value: 'FHA', label: 'Farmers Home Administration (FHA)' },{ value: 'FAA', label: 'Federal Aviation Administration (FAA)' },{ value: 'FCC', label: 'Federal Communications Commission (FCC)' },{ value: 'FEMA', label: 'Federal Emergency Management Agency (FEMA)' },{ value: 'FEA', label: 'Federal Energy Administration (FEA)' },{ value: 'FERC', label: 'Federal Energy Regulatory Commission (FERC)' },{ value: 'FHWA', label: 'Federal Highway Administration (FHWA)' },{ value: 'FMC', label: 'Federal Maritime Commission (FMC)' },{ value: 'FMSHRC', label: 'Federal Mine Safety and Health Review Commission (FMSHRC)' },{ value: 'FMCSA', label: 'Federal Motor Carrier Safety Administration (FMCSA)' },{ value: 'FPC', label: 'Federal Power Commission (FPC)' },{ value: 'FRA', label: 'Federal Railroad Administration (FRA)' },{ value: 'FRBSF', label: 'Federal Reserve Bank of San Francisco (FRBSF)' },{ value: 'FTA', label: 'Federal Transit Administration (FTA)' }
-            ,{ value: 'FirstNet', label: 'First Responder Network Authority (FirstNet)' },{ value: 'USFWS', label: 'Fish and Wildlife Service (USFWS)' },{ value: 'FDOT', label: 'Florida Department of Transportation (FDOT)' },{ value: 'FDA', label: 'Food and Drug Administration (FDA)' },{ value: 'USFS', label: 'Forest Service (USFS)' },{ value: 'GSA', label: 'General Services Administration (GSA)' },{ value: 'USGS', label: 'Geological Survey (USGS)' },{ value: 'GLB', label: 'Great Lakes Basin Commission (GLB)' },{ value: 'IHS', label: 'Indian Health Service (IHS)' },{ value: 'IRS', label: 'Internal Revenue Service (IRS)' },{ value: 'IBWC', label: 'International Boundary and Water Commission (IBWC)' },{ value: 'ICC', label: 'Interstate Commerce Commission (ICC)' },{ value: 'JCS', label: 'Joint Chiefs of Staff (JCS)' },{ value: 'MARAD', label: 'Maritime Administration (MARAD)' },{ value: 'MTB', label: 'Materials Transportation Bureau (MTB)' },{ value: 'MSHA', label: 'Mine Safety and Health Administration (MSHA)' },{ value: 'MMS', label: 'Minerals Management Service (MMS)' },{ value: 'MESA', label: 'Mining Enforcement and Safety (MESA)' },{ value: 'MRB', label: 'Missouri River Basin Commission (MRB)' },{ value: 'NASA', label: 'National Aeronautics and Space Administration (NASA)' },{ value: 'NCPC', label: 'National Capital Planning Commission (NCPC)' },{ value: 'NGA', label: 'National Geospatial-Intelligence Agency (NGA)' }
-            ,{ value: 'NGB', label: 'National Guard Bureau (NGB)' },{ value: 'NHTSA', label: 'National Highway Traffic Safety Administration (NHTSA)' },{ value: 'NIGC', label: 'National Indian Gaming Commission (NIGC)' },{ value: 'NIH', label: 'National Institute of Health (NIH)' },{ value: 'NMFS', label: 'National Marine Fisheries Service (NMFS)' },{ value: 'NNSA', label: 'National Nuclear Security Administration (NNSA)' },{ value: 'NOAA', label: 'National Oceanic and Atmospheric Administration (NOAA)' },{ value: 'NPS', label: 'National Park Service (NPS)' },{ value: 'NSF', label: 'National Science Foundation (NSF)' },{ value: 'NSA', label: 'National Security Agency (NSA)' },{ value: 'NTSB', label: 'National Transportation Safety Board (NTSB)' },{ value: 'NRCS', label: 'Natural Resource Conservation Service (NRCS)' },{ value: 'NER', label: 'New England River Basin Commission (NER)' },{ value: 'NJDEP', label: 'New Jersey Department of Environmental Protection (NJDEP)' },{ value: 'NRC', label: 'Nuclear Regulatory Commission (NRC)' },{ value: 'OCR', label: 'Office of Coal Research (OCR)' }
-            ,{ value: 'OSMRE', label: 'Office of Surface Mining Reclamation and Enforcement (OSMRE)' },{ value: 'OBR', label: 'Ohio River Basin Commission (OBR)' },{ value: 'RSPA', label: 'Research and Special Programs (RSPA)' },{ value: 'REA', label: 'Rural Electrification Administration (REA)' },{ value: 'RUS', label: 'Rural Utilities Service (RUS)' },{ value: 'SEC', label: 'Security and Exchange Commission (SEC)' },{ value: 'SBA', label: 'Small Business Administration (SBA)' },{ value: 'SCS', label: 'Soil Conservation Service (SCS)' },{ value: 'SRB', label: 'Souris-Red-Rainy River Basin Commission (SRB)' },{ value: 'STB', label: 'Surface Transportation Board (STB)' },{ value: 'SRC', label: 'Susquehanna River Basin Commission (SRC)' },{ value: 'TVA', label: 'Tennessee Valley Authority (TVA)' },{ value: 'TxDOT', label: 'Texas Department of Transportation (TxDOT)' },{ value: 'TPT', label: 'The Presidio Trust (TPT)' },{ value: 'TDA', label: 'Trade and Development Agency (TDA)' },{ value: 'USACE', label: 'U.S. Army Corps of Engineers (USACE)' },{ value: 'USCG', label: 'U.S. Coast Guard (USCG)' },{ value: 'CBP', label: 'U.S. Customs and Border Protection (CBP)' },{ value: 'RRB', label: 'U.S. Railroad Retirement Board (RRB)' },{ value: 'USAF', label: 'United States Air Force (USAF)' },{ value: 'USA', label: 'United States Army (USA)' },{ value: 'USMC', label: 'United States Marine Corps (USMC)' },{ value: 'USN', label: 'United States Navy (USN)' },{ value: 'USPS', label: 'United States Postal Service (USPS)' },{ value: 'USTR', label: 'United States Trade Representative (USTR)' },{ value: 'UMR', label: 'Upper Mississippi Basin Commission (UMR)' },{ value: 'UMTA', label: 'Urban Mass Transportation Administration (UMTA)' },{ value: 'UDOT', label: 'Utah Department of Transportation (UDOT)' }
-            ,{ value: 'URC', label: 'Utah Reclamation Mitigation and Conservation Commission (URC)' },{ value: 'WAPA', label: 'Western Area Power Administration (WAPA)' }
-        ];
-        const stateOptions = Globals.locations;
-
-        const actionOptions = [
-            {value:"Conservation/Restoration/ Bio. Resource use", label:"Conservation/Restoration/ Bio. Resource use"},
-            {value:"Recreation", label:"Recreation"},
-            {value:"Cultural/Historical", label:"Cultural/Historical"},
-            {value:"Land Management Plan", label:"Land Management Plan"},
-            {value:"Land Exchange", label:"Land Exchange"},
-            {value:"Economic and Urban Development/Commerce", label:"Economic and Urban Development/Commerce"},
-            {value:"Water Works", label:"Water Works"},
-            {value:"Mineral Resource Extraction", label:"Mineral Resource Extraction"},
-            {value:"Energy generation/transmission", label:"Energy generation/transmission"},
-            {value:"Transportation", label:"Transportation"},
-            {value:"Government Facilities/Operation", label:"Government Facilities/Operation"}];
-        const decisionOptions = [
-            {value:"Policy", label:"Policy"},
-            {value:"Plan", label:"Plan"},
-            {value:"Program", label:"Program"},
-            {value:"Project", label:"Project"},
-            {value:"Legislative", label:"Legislative"}];
+       
 
         // const tooltipTitle = "<p class=tooltip-line><span class=bold>Search word connectors</span></p>"
         // + "<p class=tooltip-line><span class=tooltip-connector>AND</span>This is the default. <span class=bold>All</span> words you enter must be found together to return a result.</p>"
@@ -739,15 +728,7 @@ class Search extends React.Component {
         // + "<p class=tooltip-line><span class=tooltip-connector>NOT</span> (all caps) to <span class=bold>exclude</span> a word or phrase.</p>"
         // + "<p class=tooltip-line><span class=tooltip-connector>&quot; &quot;</span> Surround words with quotes (&quot; &quot;) to search for an <span class=bold>exact phrase.</span></p>"
         // + "<p class=tooltip-line><span class=tooltip-connector></span> <a href=search-tips>More search tips.</a></p>";
-
-        const proximityOptions = [
-            {value: 0, label: 'exact phrase'},
-            {value: 10, label: '10 words'},
-            {value: 50, label: '50 words'},
-            {value: 100, label: '100 words'},
-            {value: 500, label: '500 words'},
-            {value: -1, label: 'any distance (default)'}
-        ];
+        
 
         // const fragmentOptions = [
         //     {value: 0, label: 'Small'},
@@ -972,6 +953,7 @@ class Search extends React.Component {
                                 checked={this.state.needsDocument} onChange={this.onNeedsDocumentChecked} />
                         <label className="checkbox-text no-select cursor-pointer" htmlFor="needsDocument">Has downloadable files</label>
                     </div>
+                                            <div className="checkbox-container-flex">
 
                     {this.renderClearFiltersButton()}
                 </div>
