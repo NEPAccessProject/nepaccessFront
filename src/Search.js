@@ -22,8 +22,9 @@ import persist from './persist.js';
 import { withRouter } from "react-router";
 import TippySearchTips from './TippySearchTips.js';
 import HelpIcon from '@mui/icons-material/Help';
-import PropTypes from 'prop-types';
-// import PropTypes from "prop-types";
+import propTypes from 'prop-types';
+import Popover from 'react-popover-portal';
+// import propTypes from "prop-types";
 
 const _ = require('lodash');
 
@@ -42,62 +43,63 @@ class Search extends React.Component {
     _lastSearchTerms = "";
 
     // static propTypes = {
-    // match: PropTypes.object.isRequired,
-    // location: PropTypes.object.isRequired,
-    // history: PropTypes.object.isRequired
+    // match: propTypes.object.isRequired,
+    // location: propTypes.object.isRequired,
+    // history: propTypes.object.isRequired
     // };
 
     constructor(props) {
         super(props);
         this.state = {
-            titleRaw: '',
-            startPublish: null,
-            endPublish: null,
-            startComment: null,
-            endComment: null,
+
+            action: [],
+            actionRaw: [],
             agency: [],
             agencyRaw: [],
             cooperatingAgency: [],
             cooperatingAgencyRaw: [],
-            state: [],
-            stateRaw: [],
             county: [],
+            countyOptions: Globals.counties,
             countyRaw: [],
             decision: [],
             decisionRaw: [],
-            action: [],
-            actionRaw: [],
-            isFast41: true,
-            typeAll: true,
-            typeFinal: false,
-            typeDraft: false,
-            typeEA: false,
-            typeNOI: false,
-            typeROD: false,
-            typeScoping: false,
-            typeOther: false,
-            typeFast41: false,
+            endComment: null,
+            endPublish: null,
+            filtersHidden: false,
+            fragmentSizeValue: 2,
+            hideOrganization: true,
+            iconClassName: 'icon icon--effect',
+            isDirty: false,
+            isFast41: false,
+            limit: 100,
+            markup: true,
             needsComments: false,
             needsDocument: false,
-            optionsChecked: true,
-            iconClassName: 'icon icon--effect',
-            limit: 100,
             offset: 0,
-            searchOption: "B",
-            test: Globals.anEnum.options,
-            tooltipOpen: undefined,
-            proximityOption: null,
+            open: false,
+            optionsChecked: true,
             proximityDisabled: true,
-            hideOrganization: true,
-            markup: true,
-            fragmentSizeValue: 2,
-            isDirty: false,
+            proximityOption: null,
+            searchOption: "B",
+            startComment: null,
+            startPublish: null,
+            state: [],
+            stateRaw: [],
             surveyChecked: true,
             surveyDone: true,
             surveyResult: "Haven't searched yet",
-            filtersHidden: false,
-
-            countyOptions: Globals.counties
+            test: Globals.anEnum.options,
+            titleRaw: '',
+            tooltipOpen: undefined,
+            typeAll: true,
+            typeDraft: false,
+            typeEA: false,
+            typeFast41: false,
+            typeFinal: false,
+            typeNOI: false,
+            typeOther: false,
+            typeROD: false,
+            typeScoping: false,
         };
         this.debouncedSearch = _.debounce(this.props.search, 300);
         this.filterBy = this.props.filterResultsBy;
@@ -890,7 +892,7 @@ class Search extends React.Component {
                                         onChange={this.onTitleOnlyChecked}
                                     />
                                     <label className="sidebar-check-label no-select" htmlFor="check1">
-                                        Search only within titles
+                                        Search only within titles <b>State?: {this.state.searchOption}</b>
                                     </label>
                                     {/* &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                 <input id="check2" className="pre-search-input" type="checkbox" 
@@ -995,7 +997,20 @@ class Search extends React.Component {
                                 checked={this.state.isFast41}
                                 onChange={this.onFast41Checked} />
                             <label className="checkbox-text no-select cursor-pointer" htmlFor="fast41">Fast 41 Documents Only</label>
-                        </div>  
+
+                            <div>
+      <p onMouseEnter={this.displayPopup} onMouseLeave={this.hidePopup} id='parent'> 
+      </p>
+
+      <Popover prefix='popup' parent='#parent' open={this.state.open}
+          onMouseEnter={() => this.setState({ open: true })} onMouseLeave={() => this.setState({ open: false })}>
+
+          <div className={'popup-content'}>
+              Popup
+          </div>
+      </Popover>
+      
+  </div>        </div>  
                         {this.renderClearFiltersButton()}
                     </div>
 
@@ -1261,6 +1276,7 @@ class Search extends React.Component {
     }
 
     componentDidUpdate() {
+        console.log('Search updated - state',this.state);
     }
 
 
@@ -1317,95 +1333,95 @@ class Search extends React.Component {
 
 }
 Search.propTypes = {
-    action: PropTypes.array,
-    actionRaw: PropTypes.array,
-    agency: PropTypes.array,
-    agencyRaw: PropTypes.array,
-    closeTooltip: PropTypes.func,
-    cooperatingAgency: PropTypes.array,
-    cooperatingAgencyRaw: PropTypes.array,
-    county: PropTypes.array,
-    countyOptions: PropTypes.array,
-    countyRaw: PropTypes.array,
-    decision: PropTypes.array,
-    decisionRaw: PropTypes.array,
-    endComment: PropTypes.object,
-    endPublish: PropTypes.object,
-    filtersHidden: PropTypes.bool,
-    fragmentSizeValue: PropTypes.number,
-    geoFilter: PropTypes.func,
-    getCounts: PropTypes.func,
-    getSearchBarText: PropTypes.func,
-    hideOrganization: PropTypes.bool,
-    iconClassName: PropTypes.string,
-    isDirty: PropTypes.bool,
-    limit: PropTypes.number,
-    markup: PropTypes.bool,
-    needsComments: PropTypes.bool,
-    needsDocument: PropTypes.bool,
-    offset: PropTypes.number,
-    onActionChange: PropTypes.func,
-    onAgencyChange: PropTypes.func,
-    onChangeHandler: PropTypes.func,
-    onChecked: PropTypes.func,
-    onClearClick: PropTypes.func,
-    onClearFiltersClick: PropTypes.func,
-    onCooperatingAgencyChange: PropTypes.func,
-    onCountyChange: PropTypes.func,
-    onDecisionChange: PropTypes.func,
-    onEndCommentChange: PropTypes.func,
-    onEndDateChange: PropTypes.func,
-    onFragmentSizeChange: PropTypes.func,
-    onIconClick: PropTypes.func,
-    onInput: PropTypes.func,
-    onKeyDown: PropTypes.func,
-    onKeyUp: PropTypes.func,
-    onLocationChange: PropTypes.func,
-    onMarkupChange: PropTypes.func,
-    onNeedsDocumentChecked: PropTypes.func,
-    onOtherBlur: PropTypes.func,
-    onOtherChange: PropTypes.func,
-    onOtherChange: PropTypes.func,
-    onOtherCompositionEnd: PropTypes.func,
-    onOtherCompositionStart: PropTypes.func,
-    onOtherCompositionUpdate: PropTypes.func,
-    onOtherFocus: PropTypes.func,
-    onOtherInput: PropTypes.func,
-    onOtherKeyDown: PropTypes.func,
-    onOtherKeyUp: PropTypes.func,
-    onOtherMouseMove: PropTypes.func,
-    onOtherMouseOut: PropTypes.func,
-    onOtherMouseOver: PropTypes.func,
-    onOtherPaste: PropTypes.func,
-    onProximityChange: PropTypes.func,
-    onStartCommentChange: PropTypes.func,
-    onStartDateChange: PropTypes.func,
-    onTitleOnlyChecked: PropTypes.func,
-    onTypeChecked: PropTypes.func,
-    onUseOptionsChecked: PropTypes.func,
-    optionsChecked: PropTypes.bool,
-    proximityDisabled: PropTypes.bool,
-    proximityOption: PropTypes.object,
-    searchOption: PropTypes.string,
-    startComment: PropTypes.object,
-    startPublish: PropTypes.object,
-    state: PropTypes.array,
-    stateRaw: PropTypes.array,
-    surveyChecked: PropTypes.bool,
-    surveyDone: PropTypes.bool,
-    surveyResult: PropTypes.string,
-    test: PropTypes.string,
-    titleRaw: PropTypes.string,
-    tooltipOpen: PropTypes.bool,
-    tooltipTrigger: PropTypes.func,
-    typeAll: PropTypes.bool,
-    typeDraft: PropTypes.bool,
-    typeEA: PropTypes.bool,
-    typeFinal: PropTypes.bool,
-    typeNOI: PropTypes.bool,
-    typeOther: PropTypes.bool,
-    typeROD: PropTypes.bool,
-    typeScoping: PropTypes.bool,
+    action: propTypes.array,
+    actionRaw: propTypes.array,
+    agency: propTypes.array,
+    agencyRaw: propTypes.array,
+    closeTooltip: propTypes.func,
+    cooperatingAgency: propTypes.array,
+    cooperatingAgencyRaw: propTypes.array,
+    county: propTypes.array,
+    countyOptions: propTypes.array,
+    countyRaw: propTypes.array,
+    decision: propTypes.array,
+    decisionRaw: propTypes.array,
+    endComment: propTypes.object,
+    endPublish: propTypes.object,
+    filtersHidden: propTypes.bool,
+    fragmentSizeValue: propTypes.number,
+    geoFilter: propTypes.func,
+    getCounts: propTypes.func,
+    getSearchBarText: propTypes.func,
+    hideOrganization: propTypes.bool,
+    iconClassName: propTypes.string,
+    isDirty: propTypes.bool,
+    limit: propTypes.number,
+    markup: propTypes.bool,
+    needsComments: propTypes.bool,
+    needsDocument: propTypes.bool,
+    offset: propTypes.number,
+    onActionChange: propTypes.func,
+    onAgencyChange: propTypes.func,
+    onChangeHandler: propTypes.func,
+    onChecked: propTypes.func,
+    onClearClick: propTypes.func,
+    onClearFiltersClick: propTypes.func,
+    onCooperatingAgencyChange: propTypes.func,
+    onCountyChange: propTypes.func,
+    onDecisionChange: propTypes.func,
+    onEndCommentChange: propTypes.func,
+    onEndDateChange: propTypes.func,
+    onFragmentSizeChange: propTypes.func,
+    onIconClick: propTypes.func,
+    onInput: propTypes.func,
+    onKeyDown: propTypes.func,
+    onKeyUp: propTypes.func,
+    onLocationChange: propTypes.func,
+    onMarkupChange: propTypes.func,
+    onNeedsDocumentChecked: propTypes.func,
+    onOtherBlur: propTypes.func,
+    onOtherChange: propTypes.func,
+    onOtherChange: propTypes.func,
+    onOtherCompositionEnd: propTypes.func,
+    onOtherCompositionStart: propTypes.func,
+    onOtherCompositionUpdate: propTypes.func,
+    onOtherFocus: propTypes.func,
+    onOtherInput: propTypes.func,
+    onOtherKeyDown: propTypes.func,
+    onOtherKeyUp: propTypes.func,
+    onOtherMouseMove: propTypes.func,
+    onOtherMouseOut: propTypes.func,
+    onOtherMouseOver: propTypes.func,
+    onOtherPaste: propTypes.func,
+    onProximityChange: propTypes.func,
+    onStartCommentChange: propTypes.func,
+    onStartDateChange: propTypes.func,
+    onTitleOnlyChecked: propTypes.func,
+    onTypeChecked: propTypes.func,
+    onUseOptionsChecked: propTypes.func,
+    optionsChecked: propTypes.bool,
+    proximityDisabled: propTypes.bool,
+    proximityOption: propTypes.object,
+    searchOption: propTypes.string,
+    startComment: propTypes.object,
+    startPublish: propTypes.object,
+    state: propTypes.array,
+    stateRaw: propTypes.array,
+    surveyChecked: propTypes.bool,
+    surveyDone: propTypes.bool,
+    surveyResult: propTypes.string,
+    test: propTypes.string,
+    titleRaw: propTypes.string,
+    tooltipOpen: propTypes.bool,
+    tooltipTrigger: propTypes.func,
+    typeAll: propTypes.bool,
+    typeDraft: propTypes.bool,
+    typeEA: propTypes.bool,
+    typeFinal: propTypes.bool,
+    typeNOI: propTypes.bool,
+    typeOther: propTypes.bool,
+    typeROD: propTypes.bool,
+    typeScoping: propTypes.bool,
 }
 export default Search;
 
@@ -1431,4 +1447,4 @@ function parseTerms(str) {
     }
 
     return str;
-}
+}``
