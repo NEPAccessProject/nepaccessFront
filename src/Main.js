@@ -20,7 +20,7 @@ import ForgotPassword from './User/ForgotPassword.js';
 import Register from './User/Register.js';
 import PreRegister from './User/PreRegister.js';
 import Verify from './User/Verify.js';
-
+import PDFViewer from './components/search/PDFViewer/PDFViewer';
 
 import AboutNepa from './iframes/AboutNepa.js';
 import AboutNepaccess from './iframes/AboutNepaccess.js';
@@ -69,6 +69,7 @@ import PropTypes from "prop-types";
 import ImporterAlignment from './ImporterAlignment';
 import Vision from './iframes/Vision';
 import Publications from './iframes/Publications';
+import PDFTestPage from './components/search/PDFViewer/PDFModal.jsx';
 
 const _ = require('lodash');
 
@@ -159,6 +160,7 @@ class Main extends React.Component {
     // refresh() has a global listener so as to change the loggedIn state and then update the navbar
     // as needed, from child components
     refresh(verified) { 
+        console.log('REFRESHING MAIN', verified);
         this.setState({
             loggedIn: verified.loggedIn
         }, () => {
@@ -364,6 +366,7 @@ class Main extends React.Component {
                 <Route path="/up_alignment" component={ImporterAlignment} />
                 <Route path="/vision" component={Vision} />
                 <Route path="/publications" component={Publications} />
+                <Route path="/pdf" component={PDFTestPage} />
                 <Route path="/" component={Landing}/>
             </Switch>
         </div>
