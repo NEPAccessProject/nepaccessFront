@@ -2,7 +2,7 @@ import React from 'react';
 import axios from 'axios';
 import './User/login.css';
 import Globals from './globals.js';
-import PropTypes from 'prop-types';
+import propTypes from 'prop-types';
 import LoginModal from './User/LoginModal.js';
 
 export default class DownloadFile extends React.Component {

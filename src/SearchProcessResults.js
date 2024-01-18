@@ -11,7 +11,7 @@ import { ReactTabulator } from 'react-tabulator';
 import { reactFormatter } from "react-tabulator";
 import 'react-tabulator/lib/styles.css'; // required styles
 import 'react-tabulator/lib/css/tabulator_site.min.css'; // theme
-import PropTypes from 'prop-types';
+import propTypes from 'prop-types';
  import Tippy from '@tippyjs/react';
 
 import './loader.css';
@@ -347,43 +347,43 @@ export default class SearchProcessResults extends React.Component {
         this.updateTableDebounced();
     }
 }
-SearchResultsMap.PropTypes = {
-    docList: PropTypes.array,
-    results: PropTypes.array,
-    toggleMapHide: PropTypes.func,
-    isHidden: PropTypes.bool,
-    searcherState: PropTypes.object,
+SearchResultsMap.propTypes = {
+    docList: propTypes.array,
+    results: propTypes.array,
+    toggleMapHide: propTypes.func,
+    isHidden: propTypes.bool,
+    searcherState: propTypes.object,
   };
   
-  SearchProcessResult.PropTypes = {
-    cell: PropTypes.shape({
-      _cell: PropTypes.shape({
-        row: PropTypes.shape({
-          data: PropTypes.shape({
-            processId: PropTypes.string,
-            title: PropTypes.string,
-            agency: PropTypes.string,
-            state: PropTypes.string,
-            county: PropTypes.string,
-            action: PropTypes.string,
-            decision: PropTypes.string,
-            records: PropTypes.arrayOf(
-              PropTypes.shape({
-                id: PropTypes.string,
-                registerDate: PropTypes.string,
-                documentType: PropTypes.string,
-                name: PropTypes.string,
-                size: PropTypes.number,
-                plaintext: PropTypes.arrayOf(PropTypes.string),
+  SearchProcessResult.propTypes = {
+    cell: propTypes.shape({
+      _cell: propTypes.shape({
+        row: propTypes.shape({
+          data: propTypes.shape({
+            processId: propTypes.string,
+            title: propTypes.string,
+            agency: propTypes.string,
+            state: propTypes.string,
+            county: propTypes.string,
+            action: propTypes.string,
+            decision: propTypes.string,
+            records: propTypes.arrayOf(
+              propTypes.shape({
+                id: propTypes.string,
+                registerDate: propTypes.string,
+                documentType: propTypes.string,
+                name: propTypes.string,
+                size: propTypes.number,
+                plaintext: propTypes.arrayOf(propTypes.string),
               })
             ),
           })
         })
       })
     }),
-    hidden: PropTypes.func,
-    hideText: PropTypes.func,
-    show: PropTypes.bool,
+    hidden: propTypes.func,
+    hideText: propTypes.func,
+    show: propTypes.bool,
   };
 // function uuidv4() {
 //     let returnVal = ([1e7]+-1e3+-4e3+-8e3+-1e11).replace(/[018]/g, c =>

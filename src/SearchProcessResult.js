@@ -7,7 +7,7 @@ import DownloadFile from './DownloadFile.js';
 import DownloadFiles from './DownloadFiles';
 
 import Tippy from '@tippyjs/react'
-import PropTypes from 'prop-types';
+import propTypes from 'prop-types';
 import CheckIcon from '@mui/icons-material/Check';
 import { VerticalAlignBottom } from '@material-ui/icons';
 import { Grid, Container, Box, Typography } from '@mui/material';
@@ -25,6 +25,7 @@ export default class SearchProcessResult extends React.Component {
             commentDownloadText: 'Download',
             commentDownloadClass: 'download'
         };
+        console.log('SEARCH PROCESS RESULT', this.props);
     }
 
     hidden = (id) => {
@@ -200,6 +201,7 @@ export default class SearchProcessResult extends React.Component {
 
             let _id = record.id;
             // console.log(record.name.substring(0,10));
+            console.log('SHOW TEXT?', this.props.show);
             if (!this.props.show) {
                 return (
                     <div className="margins" key={_id}>
@@ -257,8 +259,6 @@ export default class SearchProcessResult extends React.Component {
                                     <span className="cardHeader bold filename-inner">
                                         {combo[0]}
                                     </span>
-
-
                                     <span className="card-highlight fragment"
                                         dangerouslySetInnerHTML={{
                                             __html: combo[1]
@@ -375,14 +375,9 @@ export default class SearchProcessResult extends React.Component {
             return (
                 <>
 
-                    <Box item xs={12} flex={1} sx={{
-                    }}>
-                        Fast41 ?
-                        <CheckIcon color='primary' sx={{
-                            padding: 0,
-                            margin: 0
-                        }} className="fast41-icon" />
-                    </Box>
+<div><span className="cardHeader">Fast 41 Project:
+                    <span>yes</span></span>
+                </div>
                 </>
             );
         }
@@ -463,34 +458,34 @@ export default class SearchProcessResult extends React.Component {
     // }
 
 }
-SearchProcessResult.PropTypes = {
-    cell: PropTypes.shape({
-        _cell: PropTypes.shape({
-            row: PropTypes.shape({
-                data: PropTypes.shape({
-                    action: PropTypes.string,
-                    agency: PropTypes.string,
-                    county: PropTypes.string,
-                    decision: PropTypes.string,
-                    processId: PropTypes.string,
-                    state: PropTypes.string,
-                    title: PropTypes.string,
-                    records: PropTypes.arrayOf(
-                        PropTypes.shape({
-                            id: PropTypes.string,
-                            registerDate: PropTypes.string,
-                            documentType: PropTypes.string,
-                            name: PropTypes.string,
-                            size: PropTypes.number,
-                            isFast41: PropTypes.bool,
-                            plaintext: PropTypes.arrayOf(PropTypes.string),
+SearchProcessResult.propTypes = {
+    cell: propTypes.shape({
+        _cell: propTypes.shape({
+            row: propTypes.shape({
+                data: propTypes.shape({
+                    action: propTypes.string,
+                    agency: propTypes.string,
+                    county: propTypes.string,
+                    decision: propTypes.string,
+                    processId: propTypes.string,
+                    state: propTypes.string,
+                    title: propTypes.string,
+                    records: propTypes.arrayOf(
+                        propTypes.shape({
+                            id: propTypes.string,
+                            registerDate: propTypes.string,
+                            documentType: propTypes.string,
+                            name: propTypes.string,
+                            size: propTypes.number,
+                            isFast41: propTypes.bool,
+                            plaintext: propTypes.arrayOf(propTypes.string),
                         })
                     ),
                 })
             })
         })
     }),
-    hidden: PropTypes.func,
-    hideText: PropTypes.func,
-    show: PropTypes.bool,
+    hidden: propTypes.func,
+    hideText: propTypes.func,
+    show: propTypes.bool,
 };

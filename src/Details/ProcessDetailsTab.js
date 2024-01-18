@@ -9,7 +9,7 @@ import Chart from './Chart.js';
 
 import Globals from '../globals.js';
 import DownloadFiles from '../DownloadFiles.js';
-import PropTypes from 'prop-types';
+import propTypes from 'prop-types';
 import CheckIcon from '@mui/icons-material/Check';
 
 // TODO: Get all data for all records for process (needs new backend route)
@@ -621,32 +621,32 @@ function parentWidth(elem) {
         return 400;
     }
 }
-ProcessDetailsTab.PropTypes = {
-    detailsID: PropTypes.number,
-    exists: PropTypes.bool,
-    hasGeojson: PropTypes.bool,
-    hasGeojson: PropTypes.func,
-    interpretProcess: PropTypes.func,
-    logInteraction: PropTypes.func,
-    onChange: PropTypes.func,
-    otherTitles: PropTypes.array,
-    parentWidth: PropTypes.func,
-    populate: PropTypes.func,
-    processId: PropTypes.number,
-    renderDownload: PropTypes.func,
-    reportText: PropTypes.string,
-    showDataIssueLink: PropTypes.func,
-    showDetails: PropTypes.func,
-    showFilesNew: PropTypes.func,
-    showFilesNew: PropTypes.func,
-    showMap: PropTypes.func,
-    showMore: PropTypes.array,
-    showMoreToggle: PropTypes.func,
-    showOtherTitles: PropTypes.func,
-    showRecordLine: PropTypes.func,
-    showRecordLine: PropTypes.func,
-    showTimeline: PropTypes.func,
-    showTitle: PropTypes.func,
-    width: PropTypes.number,
+ProcessDetailsTab.propTypes = {
+    detailsID: propTypes.number,
+    exists: propTypes.bool,
+    hasGeojson: propTypes.bool,
+    hasGeojson: propTypes.func,
+    interpretProcess: propTypes.func,
+    logInteraction: propTypes.func,
+    onChange: propTypes.func,
+    otherTitles: propTypes.array,
+    parentWidth: propTypes.func,
+    populate: propTypes.func,
+    processId: propTypes.number,
+    renderDownload: propTypes.func,
+    reportText: propTypes.string,
+    showDataIssueLink: propTypes.func,
+    showDetails: propTypes.func,
+    showFilesNew: propTypes.func,
+    showFilesNew: propTypes.func,
+    showMap: propTypes.func,
+    showMore: propTypes.array,
+    showMoreToggle: propTypes.func,
+    showOtherTitles: propTypes.func,
+    showRecordLine: propTypes.func,
+    showRecordLine: propTypes.func,
+    showTimeline: propTypes.func,
+    showTitle: propTypes.func,
+    width: propTypes.number,
   }
 
